@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
+import { LocaleSwitcher } from "@/components/shared/LocaleSwitcher";
 
 interface AdminSidebarProps {
     onClose?: () => void;
@@ -76,6 +77,12 @@ export function AdminSidebar({ onClose, mobile }: AdminSidebarProps) {
                     );
                 })}
             </nav>
+            <div className="border-t border-slate-700 p-3">
+                <div className="flex items-center justify-between">
+                    <span className="text-xs text-slate-500">{t("nav.language")}</span>
+                    <LocaleSwitcher />
+                </div>
+            </div>
         </aside>
     );
 }

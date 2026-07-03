@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
+import { LocaleSwitcher } from "@/components/shared/LocaleSwitcher";
 
 interface DashboardSidebarProps {
     onClose?: () => void;
@@ -71,6 +72,12 @@ export function DashboardSidebar({ onClose, mobile }: DashboardSidebarProps) {
                     );
                 })}
             </nav>
+            <div className="border-t border-gray-100 p-3">
+                <div className="flex items-center justify-between">
+                    <span className="text-xs text-gray-400">{t("nav.language")}</span>
+                    <LocaleSwitcher />
+                </div>
+            </div>
         </aside>
     );
 }
