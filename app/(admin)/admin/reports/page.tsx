@@ -119,7 +119,7 @@ export default function AdminReportsPage() {
                             { type: "users", title: t("admin.reports.export.users"), desc: t("admin.reports.export.usersDesc") },
                             { type: "commissions", title: t("admin.reports.export.commissions"), desc: t("admin.reports.export.commissionsDesc") },
                         ].map((btn) => (
-                            <div key={btn.type} className="flex items-center justify-between p-4 rounded-xl border border-slate-150 bg-slate-50/50 hover:bg-slate-50 transition-colors">
+                            <div key={btn.type} className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl border border-slate-150 bg-slate-50/50 hover:bg-slate-50 transition-colors">
                                 <div>
                                     <h4 className="text-xs font-bold text-slate-800">{btn.title}</h4>
                                     <p className="text-[10px] text-gray-500 mt-0.5">{btn.desc}</p>

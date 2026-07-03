@@ -88,7 +88,7 @@ export default function AdminOrdersPage() {
                                     const allowedTrans = ORDER_STATUS_TRANSITIONS[order.status] || [];
                                     return (
                                         <tr key={order.id} className="hover:bg-slate-50/50">
-                                            <td className="p-4 font-mono text-[10px] text-slate-400 font-bold max-w-[100px] truncate">{order.id}</td>
+                                            <td className="p-4 font-mono text-[10px] text-slate-400 font-bold max-w-[80px] lg:max-w-[200px] truncate">{order.id}</td>
                                             <td className="p-4">
                                                 <div className="text-xs font-semibold text-slate-800">{order.user?.name}</div>
                                                 <div className="text-[10px] text-gray-500">{order.user?.phone}</div>

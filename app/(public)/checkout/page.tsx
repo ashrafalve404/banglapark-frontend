@@ -150,7 +150,7 @@ export default function CheckoutPage() {
                 <div className="space-y-6">
                     <div className="card p-6">
                         <h2 className="text-lg font-bold text-gray-900 border-b border-gray-100 pb-3 mb-4">{t("checkout.review.heading")}</h2>
-                        <div className="space-y-4 mb-6 max-h-60 overflow-y-auto">
+                        <div className="space-y-4 mb-6 max-h-60 sm:max-h-80 overflow-y-auto">
                             {items.map((item) => (
                                 <div key={item.product.id} className="flex justify-between items-center gap-4 py-1">
                                     <div className="min-w-0 flex-1">

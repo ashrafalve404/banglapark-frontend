@@ -58,7 +58,7 @@ export function Header() {
                             <div className="relative group">
                                 <button className="flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
                                     <User size={16} />
-                                    <span className="hidden sm:block max-w-[100px] truncate">{user.name}</span>
+                                    <span className="hidden sm:block max-w-[120px] lg:max-w-[200px] truncate">{user.name}</span>
                                 </button>
                                 <div className="absolute right-0 top-full mt-1 w-48 rounded-lg border border-gray-100 bg-white shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50">
                                     <div className="p-2">

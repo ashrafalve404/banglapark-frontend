@@ -42,7 +42,7 @@ export default function CartPage() {
                 <div className="lg:col-span-2 space-y-4">
                     {items.map((item) => (
                         <div key={item.product.id} className="card p-4 flex gap-4 items-center">
-                            <div className="w-20 h-20 bg-gray-50 rounded-lg overflow-hidden flex-shrink-0">
+                            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gray-50 rounded-lg overflow-hidden flex-shrink-0">
                                 {item.product.images?.[0] ? (
                                     <img src={item.product.images[0]} alt={item.product.name} className="h-full w-full object-cover" />
                                 ) : (
@@ -62,7 +62,7 @@ export default function CartPage() {
                             </div>
 
                             {/* Quantity selectors */}
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap justify-end">
                                 <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden">
                                     <button onClick={() => updateQty(item.product.id, item.quantity - 1)} className="px-2.5 py-1 bg-gray-50 hover:bg-gray-100 text-gray-600 font-bold">-</button>
                                     <span className="px-3 py-1 text-sm font-semibold text-gray-800 min-w-8 text-center">{item.quantity}</span>
