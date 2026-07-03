@@ -36,6 +36,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# Master prompt (developer reference only)
+02-frontend-master-prompt.md
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
