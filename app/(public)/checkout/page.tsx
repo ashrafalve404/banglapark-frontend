@@ -109,7 +109,7 @@ export default function CheckoutPage() {
 
             <form className="grid grid-cols-1 lg:grid-cols-3 gap-8" onSubmit={handleSubmit(onSubmit)}>
                 {/* Shipping address details */}
-                <div className="lg:col-span-2 space-y-6 card p-6 lg:p-8">
+                <div className="lg:col-span-2 space-y-6 card-flat p-6 lg:p-8">
                     <h2 className="text-lg font-bold text-gray-900 border-b border-gray-100 pb-3">{t("checkout.shipping.heading")}</h2>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -148,7 +148,7 @@ export default function CheckoutPage() {
 
                 {/* Order review sidebar */}
                 <div className="space-y-6">
-                    <div className="card p-6">
+                    <div className="card-flat p-6">
                         <h2 className="text-lg font-bold text-gray-900 border-b border-gray-100 pb-3 mb-4">{t("checkout.review.heading")}</h2>
                         <div className="space-y-4 mb-6 max-h-60 sm:max-h-80 overflow-y-auto">
                             {items.map((item) => (

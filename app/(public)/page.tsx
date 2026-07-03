@@ -66,7 +66,7 @@ export default function HomePage() {
                             { icon: Gift, step: t("home.howItWorks.step2.label"), title: t("home.howItWorks.step2.title"), desc: t("home.howItWorks.step2.desc"), color: "amber" },
                             { icon: TrendingUp, step: t("home.howItWorks.step3.label"), title: t("home.howItWorks.step3.title"), desc: t("home.howItWorks.step3.desc"), color: "blue" },
                         ].map((item) => (
-                            <div key={item.step} className="card p-6 text-center hover:shadow-md transition-shadow">
+                            <div key={item.step} className="card-flat p-6 text-center hover:shadow-md transition-shadow">
                                 <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-green-50">
                                     <item.icon size={24} className="text-green-700" />
                                 </div>
@@ -111,7 +111,7 @@ export default function HomePage() {
                     ) : (
                         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
                             {products.map((product) => (
-                                <Link key={product.id} href={`/product/${product.slug}`} className="group card overflow-hidden hover:shadow-md transition-all">
+                                <Link key={product.id} href={`/product/${product.slug}`} className="group card-flat overflow-hidden hover:shadow-md transition-all">
                                     <div className="aspect-square bg-gray-50 overflow-hidden">
                                         {product.images?.[0] ? (
                                             <img src={product.images[0]} alt={product.name} className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300" />

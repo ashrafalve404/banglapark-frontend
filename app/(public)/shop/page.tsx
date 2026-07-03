@@ -57,7 +57,7 @@ export default function ShopPage() {
             <div className="flex flex-col lg:flex-row gap-8">
                 {/* Category Filter Sidebar/Widget */}
                 <div className="w-full lg:w-64 space-y-6">
-                    <div className="card p-5">
+                    <div className="card-flat p-5">
                         <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">
                             {t("shop.filter.categories")}
                         </h3>
@@ -94,7 +94,7 @@ export default function ShopPage() {
                             <Loader2 className="animate-spin text-green-800" size={32} />
                         </div>
                     ) : products.length === 0 ? (
-                        <div className="card py-20 text-center text-gray-400">
+                        <div className="card-flat py-20 text-center text-gray-400">
                             {t("shop.empty")}
                         </div>
                     ) : (
@@ -103,7 +103,7 @@ export default function ShopPage() {
                                 <Link
                                     key={product.id}
                                     href={`/product/${product.slug}`}
-                                    className="group card overflow-hidden hover:shadow-md transition-all flex flex-col"
+                                    className="group card-flat overflow-hidden hover:shadow-md transition-all flex flex-col"
                                 >
                                     <div className="aspect-square bg-gray-50 overflow-hidden relative">
                                         {product.images?.[0] ? (

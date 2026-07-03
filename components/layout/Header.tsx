@@ -37,7 +37,7 @@ export function Header() {
                     </Link>
 
                     {/* Desktop Nav */}
-                    <nav className="hidden md:flex items-center gap-6">
+                    <nav className="header-desktop-nav hidden md:flex items-center gap-6">
                         <Link href="/shop" className="text-sm font-medium text-gray-600 hover:text-green-800 transition-colors">{t("nav.shop")}</Link>
                         <Link href="/shop?categories=all" className="text-sm font-medium text-gray-600 hover:text-green-800 transition-colors">{t("nav.category")}</Link>
                     </nav>
@@ -84,14 +84,14 @@ export function Header() {
                                 </div>
                             </div>
                         ) : (
-                            <div className="flex items-center gap-2">
+                            <div className="hidden md:flex items-center gap-2">
                                 <Link href="/login" className="btn-secondary py-1.5 px-3 text-sm">{t("nav.login")}</Link>
                                 <Link href="/register" className="btn-primary py-1.5 px-3 text-sm">{t("nav.register")}</Link>
                             </div>
                         )}
 
                         {/* Mobile menu toggle */}
-                        <button className="md:hidden p-2 text-gray-600" onClick={() => setMenuOpen(!menuOpen)}>
+                        <button className="header-hamburger md:hidden p-2 text-gray-600 flex items-center justify-center" onClick={() => setMenuOpen(!menuOpen)}>
                             {menuOpen ? <X size={20} /> : <Menu size={20} />}
                         </button>
                     </div>
@@ -101,8 +101,13 @@ export function Header() {
                 {menuOpen && (
                     <div className="md:hidden border-t border-gray-100 py-3 space-y-1">
                         <Link href="/shop" onClick={() => setMenuOpen(false)} className="block px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50">{t("nav.shop")}</Link>
-                        {isAuthenticated && (
+                        {isAuthenticated ? (
                             <Link href="/dashboard" onClick={() => setMenuOpen(false)} className="block px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50">{t("nav.mobileDashboard")}</Link>
+                        ) : (
+                            <>
+                                <Link href="/login" onClick={() => setMenuOpen(false)} className="block px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50">{t("nav.login")}</Link>
+                                <Link href="/register" onClick={() => setMenuOpen(false)} className="block px-3 py-2 rounded-lg text-sm font-medium text-green-800 hover:bg-green-50 font-semibold">{t("nav.register")}</Link>
+                            </>
                         )}
                     </div>
                 )}

@@ -41,7 +41,7 @@ export default function CartPage() {
                 {/* Cart items list */}
                 <div className="lg:col-span-2 space-y-4">
                     {items.map((item) => (
-                        <div key={item.product.id} className="card p-4 flex gap-4 items-center">
+                        <div key={item.product.id} className="card-flat p-4 flex gap-4 items-center">
                             <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gray-50 rounded-lg overflow-hidden flex-shrink-0">
                                 {item.product.images?.[0] ? (
                                     <img src={item.product.images[0]} alt={item.product.name} className="h-full w-full object-cover" />
@@ -87,7 +87,7 @@ export default function CartPage() {
 
                 {/* Cart summary box */}
                 <div className="space-y-6">
-                    <div className="card p-6">
+                    <div className="card-flat p-6">
                         <h3 className="text-base font-bold text-gray-900 mb-4 border-b border-gray-100 pb-3">{t("cart.summary.heading")}</h3>
 
                         {/* Activation Progress bar / notification */}

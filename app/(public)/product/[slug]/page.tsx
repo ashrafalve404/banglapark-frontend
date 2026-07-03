@@ -60,7 +60,7 @@ export default function ProductDetailPage() {
                 <ArrowLeft size={16} /> {t("product.backButton")}
             </button>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 bg-white card p-6 lg:p-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 bg-white card-flat p-6 lg:p-10">
                 {/* Gallery / Image view */}
                 <div className="bg-gray-50 rounded-xl overflow-hidden aspect-square flex items-center justify-center border border-gray-100">
                     {product.images?.[0] ? (
