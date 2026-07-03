@@ -1,0 +1,119 @@
+"use client";
+
+import { useQuery } from "@tanstack/react-query";
+import {
+    Users, ShoppingBag, ArrowUpRight, TrendingUp,
+    AlertCircle, ShieldAlert, BadgeAlert, CheckCircle2
+} from "lucide-react";
+import { adminApi } from "@/lib/api/admin";
+import { formatCurrency } from "@/lib/utils";
+import { useLocale } from "@/lib/i18n";
+
+export default function AdminOverview() {
+    const { t } = useLocale();
+    const { data: stats, isLoading } = useQuery({
+        queryKey: ["admin-stats"],
+        queryFn: () => adminApi.stats(),
+    });
+
+    return (
+        <div className="space-y-6">
+            <div>
+                <h1 className="text-2xl font-bold text-slate-800">{t("admin.overview.heading")}</h1>
+                <p className="text-sm text-slate-500">{t("admin.overview.subheading")}</p>
+            </div>
+
+            {/* KPI stats grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {/* Total Users */}
+                <div className="card p-5 bg-white flex items-center justify-between">
+                    <div className="space-y-1">
+                        <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block">{t("admin.overview.totalUsers")}</span>
+                        <span className="text-2xl font-bold text-slate-800">
+                            {isLoading ? "..." : stats?.totalUsers ?? 0} {t("admin.overview.unit")}
+                        </span>
+                    </div>
+                    <div className="rounded-lg bg-teal-50 p-2.5 text-teal-800">
+                        <Users size={20} />
+                    </div>
+                </div>
+
+                {/* Active Users */}
+                <div className="card p-5 bg-white flex items-center justify-between">
+                    <div className="space-y-1">
+                        <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block">{t("admin.overview.activeUsers")}</span>
+                        <span className="text-2xl font-bold text-green-700">
+                            {isLoading ? "..." : stats?.activeUsers ?? 0} {t("admin.overview.unit")}
+                        </span>
+                    </div>
+                    <div className="rounded-lg bg-green-50 p-2.5 text-green-800">
+                        <CheckCircle2 size={20} />
+                    </div>
+                </div>
+
+                {/* Total Revenue Sales */}
+                <div className="card p-5 bg-white flex items-center justify-between">
+                    <div className="space-y-1">
+                        <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block">{t("admin.overview.totalRevenue")}</span>
+                        <span className="text-2xl font-bold text-teal-800">
+                            {isLoading ? "..." : formatCurrency(stats?.totalRevenue ?? 0)}
+                        </span>
+                    </div>
+                    <div className="rounded-lg bg-emerald-50 p-2.5 text-emerald-800">
+                        <TrendingUp size={20} />
+                    </div>
+                </div>
+
+                {/* Total Commission Paid */}
+                <div className="card p-5 bg-white flex items-center justify-between">
+                    <div className="space-y-1">
+                        <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block">{t("admin.overview.totalCommission")}</span>
+                        <span className="text-2xl font-bold text-indigo-850 text-indigo-700">
+                            {isLoading ? "..." : formatCurrency(stats?.totalCommissionPaid ?? 0)}
+                        </span>
+                    </div>
+                    <div className="rounded-lg bg-indigo-50 p-2.5 text-indigo-800">
+                        <ArrowUpRight size={20} />
+                    </div>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Pending Alerts columns */}
+                <div className="lg:col-span-2 card p-6 bg-white space-y-4">
+                    <h3 className="text-sm font-bold text-slate-800 border-b border-slate-100 pb-2">{t("admin.overview.pendingAlert.heading")}</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="rounded-xl border border-amber-200 bg-amber-50/50 p-4 flex items-center gap-3">
+                            <BadgeAlert className="text-amber-800 flex-shrink-0" size={24} />
+                            <div>
+                                <span className="text-[10px] text-amber-800 font-bold block uppercase">{t("admin.overview.pendingAlert.pendingWithdrawals")}</span>
+                                <span className="text-lg font-bold text-amber-900 block">{stats?.pendingWithdrawals ?? 0} {t("admin.overview.pendingAlert.paymentUnit")}</span>
+                                <span className="text-xs text-gray-500">{t("admin.overview.pendingAlert.pendingWithdrawalsDesc")}</span>
+                            </div>
+                        </div>
+
+                        <div className="rounded-xl border border-indigo-150 bg-indigo-50/30 p-4 flex items-center gap-3">
+                            <ShoppingBag className="text-indigo-800 flex-shrink-0" size={24} />
+                            <div>
+                                <span className="text-[10px] text-indigo-800 font-bold block uppercase">{t("admin.overview.pendingAlert.orders")}</span>
+                                <span className="text-lg font-bold text-indigo-900 block">{stats?.totalOrders ?? 0} {t("admin.overview.pendingAlert.totalOrders")}</span>
+                                <span className="text-xs text-gray-500">{t("admin.overview.pendingAlert.ordersDesc")}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Short tutorial instructions */}
+                <div className="card p-6 bg-slate-900 text-white space-y-3 flex flex-col justify-between">
+                    <div>
+                        <h3 className="text-sm font-bold text-amber-400 uppercase mb-2">{t("admin.overview.guide.heading")}</h3>
+                        <p className="text-xs text-slate-300 leading-relaxed">
+                            {t("admin.overview.guide.text")}
+                        </p>
+                    </div>
+                    <span className="text-[10px] text-slate-500">{t("admin.overview.footer")}</span>
+                </div>
+            </div>
+        </div>
+    );
+}

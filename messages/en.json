@@ -1,0 +1,818 @@
+{
+  "common": {
+    "loading": "Loading..."
+  },
+  "nav": {
+    "banglaPark": "Bangla Park",
+    "banglaParkFull": "Bangla Park Limited",
+    "limited": "Limited",
+    "shop": "Shop",
+    "category": "Category",
+    "dashboard": "Dashboard",
+    "notifications": "Notifications",
+    "logout": "Logout",
+    "login": "Login",
+    "register": "Register",
+    "adminPanel": "Admin Panel",
+    "backToSite": "← Back to Public Site",
+    "mobileDashboard": "Dashboard",
+    "footerTagline": "Bangladesh's trusted MLM E-commerce Platform. Buy products, build a team, earn income.",
+    "shopping": "Shopping",
+    "allProducts": "All Products",
+    "cart": "Cart",
+    "checkout": "Checkout",
+    "account": "Account",
+    "support": "Support",
+    "supportHours": "9 AM – 9 PM",
+    "supportEmail": "support@banglapark.com",
+    "copyright": "© {year} Bangla Park Limited. All rights reserved.",
+    "mlmTagline": "MLM E-commerce Platform",
+    "overview": "Overview",
+    "profile": "Profile",
+    "wallet": "Wallet",
+    "orders": "Orders",
+    "referrals": "Referrals",
+    "dailyBenefit": "Daily Benefit",
+    "generationIncome": "Generation Income",
+    "withdraw": "Withdraw",
+    "adminOverview": "Overview",
+    "adminLabel": "Admin",
+    "adminUsers": "Users",
+    "adminProducts": "Products",
+    "adminCategories": "Categories",
+    "adminOrders": "Orders",
+    "adminWithdrawals": "Withdrawals",
+    "adminCommissionRules": "Commission Rules",
+    "adminReports": "Reports"
+  },
+  "home": {
+    "badge": "Bangladesh's Trusted MLM Platform",
+    "hero": {
+      "title": {
+        "line1": "Buy Products,",
+        "line2": "Start Earning"
+      },
+      "subtitle": "Join Bangla Park Limited. Activate your account by purchasing products and start earning from Daily Benefits & Generation Commission.",
+      "cta": {
+        "shop": "Buy Now",
+        "register": "Register Now"
+      }
+    },
+    "howItWorks": {
+      "heading": "How It Works?",
+      "subheading": "Start Earning in Just 3 Steps",
+      "step1": {
+        "title": "Register",
+        "desc": "Create a free account and get your referral code.",
+        "label": "1"
+      },
+      "step2": {
+        "title": "Buy Products",
+        "desc": "Your account will be activated when you purchase ৳2,000 or more.",
+        "label": "2"
+      },
+      "step3": {
+        "title": "Start Earning",
+        "desc": "Earn daily from Daily Benefits & Generation Commission.",
+        "label": "3"
+      }
+    },
+    "categories": {
+      "heading": "Categories",
+      "viewAll": "View All →"
+    },
+    "featuredProducts": {
+      "heading": "Featured Products",
+      "viewAll": "View All Products →",
+      "empty": "No products found",
+      "noImage": "No image",
+      "activationBadge": "✓ Activation Eligible",
+      "stockLabel": "Stock:",
+      "stockOut": "Out of Stock"
+    },
+    "earningsBanner": {
+      "heading": "How Much Daily Benefit?",
+      "subtext": "Depends on your active team member count",
+      "cta": "Start Now",
+      "tier": {
+        "member": "Members",
+        "perDay": "Per Day",
+        "5plus": "5+",
+        "20plus": "20+",
+        "50plus": "50+",
+        "100plus": "100+",
+        "100amount": "৳100",
+        "200amount": "৳200",
+        "300amount": "৳300",
+        "500amount": "৳500"
+      }
+    }
+  },
+  "shop": {
+    "heading": "Products",
+    "subheading": "Choose from our quality products",
+    "search": {
+      "placeholder": "Search products..."
+    },
+    "filter": {
+      "categories": "Categories",
+      "all": "All Products"
+    },
+    "empty": "No products found.",
+    "product": {
+      "noImage": "No image",
+      "activationBadge": "✓ Activation Eligible",
+      "stockLabel": "Stock:",
+      "stockOut": "Out of Stock"
+    }
+  },
+  "product": {
+    "notFound": "Product not found",
+    "backToShop": "Back to Shop",
+    "backButton": "Go Back",
+    "noImage": "No image",
+    "qualifyingBadge": "★ This product is eligible for account activation",
+    "vatLabel": "(VAT included)",
+    "description": {
+      "heading": "Product Description",
+      "fallback": "Description for this product will be provided soon."
+    },
+    "quantityLabel": "Quantity:",
+    "stockInfo": "In Stock:",
+    "stockUnit": "unit(s)",
+    "addedToCartMsg": "✓ Product added to cart!",
+    "addToCart": "Add to Cart",
+    "buyNow": "Buy Now",
+    "outOfStock": "Temporarily out of stock. Please wait for restock."
+  },
+  "cart": {
+    "empty": {
+      "title": "Your Cart is Empty",
+      "subtext": "Choose a product from the shop and add it to cart",
+      "cta": "Go to Shop"
+    },
+    "heading": "Shopping Cart",
+    "product": {
+      "noImage": "No image",
+      "activationBadge": "✓ Account Activatable"
+    },
+    "clearCart": "Clear Cart",
+    "continueShopping": "← Continue Shopping",
+    "summary": {
+      "heading": "Order Summary",
+      "subtotal": "Subtotal",
+      "delivery": "Delivery Charge",
+      "deliveryFree": "Free",
+      "total": "Total"
+    },
+    "activationStatus": {
+      "heading": "Account Activation Status",
+      "met": "✓ Congratulations! Your order exceeds the activation threshold (৳2,000). Your account will be activated upon completing this order.",
+      "notMet": "Purchase {amount} more worth of products to activate your account within 3 days."
+    },
+    "checkout": {
+      "cta": "Checkout"
+    }
+  },
+  "checkout": {
+    "schema": {
+      "name": "Name is required",
+      "phone": "Provide a valid mobile number",
+      "city": "Enter district/city",
+      "address": "Enter full address"
+    },
+    "error": {
+      "default": "Failed to complete order. Please try again."
+    },
+    "heading": "Checkout",
+    "shipping": {
+      "heading": "Delivery Address",
+      "nameLabel": "Name",
+      "phoneLabel": "Mobile Number",
+      "cityLabel": "District / City",
+      "cityPlaceholder": "Dhaka",
+      "addressLabel": "Full Address",
+      "addressPlaceholder": "Road, Flat, Thana...",
+      "notesLabel": "Additional Notes (Optional)",
+      "notesPlaceholder": "You can write delivery instructions here..."
+    },
+    "review": {
+      "heading": "Order Review",
+      "subtotal": "Subtotal",
+      "delivery": "Delivery Charge",
+      "deliveryFree": "Free",
+      "total": "Total"
+    },
+    "payment": {
+      "heading": "Payment Method",
+      "method": "Cash on Delivery (Pay when you receive)"
+    },
+    "submit": {
+      "loading": "Completing order...",
+      "text": "Place Order"
+    }
+  },
+  "auth": {
+    "login": {
+      "schema": {
+        "email": "Enter a valid email address",
+        "password": "Password must be at least 6 characters"
+      },
+      "error": {
+        "default": "Having trouble logging in. Please try again."
+      },
+      "heading": "Login",
+      "subheading": "Access your account",
+      "emailLabel": "Email",
+      "passwordLabel": "Password",
+      "submit": {
+        "loading": "Logging in...",
+        "text": "Login"
+      },
+      "footer": {
+        "noAccount": "Don't have an account?",
+        "registerLink": "Register"
+      },
+      "suspense": {
+        "loading": "Loading..."
+      }
+    },
+    "register": {
+      "schema": {
+        "name": "Name must be at least 2 characters",
+        "email": "Enter a valid email address",
+        "phone": "Enter a valid mobile number",
+        "password": "Password must be at least 6 characters"
+      },
+      "error": {
+        "default": "Unable to complete registration. Please try again."
+      },
+      "heading": "Register",
+      "subheading": "Join Bangla Park Limited",
+      "referralDetected": "Referral link detected! You are using referral ID:",
+      "nameLabel": "Full Name",
+      "namePlaceholder": "Your Name",
+      "emailLabel": "Email",
+      "phoneLabel": "Mobile Number",
+      "phonePlaceholder": "01XXXXXXXXX",
+      "passwordLabel": "Password",
+      "referralCodeLabel": "Referral Code (Optional)",
+      "referralCodePlaceholder": "REF-XXXXXXXX",
+      "submit": {
+        "loading": "Processing...",
+        "text": "Create Account"
+      },
+      "footer": {
+        "hasAccount": "Already have an account?",
+        "loginLink": "Login"
+      },
+      "suspense": {
+        "loading": "Loading..."
+      }
+    }
+  },
+  "dashboard": {
+    "heading": "Dashboard Overview",
+    "subheading": "Your account information at a glance",
+    "alert": {
+      "inactive": {
+        "title": "Commission Paused — Activate Your Account",
+        "desc": "Activate your account within 3 days by purchasing products worth ৳2,000 or more.",
+        "cta": "Buy Products"
+      },
+      "expiring": {
+        "title": "Activation Period Expiring Soon",
+        "desc": "Your account expires in {days} days. Renew by placing any order.",
+        "cta": "Renew"
+      }
+    },
+    "card": {
+      "walletBalance": "Current Balance",
+      "pendingWithdrawal": "Pending Withdrawal",
+      "activeTeam": "Active Team Members",
+      "activeTeamUnit": "person(s)",
+      "activationEnd": "Activation Period",
+      "activationEndNone": "No Period",
+      "daysRemaining": "Remaining:",
+      "daysUnit": "Day(s)"
+    },
+    "quickLinks": {
+      "heading": "Quick Links",
+      "wallet": "Wallet Ledger",
+      "withdraw": "Withdraw Balance",
+      "referrals": "Referral Links",
+      "orders": "Order History"
+    }
+  },
+  "profile": {
+    "schema": {
+      "name": "Name is required",
+      "email": "Enter a valid email",
+      "phone": "Enter a valid mobile number"
+    },
+    "passwordSchema": {
+      "current": "Enter current password",
+      "new": "New password must be at least 6 characters",
+      "confirm": "Re-enter new password",
+      "mismatch": "New passwords do not match"
+    },
+    "msg": {
+      "updateSuccess": "Profile updated successfully.",
+      "updateError": "Could not update profile.",
+      "passwordSuccess": "Password changed successfully.",
+      "passwordError": "Could not change password."
+    },
+    "heading": "Profile Settings",
+    "subheading": "Update your personal information and password",
+    "personalInfo": {
+      "heading": "Personal Information",
+      "nameLabel": "Full Name",
+      "emailLabel": "Email",
+      "phoneLabel": "Mobile Number",
+      "submit": {
+        "loading": "Updating...",
+        "text": "Save Information"
+      }
+    },
+    "password": {
+      "heading": "Change Password",
+      "currentLabel": "Current Password",
+      "newLabel": "New Password",
+      "confirmLabel": "Confirm New Password",
+      "submit": {
+        "loading": "Changing...",
+        "text": "Change Password"
+      }
+    }
+  },
+  "wallet": {
+    "heading": "My Wallet",
+    "subheading": "Detailed ledger of your income and expenses",
+    "refresh": "Refresh",
+    "inactiveAlert": {
+      "title": "Commission Paused — Activate Your Account",
+      "desc": "You are currently inactive. Purchase any product to activate your account and receive team commission & benefits."
+    },
+    "balance": {
+      "total": "Total Balance",
+      "pending": "Pending Withdrawal",
+      "available": "Withdrawable Balance"
+    },
+    "ledger": {
+      "heading": "Transaction History (Ledger)",
+      "filterAll": "All Transaction Types",
+      "filterGeneration": "Generation Commission",
+      "filterDailyBenefit": "Daily Benefit",
+      "filterPurchase": "Product Purchase",
+      "filterWithdrawal": "Withdrawal",
+      "filterAdmin": "Admin Adjustment",
+      "loading": "Loading...",
+      "empty": "No transaction records found.",
+      "colDate": "Date & Time",
+      "colType": "Type",
+      "colDescription": "Description",
+      "colAmount": "Amount",
+      "colBalance": "Balance",
+      "prev": "Previous",
+      "next": "Next",
+      "page": "Page"
+    }
+  },
+  "orders": {
+    "heading": "My Orders",
+    "subheading": "Order history and current status of your purchased products",
+    "empty": "No orders found.",
+    "orderId": "Order ID",
+    "activationBadge": "★ Activation Eligible Order",
+    "productFallback": "Product",
+    "deliveryAddress": "Delivery Address:",
+    "addressNotSelected": "Not Selected",
+    "totalLabel": "Total Price",
+    "prev": "Previous",
+    "next": "Next",
+    "page": "Page"
+  },
+  "referrals": {
+    "heading": "My Referrals",
+    "subheading": "Members who joined our platform through you and team statistics",
+    "referralLink": {
+      "heading": "Your Referral Link & Code",
+      "linkLabel": "Referral Link",
+      "codeLabel": "Referral Code"
+    },
+    "stats": {
+      "total": "Total Team Members",
+      "active": "Active Members",
+      "inactive": "Inactive Members"
+    },
+    "table": {
+      "heading": "Direct Member List",
+      "searchPlaceholder": "Search by name or mobile...",
+      "loading": "Loading member list...",
+      "empty": "No members found for this referral code.",
+      "colName": "Name",
+      "colContact": "Mobile / Email",
+      "colDate": "Join Date",
+      "colStatus": "Status",
+      "statusActive": "Active",
+      "statusInactive": "Inactive"
+    },
+    "prev": "Previous",
+    "next": "Next",
+    "page": "Page"
+  },
+  "dailyBenefit": {
+    "heading": "Daily Benefit",
+    "subheading": "Daily income commission and rules based on active team members",
+    "currentTier": {
+      "label": "Current Daily Slab",
+      "perDay": "/ Per Day",
+      "none": "No slab earned yet",
+      "teamLabel": "Your Active Team Members:",
+      "teamUnit": "person(s)"
+    },
+    "nextTier": {
+      "label": "Next Slab Target",
+      "text": "Next Slab: Reach {count} members to start earning {amount} / day.",
+      "progress": "Target:",
+      "unit": "person(s)",
+      "maxReached": "✓ You have reached the maximum Daily Benefit slab!"
+    },
+    "chart": {
+      "heading": "Daily Benefit Income Chart",
+      "memberLabel": "Active Members",
+      "memberCount": "or more",
+      "perDay": "Per Day"
+    },
+    "history": {
+      "heading": "Daily Benefit Earnings History",
+      "loading": "Loading history...",
+      "empty": "No benefit transactions yet.",
+      "colDate": "Date",
+      "colTeam": "Active Team Members",
+      "colCommission": "Commission Amount",
+      "teamUnit": "person(s)"
+    },
+    "prev": "Previous",
+    "next": "Next",
+    "page": "Page"
+  },
+  "generationIncome": {
+    "heading": "Generation Income",
+    "subheading": "Referral commission from purchases made by your active downline members",
+    "rules": {
+      "heading": "Generation Commission Rules:",
+      "level1": "Earn ৳200 commission when your direct Level 1 referral member activates their account.",
+      "level2to15": "Generation bonus commission (৳10) will be automatically added to balance when any member from Level 2 to 15 activates their account."
+    },
+    "history": {
+      "heading": "Commission History",
+      "loading": "Loading...",
+      "empty": "No generation commission earned yet.",
+      "colDate": "Date & Time",
+      "colSource": "Member Name (Source)",
+      "colLevel": "Level (Generation)",
+      "colAmount": "Commission Amount",
+      "level": "Level",
+      "memberUnknown": "Unknown Member"
+    },
+    "prev": "Previous",
+    "next": "Next",
+    "page": "Page"
+  },
+  "withdraw": {
+    "schema": {
+      "amount": "Minimum withdrawal amount must be ৳1,000",
+      "account": "Provide account number or mobile number"
+    },
+    "error": {
+      "insufficient": "You don't have sufficient withdrawable balance in your wallet.",
+      "default": "Could not send withdrawal request. Please try again."
+    },
+    "success": "Withdrawal request submitted successfully. Please wait for admin panel approval.",
+    "heading": "Withdraw Balance",
+    "subheading": "Withdraw your earned income via mobile banking or bank account",
+    "form": {
+      "heading": "New Withdrawal Request",
+      "amountLabel": "Amount (BDT)",
+      "amountPlaceholder": "৳1,000 or more",
+      "methodLabel": "Withdrawal Method",
+      "methodBkash": "bKash",
+      "methodNagad": "Nagad",
+      "methodRocket": "Rocket",
+      "methodBank": "Bank Transfer",
+      "accountLabelBank": "Bank Account Number",
+      "accountLabelMobile": "Mobile Financial Number",
+      "accountPlaceholderBank": "xxxx-xxxx-xxxx",
+      "accountPlaceholderMobile": "01XXXXXXXXX",
+      "bankNameLabel": "Bank Name",
+      "bankNamePlaceholder": "Dutch Bangla Bank",
+      "branchLabel": "Branch Name",
+      "branchPlaceholder": "Motijheel Branch",
+      "holderLabel": "Account Holder Name",
+      "holderPlaceholder": "Ashik Rahman",
+      "submit": {
+        "loading": "Sending request...",
+        "text": "Submit Withdrawal Request"
+      }
+    },
+    "sidebar": {
+      "availableBalance": "Withdrawable Balance",
+      "minLimit": "Minimum Withdrawal Limit: ৳1,000",
+      "timing": {
+        "heading": "Payment Processing Time:",
+        "mobile": "1. Mobile balance requests are processed within 24-48 hours.",
+        "bank": "2. Bank transfers may take 2-3 business days."
+      }
+    },
+    "history": {
+      "heading": "Withdrawal Request Details & History",
+      "loading": "Loading...",
+      "empty": "No withdrawal history found.",
+      "colDate": "Date",
+      "colMethod": "Withdrawal Method",
+      "colAccount": "Account Info",
+      "colAmount": "Amount",
+      "colStatus": "Status",
+      "accountNo": "Number:",
+      "comment": "Comment:"
+    },
+    "prev": "Previous",
+    "next": "Next",
+    "page": "Page"
+  },
+  "notifications": {
+    "heading": "System Notifications",
+    "subheading": "Recent updates and activities on your account",
+    "markAllRead": "Mark All as Read",
+    "empty": "No notifications.",
+    "prev": "Previous",
+    "next": "Next",
+    "page": "Page"
+  },
+  "admin": {
+    "overview": {
+      "heading": "Admin Dashboard Overview",
+      "subheading": "Track overall platform reports and growth of Bangla Park Limited",
+      "totalUsers": "Total Users",
+      "activeUsers": "Active Members",
+      "totalRevenue": "Total Sales",
+      "totalCommission": "Commission Distributed",
+      "unit": "person(s)",
+      "pendingAlert": {
+        "heading": "Urgent Admin Action Alerts",
+        "pendingWithdrawals": "Pending Withdrawals",
+        "pendingWithdrawalsDesc": "Withdrawals awaiting approval",
+        "paymentUnit": "payment(s)",
+        "orders": "Orders Overview",
+        "totalOrders": "total orders",
+        "ordersDesc": "Overall product sales rate"
+      },
+      "guide": {
+        "heading": "Quick Approval Guide",
+        "text": "Direct referral commission distribution and daily benefit calculation for new members are processed automatically via backend cron jobs. As an admin, you only need to approve withdrawal requests and update order statuses."
+      },
+      "footer": "Bangla Park Limited Management Panel"
+    },
+    "users": {
+      "heading": "User List",
+      "subheading": "Manage customers and adjust their activation status",
+      "search": {
+        "placeholder": "Search by name, mobile, or email..."
+      },
+      "filter": {
+        "all": "All Status",
+        "active": "Active",
+        "inactive": "Inactive"
+      },
+      "empty": "No users found.",
+      "table": {
+        "colUser": "User Info",
+        "colReferral": "Referral Code",
+        "colActivation": "Activation Period",
+        "colStatus": "Status",
+        "colAction": "Action",
+        "bannedBadge": "Banned",
+        "noActivation": "No activation period",
+        "statusActive": "Active",
+        "statusInactive": "Inactive",
+        "unbanTitle": "Unban",
+        "banTitle": "Ban",
+        "deactivate": "Deactivate",
+        "activate": "Activate Directly"
+      },
+      "prev": "Previous",
+      "next": "Next",
+      "page": "Page"
+    },
+    "products": {
+      "heading": "Product Catalog",
+      "subheading": "Add new products or update existing ones in the store catalog",
+      "addButton": "Add Product",
+      "backButton": "Go Back",
+      "createSuccess": "Product added to catalog successfully.",
+      "createError": "Could not add product.",
+      "updateSuccess": "Product data updated successfully.",
+      "updateError": "Could not update.",
+      "deleteSuccess": "Product has been deleted.",
+      "deleteError": "Could not delete product.",
+      "form": {
+        "editTitle": "Edit Product",
+        "createTitle": "New Product Details",
+        "nameLabel": "Product Name",
+        "slugLabel": "Slug (URL ID - Optional - Auto Generated)",
+        "slugPlaceholder": "e.g.: smart-watch-v1",
+        "priceLabel": "Price BDT (৳)",
+        "stockLabel": "Stock Quantity",
+        "categoryLabel": "Category",
+        "categoryPlaceholder": "Select",
+        "descriptionLabel": "Product Description",
+        "imagesLabel": "Image URLs",
+        "addImage": "Add Another Image",
+        "removeImage": "Remove",
+        "submitUpdate": "Update Product",
+        "submitCreate": "Save Product"
+      },
+      "list": {
+        "empty": "No products found.",
+        "colProduct": "Product Image & Details",
+        "colCategory": "Category",
+        "colPrice": "Price BDT",
+        "colStock": "Stock",
+        "colAction": "Action",
+        "activationBadge": "✓ Activation Eligible",
+        "uncategorized": "Uncategorized",
+        "stockUnit": "unit(s)",
+        "confirmDelete": "Are you sure you want to delete this product?"
+      },
+      "prev": "Previous",
+      "next": "Next",
+      "page": "Page"
+    },
+    "categories": {
+      "heading": "Category List",
+      "subheading": "Panel for creating, editing, and deleting product categories",
+      "createSuccess": "Category created successfully.",
+      "createError": "Could not create category.",
+      "updateSuccess": "Category data updated.",
+      "updateError": "Could not update.",
+      "deleteSuccess": "Category deleted successfully.",
+      "deleteError": "Could not delete category (check if any products are linked to it).",
+      "form": {
+        "heading": "Add New Category",
+        "nameLabel": "Category Name",
+        "placeholder": "e.g.: Cosmetics, Gadgets, etc.",
+        "submit": "Add Category"
+      },
+      "list": {
+        "heading": "Existing Categories",
+        "loading": "Loading...",
+        "empty": "No categories found.",
+        "save": "Save",
+        "cancel": "Cancel",
+        "idLabel": "ID:",
+        "confirmDelete": "Delete this category?"
+      }
+    },
+    "orders": {
+      "heading": "Manage Orders",
+      "subheading": "Customer purchase order details and logistics status tracker",
+      "filter": {
+        "heading": "Filter List",
+        "all": "All Orders",
+        "pending": "Pending Orders",
+        "shipped": "Shipped",
+        "delivered": "Delivered",
+        "cancelled": "Cancelled"
+      },
+      "empty": "No order records found.",
+      "table": {
+        "colOrderId": "Order ID",
+        "colCustomer": "Customer",
+        "colPrice": "Price BDT",
+        "colAddress": "Delivery Address & Products",
+        "colStatus": "Status",
+        "colAction": "Action",
+        "productFallback": "Product",
+        "activationBadge": "★ Activation Order",
+        "btnShip": "Mark as Shipped",
+        "btnDeliver": "Mark as Delivered",
+        "btnCancel": "Cancel",
+        "completed": "Completed"
+      },
+      "prev": "Previous",
+      "next": "Next",
+      "page": "Page"
+    },
+    "withdrawals": {
+      "heading": "Withdrawal Requests",
+      "subheading": "Review and approve withdrawal requests submitted by members",
+      "filter": {
+        "heading": "Request Status",
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      },
+      "empty": "No withdrawal requests found.",
+      "table": {
+        "colDate": "Date & Time",
+        "colMember": "Member",
+        "colAmount": "Request Amount",
+        "colAccount": "Account Info (Payment Details)",
+        "colStatus": "Status",
+        "colAction": "Action",
+        "accountLabel": "Account Number:",
+        "bankLabel": "Bank:",
+        "reasonLabel": "Rejection Reason:",
+        "btnApprove": "Approve",
+        "btnReject": "Reject",
+        "completed": "Settled"
+      },
+      "modal": {
+        "heading": "Withdrawal Rejection Reason",
+        "desc": "Write a brief comment to inform the customer about the rejection reason:",
+        "placeholder": "e.g.: Incorrect method or account number provided.",
+        "confirm": "Confirm Rejection",
+        "cancel": "Cancel"
+      },
+      "confirm": {
+        "approve": "Are you sure you want to approve this withdrawal?"
+      },
+      "prev": "Previous",
+      "next": "Next",
+      "page": "Page"
+    },
+    "commissionRules": {
+      "heading": "System Configuration",
+      "subheading": "Modify business logic, activation limits, and generation slab values for Bangla Park Limited",
+      "updateSuccess": "System rules configuration updated successfully.",
+      "updateError": "Could not update configuration.",
+      "form": {
+        "heading": "Business Rules Settings",
+        "activationLimit": "Account Activation Limit (৳ BDT)",
+        "activationLimitHint": "Customer becomes eligible for account activation upon purchasing products worth the specified limit.",
+        "validityDays": "Activation Validity (Days)",
+        "validityDaysHint": "How many days the account will remain active after an order.",
+        "level1Commission": "Level 1 Direct Referral Commission (৳ BDT)",
+        "level1CommissionHint": "Bonus for activating a directly referred member.",
+        "level2to15Commission": "Level 2 to 15 Commission (৳ BDT)",
+        "level2to15CommissionHint": "Bonus commission generator for subsequent downline levels.",
+        "submit": "Confirm Settings Update"
+      }
+    },
+    "reports": {
+      "heading": "Audit & Reporting",
+      "subheading": "Generate CSV export files of online sales records and financial commission records",
+      "export": {
+        "heading": "Important Data Export",
+        "desc": "Click here to download platform audit files converted to CSV format compatible with Excel or Google Sheets.",
+        "orders": "Download Order Sales Report (Orders CSV)",
+        "ordersDesc": "All pending and delivered order history",
+        "users": "Download Member & Distributor List (Users CSV)",
+        "usersDesc": "All registered user information and codes",
+        "commissions": "Download Platform Referral Audit Sheet (Audit CSV)",
+        "commissionsDesc": "Summary of all members and their data logs",
+        "downloading": "Downloading...",
+        "button": "Export",
+        "alertEmpty": "No data found to download!",
+        "alertError": "An error occurred while generating the report."
+      },
+      "sidebar": {
+        "heading": "Import & Export Guidelines",
+        "rule1": "1. If you have trouble reading Bengali text in the downloaded CSV file, import it in Excel with UTF-8 Encoding mode.",
+        "rule2": "2. It is recommended to back up data before making any major changes."
+      },
+      "footer": "Bangla Park Limited Reports Export Panel"
+    }
+  },
+  "utils": {
+    "currency": "৳",
+    "orderStatus": {
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "processing": "Processing",
+      "shipped": "Shipped",
+      "delivered": "Delivered",
+      "cancelled": "Cancelled"
+    },
+    "withdrawStatus": {
+      "pending": "Pending",
+      "approved": "Approved",
+      "rejected": "Rejected"
+    },
+    "txType": {
+      "generationCommission": "Generation Commission",
+      "dailyBenefit": "Daily Benefit",
+      "purchase": "Purchase",
+      "withdrawal": "Withdrawal",
+      "refund": "Refund",
+      "adminAdjustment": "Admin Adjustment"
+    },
+    "withdrawMethod": {
+      "bkash": "bKash",
+      "nagad": "Nagad",
+      "rocket": "Rocket",
+      "bank": "Bank Transfer"
+    }
+  }
+}
