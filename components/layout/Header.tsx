@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ShoppingCart, Bell, User, Menu, X, LogOut, LayoutDashboard, Shield } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuthStore } from "@/store/auth";
 import { useCartStore } from "@/store/cart";
 import { authApi } from "@/lib/api/auth";
@@ -15,7 +15,10 @@ export function Header() {
     const cartCount = useCartStore((s) => s.count());
     const { t } = useLocale();
     const [menuOpen, setMenuOpen] = useState(false);
+    const [mounted, setMounted] = useState(false);
     const router = useRouter();
+
+    useEffect(() => { setMounted(true); }, []);
 
     const handleLogout = async () => {
         await authApi.logout();
@@ -47,14 +50,14 @@ export function Header() {
                         {/* Cart */}
                         <Link href="/cart" className="relative p-2 text-gray-600 hover:text-green-800 transition-colors">
                             <ShoppingCart size={20} />
-                            {cartCount > 0 && (
+                            {mounted && cartCount > 0 && (
                                 <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-green-800 text-[10px] font-bold text-white">
                                     {cartCount > 9 ? "9+" : cartCount}
                                 </span>
                             )}
                         </Link>
 
-                        {isAuthenticated && user ? (
+                        {mounted && isAuthenticated && user ? (
                             <div className="relative group">
                                 <button className="flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
                                     <User size={16} />
