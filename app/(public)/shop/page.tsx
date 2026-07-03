@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Search, Loader2, ChevronDown } from "lucide-react";
@@ -9,7 +9,7 @@ import { productsApi } from "@/lib/api/products";
 import { categoriesApi } from "@/lib/api/categories";
 import { useLocale } from "@/lib/i18n";
 
-export default function ShopPage() {
+function ShopPageContent() {
     const { t } = useLocale();
     const searchParams = useSearchParams();
     const [search, setSearch] = useState(searchParams.get("search") || "");
@@ -157,5 +157,17 @@ export default function ShopPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default function ShopPage() {
+    return (
+        <Suspense fallback={
+            <div className="flex items-center justify-center py-20">
+                <Loader2 className="animate-spin text-green-800" size={32} />
+            </div>
+        }>
+            <ShopPageContent />
+        </Suspense>
     );
 }
