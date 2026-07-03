@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useLocale } from "@/lib/i18n";
 
 export function Footer() {
@@ -10,8 +11,11 @@ export function Footer() {
             <div className="page-container py-10">
                 <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
                     <div>
-                        <h3 className="text-base font-bold text-green-800 mb-3">{t("nav.banglaParkFull")}</h3>
-                        <p className="text-sm text-gray-500 leading-relaxed">
+                        <Link href="/" className="inline-block mb-3">
+                            <Image src="/logo.png" alt="Bangla Park Limited" width={360} height={96} className="h-16 sm:h-24 md:h-40 w-auto" />
+                        </Link>
+                        <p className="text-base sm:text-xl font-bold text-green-800">Bangla Park Limited</p>
+                        <p className="text-sm text-gray-500 leading-relaxed mt-1">
                             {t("nav.footerTagline")}
                         </p>
                     </div>

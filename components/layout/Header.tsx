@@ -1,12 +1,15 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { ShoppingCart, Bell, User, Menu, X, LogOut, LayoutDashboard, Shield } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useAuthStore } from "@/store/auth";
 import { useCartStore } from "@/store/cart";
 import { authApi } from "@/lib/api/auth";
+import { categoriesApi } from "@/lib/api/categories";
 import { useLocale } from "@/lib/i18n";
 import { LocaleSwitcher } from "@/components/shared/LocaleSwitcher";
 
@@ -17,6 +20,12 @@ export function Header() {
     const [menuOpen, setMenuOpen] = useState(false);
     const [mounted, setMounted] = useState(false);
     const router = useRouter();
+
+    const { data: categoriesData } = useQuery({
+        queryKey: ["categories"],
+        queryFn: () => categoriesApi.list(),
+    });
+    const categories = categoriesData?.categories ?? [];
 
     useEffect(() => { setMounted(true); }, []);
 
@@ -31,15 +40,29 @@ export function Header() {
             <div className="page-container">
                 <div className="flex h-16 items-center justify-between">
                     {/* Logo */}
-                    <Link href="/" className="flex items-center gap-2">
-                        <span className="text-xl font-bold text-green-800">{t("nav.banglaPark")}</span>
-                        <span className="hidden sm:block text-xs text-gray-400 font-medium tracking-wider uppercase">{t("nav.limited")}</span>
+                    <Link href="/" className="flex items-center">
+                        <Image src="/logo.png" alt="Bangla Park Limited" width={280} height={72} className="h-20 w-auto" priority />
                     </Link>
 
                     {/* Desktop Nav */}
                     <nav className="header-desktop-nav hidden md:flex items-center gap-6">
                         <Link href="/shop" className="text-sm font-medium text-gray-600 hover:text-green-800 transition-colors">{t("nav.shop")}</Link>
-                        <Link href="/shop?categories=all" className="text-sm font-medium text-gray-600 hover:text-green-800 transition-colors">{t("nav.category")}</Link>
+                        <div className="relative group">
+                            <button className="text-sm font-medium text-gray-600 hover:text-green-800 transition-colors flex items-center gap-1">
+                                {t("nav.category")}
+                            </button>
+                            <div className="absolute top-full left-0 mt-2 w-48 rounded-lg border border-gray-100 bg-white shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50">
+                                <div className="p-2">
+                                    {categories.length > 0 ? categories.map((cat) => (
+                                        <Link key={cat.id} href={`/shop?categoryId=${cat.id}`} className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-md">
+                                            {cat.name}
+                                        </Link>
+                                    )) : (
+                                        <span className="block px-3 py-2 text-xs text-gray-400">No categories</span>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
                     </nav>
 
                     {/* Actions */}
@@ -101,6 +124,18 @@ export function Header() {
                 {menuOpen && (
                     <div className="md:hidden border-t border-gray-100 py-3 space-y-1">
                         <Link href="/shop" onClick={() => setMenuOpen(false)} className="block px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50">{t("nav.shop")}</Link>
+                        {categories.length > 0 && (
+                            <div className="px-3 py-2">
+                                <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">{t("nav.category")}</p>
+                                <div className="flex flex-wrap gap-2">
+                                    {categories.map((cat) => (
+                                        <Link key={cat.id} href={`/shop?categoryId=${cat.id}`} onClick={() => setMenuOpen(false)} className="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-medium text-gray-700 hover:border-green-600 hover:text-green-800">
+                                            {cat.name}
+                                        </Link>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
                         {isAuthenticated ? (
                             <Link href="/dashboard" onClick={() => setMenuOpen(false)} className="block px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50">{t("nav.mobileDashboard")}</Link>
                         ) : (

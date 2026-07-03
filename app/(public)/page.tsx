@@ -16,12 +16,18 @@ export default function HomePage() {
         queryFn: () => productsApi.list({ limit: 8 }),
     });
 
+    const { data: bestSellerData } = useQuery({
+        queryKey: ["products", "best-seller"],
+        queryFn: () => productsApi.list({ sort: "price_desc", limit: 8 }),
+    });
+
     const { data: categoriesData } = useQuery({
         queryKey: ["categories"],
         queryFn: () => categoriesApi.list(),
     });
 
     const products = productsData?.products ?? [];
+    const bestSellers = bestSellerData?.products ?? [];
     const categories = categoriesData?.categories ?? [];
 
     return (
@@ -112,6 +118,41 @@ export default function HomePage() {
                     )}
                 </div>
             </section>
+
+            {/* Best Sellers */}
+            {bestSellers.length > 0 && (
+                <section className="py-14 bg-gray-50">
+                    <div className="page-container">
+                        <div className="flex items-center justify-between mb-8">
+                            <h2 className="section-title text-xl lg:text-2xl">{t("home.bestSellers.heading")}</h2>
+                            <Link href="/shop?sort=price_desc" className="text-sm font-medium text-green-800 hover:underline">{t("home.bestSellers.viewAll")}</Link>
+                        </div>
+                        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+                            {bestSellers.map((product) => (
+                                <Link key={product.id} href={`/product/${product.slug}`} className="group card-flat overflow-hidden hover:shadow-md transition-all">
+                                    <div className="aspect-square bg-gray-50 overflow-hidden relative">
+                                        {product.images?.[0] ? (
+                                            <img src={product.images[0]} alt={product.name} className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                                        ) : (
+                                            <div className="flex h-full items-center justify-center text-gray-300 text-sm">{t("home.featuredProducts.noImage")}</div>
+                                        )}
+                                    </div>
+                                    <div className="p-3">
+                                        {Number(product.price) >= 2000 && (
+                                            <span className="mb-1 inline-block rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold text-amber-800">{t("home.featuredProducts.activationBadge")}</span>
+                                        )}
+                                        <h3 className="text-sm font-semibold text-gray-800 line-clamp-2">{product.name}</h3>
+                                        <p className="mt-1 text-base font-bold text-green-800">৳{Number(product.price).toLocaleString()}</p>
+                                        <p className={`text-xs mt-0.5 ${product.stock > 0 ? 'text-gray-400' : 'text-red-500'}`}>
+                                            {product.stock > 0 ? `${t("home.featuredProducts.stockLabel")} ${product.stock}` : t("home.featuredProducts.stockOut")}
+                                        </p>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            )}
 
             {/* How it works */}
             <section className="py-16 bg-white">

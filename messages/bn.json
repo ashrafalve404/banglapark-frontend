@@ -91,6 +91,10 @@
       "stockLabel": "স্টক:",
       "stockOut": "স্টক শেষ"
     },
+    "bestSellers": {
+      "heading": "বেস্ট সেলার",
+      "viewAll": "সব দেখুন →"
+    },
     "earningsBanner": {
       "heading": "দৈনিক বেনিফিট কত পাবেন?",
       "subtext": "আপনার সক্রিয় টিম সদস্যের সংখ্যার উপর নির্ভর করে",
@@ -118,6 +122,11 @@
     "filter": {
       "categories": "ক্যাটাগরি",
       "all": "সব পণ্য"
+    },
+    "sort": {
+      "newest": "নতুন আগে",
+      "priceLowHigh": "কম দাম থেকে বেশি",
+      "priceHighLow": "বেশি দাম থেকে কম"
     },
     "empty": "কোনো পণ্য খুঁজে পাওয়া যায়নি।",
     "product": {

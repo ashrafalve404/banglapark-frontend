@@ -13,7 +13,7 @@ type NestedValue = string | Record<string, unknown>;
 type LocaleContextType = {
     locale: Locale;
     setLocale: (locale: Locale) => void;
-    t: (key: string, params?: Record<string, string | number>) => string;
+    t: (key: string, params?: Record<string, string | number>, fallback?: string) => string;
 };
 
 const LocaleContext = createContext<LocaleContextType | null>(null);
@@ -44,9 +44,9 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
     }, []);
 
     const t = useCallback(
-        (key: string, params?: Record<string, string | number>): string => {
+        (key: string, params?: Record<string, string | number>, fallback?: string): string => {
             const msg = resolve(messages[locale] as Record<string, NestedValue>, key);
-            if (!msg) return key;
+            if (!msg) return fallback || key;
             if (!params) return msg;
             return msg.replace(/\{(\w+)\}/g, (_, k) => String(params[k] ?? `{${k}}`));
         },

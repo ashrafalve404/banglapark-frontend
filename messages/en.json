@@ -91,6 +91,10 @@
       "stockLabel": "Stock:",
       "stockOut": "Out of Stock"
     },
+    "bestSellers": {
+      "heading": "Best Sellers",
+      "viewAll": "View All →"
+    },
     "earningsBanner": {
       "heading": "How Much Daily Benefit?",
       "subtext": "Depends on your active team member count",
@@ -118,6 +122,11 @@
     "filter": {
       "categories": "Categories",
       "all": "All Products"
+    },
+    "sort": {
+      "newest": "Newest",
+      "priceLowHigh": "Price: Low to High",
+      "priceHighLow": "Price: High to Low"
     },
     "empty": "No products found.",
     "product": {

@@ -3,7 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import Link from "next/link";
-import { Search, Loader2 } from "lucide-react";
+import { Search, Loader2, ChevronDown } from "lucide-react";
 import { productsApi } from "@/lib/api/products";
 import { categoriesApi } from "@/lib/api/categories";
 import { useLocale } from "@/lib/i18n";
@@ -12,19 +12,19 @@ export default function ShopPage() {
     const { t } = useLocale();
     const [search, setSearch] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("all");
+    const [sort, setSort] = useState<"newest" | "price_asc" | "price_desc">("newest");
 
-    // Load products list with React Query
     const { data: productsData, isLoading: prodLoading } = useQuery({
-        queryKey: ["products", selectedCategory, search],
+        queryKey: ["products", selectedCategory, search, sort],
         queryFn: () =>
             productsApi.list({
                 categoryId: selectedCategory === "all" ? undefined : selectedCategory,
                 search: search || undefined,
+                sort: sort === "newest" ? undefined : sort,
                 limit: 50,
             }),
     });
 
-    // Load categories
     const { data: categoriesData } = useQuery({
         queryKey: ["categories"],
         queryFn: () => categoriesApi.list(),
@@ -41,21 +41,34 @@ export default function ShopPage() {
                     <p className="mt-1 text-sm text-gray-500">{t("shop.subheading")}</p>
                 </div>
 
-                {/* Search */}
-                <div className="relative w-full md:w-80">
-                    <input
-                        type="text"
-                        className="input pl-10"
-                        placeholder={t("shop.search.placeholder")}
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                    />
-                    <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <div className="flex items-center gap-3">
+                    <div className="relative">
+                        <select
+                            value={sort}
+                            onChange={(e) => setSort(e.target.value as "newest" | "price_asc" | "price_desc")}
+                            className="input pr-8 appearance-none text-sm"
+                        >
+                            <option value="newest">{t("shop.sort.newest", undefined, "Newest")}</option>
+                            <option value="price_asc">{t("shop.sort.priceLowHigh", undefined, "Price: Low to High")}</option>
+                            <option value="price_desc">{t("shop.sort.priceHighLow", undefined, "Price: High to Low")}</option>
+                        </select>
+                        <ChevronDown size={16} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                    </div>
+
+                    <div className="relative w-full md:w-80">
+                        <input
+                            type="text"
+                            className="input pl-10"
+                            placeholder={t("shop.search.placeholder")}
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                        />
+                        <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                    </div>
                 </div>
             </div>
 
             <div className="flex flex-col lg:flex-row gap-8">
-                {/* Category Filter Sidebar/Widget */}
                 <div className="w-full lg:w-64 space-y-6">
                     <div className="card-flat p-5">
                         <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">
@@ -87,7 +100,6 @@ export default function ShopPage() {
                     </div>
                 </div>
 
-                {/* Product Grid Area */}
                 <div className="flex-1">
                     {prodLoading ? (
                         <div className="flex items-center justify-center py-20">
