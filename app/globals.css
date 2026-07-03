@@ -131,4 +131,11 @@
       display: none;
     }
   }
+
+  /* ── Banner carousel ────────────────────────────────────────────────────── */
+  .banner-slide {
+    position: absolute;
+    inset: 0;
+    will-change: transform;
+  }
 }

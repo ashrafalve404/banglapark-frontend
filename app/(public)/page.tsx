@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { ArrowRight, ShieldCheck, TrendingUp, Users, Gift } from "lucide-react";
+import { BannerCarousel } from "@/components/home/BannerCarousel";
 import { productsApi } from "@/lib/api/products";
 import { categoriesApi } from "@/lib/api/categories";
 import { useQuery } from "@tanstack/react-query";
@@ -25,6 +26,8 @@ export default function HomePage() {
 
     return (
         <div>
+            <BannerCarousel />
+
             {/* Hero */}
             <section className="relative overflow-hidden bg-gradient-to-br from-green-900 via-green-800 to-green-700 text-white">
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width=%2760%27%20height=%2760%27%20viewBox=%270%200%2060%2060%27%20xmlns=%27http://www.w3.org/2000/svg%27%3E%3Cg%20fill=%27none%27%20fill-rule=%27evenodd%27%3E%3Cg%20fill=%27%23ffffff%27%2520fill-opacity=%270.03%27%3E%3Cpath%20d=%27M36%2034v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6%2034v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6%204V0H4v4H0v2h4v4h2V6h4V4H6z%27/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-50" />
@@ -49,32 +52,6 @@ export default function HomePage() {
                                 {t("home.hero.cta.register")}
                             </Link>
                         </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* How it works */}
-            <section className="py-16 bg-white">
-                <div className="page-container">
-                    <div className="text-center mb-10">
-                        <h2 className="section-title text-2xl lg:text-3xl">{t("home.howItWorks.heading")}</h2>
-                        <p className="mt-2 text-gray-500">{t("home.howItWorks.subheading")}</p>
-                    </div>
-                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
-                        {[
-                            { icon: ShieldCheck, step: t("home.howItWorks.step1.label"), title: t("home.howItWorks.step1.title"), desc: t("home.howItWorks.step1.desc"), color: "green" },
-                            { icon: Gift, step: t("home.howItWorks.step2.label"), title: t("home.howItWorks.step2.title"), desc: t("home.howItWorks.step2.desc"), color: "amber" },
-                            { icon: TrendingUp, step: t("home.howItWorks.step3.label"), title: t("home.howItWorks.step3.title"), desc: t("home.howItWorks.step3.desc"), color: "blue" },
-                        ].map((item) => (
-                            <div key={item.step} className="card-flat p-6 text-center hover:shadow-md transition-shadow">
-                                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-green-50">
-                                    <item.icon size={24} className="text-green-700" />
-                                </div>
-                                <div className="mb-2 text-3xl font-bold text-green-800">{item.step}</div>
-                                <h3 className="mb-2 text-base font-semibold text-gray-800">{item.title}</h3>
-                                <p className="text-sm text-gray-500 leading-relaxed">{item.desc}</p>
-                            </div>
-                        ))}
                     </div>
                 </div>
             </section>
@@ -133,6 +110,32 @@ export default function HomePage() {
                             ))}
                         </div>
                     )}
+                </div>
+            </section>
+
+            {/* How it works */}
+            <section className="py-16 bg-white">
+                <div className="page-container">
+                    <div className="text-center mb-10">
+                        <h2 className="section-title text-2xl lg:text-3xl">{t("home.howItWorks.heading")}</h2>
+                        <p className="mt-2 text-gray-500">{t("home.howItWorks.subheading")}</p>
+                    </div>
+                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+                        {[
+                            { icon: ShieldCheck, step: t("home.howItWorks.step1.label"), title: t("home.howItWorks.step1.title"), desc: t("home.howItWorks.step1.desc"), color: "green" },
+                            { icon: Gift, step: t("home.howItWorks.step2.label"), title: t("home.howItWorks.step2.title"), desc: t("home.howItWorks.step2.desc"), color: "amber" },
+                            { icon: TrendingUp, step: t("home.howItWorks.step3.label"), title: t("home.howItWorks.step3.title"), desc: t("home.howItWorks.step3.desc"), color: "blue" },
+                        ].map((item) => (
+                            <div key={item.step} className="card-flat p-6 text-center hover:shadow-md transition-shadow">
+                                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-green-50">
+                                    <item.icon size={24} className="text-green-700" />
+                                </div>
+                                <div className="mb-2 text-3xl font-bold text-green-800">{item.step}</div>
+                                <h3 className="mb-2 text-base font-semibold text-gray-800">{item.title}</h3>
+                                <p className="text-sm text-gray-500 leading-relaxed">{item.desc}</p>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </section>
 
