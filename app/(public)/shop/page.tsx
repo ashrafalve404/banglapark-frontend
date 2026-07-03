@@ -1,8 +1,9 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { Search, Loader2, ChevronDown } from "lucide-react";
 import { productsApi } from "@/lib/api/products";
 import { categoriesApi } from "@/lib/api/categories";
@@ -10,7 +11,8 @@ import { useLocale } from "@/lib/i18n";
 
 export default function ShopPage() {
     const { t } = useLocale();
-    const [search, setSearch] = useState("");
+    const searchParams = useSearchParams();
+    const [search, setSearch] = useState(searchParams.get("search") || "");
     const [selectedCategory, setSelectedCategory] = useState("all");
     const [sort, setSort] = useState<"newest" | "price_asc" | "price_desc">("newest");
 

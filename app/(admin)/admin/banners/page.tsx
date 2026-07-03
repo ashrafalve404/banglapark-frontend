@@ -1,0 +1,185 @@
+"use client";
+
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { Plus, Trash2, Loader2, Image as ImageIcon } from "lucide-react";
+import { adminApi } from "@/lib/api/admin";
+import { useLocale } from "@/lib/i18n";
+
+interface Banner {
+    id: string;
+    imageUrl: string;
+    linkUrl?: string;
+    isActive: boolean;
+    sortOrder: number;
+}
+
+export default function AdminBannersPage() {
+    const { t } = useLocale();
+    const queryClient = useQueryClient();
+    const [editing, setEditing] = useState<Banner | null>(null);
+    const [imageUrl, setImageUrl] = useState("");
+    const [linkUrl, setLinkUrl] = useState("");
+    const [isActive, setIsActive] = useState(true);
+    const [sortOrder, setSortOrder] = useState(0);
+
+    const { data: banners = [], isLoading } = useQuery({
+        queryKey: ["admin-banners"],
+        queryFn: () => adminApi.banners(),
+    });
+
+    const createMutation = useMutation({
+        mutationFn: (data: { imageUrl: string; linkUrl?: string; isActive?: boolean; sortOrder?: number }) =>
+            adminApi.createBanner(data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["admin-banners"] });
+            resetForm();
+        },
+    });
+
+    const updateMutation = useMutation({
+        mutationFn: ({ id, data }: { id: string; data: { imageUrl?: string; linkUrl?: string; isActive?: boolean; sortOrder?: number } }) =>
+            adminApi.updateBanner(id, data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["admin-banners"] });
+            resetForm();
+        },
+    });
+
+    const deleteMutation = useMutation({
+        mutationFn: (id: string) => adminApi.deleteBanner(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["admin-banners"] });
+        },
+    });
+
+    const resetForm = () => {
+        setEditing(null);
+        setImageUrl("");
+        setLinkUrl("");
+        setIsActive(true);
+        setSortOrder(0);
+    };
+
+    const handleEdit = (banner: Banner) => {
+        setEditing(banner);
+        setImageUrl(banner.imageUrl);
+        setLinkUrl(banner.linkUrl || "");
+        setIsActive(banner.isActive);
+        setSortOrder(banner.sortOrder);
+    };
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!imageUrl.trim()) return;
+        const data = { imageUrl, linkUrl: linkUrl || undefined, isActive, sortOrder };
+        if (editing) {
+            updateMutation.mutate({ id: editing.id, data });
+        } else {
+            createMutation.mutate(data);
+        }
+    };
+
+    return (
+        <div className="space-y-6">
+            <div>
+                <h1 className="text-2xl font-bold text-slate-800">{t("nav.banners")}</h1>
+                <p className="text-sm text-slate-500">Manage homepage sliding banners</p>
+            </div>
+
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="card p-6 bg-white space-y-4">
+                <h2 className="text-sm font-bold text-slate-800 border-b border-slate-100 pb-2">
+                    {editing ? "Edit Banner" : "Add New Banner"}
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label className="block text-xs font-semibold text-slate-600 mb-1">Image URL *</label>
+                        <input
+                            type="url"
+                            value={imageUrl}
+                            onChange={(e) => setImageUrl(e.target.value)}
+                            placeholder="https://example.com/banner.jpg"
+                            className="input w-full"
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-xs font-semibold text-slate-600 mb-1">Link URL (optional)</label>
+                        <input
+                            type="url"
+                            value={linkUrl}
+                            onChange={(e) => setLinkUrl(e.target.value)}
+                            placeholder="https://example.com/shop"
+                            className="input w-full"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-xs font-semibold text-slate-600 mb-1">Sort Order</label>
+                        <input
+                            type="number"
+                            value={sortOrder}
+                            onChange={(e) => setSortOrder(parseInt(e.target.value) || 0)}
+                            className="input w-full"
+                            min={0}
+                        />
+                    </div>
+                    <div className="flex items-center gap-2 pt-6">
+                        <label className="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" checked={isActive} onChange={(e) => setIsActive(e.target.checked)} className="sr-only peer" />
+                            <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600"></div>
+                        </label>
+                        <span className="text-sm text-slate-600">{isActive ? "Active" : "Inactive"}</span>
+                    </div>
+                </div>
+                <div className="flex gap-2">
+                    <button type="submit" className="btn-primary py-2 px-4 text-sm" disabled={createMutation.isPending || updateMutation.isPending}>
+                        {(createMutation.isPending || updateMutation.isPending) ? <Loader2 className="animate-spin" size={16} /> : (editing ? "Update" : "Create")}
+                    </button>
+                    {editing && (
+                        <button type="button" onClick={resetForm} className="btn-secondary py-2 px-4 text-sm">Cancel</button>
+                    )}
+                </div>
+            </form>
+
+            {/* List */}
+            <div className="card bg-white">
+                {isLoading ? (
+                    <div className="flex items-center justify-center py-12">
+                        <Loader2 className="animate-spin text-slate-400" size={32} />
+                    </div>
+                ) : banners.length === 0 ? (
+                    <div className="text-center py-12 text-gray-400 text-sm">No banners yet</div>
+                ) : (
+                    <div className="divide-y divide-slate-100">
+                        {banners.map((banner) => (
+                            <div key={banner.id} className="flex items-center gap-4 p-4">
+                                <div className="w-32 h-20 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+                                    <img src={banner.imageUrl} alt="" className="w-full h-full object-cover" />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                    <p className="text-sm font-medium text-slate-800 truncate">{banner.imageUrl}</p>
+                                    {banner.linkUrl && <p className="text-xs text-gray-400 truncate">{banner.linkUrl}</p>}
+                                    <div className="flex items-center gap-2 mt-1">
+                                        <span className={`text-[10px] px-2 py-0.5 rounded-full font-semibold ${banner.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-500'}`}>
+                                            {banner.isActive ? 'Active' : 'Inactive'}
+                                        </span>
+                                        <span className="text-[10px] text-gray-400">Sort: {banner.sortOrder}</span>
+                                    </div>
+                                </div>
+                                <div className="flex gap-1">
+                                    <button onClick={() => handleEdit(banner)} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg">
+                                        <ImageIcon size={16} />
+                                    </button>
+                                    <button onClick={() => deleteMutation.mutate(banner.id)} className="p-2 text-red-600 hover:bg-red-50 rounded-lg">
+                                        <Trash2 size={16} />
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+}

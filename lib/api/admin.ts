@@ -41,6 +41,26 @@ export const adminApi = {
         const res = await api.post("/admin/config", { key, value });
         return res.data;
     },
+
+    banners: async () => {
+        const res = await api.get("/banners");
+        return res.data;
+    },
+
+    createBanner: async (data: { imageUrl: string; linkUrl?: string; isActive?: boolean; sortOrder?: number }) => {
+        const res = await api.post("/banners", data);
+        return res.data;
+    },
+
+    updateBanner: async (id: string, data: { imageUrl?: string; linkUrl?: string; isActive?: boolean; sortOrder?: number }) => {
+        const res = await api.patch(`/banners/${id}`, data);
+        return res.data;
+    },
+
+    deleteBanner: async (id: string) => {
+        const res = await api.delete(`/banners/${id}`);
+        return res.data;
+    },
 };
 
 export const reportsApi = {

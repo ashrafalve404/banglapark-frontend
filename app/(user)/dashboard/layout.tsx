@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Menu } from "lucide-react";
 import { DashboardSidebar } from "@/components/layout/DashboardSidebar";
+import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
 import { useAuthStore } from "@/store/auth";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -51,7 +52,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     </div>
                 </header>
 
-                <main className="flex-1 overflow-y-auto p-4 lg:p-6">{children}</main>
+                <main className="flex-1 overflow-y-auto p-4 lg:p-6 pb-[72px] md:pb-6">{children}</main>
+                <MobileBottomNav />
             </div>
         </div>
     );

@@ -3,6 +3,7 @@
     "loading": "লোডিং..."
   },
   "nav": {
+    "home": "হোম",
     "banglaPark": "বাংলা পার্ক",
     "banglaParkFull": "বাংলা পার্ক লিমিটেড",
     "limited": "Limited",
@@ -44,7 +45,8 @@
     "adminOrders": "অর্ডার",
     "adminWithdrawals": "উত্তোলন",
     "adminCommissionRules": "কমিশন রুলস",
-    "adminReports": "রিপোর্ট"
+    "adminReports": "রিপোর্ট",
+    "navBanners": "ব্যানার"
   },
   "home": {
     "badge": "বাংলাদেশের বিশ্বস্ত MLM প্ল্যাটফর্ম",
@@ -80,7 +82,8 @@
     },
     "categories": {
       "heading": "ক্যাটাগরি",
-      "viewAll": "সব দেখুন →"
+      "viewAll": "সব দেখুন →",
+      "empty": "কোনো ক্যাটাগরি পাওয়া যায়নি"
     },
     "featuredProducts": {
       "heading": "জনপ্রিয় পণ্য",
@@ -93,7 +96,8 @@
     },
     "bestSellers": {
       "heading": "বেস্ট সেলার",
-      "viewAll": "সব দেখুন →"
+      "viewAll": "সব দেখুন →",
+      "empty": "কোনো পণ্য পাওয়া যায়নি"
     },
     "earningsBanner": {
       "heading": "দৈনিক বেনিফিট কত পাবেন?",

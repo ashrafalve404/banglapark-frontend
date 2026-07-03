@@ -39,13 +39,9 @@ export default function HomePage() {
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width=%2760%27%20height=%2760%27%20viewBox=%270%200%2060%2060%27%20xmlns=%27http://www.w3.org/2000/svg%27%3E%3Cg%20fill=%27none%27%20fill-rule=%27evenodd%27%3E%3Cg%20fill=%27%23ffffff%27%2520fill-opacity=%270.03%27%3E%3Cpath%20d=%27M36%2034v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6%2034v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6%204V0H4v4H0v2h4v4h2V6h4V4H6z%27/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-50" />
                 <div className="page-container relative py-20 lg:py-28">
                     <div className="max-w-2xl">
-                        <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-sm font-medium backdrop-blur-sm">
-                            <span className="h-2 w-2 rounded-full bg-green-400 animate-pulse" />
-                            {t("home.badge")}
-                        </div>
                         <h1 className="mb-6 text-4xl font-bold leading-tight lg:text-5xl xl:text-6xl">
                             {t("home.hero.title.line1")}<br />
-                            <span className="text-amber-400">{t("home.hero.title.line2")}</span>
+                            <span className="text-white">{t("home.hero.title.line2")}</span>
                         </h1>
                         <p className="mb-8 text-lg text-green-100 leading-relaxed">
                             {t("home.hero.subtitle")}
@@ -63,13 +59,15 @@ export default function HomePage() {
             </section>
 
             {/* Categories */}
-            {categories.length > 0 && (
-                <section className="py-12 bg-gray-50">
-                    <div className="page-container">
-                        <div className="flex items-center justify-between mb-6">
-                            <h2 className="section-title text-xl">{t("home.categories.heading")}</h2>
-                            <Link href="/shop" className="text-sm font-medium text-green-800 hover:underline">{t("home.categories.viewAll")}</Link>
-                        </div>
+            <section className="py-12 bg-gray-50">
+                <div className="page-container">
+                    <div className="flex items-center justify-between mb-6">
+                        <h2 className="section-title text-xl">{t("home.categories.heading")}</h2>
+                        <Link href="/shop" className="text-sm font-medium text-green-800 hover:underline">{t("home.categories.viewAll")}</Link>
+                    </div>
+                    {categories.length === 0 ? (
+                        <div className="text-center py-10 text-gray-400 text-sm">{t("home.categories.empty", "No categories found")}</div>
+                    ) : (
                         <div className="flex flex-wrap gap-3">
                             {categories.map((cat) => (
                                 <Link key={cat.id} href={`/shop?categoryId=${cat.id}`}
@@ -78,9 +76,9 @@ export default function HomePage() {
                                 </Link>
                             ))}
                         </div>
-                    </div>
-                </section>
-            )}
+                    )}
+                </div>
+            </section>
 
             {/* Featured Products */}
             <section className="py-14 bg-white">
@@ -120,13 +118,15 @@ export default function HomePage() {
             </section>
 
             {/* Best Sellers */}
-            {bestSellers.length > 0 && (
-                <section className="py-14 bg-gray-50">
-                    <div className="page-container">
-                        <div className="flex items-center justify-between mb-8">
-                            <h2 className="section-title text-xl lg:text-2xl">{t("home.bestSellers.heading")}</h2>
-                            <Link href="/shop?sort=price_desc" className="text-sm font-medium text-green-800 hover:underline">{t("home.bestSellers.viewAll")}</Link>
-                        </div>
+            <section className="py-14 bg-gray-50">
+                <div className="page-container">
+                    <div className="flex items-center justify-between mb-8">
+                        <h2 className="section-title text-xl lg:text-2xl">{t("home.bestSellers.heading")}</h2>
+                        <Link href="/shop?sort=price_desc" className="text-sm font-medium text-green-800 hover:underline">{t("home.bestSellers.viewAll")}</Link>
+                    </div>
+                    {bestSellers.length === 0 ? (
+                        <div className="text-center py-16 text-gray-400">{t("home.bestSellers.empty", "No products found")}</div>
+                    ) : (
                         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
                             {bestSellers.map((product) => (
                                 <Link key={product.id} href={`/product/${product.slug}`} className="group card-flat overflow-hidden hover:shadow-md transition-all">
@@ -150,9 +150,9 @@ export default function HomePage() {
                                 </Link>
                             ))}
                         </div>
-                    </div>
-                </section>
-            )}
+                    )}
+                </div>
+            </section>
 
             {/* How it works */}
             <section className="py-16 bg-white">

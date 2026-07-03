@@ -3,6 +3,7 @@
     "loading": "Loading..."
   },
   "nav": {
+    "home": "Home",
     "banglaPark": "Bangla Park",
     "banglaParkFull": "Bangla Park Limited",
     "limited": "Limited",
@@ -44,7 +45,8 @@
     "adminOrders": "Orders",
     "adminWithdrawals": "Withdrawals",
     "adminCommissionRules": "Commission Rules",
-    "adminReports": "Reports"
+    "adminReports": "Reports",
+    "navBanners": "Banners"
   },
   "home": {
     "badge": "Bangladesh's Trusted MLM Platform",
@@ -80,7 +82,8 @@
     },
     "categories": {
       "heading": "Categories",
-      "viewAll": "View All →"
+      "viewAll": "View All →",
+      "empty": "No categories found"
     },
     "featuredProducts": {
       "heading": "Featured Products",
@@ -93,7 +96,8 @@
     },
     "bestSellers": {
       "heading": "Best Sellers",
-      "viewAll": "View All →"
+      "viewAll": "View All →",
+      "empty": "No products found"
     },
     "earningsBanner": {
       "heading": "How Much Daily Benefit?",

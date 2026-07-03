@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { ShoppingCart, Bell, User, Menu, X, LogOut, LayoutDashboard, Shield } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { ShoppingCart, Bell, User, Menu, X, LogOut, LayoutDashboard, Shield, Search } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useAuthStore } from "@/store/auth";
 import { useCartStore } from "@/store/cart";
@@ -19,6 +19,7 @@ export function Header() {
     const { t } = useLocale();
     const [menuOpen, setMenuOpen] = useState(false);
     const [mounted, setMounted] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
     const router = useRouter();
 
     const { data: categoriesData } = useQuery({
@@ -29,6 +30,13 @@ export function Header() {
 
     useEffect(() => { setMounted(true); }, []);
 
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (searchQuery.trim()) {
+            router.push(`/shop?search=${encodeURIComponent(searchQuery.trim())}`);
+        }
+    };
+
     const handleLogout = async () => {
         await authApi.logout();
         clearAuth();
@@ -36,13 +44,27 @@ export function Header() {
     };
 
     return (
-        <header className="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-sm">
+        <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-100 shadow-sm">
             <div className="page-container">
                 <div className="flex h-16 items-center justify-between">
                     {/* Logo */}
                     <Link href="/" className="flex items-center">
                         <Image src="/logo.png" alt="Bangla Park Limited" width={280} height={72} className="h-20 w-auto" priority />
                     </Link>
+
+                    {/* Search Bar - Desktop */}
+                    <form onSubmit={handleSearch} className="header-desktop-nav hidden md:flex items-center flex-1 max-w-md mx-6">
+                        <div className="relative w-full">
+                            <input
+                                type="text"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                placeholder={t("shop.search.placeholder")}
+                                className="w-full rounded-lg border border-gray-200 bg-gray-50 pl-10 pr-4 py-2 text-sm outline-none transition-colors focus:border-green-600 focus:bg-white focus:ring-2 focus:ring-green-600/20"
+                            />
+                            <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                        </div>
+                    </form>
 
                     {/* Desktop Nav */}
                     <nav className="header-desktop-nav hidden md:flex items-center gap-6">
@@ -123,6 +145,18 @@ export function Header() {
                 {/* Mobile Nav */}
                 {menuOpen && (
                     <div className="md:hidden border-t border-gray-100 py-3 space-y-1">
+                        <form onSubmit={handleSearch} className="px-3 py-2">
+                            <div className="relative">
+                                <input
+                                    type="text"
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    placeholder={t("shop.search.placeholder")}
+                                    className="w-full rounded-lg border border-gray-200 bg-gray-50 pl-10 pr-4 py-2.5 text-sm outline-none focus:border-green-600 focus:bg-white"
+                                />
+                                <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                            </div>
+                        </form>
                         <Link href="/shop" onClick={() => setMenuOpen(false)} className="block px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50">{t("nav.shop")}</Link>
                         {categories.length > 0 && (
                             <div className="px-3 py-2">
