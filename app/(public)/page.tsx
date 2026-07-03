@@ -66,7 +66,7 @@ export default function HomePage() {
                         <Link href="/shop" className="text-sm font-medium text-green-800 hover:underline">{t("home.categories.viewAll")}</Link>
                     </div>
                     {categories.length === 0 ? (
-                        <div className="text-center py-10 text-gray-400 text-sm">{t("home.categories.empty", "No categories found")}</div>
+                        <div className="text-center py-10 text-gray-400 text-sm">{t("home.categories.empty", undefined, "No categories found")}</div>
                     ) : (
                         <div className="flex flex-wrap gap-3">
                             {categories.map((cat) => (
@@ -125,7 +125,7 @@ export default function HomePage() {
                         <Link href="/shop?sort=price_desc" className="text-sm font-medium text-green-800 hover:underline">{t("home.bestSellers.viewAll")}</Link>
                     </div>
                     {bestSellers.length === 0 ? (
-                        <div className="text-center py-16 text-gray-400">{t("home.bestSellers.empty", "No products found")}</div>
+                        <div className="text-center py-16 text-gray-400">{t("home.bestSellers.empty", undefined, "No products found")}</div>
                     ) : (
                         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
                             {bestSellers.map((product) => (

@@ -23,7 +23,7 @@ export default function AdminBannersPage() {
     const [isActive, setIsActive] = useState(true);
     const [sortOrder, setSortOrder] = useState(0);
 
-    const { data: banners = [], isLoading } = useQuery({
+    const { data: banners = [], isLoading } = useQuery<Banner[]>({
         queryKey: ["admin-banners"],
         queryFn: () => adminApi.banners(),
     });
@@ -152,7 +152,7 @@ export default function AdminBannersPage() {
                     <div className="text-center py-12 text-gray-400 text-sm">No banners yet</div>
                 ) : (
                     <div className="divide-y divide-slate-100">
-                        {banners.map((banner) => (
+                        {banners.map((banner: Banner) => (
                             <div key={banner.id} className="flex items-center gap-4 p-4">
                                 <div className="w-32 h-20 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
                                     <img src={banner.imageUrl} alt="" className="w-full h-full object-cover" />

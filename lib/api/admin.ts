@@ -1,5 +1,6 @@
 import { api } from "./client";
 import type { AdminStats, User, PlatformConfig } from "@/types";
+import type { Banner } from "./banners";
 
 export const adminApi = {
     stats: async (): Promise<AdminStats> => {
@@ -42,7 +43,7 @@ export const adminApi = {
         return res.data;
     },
 
-    banners: async () => {
+    banners: async (): Promise<Banner[]> => {
         const res = await api.get("/banners");
         return res.data;
     },
