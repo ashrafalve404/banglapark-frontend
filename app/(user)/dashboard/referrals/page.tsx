@@ -18,6 +18,7 @@ export default function ReferralsPage() {
     const { data: stats, isLoading: statsLoading } = useQuery({
         queryKey: ["referral-stats"],
         queryFn: () => referralApi.teamStats(),
+        refetchOnWindowFocus: true,
     });
 
     const { data: teamData, isLoading: teamLoading } = useQuery({
@@ -79,21 +80,21 @@ export default function ReferralsPage() {
                 <div className="card p-5 text-center">
                     <span className="text-xs text-gray-500 font-bold block mb-1">{t("referrals.stats.total")}</span>
                     <span className="text-3xl font-extrabold text-blue-900">
-                        {statsLoading ? "..." : stats?.totalCount ?? 0}
+                        {statsLoading ? "..." : stats?.totalTeam ?? 0}
                     </span>
                 </div>
 
                 <div className="card p-5 text-center border-l-4 border-l-green-600">
                     <span className="text-xs text-green-700 font-bold block mb-1">{t("referrals.stats.active")}</span>
                     <span className="text-3xl font-extrabold text-green-800">
-                        {statsLoading ? "..." : stats?.activeCount ?? 0}
+                        {statsLoading ? "..." : stats?.activeTeam ?? 0}
                     </span>
                 </div>
 
                 <div className="card p-5 text-center border-l-4 border-l-red-500">
                     <span className="text-xs text-red-650 font-bold block mb-1">{t("referrals.stats.inactive")}</span>
                     <span className="text-3xl font-extrabold text-red-750">
-                        {statsLoading ? "..." : stats?.inactiveCount ?? 0}
+                        {statsLoading ? "..." : stats?.inactiveTeam ?? 0}
                     </span>
                 </div>
             </div>

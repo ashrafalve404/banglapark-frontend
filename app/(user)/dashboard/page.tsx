@@ -38,11 +38,13 @@ export default function DashboardOverview() {
     const { data: wallet, isLoading: walletLoading } = useQuery({
         queryKey: ["wallet-balance"],
         queryFn: () => walletApi.balance(),
+        refetchOnWindowFocus: true,
     });
 
     const { data: referralStats, isLoading: refLoading } = useQuery({
         queryKey: ["referral-stats"],
         queryFn: () => referralApi.teamStats(),
+        refetchOnWindowFocus: true,
     });
 
     const activeDays = user?.activeUntil ? daysUntil(user.activeUntil) : 0;
@@ -117,7 +119,7 @@ export default function DashboardOverview() {
                     <div className="space-y-1">
                         <span className="text-xs text-gray-500 font-semibold uppercase tracking-wider block">{t("dashboard.card.activeTeam")}</span>
                         <span className="text-2xl font-bold text-green-800">
-                            {refLoading ? "..." : referralStats?.activeCount ?? 0}{t("dashboard.card.activeTeamUnit")}
+                            {refLoading ? "..." : referralStats?.activeTeam ?? 0}{t("dashboard.card.activeTeamUnit")}
                         </span>
                     </div>
                     <div className="rounded-lg bg-green-50 p-2.5 text-green-800">

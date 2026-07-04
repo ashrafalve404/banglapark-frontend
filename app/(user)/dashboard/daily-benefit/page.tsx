@@ -20,6 +20,7 @@ export default function DailyBenefitPage() {
     const { data: stats } = useQuery({
         queryKey: ["referral-stats"],
         queryFn: () => referralApi.teamStats(),
+        refetchOnWindowFocus: true,
     });
 
     const { data: logData, isLoading: logsLoading } = useQuery({
@@ -27,7 +28,7 @@ export default function DailyBenefitPage() {
         queryFn: () => dailyBenefitApi.myLogs({ page, limit: 10 }),
     });
 
-    const activeCount = stats?.activeCount ?? 0;
+    const activeCount = stats?.activeTeam ?? 0;
     const logs = logData?.logs ?? [];
     const total = logData?.total ?? 0;
     const totalPages = Math.ceil(total / 10) || 1;

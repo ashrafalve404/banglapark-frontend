@@ -4,9 +4,10 @@ import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Search, Loader2, ChevronDown } from "lucide-react";
+import { Search, Loader2, ChevronDown, ShoppingCart } from "lucide-react";
 import { productsApi } from "@/lib/api/products";
 import { categoriesApi } from "@/lib/api/categories";
+import { useCartStore } from "@/store/cart";
 import { useLocale } from "@/lib/i18n";
 
 function ShopPageContent() {
@@ -15,6 +16,16 @@ function ShopPageContent() {
     const [search, setSearch] = useState(searchParams.get("search") || "");
     const [selectedCategory, setSelectedCategory] = useState("all");
     const [sort, setSort] = useState<"newest" | "price_asc" | "price_desc">("newest");
+    const addItem = useCartStore((s) => s.addItem);
+    const [addedId, setAddedId] = useState<string | null>(null);
+
+    const handleAddToCart = (product: any, e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        addItem(product);
+        setAddedId(product.id);
+        setTimeout(() => setAddedId(null), 1500);
+    };
 
     const { data: productsData, isLoading: prodLoading } = useQuery({
         queryKey: ["products", selectedCategory, search, sort],
@@ -148,6 +159,18 @@ function ShopPageContent() {
                                             <p className={`text-xs mt-0.5 ${product.stock > 0 ? "text-gray-400" : "text-red-500 font-semibold"}`}>
                                                 {product.stock > 0 ? `${t("shop.product.stockLabel")} ${product.stock}` : t("shop.product.stockOut")}
                                             </p>
+                                            {product.stock > 0 && (
+                                                <button
+                                                    onClick={(e) => handleAddToCart(product, e)}
+                                                    className="mt-2 w-full rounded-lg bg-green-800 py-1.5 text-xs font-semibold text-white hover:bg-green-700 transition-colors flex items-center justify-center gap-1"
+                                                >
+                                                    {addedId === product.id ? (
+                                                        <span>{t("shop.product.added", undefined, "Added!")}</span>
+                                                    ) : (
+                                                        <><ShoppingCart size={14} /> {t("product.addToCart")}</>
+                                                    )}
+                                                </button>
+                                            )}
                                         </div>
                                     </div>
                                 </Link>

@@ -42,6 +42,7 @@ export default function AdminOrdersPage() {
                 if (!old?.orders) return old;
                 return { ...old, orders: old.orders.filter((o: any) => o.id !== orderId) };
             });
+            queryClient.invalidateQueries({ queryKey: ["admin-orders"] });
         },
     });
 

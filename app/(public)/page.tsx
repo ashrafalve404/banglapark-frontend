@@ -1,15 +1,27 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, ShieldCheck, TrendingUp, Users, Gift } from "lucide-react";
+import { ArrowRight, ShieldCheck, TrendingUp, Gift, ShoppingCart, ShoppingBag, Award } from "lucide-react";
 import { BannerCarousel } from "@/components/home/BannerCarousel";
 import { productsApi } from "@/lib/api/products";
 import { categoriesApi } from "@/lib/api/categories";
+import { useCartStore } from "@/store/cart";
 import { useQuery } from "@tanstack/react-query";
 import { useLocale } from "@/lib/i18n";
+import { useState } from "react";
 
 export default function HomePage() {
     const { t } = useLocale();
+    const addItem = useCartStore((s) => s.addItem);
+    const [addedId, setAddedId] = useState<string | null>(null);
+
+    const handleAddToCart = (product: any, e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        addItem(product);
+        setAddedId(product.id);
+        setTimeout(() => setAddedId(null), 1500);
+    };
 
     const { data: productsData } = useQuery({
         queryKey: ["products", "featured"],
@@ -37,6 +49,21 @@ export default function HomePage() {
             {/* Hero */}
             <section className="relative overflow-hidden bg-gradient-to-br from-green-900 via-green-800 to-green-700 text-white">
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width=%2760%27%20height=%2760%27%20viewBox=%270%200%2060%2060%27%20xmlns=%27http://www.w3.org/2000/svg%27%3E%3Cg%20fill=%27none%27%20fill-rule=%27evenodd%27%3E%3Cg%20fill=%27%23ffffff%27%2520fill-opacity=%270.03%27%3E%3Cpath%20d=%27M36%2034v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6%2034v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6%204V0H4v4H0v2h4v4h2V6h4V4H6z%27/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-50" />
+
+                {/* Decorative curved shapes */}
+                <div className="absolute -top-32 -right-20 h-[28rem] w-[28rem] opacity-25 blur-3xl" style={{ borderRadius: "42% 58% 35% 65% / 55% 40% 60% 45%", background: "linear-gradient(135deg, #166534, #14532d)" }} />
+                <div className="absolute -bottom-40 -left-28 h-[35rem] w-[35rem] opacity-20 blur-3xl" style={{ borderRadius: "55% 45% 65% 35% / 40% 60% 40% 60%", background: "linear-gradient(225deg, #052e16, #14532d)" }} />
+                <div className="absolute top-1/4 right-1/4 h-72 w-72 opacity-15 blur-2xl" style={{ borderRadius: "60% 40% 50% 50% / 40% 55% 45% 60%", background: "linear-gradient(180deg, #047857, #065f46)" }} />
+                <div className="absolute bottom-1/3 left-1/5 h-56 w-56 opacity-15 blur-2xl rotate-12" style={{ borderRadius: "38% 62% 45% 55% / 50% 40% 60% 50%", background: "linear-gradient(300deg, #052e16, #166534)" }} />
+
+                {/* Curved accent lines */}
+                <svg className="absolute top-0 right-0 h-full w-64 text-green-950/20" viewBox="0 0 100 100" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M100 0C60 20 40 60 60 100H100V0Z" fill="currentColor" />
+                </svg>
+                <svg className="absolute bottom-0 left-0 h-32 w-full text-green-950/15" viewBox="0 0 1440 100" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0 100C360 20 720 80 1440 30V100H0Z" fill="currentColor" />
+                </svg>
+
                 <div className="page-container relative py-20 lg:py-28">
                     <div className="max-w-2xl">
                         <h1 className="mb-6 text-4xl font-bold leading-tight lg:text-5xl xl:text-6xl">
@@ -109,7 +136,43 @@ export default function HomePage() {
                                         <p className={`text-xs mt-0.5 ${product.stock > 0 ? 'text-gray-400' : 'text-red-500'}`}>
                                             {product.stock > 0 ? `${t("home.featuredProducts.stockLabel")} ${product.stock}` : t("home.featuredProducts.stockOut")}
                                         </p>
+                                        {product.stock > 0 && (
+                                            <button
+                                                onClick={(e) => handleAddToCart(product, e)}
+                                                className="mt-2 w-full rounded-lg bg-green-800 py-1.5 text-xs font-semibold text-white hover:bg-green-700 transition-colors flex items-center justify-center gap-1"
+                                            >
+                                                {addedId === product.id ? (
+                                                    <span>{t("shop.product.added", undefined, "Added!")}</span>
+                                                ) : (
+                                                    <><ShoppingCart size={14} /> {t("product.addToCart")}</>
+                                                )}
+                                            </button>
+                                        )}
                                     </div>
+                                </Link>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            </section>
+
+            {/* Popular Categories */}
+            <section className="py-14 bg-white">
+                <div className="page-container">
+                    <div className="flex items-center justify-between mb-8">
+                        <h2 className="section-title text-xl lg:text-2xl">{t("home.popularCategories.heading", undefined, "Popular Categories")}</h2>
+                        <Link href="/shop" className="text-sm font-medium text-green-800 hover:underline">{t("home.popularCategories.viewAll", undefined, "View All →")}</Link>
+                    </div>
+                    {categories.length === 0 ? (
+                        <div className="text-center py-16 text-gray-400">{t("home.popularCategories.empty", undefined, "No categories found")}</div>
+                    ) : (
+                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+                            {categories.slice(0, 6).map((cat) => (
+                                <Link key={cat.id} href={`/shop?categoryId=${cat.id}`} className="group card-flat p-6 text-center hover:shadow-md hover:border-green-200 transition-all">
+                                    <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-xl bg-green-50 group-hover:bg-green-100 transition-colors">
+                                        <ShoppingBag size={24} className="text-green-700" />
+                                    </div>
+                                    <h3 className="text-sm font-semibold text-gray-800 line-clamp-2">{cat.name}</h3>
                                 </Link>
                             ))}
                         </div>
@@ -146,6 +209,18 @@ export default function HomePage() {
                                         <p className={`text-xs mt-0.5 ${product.stock > 0 ? 'text-gray-400' : 'text-red-500'}`}>
                                             {product.stock > 0 ? `${t("home.featuredProducts.stockLabel")} ${product.stock}` : t("home.featuredProducts.stockOut")}
                                         </p>
+                                        {product.stock > 0 && (
+                                            <button
+                                                onClick={(e) => handleAddToCart(product, e)}
+                                                className="mt-2 w-full rounded-lg bg-green-800 py-1.5 text-xs font-semibold text-white hover:bg-green-700 transition-colors flex items-center justify-center gap-1"
+                                            >
+                                                {addedId === product.id ? (
+                                                    <span>{t("shop.product.added", undefined, "Added!")}</span>
+                                                ) : (
+                                                    <><ShoppingCart size={14} /> {t("product.addToCart")}</>
+                                                )}
+                                            </button>
+                                        )}
                                     </div>
                                 </Link>
                             ))}
@@ -155,58 +230,66 @@ export default function HomePage() {
             </section>
 
             {/* How it works */}
-            <section className="py-16 bg-white">
+            <section className="bg-gray-50 py-14 lg:py-16">
                 <div className="page-container">
                     <div className="text-center mb-10">
-                        <h2 className="section-title text-2xl lg:text-3xl">{t("home.howItWorks.heading")}</h2>
-                        <p className="mt-2 text-gray-500">{t("home.howItWorks.subheading")}</p>
+                        <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">{t("home.howItWorks.heading")}</h2>
+                        <p className="text-gray-500 text-sm">{t("home.howItWorks.subheading")}</p>
                     </div>
-                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+                    <div className="relative flex flex-col sm:flex-row items-start sm:items-center justify-center gap-6 sm:gap-0 max-w-4xl mx-auto">
                         {[
-                            { icon: ShieldCheck, step: t("home.howItWorks.step1.label"), title: t("home.howItWorks.step1.title"), desc: t("home.howItWorks.step1.desc"), color: "green" },
-                            { icon: Gift, step: t("home.howItWorks.step2.label"), title: t("home.howItWorks.step2.title"), desc: t("home.howItWorks.step2.desc"), color: "amber" },
-                            { icon: TrendingUp, step: t("home.howItWorks.step3.label"), title: t("home.howItWorks.step3.title"), desc: t("home.howItWorks.step3.desc"), color: "blue" },
-                        ].map((item) => (
-                            <div key={item.step} className="card-flat p-6 text-center hover:shadow-md transition-shadow">
-                                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-green-50">
-                                    <item.icon size={24} className="text-green-700" />
+                            { icon: ShieldCheck, step: t("home.howItWorks.step1.label"), title: t("home.howItWorks.step1.title"), desc: t("home.howItWorks.step1.desc") },
+                            { icon: Gift, step: t("home.howItWorks.step2.label"), title: t("home.howItWorks.step2.title"), desc: t("home.howItWorks.step2.desc") },
+                            { icon: TrendingUp, step: t("home.howItWorks.step3.label"), title: t("home.howItWorks.step3.title"), desc: t("home.howItWorks.step3.desc") },
+                        ].map((item, i) => (
+                            <div key={item.step} className="relative flex-1 sm:px-4">
+                                {i < 2 && (
+                                    <div className="hidden sm:block absolute top-14 left-[60%] w-[calc(80%)] h-px border-t border-dashed border-gray-300" />
+                                )}
+                                <div className="group card-flat p-6 text-center hover:shadow-md transition-all">
+                                    <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-green-100 text-green-700 text-lg font-extrabold">
+                                        {item.step}
+                                    </div>
+                                    <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-xl bg-green-50">
+                                        <item.icon size={26} className="text-green-700" />
+                                    </div>
+                                    <h3 className="text-base font-bold text-gray-800 mb-1.5">{item.title}</h3>
+                                    <p className="text-sm text-gray-500 leading-relaxed">{item.desc}</p>
                                 </div>
-                                <div className="mb-2 text-3xl font-bold text-green-800">{item.step}</div>
-                                <h3 className="mb-2 text-base font-semibold text-gray-800">{item.title}</h3>
-                                <p className="text-sm text-gray-500 leading-relaxed">{item.desc}</p>
                             </div>
                         ))}
                     </div>
                 </div>
             </section>
 
-            {/* Earnings Banner */}
-            <section className="py-14 bg-gradient-to-r from-amber-50 to-orange-50 border-y border-amber-100">
-                <div className="page-container">
-                    <div className="flex flex-col lg:flex-row items-center gap-8">
-                        <div className="flex-1 text-center lg:text-left">
-                            <h2 className="text-2xl font-bold text-gray-900 mb-3">{t("home.earningsBanner.heading")}</h2>
-                            <p className="text-gray-600 mb-6">{t("home.earningsBanner.subtext")}</p>
-                            <Link href="/register" className="btn-primary inline-flex">{t("home.earningsBanner.cta")} <ArrowRight size={16} className="ml-1" /></Link>
-                        </div>
-                        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-                            {[
-                                { count: "৫+", amount: "৳১০০" },
-                                { count: "২০+", amount: "৳২০০" },
-                                { count: "৫০+", amount: "৳৩০০" },
-                                { count: "১০০+", amount: "৳৫০০" },
-                                { count: "৫০০+", amount: "৳১,০০০" },
-                                { count: "৫,০০০+", amount: "৳২,০০০" },
-                                { count: "১০,০০০+", amount: "৳৫,০০০" },
-                            ].slice(0, 4).map((tier) => (
-                                <div key={tier.count} className="rounded-xl bg-white p-4 text-center shadow-sm border border-amber-100">
-                                    <Users size={18} className="mx-auto mb-1 text-amber-600" />
-                                    <div className="text-xs text-gray-500 mb-1">{tier.count} {t("home.earningsBanner.tier.member")}</div>
-                                    <div className="text-lg font-bold text-amber-700">{tier.amount}</div>
-                                    <div className="text-xs text-gray-400">{t("home.earningsBanner.tier.perDay")}</div>
-                                </div>
-                            ))}
-                        </div>
+            {/* Daily Benefit */}
+            <section className="relative overflow-hidden bg-gradient-to-br from-green-900 via-green-800 to-green-700 text-white pb-6 pt-8 lg:pb-10 lg:pt-10">
+                <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%23ffffff%22%20fill-opacity%3D%220.03%22%3E%3Cpath%20d%3D%22M36%2034v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6%2034v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6%204V0H4v4H0v2h4v4h2V6h4V4H6z%22%2F%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E')]" />
+                <div className="page-container relative">
+                    <div className="text-center mb-4">
+                        <h2 className="text-xl lg:text-2xl font-bold text-white mb-1">{t("home.earningsBanner.heading")}</h2>
+                        <p className="text-green-200/80 text-sm max-w-xl mx-auto mb-4">{t("home.earningsBanner.subtext")}</p>
+                        <Link href="/register" className="inline-flex items-center gap-2 rounded-lg bg-amber-400 hover:bg-amber-300 px-5 py-2 text-xs font-bold text-green-950 shadow-lg hover:shadow-xl transition-all">
+                            {t("home.earningsBanner.cta")} <ArrowRight size={18} />
+                        </Link>
+                    </div>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-4xl mx-auto">
+                        {[
+                            { count: "৫+", amount: "৳১০০" },
+                            { count: "২০+", amount: "৳২০০" },
+                            { count: "৫০+", amount: "৳৩০০" },
+                            { count: "১০০+", amount: "৳৫০০" },
+                            { count: "৫০০+", amount: "৳১,০০০" },
+                            { count: "৫,০০০+", amount: "৳২,০০০" },
+                            { count: "১০,০০০+", amount: "৳৫,০০০" },
+                        ].map((tier) => (
+                            <div key={tier.count} className="group rounded-lg bg-white/10 backdrop-blur-sm border border-white/20 p-3 text-center hover:bg-white/20 hover:border-amber-400/50 transition-all duration-200">
+                                <Award size={16} className="mx-auto mb-1.5 text-amber-400/80 group-hover:text-amber-300 transition-colors" />
+                                <div className="text-amber-300 font-bold text-xs mb-0.5">{tier.count} {t("home.earningsBanner.tier.member")}</div>
+                                <div className="text-white font-extrabold text-xl lg:text-2xl tracking-tight mb-0.5">{tier.amount}</div>
+                                <div className="text-green-300/50 text-[10px] font-medium uppercase tracking-wider">{t("home.earningsBanner.tier.perDay")}</div>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </section>
