@@ -15,6 +15,7 @@ export default function ProductDetailPage() {
     const addItem = useCartStore((s) => s.addItem);
     const { t } = useLocale();
     const [qty, setQty] = useState(1);
+    const [selectedSize, setSelectedSize] = useState("");
     const [msg, setMsg] = useState(false);
 
     const { data: product, isLoading, error } = useQuery({
@@ -42,15 +43,16 @@ export default function ProductDetailPage() {
     }
 
     const isQualifying = Number(product.price) >= 2000;
+    const hasSizes = product.sizes && product.sizes.length > 0;
 
     const handleAddToCart = () => {
-        addItem(product, qty);
+        addItem(product, qty, selectedSize || undefined);
         setMsg(true);
         setTimeout(() => setMsg(false), 2000);
     };
 
     const handleBuyNow = () => {
-        addItem(product, qty);
+        addItem(product, qty, selectedSize || undefined);
         router.push("/cart");
     };
 
@@ -97,6 +99,26 @@ export default function ProductDetailPage() {
                     {/* Action logic details */}
                     {product.stock > 0 ? (
                         <div className="space-y-4">
+                            {hasSizes && (
+                                <div>
+                                    <span className="text-sm font-medium text-gray-600">{t("product.sizeLabel", undefined, "Size")}</span>
+                                    <div className="flex flex-wrap gap-2 mt-1.5">
+                                        {product.sizes.map((s) => (
+                                            <button
+                                                key={s}
+                                                type="button"
+                                                onClick={() => setSelectedSize(s === selectedSize ? "" : s)}
+                                                className={`px-4 py-2 rounded-lg border text-sm font-semibold transition-all ${selectedSize === s
+                                                    ? "border-green-800 bg-green-800 text-white"
+                                                    : "border-gray-200 text-gray-600 hover:border-green-300 hover:text-green-700"
+                                                    }`}
+                                            >
+                                                {s}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
                             <div className="flex items-center gap-3">
                                 <span className="text-sm font-medium text-gray-600">{t("product.quantityLabel")}</span>
                                 <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden">

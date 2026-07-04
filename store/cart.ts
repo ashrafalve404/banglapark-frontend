@@ -4,11 +4,15 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { CartItem, Product } from "@/types";
 
+function itemKey(productId: string, size?: string) {
+    return size ? `${productId}::${size}` : productId;
+}
+
 interface CartState {
     items: CartItem[];
-    addItem: (product: Product, qty?: number) => void;
-    removeItem: (productId: string) => void;
-    updateQty: (productId: string, qty: number) => void;
+    addItem: (product: Product, qty?: number, size?: string) => void;
+    removeItem: (productId: string, size?: string) => void;
+    updateQty: (productId: string, qty: number, size?: string) => void;
     clear: () => void;
     total: () => number;
     count: () => number;
@@ -19,21 +23,23 @@ export const useCartStore = create<CartState>()(
         (set, get) => ({
             items: [],
 
-            addItem: (product, qty = 1) => {
+            addItem: (product, qty = 1, size) => {
                 const items = get().items;
-                const existing = items.find((i) => i.product.id === product.id);
+                const key = itemKey(product.id, size);
+                const existing = items.find((i) => itemKey(i.product.id, i.size) === key);
                 if (existing) {
-                    set({ items: items.map((i) => i.product.id === product.id ? { ...i, quantity: i.quantity + qty } : i) });
+                    set({ items: items.map((i) => itemKey(i.product.id, i.size) === key ? { ...i, quantity: i.quantity + qty } : i) });
                 } else {
-                    set({ items: [...items, { product, quantity: qty }] });
+                    set({ items: [...items, { product, quantity: qty, size }] });
                 }
             },
 
-            removeItem: (productId) => set({ items: get().items.filter((i) => i.product.id !== productId) }),
+            removeItem: (productId, size) => set({ items: get().items.filter((i) => itemKey(i.product.id, i.size) !== itemKey(productId, size)) }),
 
-            updateQty: (productId, qty) => {
-                if (qty <= 0) { get().removeItem(productId); return; }
-                set({ items: get().items.map((i) => i.product.id === productId ? { ...i, quantity: qty } : i) });
+            updateQty: (productId, qty, size) => {
+                if (qty <= 0) { get().removeItem(productId, size); return; }
+                const key = itemKey(productId, size);
+                set({ items: get().items.map((i) => itemKey(i.product.id, i.size) === key ? { ...i, quantity: qty } : i) });
             },
 
             clear: () => set({ items: [] }),

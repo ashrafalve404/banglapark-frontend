@@ -653,6 +653,8 @@
         "imagesLabel": "Image URLs",
         "addImage": "Add Another Image",
         "removeImage": "Remove",
+        "sizesLabel": "Sizes (optional)",
+        "sizesPlaceholder": "Type a size and press Enter (e.g. S, M, L, XL)",
         "submitUpdate": "Update Product",
         "submitCreate": "Save Product"
       },

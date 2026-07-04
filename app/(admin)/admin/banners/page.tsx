@@ -1,9 +1,10 @@
 "use client";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
-import { Plus, Trash2, Loader2, Image as ImageIcon } from "lucide-react";
+import { useState, useRef } from "react";
+import { Plus, Trash2, Loader2, ImagePlus, X, Image as ImageIcon } from "lucide-react";
 import { adminApi } from "@/lib/api/admin";
+import { uploadsApi } from "@/lib/api/uploads";
 import { useLocale } from "@/lib/i18n";
 
 interface Banner {
@@ -17,11 +18,13 @@ interface Banner {
 export default function AdminBannersPage() {
     const { t } = useLocale();
     const queryClient = useQueryClient();
+    const fileInputRef = useRef<HTMLInputElement>(null);
     const [editing, setEditing] = useState<Banner | null>(null);
     const [imageUrl, setImageUrl] = useState("");
     const [linkUrl, setLinkUrl] = useState("");
     const [isActive, setIsActive] = useState(true);
     const [sortOrder, setSortOrder] = useState(0);
+    const [uploading, setUploading] = useState(false);
 
     const { data: banners = [], isLoading } = useQuery<Banner[]>({
         queryKey: ["admin-banners"],
@@ -69,6 +72,19 @@ export default function AdminBannersPage() {
         setSortOrder(banner.sortOrder);
     };
 
+    const handleFileUpload = async (file: File) => {
+        setUploading(true);
+        try {
+            const { url } = await uploadsApi.upload(file);
+            setImageUrl(url);
+        } catch {
+            alert("Upload failed");
+        } finally {
+            setUploading(false);
+            if (fileInputRef.current) fileInputRef.current.value = "";
+        }
+    };
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (!imageUrl.trim()) return;
@@ -93,47 +109,75 @@ export default function AdminBannersPage() {
                     {editing ? "Edit Banner" : "Add New Banner"}
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label className="block text-xs font-semibold text-slate-600 mb-1">Image URL *</label>
-                        <input
-                            type="url"
-                            value={imageUrl}
-                            onChange={(e) => setImageUrl(e.target.value)}
-                            placeholder="https://example.com/banner.jpg"
-                            className="input w-full"
-                            required
-                        />
+                    <div className="space-y-2">
+                        <label className="block text-xs font-semibold text-slate-600 mb-1">Banner Image *</label>
+                        {imageUrl ? (
+                            <div className="relative w-full h-40 rounded-lg border border-slate-200 overflow-hidden bg-slate-50">
+                                <img src={imageUrl} alt="Banner preview" className="w-full h-full object-cover" />
+                                <button
+                                    type="button"
+                                    onClick={() => setImageUrl("")}
+                                    className="absolute top-2 right-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-600/80 text-white hover:bg-red-600"
+                                >
+                                    <X size={14} />
+                                </button>
+                            </div>
+                        ) : (
+                            <label className="flex flex-col items-center justify-center w-full h-40 rounded-lg border-2 border-dashed border-slate-300 cursor-pointer hover:border-green-400 hover:bg-green-50/50 transition-colors">
+                                {uploading ? (
+                                    <Loader2 size={24} className="animate-spin text-green-700" />
+                                ) : (
+                                    <ImagePlus size={28} className="text-slate-400" />
+                                )}
+                                <span className="text-xs text-slate-400 mt-2 font-medium">
+                                    {uploading ? "Uploading..." : "Click to upload image"}
+                                </span>
+                                <input
+                                    ref={fileInputRef}
+                                    type="file"
+                                    accept="image/jpeg,image/png,image/webp,image/gif"
+                                    className="hidden"
+                                    disabled={uploading}
+                                    onChange={(e) => {
+                                        const file = e.target.files?.[0];
+                                        if (file) handleFileUpload(file);
+                                    }}
+                                />
+                            </label>
+                        )}
                     </div>
-                    <div>
-                        <label className="block text-xs font-semibold text-slate-600 mb-1">Link URL (optional)</label>
-                        <input
-                            type="url"
-                            value={linkUrl}
-                            onChange={(e) => setLinkUrl(e.target.value)}
-                            placeholder="https://example.com/shop"
-                            className="input w-full"
-                        />
-                    </div>
-                    <div>
-                        <label className="block text-xs font-semibold text-slate-600 mb-1">Sort Order</label>
-                        <input
-                            type="number"
-                            value={sortOrder}
-                            onChange={(e) => setSortOrder(parseInt(e.target.value) || 0)}
-                            className="input w-full"
-                            min={0}
-                        />
-                    </div>
-                    <div className="flex items-center gap-2 pt-6">
-                        <label className="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" checked={isActive} onChange={(e) => setIsActive(e.target.checked)} className="sr-only peer" />
-                            <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600"></div>
-                        </label>
-                        <span className="text-sm text-slate-600">{isActive ? "Active" : "Inactive"}</span>
+                    <div className="space-y-4">
+                        <div>
+                            <label className="block text-xs font-semibold text-slate-600 mb-1">Link URL (optional)</label>
+                            <input
+                                type="url"
+                                value={linkUrl}
+                                onChange={(e) => setLinkUrl(e.target.value)}
+                                placeholder="https://example.com/shop"
+                                className="input w-full"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-xs font-semibold text-slate-600 mb-1">Sort Order</label>
+                            <input
+                                type="number"
+                                value={sortOrder}
+                                onChange={(e) => setSortOrder(parseInt(e.target.value) || 0)}
+                                className="input w-full"
+                                min={0}
+                            />
+                        </div>
+                        <div className="flex items-center gap-2 pt-2">
+                            <label className="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" checked={isActive} onChange={(e) => setIsActive(e.target.checked)} className="sr-only peer" />
+                                <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600"></div>
+                            </label>
+                            <span className="text-sm text-slate-600">{isActive ? "Active" : "Inactive"}</span>
+                        </div>
                     </div>
                 </div>
                 <div className="flex gap-2">
-                    <button type="submit" className="btn-primary py-2 px-4 text-sm" disabled={createMutation.isPending || updateMutation.isPending}>
+                    <button type="submit" className="btn-primary py-2 px-4 text-sm" disabled={createMutation.isPending || updateMutation.isPending || !imageUrl}>
                         {(createMutation.isPending || updateMutation.isPending) ? <Loader2 className="animate-spin" size={16} /> : (editing ? "Update" : "Create")}
                     </button>
                     {editing && (

@@ -1,31 +1,32 @@
 "use client";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState, useTransition } from "react";
-import { Plus, Edit2, Trash2, CheckCircle2, ArrowLeft, Loader2, ImagePlus } from "lucide-react";
+import { useState, useRef, useTransition } from "react";
+import { Plus, Edit2, Trash2, CheckCircle2, ArrowLeft, Loader2, ImagePlus, X } from "lucide-react";
 import { productsApi } from "@/lib/api/products";
 import { categoriesApi } from "@/lib/api/categories";
+import { uploadsApi } from "@/lib/api/uploads";
 import { formatCurrency } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
 
 interface ProductFormState {
     name: string;
-    slug: string;
     description: string;
     price: number;
     stock: number;
     categoryId: string;
     images: string[];
+    sizes: string[];
 }
 
 const initialForm: ProductFormState = {
     name: "",
-    slug: "",
     description: "",
     price: 0,
     stock: 10,
     categoryId: "",
-    images: [""],
+    images: [],
+    sizes: [],
 };
 
 export default function AdminProductsPage() {
@@ -36,6 +37,9 @@ export default function AdminProductsPage() {
     const [editingId, setEditingId] = useState<string | null>(null);
     const [form, setForm] = useState<ProductFormState>(initialForm);
     const [msg, setMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
+    const [uploadingIdx, setUploadingIdx] = useState<number | null>(null);
+    const [sizeInput, setSizeInput] = useState("");
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     // Load products list
     const { data: prodData, isLoading: prodLoading } = useQuery({
@@ -95,12 +99,12 @@ export default function AdminProductsPage() {
         setEditingId(prod.id);
         setForm({
             name: prod.name,
-            slug: prod.slug,
             description: prod.description || "",
             price: Number(prod.price),
             stock: prod.stock,
             categoryId: prod.categoryId || "",
-            images: prod.images && prod.images.length > 0 ? [...prod.images] : [""],
+            images: prod.images && prod.images.length > 0 ? [...prod.images] : [],
+            sizes: prod.sizes && prod.sizes.length > 0 ? [...prod.sizes] : [],
         });
         setView("form");
     };
@@ -128,6 +132,27 @@ export default function AdminProductsPage() {
         setForm({ ...form, images: form.images.filter((_, i) => i !== index) });
     };
 
+    const COMMON_SIZES = ["S", "M", "L", "XL", "XXL", "XXXL"];
+
+    const addSize = (size: string) => {
+        const s = size.trim().toUpperCase();
+        if (s && !form.sizes.includes(s)) {
+            setForm({ ...form, sizes: [...form.sizes, s] });
+        }
+        setSizeInput("");
+    };
+
+    const removeSize = (size: string) => {
+        setForm({ ...form, sizes: form.sizes.filter((s) => s !== size) });
+    };
+
+    const handleSizeKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === "Enter" || e.key === ",") {
+            e.preventDefault();
+            addSize(sizeInput);
+        }
+    };
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setMsg(null);
@@ -137,12 +162,12 @@ export default function AdminProductsPage() {
 
         const payload = {
             name: form.name,
-            slug: form.slug || form.name.toLowerCase().replace(/ /g, "-").replace(/[^\w-]+/g, ""),
             description: form.description,
             price: Number(form.price),
             stock: Number(form.stock),
             categoryId: form.categoryId || undefined,
             images: cleanImages,
+            sizes: form.sizes,
         };
 
         if (editingId) {
@@ -194,16 +219,6 @@ export default function AdminProductsPage() {
                                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                             />
                         </div>
-                        <div>
-                            <label className="label mb-1 block">{t("admin.products.form.slugLabel")}</label>
-                            <input
-                                type="text"
-                                className="input text-left font-mono"
-                                placeholder={t("admin.products.form.slugPlaceholder")}
-                                value={form.slug}
-                                onChange={(e) => setForm({ ...form, slug: e.target.value })}
-                            />
-                        </div>
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -251,30 +266,96 @@ export default function AdminProductsPage() {
                         />
                     </div>
 
-                    {/* Dynamic Image Link items inputs */}
+                    {/* Sizes */}
                     <div className="space-y-2">
-                        <div className="flex justify-between items-center">
-                            <label className="label font-bold text-slate-700">{t("admin.products.form.imagesLabel")}</label>
-                            <button type="button" onClick={addImageUrlInput} className="text-xs font-semibold text-blue-600 flex items-center gap-1">
-                                <ImagePlus size={14} /> {t("admin.products.form.addImage")}
-                            </button>
+                        <label className="label font-bold text-slate-700">{t("admin.products.form.sizesLabel")}</label>
+                        <div className="flex flex-wrap gap-1.5 mb-2">
+                            {form.sizes.map((s) => (
+                                <span key={s} className="inline-flex items-center gap-1 rounded-md bg-green-50 text-green-800 border border-green-200 px-2.5 py-1 text-xs font-semibold">
+                                    {s}
+                                    <button type="button" onClick={() => removeSize(s)} className="hover:text-red-600"><X size={11} /></button>
+                                </span>
+                            ))}
                         </div>
-                        {form.images.map((img, i) => (
-                            <div key={i} className="flex gap-2">
-                                <input
-                                    type="text"
-                                    className="input text-left flex-1"
-                                    placeholder="https://example.com/image.jpg"
-                                    value={img}
-                                    onChange={(e) => handleImageChange(i, e.target.value)}
-                                />
-                                {form.images.length > 1 && (
-                                    <button type="button" onClick={() => removeImageUrlInput(i)} className="text-red-500 hover:text-red-750 px-2 py-1 border border-red-200 rounded-lg bg-red-50/50">
-                                        {t("admin.products.form.removeImage")}
+                        <div className="flex gap-2">
+                            <input
+                                type="text"
+                                className="input text-left flex-1"
+                                placeholder={t("admin.products.form.sizesPlaceholder")}
+                                value={sizeInput}
+                                onChange={(e) => setSizeInput(e.target.value)}
+                                onKeyDown={handleSizeKeyDown}
+                            />
+                        </div>
+                        <div className="flex flex-wrap gap-1.5 mt-1.5">
+                            {COMMON_SIZES.filter((s) => !form.sizes.includes(s)).map((s) => (
+                                <button
+                                    key={s}
+                                    type="button"
+                                    onClick={() => addSize(s)}
+                                    className="px-2.5 py-1 rounded-md border border-slate-200 text-xs font-medium text-slate-500 hover:border-green-300 hover:text-green-700 hover:bg-green-50 transition-colors"
+                                >
+                                    + {s}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Image Upload */}
+                    <div className="space-y-3">
+                        <label className="label font-bold text-slate-700">{t("admin.products.form.imagesLabel")}</label>
+                        <div className="flex flex-wrap gap-3">
+                            {form.images.map((url, i) => url ? (
+                                <div key={i} className="relative group w-24 h-24 rounded-lg border border-slate-200 overflow-hidden bg-slate-50">
+                                    <img src={url} alt="" className="h-full w-full object-cover" />
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            const updated = form.images.filter((_, j) => j !== i);
+                                            setForm({ ...form, images: updated });
+                                        }}
+                                        className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-600/80 text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                                    >
+                                        <X size={12} />
                                     </button>
+                                </div>
+                            ) : null)}
+                            <label className="flex flex-col items-center justify-center w-24 h-24 rounded-lg border-2 border-dashed border-slate-300 cursor-pointer hover:border-green-400 hover:bg-green-50/50 transition-colors">
+                                {uploadingIdx !== null ? (
+                                    <Loader2 size={20} className="animate-spin text-green-700" />
+                                ) : (
+                                    <ImagePlus size={20} className="text-slate-400" />
                                 )}
-                            </div>
-                        ))}
+                                <span className="text-[10px] text-slate-400 mt-1 font-medium">
+                                    {uploadingIdx !== null ? t("admin.products.form.uploading", undefined, "Uploading...") : t("admin.products.form.addImage")}
+                                </span>
+                                <input
+                                    ref={fileInputRef}
+                                    type="file"
+                                    accept="image/jpeg,image/png,image/webp,image/gif"
+                                    className="hidden"
+                                    disabled={uploadingIdx !== null}
+                                    onChange={async (e) => {
+                                        const file = e.target.files?.[0];
+                                        if (!file) return;
+                                        setUploadingIdx(form.images.length);
+                                        try {
+                                            const { url } = await uploadsApi.upload(file);
+                                            const hasEmpty = form.images.length === 1 && form.images[0] === "";
+                                            setForm({
+                                                ...form,
+                                                images: hasEmpty ? [url] : [...form.images, url],
+                                            });
+                                        } catch {
+                                            setMsg({ type: "error", text: t("admin.products.form.uploadError", undefined, "Upload failed") });
+                                        } finally {
+                                            setUploadingIdx(null);
+                                            if (fileInputRef.current) fileInputRef.current.value = "";
+                                        }
+                                    }}
+                                />
+                            </label>
+                        </div>
                     </div>
 
                     <button type="submit" disabled={createMutation.isPending || updateMutation.isPending} className="btn-primary w-full py-3.5">
@@ -336,8 +417,8 @@ export default function AdminProductsPage() {
                                                     </button>
                                                 </div>
                                             </td>
-                                        </tr>
-                                    ))}
+                                    </tr>
+                                ))}
                                 </tbody>
                             </table>
                         </div>

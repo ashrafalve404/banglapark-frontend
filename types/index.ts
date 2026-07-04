@@ -61,6 +61,7 @@ export interface Product {
     categoryId: string;
     category?: Category;
     images: string[];
+    sizes: string[];
     isActive: boolean;
     createdAt: string;
 }
@@ -71,6 +72,7 @@ export interface OrderItem {
     product: Pick<Product, "id" | "name" | "slug" | "images" | "price">;
     quantity: number;
     price: number;
+    size?: string;
 }
 
 export interface Order {
@@ -163,6 +165,7 @@ export interface AuthResponse {
 export interface CartItem {
     product: Product;
     quantity: number;
+    size?: string;
 }
 
 export interface BenefitTier {

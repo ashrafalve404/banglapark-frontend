@@ -653,6 +653,8 @@
         "imagesLabel": "ছবি লিঙ্ক সমূহ (URLs)",
         "addImage": "আরেকটি ছবি যোগ করুন",
         "removeImage": "মুছুন",
+        "sizesLabel": "সাইজ (ঐচ্ছিক)",
+        "sizesPlaceholder": "সাইজ লিখে Enter চাপুন (যেমন: S, M, L, XL)",
         "submitUpdate": "পণ্যের তথ্য আপডেট করুন",
         "submitCreate": "পণ্য সংরক্ষণ করুন"
       },

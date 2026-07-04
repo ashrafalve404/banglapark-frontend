@@ -14,11 +14,20 @@ export default function HomePage() {
     const { t } = useLocale();
     const addItem = useCartStore((s) => s.addItem);
     const [addedId, setAddedId] = useState<string | null>(null);
+    const [sizePopups, setSizePopups] = useState<Record<string, string>>({});
 
     const handleAddToCart = (product: any, e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
         addItem(product);
+        setAddedId(product.id);
+        setTimeout(() => setAddedId(null), 1500);
+    };
+
+    const handleAddToCartWithSize = (product: any, e: React.MouseEvent, size?: string) => {
+        e.preventDefault();
+        e.stopPropagation();
+        addItem(product, 1, size);
         setAddedId(product.id);
         setTimeout(() => setAddedId(null), 1500);
     };
@@ -137,16 +146,37 @@ export default function HomePage() {
                                             {product.stock > 0 ? `${t("home.featuredProducts.stockLabel")} ${product.stock}` : t("home.featuredProducts.stockOut")}
                                         </p>
                                         {product.stock > 0 && (
-                                            <button
-                                                onClick={(e) => handleAddToCart(product, e)}
-                                                className="mt-2 w-full rounded-lg bg-green-800 py-1.5 text-xs font-semibold text-white hover:bg-green-700 transition-colors flex items-center justify-center gap-1"
-                                            >
-                                                {addedId === product.id ? (
-                                                    <span>{t("shop.product.added", undefined, "Added!")}</span>
-                                                ) : (
-                                                    <><ShoppingCart size={14} /> {t("product.addToCart")}</>
+                                            <div className="mt-2 space-y-1.5">
+                                                {product.sizes?.length > 0 && (
+                                                    <select
+                                                        value={sizePopups[product.id] || ""}
+                                                        onChange={(e) => setSizePopups({ ...sizePopups, [product.id]: e.target.value })}
+                                                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                                                        className="w-full rounded-lg border border-gray-200 bg-white px-2 py-1 text-xs font-medium text-gray-600"
+                                                    >
+                                                        <option value="">{t("shop.product.selectSize", undefined, "Select size")}</option>
+                                                        {product.sizes.map((s: string) => (
+                                                            <option key={s} value={s}>{s}</option>
+                                                        ))}
+                                                    </select>
                                                 )}
-                                            </button>
+                                                <button
+                                                    onClick={(e) => {
+                                                        if (product.sizes?.length > 0) {
+                                                            handleAddToCartWithSize(product, e, sizePopups[product.id] || undefined);
+                                                        } else {
+                                                            handleAddToCart(product, e);
+                                                        }
+                                                    }}
+                                                    className="w-full rounded-lg bg-green-800 py-1.5 text-xs font-semibold text-white hover:bg-green-700 transition-colors flex items-center justify-center gap-1"
+                                                >
+                                                    {addedId === product.id ? (
+                                                        <span>{t("shop.product.added", undefined, "Added!")}</span>
+                                                    ) : (
+                                                        <><ShoppingCart size={14} /> {t("product.addToCart")}</>
+                                                    )}
+                                                </button>
+                                            </div>
                                         )}
                                     </div>
                                 </Link>
@@ -210,16 +240,37 @@ export default function HomePage() {
                                             {product.stock > 0 ? `${t("home.featuredProducts.stockLabel")} ${product.stock}` : t("home.featuredProducts.stockOut")}
                                         </p>
                                         {product.stock > 0 && (
-                                            <button
-                                                onClick={(e) => handleAddToCart(product, e)}
-                                                className="mt-2 w-full rounded-lg bg-green-800 py-1.5 text-xs font-semibold text-white hover:bg-green-700 transition-colors flex items-center justify-center gap-1"
-                                            >
-                                                {addedId === product.id ? (
-                                                    <span>{t("shop.product.added", undefined, "Added!")}</span>
-                                                ) : (
-                                                    <><ShoppingCart size={14} /> {t("product.addToCart")}</>
+                                            <div className="mt-2 space-y-1.5">
+                                                {product.sizes?.length > 0 && (
+                                                    <select
+                                                        value={sizePopups[product.id] || ""}
+                                                        onChange={(e) => setSizePopups({ ...sizePopups, [product.id]: e.target.value })}
+                                                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                                                        className="w-full rounded-lg border border-gray-200 bg-white px-2 py-1 text-xs font-medium text-gray-600"
+                                                    >
+                                                        <option value="">{t("shop.product.selectSize", undefined, "Select size")}</option>
+                                                        {product.sizes.map((s: string) => (
+                                                            <option key={s} value={s}>{s}</option>
+                                                        ))}
+                                                    </select>
                                                 )}
-                                            </button>
+                                                <button
+                                                    onClick={(e) => {
+                                                        if (product.sizes?.length > 0) {
+                                                            handleAddToCartWithSize(product, e, sizePopups[product.id] || undefined);
+                                                        } else {
+                                                            handleAddToCart(product, e);
+                                                        }
+                                                    }}
+                                                    className="w-full rounded-lg bg-green-800 py-1.5 text-xs font-semibold text-white hover:bg-green-700 transition-colors flex items-center justify-center gap-1"
+                                                >
+                                                    {addedId === product.id ? (
+                                                        <span>{t("shop.product.added", undefined, "Added!")}</span>
+                                                    ) : (
+                                                        <><ShoppingCart size={14} /> {t("product.addToCart")}</>
+                                                    )}
+                                                </button>
+                                            </div>
                                         )}
                                     </div>
                                 </Link>

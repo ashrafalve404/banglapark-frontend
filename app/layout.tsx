@@ -17,6 +17,14 @@ export const metadata: Metadata = {
   description:
     "বাংলা পার্ক লিমিটেড — MLM ই-কমার্স প্ল্যাটফর্ম। পণ্য কিনুন, রেফার করুন, আয় করুন।",
   keywords: ["bangla park", "mlm", "ecommerce", "bangladesh"],
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-96x96.png", sizes: "96x96", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+  },
+  manifest: "/site.webmanifest",
 };
 
 export const viewport = {

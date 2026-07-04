@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { ShoppingCart, Bell, User, Menu, X, LogOut, LayoutDashboard, Shield, Search } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
@@ -20,6 +20,7 @@ export function Header() {
     const cartCount = useCartStore((s) => s.count());
     const { t } = useLocale();
     const [menuOpen, setMenuOpen] = useState(false);
+    const [profileOpen, setProfileOpen] = useState(false);
     const [mounted, setMounted] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const router = useRouter();
@@ -31,6 +32,18 @@ export function Header() {
     const categories = categoriesData?.categories ?? [];
 
     useEffect(() => { setMounted(true); }, []);
+
+    const profileRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
+                setProfileOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
@@ -107,30 +120,32 @@ export function Header() {
                         </Link>
 
                         {mounted && isAuthenticated && user ? (
-                            <div className="relative group">
-                                <button className="flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
+                            <div ref={profileRef} className="relative">
+                                <button onClick={() => setProfileOpen(!profileOpen)} className="flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
                                     <User size={16} />
                                     <span className="hidden sm:block max-w-[120px] lg:max-w-[200px] truncate">{user.name}</span>
                                 </button>
-                                <div className="absolute right-0 top-full mt-1 w-48 rounded-lg border border-gray-100 bg-white shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50">
-                                    <div className="p-2">
-                                        {(user.role === "ADMIN" || user.role === "SUPER_ADMIN") && (
-                                            <Link href="/admin" className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-50">
-                                                <Shield size={15} /> {t("nav.adminPanel")}
+                                {profileOpen && (
+                                    <div className="absolute right-0 top-full mt-1 w-48 rounded-lg border border-gray-100 bg-white shadow-lg z-50">
+                                        <div className="p-2">
+                                            {(user.role === "ADMIN" || user.role === "SUPER_ADMIN") && (
+                                                <Link href="/admin" onClick={() => setProfileOpen(false)} className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                                                    <Shield size={15} /> {t("nav.adminPanel")}
+                                                </Link>
+                                            )}
+                                            <Link href="/dashboard" onClick={() => setProfileOpen(false)} className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                                                <LayoutDashboard size={15} /> {t("nav.dashboard")}
                                             </Link>
-                                        )}
-                                        <Link href="/dashboard" className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-50">
-                                            <LayoutDashboard size={15} /> {t("nav.dashboard")}
-                                        </Link>
-                                        <Link href="/dashboard/notifications" className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-50">
-                                            <Bell size={15} /> {t("nav.notifications")}
-                                        </Link>
-                                        <hr className="my-1 border-gray-100" />
-                                        <button onClick={handleLogout} className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-red-600 hover:bg-red-50">
-                                            <LogOut size={15} /> {t("nav.logout")}
-                                        </button>
+                                            <Link href="/dashboard/notifications" onClick={() => setProfileOpen(false)} className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                                                <Bell size={15} /> {t("nav.notifications")}
+                                            </Link>
+                                            <hr className="my-1 border-gray-100" />
+                                            <button onClick={() => { handleLogout(); setProfileOpen(false); }} className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-red-600 hover:bg-red-50">
+                                                <LogOut size={15} /> {t("nav.logout")}
+                                            </button>
+                                        </div>
                                     </div>
-                                </div>
+                                )}
                             </div>
                         ) : (
                             <div className="hidden md:flex items-center gap-2">
