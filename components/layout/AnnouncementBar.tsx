@@ -1,23 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import { useAnnouncement } from "@/lib/announcement-context";
-
-const SEGMENTS = [
-    "🎉 Welcome to Bangla Park Limited — Start Earning Today!",
-    "📞 Contact: 01700-000000",
-    "📧 support@banglapark.com",
-    "🚚 Delivery all over Bangladesh",
-];
-
-const SEPARATOR = "     ·     ";
-const TRACK_TEXT = SEGMENTS.join(SEPARATOR);
+import { useLocale } from "@/lib/i18n";
 
 export function AnnouncementBar() {
+    const { t } = useLocale();
     const { dismissed, dismiss } = useAnnouncement();
-    const [isPaused, setIsPaused] = useState(false);
     const [closing, setClosing] = useState(false);
+    const [isPaused, setIsPaused] = useState(false);
 
     useEffect(() => {
         const handleVisibility = () => setIsPaused(document.hidden);
@@ -25,13 +17,14 @@ export function AnnouncementBar() {
         return () => document.removeEventListener("visibilitychange", handleVisibility);
     }, []);
 
-    // Animate out then dismiss
     const handleClose = () => {
         setClosing(true);
-        setTimeout(dismiss, 280); // matches transition duration
+        setTimeout(dismiss, 300);
     };
 
     if (dismissed) return null;
+
+    const announcementText = t("common.announcement");
 
     return (
         <div
@@ -41,23 +34,26 @@ export function AnnouncementBar() {
                 opacity: closing ? 0 : 1,
             }}
         >
-            {/* Scrolling text — two duplicate tracks for seamless loop */}
-            <div
-                className="flex whitespace-nowrap text-[10px] sm:text-[11px] animate-marquee flex-1 min-w-0"
-                style={{ animationPlayState: isPaused ? "paused" : "running" }}
-            >
-                <span className="inline-block px-8">{TRACK_TEXT}</span>
-                <span className="inline-block px-8" aria-hidden="true">{TRACK_TEXT}</span>
+            {/* Scrolling Banner */}
+            <div className="flex-1 overflow-hidden relative flex items-center h-full pl-4 pr-1">
+                <div
+                    className="whitespace-nowrap animate-marquee-slow inline-block text-[10px] sm:text-[11px] font-medium"
+                    style={{ animationPlayState: isPaused ? "paused" : "running" }}
+                >
+                    <span className="inline-block pr-24">{announcementText}</span>
+                    <span className="inline-block pr-24">{announcementText}</span>
+                </div>
             </div>
 
-            {/* Close button */}
+            {/* Close Button */}
             <button
                 onClick={handleClose}
                 aria-label="Close announcement"
-                className="flex-shrink-0 mr-2 sm:mr-3 p-1 rounded hover:bg-white/15 transition-colors focus:outline-none focus:ring-1 focus:ring-white/40"
+                className="flex-shrink-0 mr-2 sm:mr-3 p-1 rounded hover:bg-white/15 transition-colors focus:outline-none focus:ring-1 focus:ring-white/40 cursor-pointer"
             >
                 <X size={13} strokeWidth={2.5} />
             </button>
         </div>
     );
 }
+

@@ -2,14 +2,16 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { Search, ShieldAlert, Loader2, ArrowRight } from "lucide-react";
+import { Search, ShieldAlert, Loader2, ArrowRight, Trash2 } from "lucide-react";
 import { ordersApi } from "@/lib/api/orders";
 import { formatCurrency, formatDateTime, getOrderStatusLabel } from "@/lib/utils";
 import type { Order, OrderItem, OrderStatus } from "@/types";
 import { useLocale } from "@/lib/i18n";
 
 const ORDER_STATUS_TRANSITIONS: Record<string, string[]> = {
-    PENDING: ["SHIPPED", "CANCELLED"],
+    PENDING: ["CONFIRMED", "CANCELLED"],
+    CONFIRMED: ["PROCESSING", "CANCELLED"],
+    PROCESSING: ["SHIPPED", "CANCELLED"],
     SHIPPED: ["DELIVERED"],
     DELIVERED: [],
     CANCELLED: [],
@@ -30,14 +32,50 @@ export default function AdminOrdersPage() {
     const total = data?.total ?? 0;
     const totalPages = Math.ceil(total / 12) || 1;
 
-    // Change order status mutation
-    const updateStatusMutation = useMutation({
-        mutationFn: ({ id, nextStatus }: { id: string; nextStatus: string }) =>
-            ordersApi.updateStatus(id, nextStatus as OrderStatus),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["admin-orders"] });
+    const [mutatingId, setMutatingId] = useState<string | null>(null);
+
+    // Delete order mutation
+    const deleteMutation = useMutation({
+        mutationFn: (id: string) => ordersApi.deleteOrder(id),
+        onSuccess: (_data, orderId) => {
+            queryClient.setQueriesData<any>({ queryKey: ["admin-orders"] }, (old: any) => {
+                if (!old?.orders) return old;
+                return { ...old, orders: old.orders.filter((o: any) => o.id !== orderId) };
+            });
         },
     });
+
+    const handleDeleteOrder = (orderId: string) => {
+        if (window.confirm("Are you sure you want to permanently delete this order? This action cannot be undone.")) {
+            deleteMutation.mutate(orderId);
+        }
+    };
+
+    // Change order status mutation
+    const updateStatusMutation = useMutation({
+        mutationFn: async ({ id, nextStatus }: { id: string; nextStatus: string }) => {
+            setMutatingId(id);
+            return ordersApi.updateStatus(id, nextStatus as OrderStatus);
+        },
+        onSuccess: (updatedOrder) => {
+            // Update react-query cache directly for instant UI changes
+            queryClient.setQueriesData<any>({ queryKey: ["admin-orders"] }, (oldData: any) => {
+                if (!oldData) return oldData;
+                return {
+                    ...oldData,
+                    orders: oldData.orders?.map((order: any) =>
+                        order.id === updatedOrder.id ? { ...order, status: updatedOrder.status } : order
+                    ) || [],
+                };
+            });
+            // Also trigger background invalidation / check
+            queryClient.invalidateQueries({ queryKey: ["admin-orders"] });
+        },
+        onSettled: () => {
+            setMutatingId(null);
+        },
+    });
+
 
     return (
         <div className="space-y-6">
@@ -56,6 +94,8 @@ export default function AdminOrdersPage() {
                 >
                     <option value="">{t("admin.orders.filter.all")}</option>
                     <option value="PENDING">{t("admin.orders.filter.pending")}</option>
+                    <option value="CONFIRMED">{t("admin.orders.filter.confirmed")}</option>
+                    <option value="PROCESSING">{t("admin.orders.filter.processing")}</option>
                     <option value="SHIPPED">{t("admin.orders.filter.shipped")}</option>
                     <option value="DELIVERED">{t("admin.orders.filter.delivered")}</option>
                     <option value="CANCELLED">{t("admin.orders.filter.cancelled")}</option>
@@ -122,24 +162,39 @@ export default function AdminOrdersPage() {
                                                 )}
                                             </td>
                                             <td className="p-4 text-center">
-                                                {allowedTrans.length > 0 ? (
-                                                    <div className="flex flex-col gap-1 items-center">
-                                                        {allowedTrans.map((next) => (
-                                                            <button
-                                                                key={next}
-                                                                onClick={() => updateStatusMutation.mutate({ id: order.id, nextStatus: next })}
-                                                                className={`text-[10px] py-1 px-2.5 rounded font-bold border ${next === "CANCELLED"
-                                                                    ? "bg-red-50 text-red-650 border-red-200 hover:bg-red-100"
-                                                                    : "bg-green-50 text-green-700 border-green-200 hover:bg-green-100"
-                                                                    }`}
-                                                            >
-                                                                {next === "SHIPPED" ? t("admin.orders.table.btnShip") : next === "DELIVERED" ? t("admin.orders.table.btnDeliver") : t("admin.orders.table.btnCancel")}
-                                                            </button>
-                                                        ))}
-                                                    </div>
-                                                ) : (
-                                                    <span className="text-[10px] text-gray-400 font-semibold">{t("admin.orders.table.completed")}</span>
-                                                )}
+                                                <div className="flex flex-col gap-1 items-center">
+                                                    {allowedTrans.length > 0 ? (
+                                                        allowedTrans.map((next) => {
+                                                            const isMutating = mutatingId === order.id;
+                                                            return (
+                                                                <button
+                                                                    key={next}
+                                                                    disabled={isMutating}
+                                                                    onClick={() => updateStatusMutation.mutate({ id: order.id, nextStatus: next })}
+                                                                    className={`text-[10px] py-1 px-2.5 rounded font-bold border flex items-center justify-center gap-1 ${isMutating
+                                                                            ? "opacity-50 cursor-not-allowed bg-slate-100 text-slate-400 border-slate-200"
+                                                                            : next === "CANCELLED"
+                                                                                ? "bg-red-50 text-red-650 border-red-200 hover:bg-red-100 cursor-pointer"
+                                                                                : "bg-green-50 text-green-700 border-green-200 hover:bg-green-100 cursor-pointer"
+                                                                        }`}
+                                                                >
+                                                                    {isMutating && <Loader2 className="animate-spin" size={10} />}
+                                                                    {next === "CONFIRMED" ? t("admin.orders.table.btnConfirm") : next === "PROCESSING" ? t("admin.orders.table.btnProcess") : next === "SHIPPED" ? t("admin.orders.table.btnShip") : next === "DELIVERED" ? t("admin.orders.table.btnDeliver") : t("admin.orders.table.btnCancel")}
+                                                                </button>
+                                                            );
+                                                        })
+                                                    ) : (
+                                                        <span className="text-[10px] text-gray-400 font-semibold">{t("admin.orders.table.completed")}</span>
+                                                    )}
+                                                    <button
+                                                        onClick={() => handleDeleteOrder(order.id)}
+                                                        className="text-[10px] py-1 px-2.5 rounded font-bold border bg-red-50 text-red-600 border-red-200 hover:bg-red-100 cursor-pointer flex items-center gap-1"
+                                                        title="Delete order"
+                                                    >
+                                                        <Trash2 size={10} />
+                                                        Delete
+                                                    </button>
+                                                </div>
                                             </td>
                                         </tr>
                                     );

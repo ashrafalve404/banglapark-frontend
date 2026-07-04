@@ -110,30 +110,30 @@ export default function CheckoutPage() {
 
                     {/* Heading */}
                     <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                        অর্ডার সফল হয়েছে! 🎉
+                        Order Confirmed
                     </h2>
                     <p className="text-sm text-gray-500 mb-6">
-                        আপনার অর্ডারটি সফলভাবে গ্রহণ করা হয়েছে। শীঘ্রই আমাদের টিম আপনার সাথে যোগাযোগ করবে।
+                        Your order has been placed successfully. We will contact you shortly.
                     </p>
 
                     {/* Order details card */}
                     <div className="rounded-xl border border-gray-100 bg-gray-50 p-4 mb-6 text-left space-y-2">
                         <div className="flex justify-between text-xs text-gray-500">
-                            <span className="font-semibold uppercase tracking-wide">অর্ডার আইডি</span>
+                            <span className="font-semibold uppercase tracking-wide">Order ID</span>
                             <span className="font-mono text-gray-700 truncate max-w-[180px]">{confirmedOrder.id}</span>
                         </div>
                         <div className="flex justify-between text-xs text-gray-500">
-                            <span className="font-semibold uppercase tracking-wide">মোট মূল্য</span>
+                            <span className="font-semibold uppercase tracking-wide">Total</span>
                             <span className="font-bold text-green-800 text-sm">{formatCurrency(Number(confirmedOrder.total))}</span>
                         </div>
                         <div className="flex justify-between text-xs text-gray-500">
-                            <span className="font-semibold uppercase tracking-wide">স্ট্যাটাস</span>
-                            <span className="rounded-full bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5">পেন্ডিং</span>
+                            <span className="font-semibold uppercase tracking-wide">Status</span>
+                            <span className="rounded-full bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5">Pending</span>
                         </div>
                         {confirmedOrder.isQualifying && (
                             <div className="mt-2 rounded-lg bg-green-50 border border-green-200 p-2 text-[11px] text-green-700 font-medium flex items-center gap-1.5">
                                 <PackageCheck size={13} />
-                                এই অর্ডারটি একাউন্ট একটিভেশনের যোগ্য!
+                                This order qualifies for account activation!
                             </div>
                         )}
                     </div>
@@ -144,13 +144,13 @@ export default function CheckoutPage() {
                             onClick={() => router.push("/dashboard/orders")}
                             className="flex-1 btn-primary flex items-center justify-center gap-2"
                         >
-                            আমার অর্ডার দেখুন <ArrowRight size={15} />
+                            View My Orders <ArrowRight size={15} />
                         </button>
                         <button
                             onClick={() => router.push("/shop")}
                             className="flex-1 btn-secondary"
                         >
-                            আরো কেনাকাটা করুন
+                            Continue Shopping
                         </button>
                     </div>
                 </div>

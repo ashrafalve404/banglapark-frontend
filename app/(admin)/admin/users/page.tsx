@@ -2,7 +2,7 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { Search, ShieldAlert, Check, Ban, XSquare, Loader2 } from "lucide-react";
+import { Search, ShieldAlert, Check, Ban, XSquare, Loader2, Trash2 } from "lucide-react";
 import { adminApi } from "@/lib/api/admin";
 import { formatDate } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
@@ -43,6 +43,22 @@ export default function AdminUsersPage() {
         mutationFn: (id: string) => adminApi.deactivateUser(id),
         onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin-users"] }),
     });
+
+    const deleteMutation = useMutation({
+        mutationFn: (id: string) => adminApi.deleteUser(id),
+        onSuccess: (_data, userId) => {
+            queryClient.setQueriesData<any>({ queryKey: ["admin-users"] }, (old: any) => {
+                if (!old?.users) return old;
+                return { ...old, users: old.users.filter((u: any) => u.id !== userId) };
+            });
+        },
+    });
+
+    const handleDelete = (id: string, name: string) => {
+        if (window.confirm(`Are you sure you want to permanently delete "${name}"? This action cannot be undone.`)) {
+            deleteMutation.mutate(id);
+        }
+    };
 
     return (
         <div className="space-y-6">
@@ -141,6 +157,10 @@ export default function AdminUsersPage() {
                                                         {t("admin.users.table.activate")}
                                                     </button>
                                                 )}
+
+                                                <button onClick={() => handleDelete(item.id, item.name)} className="rounded-lg p-1.5 bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 transition-colors" title={t("admin.users.table.deleteTitle")}>
+                                                    <Trash2 size={14} />
+                                                </button>
                                             </div>
                                         </td>
                                     </tr>

@@ -1,6 +1,7 @@
 {
   "common": {
-    "loading": "লোডিং..."
+    "loading": "লোডিং...",
+    "announcement": "🎉 বাংলা পার্ক লিমিটেড-এ আপনাকে স্বাগতম! • 🚚 দেশব্যাপী দ্রুত ক্যাশ অন ডেলিভারি • 📞 হটলাইন: ০১৭৯৪-৪৫৪৪১২ • ✉️ ইমেল: support@banglapark.com"
   },
   "nav": {
     "home": "হোম",
@@ -620,7 +621,8 @@
         "unbanTitle": "আনব্যান করুন",
         "banTitle": "ব্যান করুন",
         "deactivate": "ডিঅ্যাক্টিভ করুন",
-        "activate": "সরাসরি একটিভ করুন"
+        "activate": "সরাসরি একটিভ করুন",
+        "deleteTitle": "ইউজার ডিলিট করুন"
       },
       "prev": "পূর্ববর্তী",
       "next": "পরবর্তী",
@@ -702,6 +704,8 @@
         "heading": "ফিল্টার তালিকা",
         "all": "সকল অর্ডার",
         "pending": "পেন্ডিং অর্ডার (Pending)",
+        "confirmed": "নিশ্চিতকৃত (Confirmed)",
+        "processing": "প্রক্রিয়াধীন (Processing)",
         "shipped": "পাঠানো হয়েছে (Shipped)",
         "delivered": "ডেলিভারড (Delivered)",
         "cancelled": "বাতিলকৃত (Cancelled)"
@@ -716,6 +720,8 @@
         "colAction": "অ্যাকশন",
         "productFallback": "পণ্য",
         "activationBadge": "★ একটিভেশন অর্ডার",
+        "btnConfirm": "নিশ্চিত করুন",
+        "btnProcess": "প্রক্রিয়া শুরু করুন",
         "btnShip": "পাঠিয়ে দিন",
         "btnDeliver": "ডেলিভারড করুন",
         "btnCancel": "বাতিল করুন",

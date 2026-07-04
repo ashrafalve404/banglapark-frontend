@@ -47,8 +47,7 @@ export function Header() {
 
     return (
         <header
-            className="fixed left-0 right-0 z-50 bg-white border-b border-gray-100 shadow-sm transition-[top] duration-300"
-            style={{ top: dismissed ? 0 : "2.25rem" }}
+            className={`fixed left-0 right-0 z-50 bg-white border-b border-gray-100 shadow-sm transition-[top] duration-300 ${dismissed ? "top-0" : "top-8 sm:top-9"}`}
         >
             <div className="page-container">
                 <div className="flex h-16 items-center justify-between">

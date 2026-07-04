@@ -1,6 +1,7 @@
 {
   "common": {
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "announcement": "🎉 Welcome to Bangla Park Limited! • 🚚 Fast Cash on Delivery Nationwide • 📞 Hotline: +8801794-454412 • ✉️ Email: support@banglapark.com"
   },
   "nav": {
     "home": "Home",
@@ -620,7 +621,8 @@
         "unbanTitle": "Unban",
         "banTitle": "Ban",
         "deactivate": "Deactivate",
-        "activate": "Activate Directly"
+        "activate": "Activate Directly",
+        "deleteTitle": "Delete user"
       },
       "prev": "Previous",
       "next": "Next",
@@ -702,6 +704,8 @@
         "heading": "Filter List",
         "all": "All Orders",
         "pending": "Pending Orders",
+        "confirmed": "Confirmed",
+        "processing": "Processing",
         "shipped": "Shipped",
         "delivered": "Delivered",
         "cancelled": "Cancelled"
@@ -716,6 +720,8 @@
         "colAction": "Action",
         "productFallback": "Product",
         "activationBadge": "★ Activation Order",
+        "btnConfirm": "Confirm",
+        "btnProcess": "Process",
         "btnShip": "Mark as Shipped",
         "btnDeliver": "Mark as Delivered",
         "btnCancel": "Cancel",

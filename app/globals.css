@@ -140,15 +140,16 @@
   }
 
   /* ── Announcement bar marquee ───────────────────────────────────────────── */
-  /*
-   * The .animate-marquee div is a flex row containing two identical text tracks
-   * side-by-side (Track A + Track B). Each track is naturally sized by its content.
-   * translateX(-50%) slides the entire flex row left by exactly one track width,
-   * creating a seamless infinite loop.
-   */
   .animate-marquee {
-    animation: marquee 28s linear infinite;
-    will-change: transform;
+    animation: marquee 8s linear infinite;
+  }
+  .animate-marquee-slow {
+    animation: marquee 18s linear infinite;
+  }
+
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
   }
 
   @keyframes marquee {

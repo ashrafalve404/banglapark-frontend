@@ -33,6 +33,11 @@ export const adminApi = {
         return res.data;
     },
 
+    deleteUser: async (id: string): Promise<void> => {
+        const res = await api.delete(`/admin/users/${id}`);
+        return res.data;
+    },
+
     getConfig: async (): Promise<PlatformConfig[]> => {
         const res = await api.get("/admin/config");
         return res.data;

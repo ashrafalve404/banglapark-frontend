@@ -35,4 +35,9 @@ export const ordersApi = {
         const res = await api.patch(`/orders/admin/${id}/status`, { status });
         return res.data;
     },
+
+    deleteOrder: async (id: string): Promise<void> => {
+        const res = await api.delete(`/admin/orders/${id}`);
+        return res.data;
+    },
 };
