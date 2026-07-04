@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Menu } from "lucide-react";
+import { Menu, Loader2 } from "lucide-react";
 import { AdminSidebar } from "@/components/layout/AdminSidebar";
 import { useAuthStore } from "@/store/auth";
 
@@ -10,11 +10,26 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     const { isAuthenticated, user } = useAuthStore();
     const router = useRouter();
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    useEffect(() => {
+        if (!mounted) return; // wait for hydration before checking auth
         if (!isAuthenticated) { router.push("/login"); return; }
         if (user && user.role === "USER") router.push("/dashboard");
-    }, [isAuthenticated, user, router]);
+    }, [mounted, isAuthenticated, user, router]);
+
+    // Show spinner while Zustand rehydrates from localStorage
+    if (!mounted) {
+        return (
+            <div className="flex h-screen items-center justify-center bg-slate-50">
+                <Loader2 className="animate-spin text-green-700" size={32} />
+            </div>
+        );
+    }
 
     if (!isAuthenticated || !user || user.role === "USER") return null;
 

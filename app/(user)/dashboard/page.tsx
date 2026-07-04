@@ -9,12 +9,31 @@ import {
 import { useAuthStore } from "@/store/auth";
 import { walletApi } from "@/lib/api/wallet";
 import { referralApi } from "@/lib/api/categories";
+import { authApi } from "@/lib/api/auth";
 import { formatCurrency, daysUntil, formatDate } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
+import { useEffect } from "react";
 
 export default function DashboardOverview() {
-    const { user } = useAuthStore();
+    const { user: storeUser, setUser } = useAuthStore();
     const { t } = useLocale();
+
+    // Always fetch fresh user profile — the auth store can be stale from login time
+    const { data: freshUser } = useQuery({
+        queryKey: ["user-me"],
+        queryFn: () => authApi.me(),
+        // Refetch on window focus so status updates after admin action are reflected immediately
+        refetchOnWindowFocus: true,
+        staleTime: 0,
+    });
+
+    // Sync fresh data back into the auth store whenever it changes
+    useEffect(() => {
+        if (freshUser) setUser(freshUser);
+    }, [freshUser, setUser]);
+
+    // Use fresh API data when available, fall back to store
+    const user = freshUser ?? storeUser;
 
     const { data: wallet, isLoading: walletLoading } = useQuery({
         queryKey: ["wallet-balance"],

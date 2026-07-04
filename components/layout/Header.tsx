@@ -12,8 +12,10 @@ import { authApi } from "@/lib/api/auth";
 import { categoriesApi } from "@/lib/api/categories";
 import { useLocale } from "@/lib/i18n";
 import { LocaleSwitcher } from "@/components/shared/LocaleSwitcher";
+import { useAnnouncement } from "@/lib/announcement-context";
 
 export function Header() {
+    const { dismissed } = useAnnouncement();
     const { user, isAuthenticated, clearAuth } = useAuthStore();
     const cartCount = useCartStore((s) => s.count());
     const { t } = useLocale();
@@ -44,7 +46,10 @@ export function Header() {
     };
 
     return (
-        <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-100 shadow-sm">
+        <header
+            className="fixed left-0 right-0 z-50 bg-white border-b border-gray-100 shadow-sm transition-[top] duration-300"
+            style={{ top: dismissed ? 0 : "2.25rem" }}
+        >
             <div className="page-container">
                 <div className="flex h-16 items-center justify-between">
                     {/* Logo */}

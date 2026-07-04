@@ -10,6 +10,8 @@ import { useAuthStore } from "@/store/auth";
 import { ordersApi } from "@/lib/api/orders";
 import { formatCurrency } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
+import { CheckCircle2, PackageCheck, ArrowRight, X } from "lucide-react";
+import type { Order } from "@/types";
 
 const checkoutSchema = z.object({
     name: z.string().min(2, "নাম অবশ্যই প্রদান করতে হবে"),
@@ -28,15 +30,16 @@ export default function CheckoutPage() {
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [confirmedOrder, setConfirmedOrder] = useState<Order | null>(null);
 
     const cartTotal = total();
 
     // Route back if user has empty cart
     useEffect(() => {
-        if (items.length === 0) {
+        if (items.length === 0 && !confirmedOrder) {
             router.push("/shop");
         }
-    }, [items, router]);
+    }, [items, router, confirmedOrder]);
 
     // Route to login if not authenticated
     useEffect(() => {
@@ -71,7 +74,7 @@ export default function CheckoutPage() {
                 quantity: i.quantity,
             }));
 
-            await ordersApi.checkout({
+            const order = await ordersApi.checkout({
                 items: orderItems,
                 shippingAddress: {
                     name: data.name,
@@ -82,10 +85,9 @@ export default function CheckoutPage() {
                 notes: data.notes,
             });
 
-            // Clear local shopping cart trigger
+            // Clear cart and show confirmation modal
             clear();
-            // Forward to success landing page / my-orders
-            router.push("/dashboard/orders");
+            setConfirmedOrder(order);
         } catch (err: any) {
             setError(
                 err.response?.data?.message || t("checkout.error.default")
@@ -94,6 +96,67 @@ export default function CheckoutPage() {
             setLoading(false);
         }
     };
+
+    // ── Order Confirmation Modal ───────────────────────────────────────────────
+    if (confirmedOrder) {
+        return (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+                <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 text-center animate-[fadeInUp_0.4s_ease]">
+                    {/* Icon */}
+                    <div className="relative mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-green-50">
+                        <div className="absolute inset-0 rounded-full bg-green-100 animate-ping opacity-40" />
+                        <CheckCircle2 className="text-green-600 relative z-10" size={44} strokeWidth={1.5} />
+                    </div>
+
+                    {/* Heading */}
+                    <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                        অর্ডার সফল হয়েছে! 🎉
+                    </h2>
+                    <p className="text-sm text-gray-500 mb-6">
+                        আপনার অর্ডারটি সফলভাবে গ্রহণ করা হয়েছে। শীঘ্রই আমাদের টিম আপনার সাথে যোগাযোগ করবে।
+                    </p>
+
+                    {/* Order details card */}
+                    <div className="rounded-xl border border-gray-100 bg-gray-50 p-4 mb-6 text-left space-y-2">
+                        <div className="flex justify-between text-xs text-gray-500">
+                            <span className="font-semibold uppercase tracking-wide">অর্ডার আইডি</span>
+                            <span className="font-mono text-gray-700 truncate max-w-[180px]">{confirmedOrder.id}</span>
+                        </div>
+                        <div className="flex justify-between text-xs text-gray-500">
+                            <span className="font-semibold uppercase tracking-wide">মোট মূল্য</span>
+                            <span className="font-bold text-green-800 text-sm">{formatCurrency(Number(confirmedOrder.total))}</span>
+                        </div>
+                        <div className="flex justify-between text-xs text-gray-500">
+                            <span className="font-semibold uppercase tracking-wide">স্ট্যাটাস</span>
+                            <span className="rounded-full bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5">পেন্ডিং</span>
+                        </div>
+                        {confirmedOrder.isQualifying && (
+                            <div className="mt-2 rounded-lg bg-green-50 border border-green-200 p-2 text-[11px] text-green-700 font-medium flex items-center gap-1.5">
+                                <PackageCheck size={13} />
+                                এই অর্ডারটি একাউন্ট একটিভেশনের যোগ্য!
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex flex-col sm:flex-row gap-3">
+                        <button
+                            onClick={() => router.push("/dashboard/orders")}
+                            className="flex-1 btn-primary flex items-center justify-center gap-2"
+                        >
+                            আমার অর্ডার দেখুন <ArrowRight size={15} />
+                        </button>
+                        <button
+                            onClick={() => router.push("/shop")}
+                            className="flex-1 btn-secondary"
+                        >
+                            আরো কেনাকাটা করুন
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     if (!isAuthenticated || items.length === 0) return null;
 
@@ -192,3 +255,4 @@ export default function CheckoutPage() {
         </div>
     );
 }
+

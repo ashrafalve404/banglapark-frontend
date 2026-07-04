@@ -46,7 +46,14 @@
     "adminWithdrawals": "Withdrawals",
     "adminCommissionRules": "Commission Rules",
     "adminReports": "Reports",
-    "navBanners": "Banners"
+    "navBanners": "Banners",
+    "banners": "Banners",
+    "users": "Users",
+    "products": "Products",
+    "categories": "Categories",
+    "withdrawals": "Withdrawals",
+    "commissionRules": "Commission Rules",
+    "reports": "Reports"
   },
   "home": {
     "badge": "Bangladesh's Trusted MLM Platform",

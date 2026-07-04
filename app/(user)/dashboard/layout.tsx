@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Menu } from "lucide-react";
+import { Menu, Loader2 } from "lucide-react";
 import { DashboardSidebar } from "@/components/layout/DashboardSidebar";
 import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
 import { useAuthStore } from "@/store/auth";
@@ -11,15 +11,34 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     const { isAuthenticated, user } = useAuthStore();
     const router = useRouter();
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    // Hydration guard: Zustand persist reads localStorage only on the client.
+    // Without this, isAuthenticated is false during SSR/hydration → false redirect to login.
+    const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
-        if (!isAuthenticated) router.push("/login?redirect=/dashboard");
-    }, [isAuthenticated, router]);
+        setMounted(true);
+    }, []);
+
+    useEffect(() => {
+        // Only redirect AFTER hydration so we don't act on the transient pre-hydration state
+        if (mounted && !isAuthenticated) {
+            router.push("/login?redirect=/dashboard");
+        }
+    }, [mounted, isAuthenticated, router]);
+
+    // Show a full-screen loader while Zustand is hydrating from localStorage
+    if (!mounted) {
+        return (
+            <div className="flex h-screen items-center justify-center bg-gray-50">
+                <Loader2 className="animate-spin text-green-700" size={32} />
+            </div>
+        );
+    }
 
     if (!isAuthenticated || !user) return null;
 
     return (
-        <div className="flex h-screen bg-gray-50">
+        <div className="flex h-screen bg-gray-50 overflow-hidden">
             {/* Desktop sidebar */}
             <div className="hidden lg:flex lg:w-64 lg:flex-col lg:border-r lg:border-gray-100">
                 <DashboardSidebar />
@@ -58,3 +77,4 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </div>
     );
 }
+

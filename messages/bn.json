@@ -46,7 +46,14 @@
     "adminWithdrawals": "উত্তোলন",
     "adminCommissionRules": "কমিশন রুলস",
     "adminReports": "রিপোর্ট",
-    "navBanners": "ব্যানার"
+    "navBanners": "ব্যানার",
+    "banners": "ব্যানার",
+    "users": "ব্যবহারকারী",
+    "products": "পণ্য",
+    "categories": "ক্যাটাগরি",
+    "withdrawals": "উত্তোলন",
+    "commissionRules": "কমিশন রুলস",
+    "reports": "রিপোর্ট"
   },
   "home": {
     "badge": "বাংলাদেশের বিশ্বস্ত MLM প্ল্যাটফর্ম",
