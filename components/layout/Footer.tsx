@@ -40,6 +40,7 @@ export function Footer() {
                         <ul className="space-y-2">
                             <li><span className="text-sm text-gray-400">{t("nav.supportHours")}</span></li>
                             <li><span className="text-sm text-gray-400">{t("nav.supportEmail")}</span></li>
+                            <li><span className="text-sm text-gray-400">{t("nav.supportPhone")}</span></li>
                         </ul>
                     </div>
                 </div>
