@@ -9,7 +9,7 @@ import { formatCurrency, formatDate } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
 
 export default function DailyBenefitPage() {
-    const { t } = useLocale();
+    const { t, locale } = useLocale();
     const [page, setPage] = useState(1);
 
     const { data: tiers = [], isLoading: tiersLoading } = useQuery({
@@ -56,7 +56,7 @@ export default function DailyBenefitPage() {
                     </div>
                     <div>
                         <h2 className="text-2xl font-extrabold mb-1">
-                            {currentTier ? `${formatCurrency(currentTier.amount)} ${t("dailyBenefit.currentTier.perDay")}` : t("dailyBenefit.currentTier.none")}
+                            {currentTier ? `${formatCurrency(currentTier.amount, locale)} ${t("dailyBenefit.currentTier.perDay")}` : t("dailyBenefit.currentTier.none")}
                         </h2>
                         <p className="text-xs text-green-200">
                             {t("dailyBenefit.currentTier.teamLabel")} <strong className="text-white">{activeCount}{t("dailyBenefit.currentTier.teamUnit")}</strong>
@@ -73,7 +73,7 @@ export default function DailyBenefitPage() {
                     {nextTargetTier ? (
                         <div>
                             <p className="text-xs text-gray-500 mb-2">
-                                {t("dailyBenefit.nextTier.text", { count: nextTargetTier.minCount, amount: formatCurrency(nextTargetTier.amount) })}
+                                {t("dailyBenefit.nextTier.text", { count: nextTargetTier.minCount, amount: formatCurrency(nextTargetTier.amount, locale) })}
                             </p>
                             <div className="h-2 w-full bg-gray-150 rounded-full mb-1 bg-gray-100 overflow-hidden">
                                 <div className="h-full bg-green-755" style={{ width: `${Math.min(100, (activeCount / nextTargetTier.minCount) * 100)}%` }} />
@@ -103,7 +103,7 @@ export default function DailyBenefitPage() {
                                 <div className="text-xs font-semibold text-gray-600 mb-1">{t("dailyBenefit.chart.memberLabel")}</div>
                                 <div className="text-sm font-bold text-gray-900 mb-1">{tier.minCount}{t("dailyBenefit.chart.memberCount")}</div>
                                 <hr className="my-1.5 border-gray-100" />
-                                <div className={`text-base font-extrabold ${isSelfOrMore ? "text-green-850" : "text-gray-600"}`}>{formatCurrency(tier.amount)}</div>
+                                <div className={`text-base font-extrabold ${isSelfOrMore ? "text-green-850" : "text-gray-600"}`}>{formatCurrency(tier.amount, locale)}</div>
                                 <div className="text-[10px] text-gray-500">{t("dailyBenefit.chart.perDay")}</div>
                             </div>
                         );
@@ -135,7 +135,7 @@ export default function DailyBenefitPage() {
                                     <tr key={lg.id} className="hover:bg-gray-50/50">
                                         <td className="p-4 text-xs text-gray-650">{formatDate(lg.date)}</td>
                                         <td className="p-4 text-xs text-gray-550 text-center font-semibold">{lg.teamCount}{t("dailyBenefit.history.teamUnit")}</td>
-                                        <td className="p-4 text-xs font-bold text-green-700 text-right">{formatCurrency(lg.amount)}</td>
+                                        <td className="p-4 text-xs font-bold text-green-700 text-right">{formatCurrency(lg.amount, locale)}</td>
                                     </tr>
                                 ))}
                             </tbody>

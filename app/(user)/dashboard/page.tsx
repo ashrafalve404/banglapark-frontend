@@ -3,12 +3,13 @@
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import {
-    Wallet, Users, ShoppingBag, ShieldCheck,
-    AlertCircle, ChevronRight, ArrowUpRight, ArrowDownRight, Clock
+    Wallet, Users, ShieldCheck, Gift, TrendingUp,
+    AlertCircle, ArrowUpRight, Clock, ChevronRight, ShoppingBag
 } from "lucide-react";
 import { useAuthStore } from "@/store/auth";
 import { walletApi } from "@/lib/api/wallet";
 import { referralApi } from "@/lib/api/categories";
+import { dailyBenefitApi } from "@/lib/api/commissions";
 import { authApi } from "@/lib/api/auth";
 import { formatCurrency, daysUntil, formatDate } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
@@ -16,7 +17,7 @@ import { useEffect } from "react";
 
 export default function DashboardOverview() {
     const { user: storeUser, setUser } = useAuthStore();
-    const { t } = useLocale();
+    const { t, locale } = useLocale();
 
     // Always fetch fresh user profile — the auth store can be stale from login time
     const { data: freshUser } = useQuery({
@@ -46,6 +47,16 @@ export default function DashboardOverview() {
         queryFn: () => referralApi.teamStats(),
         refetchOnWindowFocus: true,
     });
+
+    const { data: benefitTiers = [] } = useQuery({
+        queryKey: ["benefit-tiers"],
+        queryFn: () => dailyBenefitApi.tiers(),
+    });
+
+    const activeCount = referralStats?.activeTeam ?? 0;
+    const currentTier = [...benefitTiers]
+        .sort((a, b) => b.minCount - a.minCount)
+        .find((tier) => activeCount >= tier.minCount);
 
     const activeDays = user?.activeUntil ? daysUntil(user.activeUntil) : 0;
     const isExpiringSoon = activeDays > 0 && activeDays <= 5;
@@ -95,7 +106,7 @@ export default function DashboardOverview() {
                     <div className="space-y-1">
                         <span className="text-xs text-gray-500 font-semibold uppercase tracking-wider block">{t("dashboard.card.walletBalance")}</span>
                         <span className="text-2xl font-bold text-green-800">
-                            {walletLoading ? "..." : formatCurrency(wallet?.balance ?? 0)}
+                            {walletLoading ? "..." : formatCurrency(wallet?.balance ?? 0, locale)}
                         </span>
                     </div>
                     <div className="rounded-lg bg-green-50 p-2.5 text-green-800">
@@ -107,7 +118,7 @@ export default function DashboardOverview() {
                     <div className="space-y-1">
                         <span className="text-xs text-gray-500 font-semibold uppercase tracking-wider block">{t("dashboard.card.pendingWithdrawal")}</span>
                         <span className="text-2xl font-bold text-gray-800">
-                            {walletLoading ? "..." : formatCurrency(wallet?.pendingWithdrawal ?? 0)}
+                            {walletLoading ? "..." : formatCurrency(wallet?.pendingWithdrawal ?? 0, locale)}
                         </span>
                     </div>
                     <div className="rounded-lg bg-gray-50 p-2.5 text-gray-800">
@@ -158,6 +169,63 @@ export default function DashboardOverview() {
                             <span className={`text-sm font-bold ${lnk.text}`}>{lnk.title}</span>
                         </Link>
                     ))}
+                </div>
+            </div>
+
+            {/* How It Works - compact */}
+            <div className="card p-5">
+                <h3 className="text-sm font-bold text-gray-900 mb-4 pb-2 border-b border-gray-100">{t("home.howItWorks.heading")}</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    {[
+                        { icon: Gift, label: t("home.howItWorks.step1.label"), title: t("home.howItWorks.step1.title"), desc: t("home.howItWorks.step1.desc") },
+                        { icon: ShoppingBag, label: t("home.howItWorks.step2.label"), title: t("home.howItWorks.step2.title"), desc: t("home.howItWorks.step2.desc") },
+                        { icon: TrendingUp, label: t("home.howItWorks.step3.label"), title: t("home.howItWorks.step3.title"), desc: t("home.howItWorks.step3.desc") },
+                    ].map((item) => (
+                        <div key={item.label} className="flex items-start gap-3 rounded-lg bg-gray-50 p-3">
+                            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-green-100 text-xs font-extrabold text-green-700">
+                                {item.label}
+                            </div>
+                            <div className="min-w-0">
+                                <h4 className="text-xs font-bold text-gray-800">{item.title}</h4>
+                                <p className="text-[11px] text-gray-500 leading-snug mt-0.5">{item.desc}</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            {/* Daily Benefit - compact */}
+            <div className="card p-5">
+                <div className="flex items-center justify-between mb-4 pb-2 border-b border-gray-100">
+                    <h3 className="text-sm font-bold text-gray-900">{t("home.earningsBanner.heading")}</h3>
+                    <Link href="/dashboard/daily-benefit" className="text-xs font-medium text-green-700 hover:underline flex items-center gap-0.5">
+                        {t("dashboard.quickLinks.wallet", undefined, "Details")} <ChevronRight size={12} />
+                    </Link>
+                </div>
+                {currentTier ? (
+                    <div className="flex items-center justify-between rounded-lg bg-gradient-to-r from-green-900 to-green-800 text-white p-3 mb-4">
+                        <div>
+                            <span className="text-[10px] text-green-200 font-semibold uppercase tracking-wider">{t("dailyBenefit.currentTier.label")}</span>
+                            <div className="text-lg font-extrabold">{formatCurrency(currentTier.amount, locale)} <span className="text-xs font-medium text-green-200">{t("dailyBenefit.currentTier.perDay")}</span></div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <Users size={16} className="text-amber-400" />
+                            <span className="text-sm font-bold text-white">{activeCount}</span>
+                        </div>
+                    </div>
+                ) : (
+                    <p className="text-xs text-gray-500 mb-4">{t("dailyBenefit.currentTier.none")}</p>
+                )}
+                <div className="grid grid-cols-4 sm:grid-cols-7 gap-1.5">
+                    {benefitTiers.map((tier) => {
+                        const unlocked = activeCount >= tier.minCount;
+                        return (
+                            <div key={tier.minCount} className={`rounded-lg p-2 text-center border ${unlocked ? "bg-green-50 border-green-200" : "bg-gray-50 border-gray-100"}`}>
+                                <div className={`text-[9px] font-semibold ${unlocked ? "text-green-800" : "text-gray-400"}`}>{tier.minCount}+</div>
+                                <div className={`text-xs font-extrabold ${unlocked ? "text-green-800" : "text-gray-500"}`}>{formatCurrency(tier.amount, locale)}</div>
+                            </div>
+                        );
+                    })}
                 </div>
             </div>
         </div>

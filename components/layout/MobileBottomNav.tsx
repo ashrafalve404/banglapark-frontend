@@ -6,6 +6,7 @@ import { Home, ShoppingBag, ShoppingCart, User, LayoutDashboard } from "lucide-r
 import { useLocale } from "@/lib/i18n";
 import { useCartStore } from "@/store/cart";
 import { useAuthStore } from "@/store/auth";
+import { useEffect, useState } from "react";
 
 const NAV_ITEMS = [
     { href: "/", icon: Home, labelKey: "nav.home" },
@@ -20,8 +21,12 @@ export function MobileBottomNav() {
     const { t } = useLocale();
     const cartCount = useCartStore((s) => s.count());
     const { isAuthenticated } = useAuthStore();
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => { setMounted(true); }, []);
 
     const visibleItems = NAV_ITEMS.filter((item) => {
+        if (!mounted) return item.href === "/" || item.href === "/shop" || item.href === "/cart";
         if (item.auth && !isAuthenticated) return false;
         if (item.guest && isAuthenticated) return false;
         return true;
@@ -44,7 +49,7 @@ export function MobileBottomNav() {
                         >
                             <div className="relative">
                                 <Icon size={22} strokeWidth={isActive ? 2.5 : 1.8} />
-                                {item.showBadge && cartCount > 0 && (
+                                {item.showBadge && mounted && cartCount > 0 && (
                                     <span className="absolute -top-1.5 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-green-800 text-[10px] font-bold text-white">
                                         {cartCount > 9 ? "9+" : cartCount}
                                     </span>

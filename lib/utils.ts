@@ -5,8 +5,10 @@ export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
 }
 
-export function formatCurrency(amount: number | string): string {
-    return `৳${Number(amount).toLocaleString("bn-BD")}`;
+export function formatCurrency(amount: number | string, locale = "bn-BD"): string {
+    const localeMap: Record<string, string> = { bn: "bn-BD", en: "en-IN" };
+    const l = localeMap[locale] || locale;
+    return `৳${Number(amount).toLocaleString(l)}`;
 }
 
 export function formatDate(dateStr: string): string {

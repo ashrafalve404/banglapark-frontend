@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, ShieldCheck, TrendingUp, Gift, ShoppingCart, ShoppingBag, Award } from "lucide-react";
+import { ArrowRight, ShoppingCart, ShoppingBag } from "lucide-react";
 import { BannerCarousel } from "@/components/home/BannerCarousel";
 import { productsApi } from "@/lib/api/products";
 import { categoriesApi } from "@/lib/api/categories";
@@ -280,70 +280,7 @@ export default function HomePage() {
                 </div>
             </section>
 
-            {/* How it works */}
-            <section className="bg-gray-50 py-14 lg:py-16">
-                <div className="page-container">
-                    <div className="text-center mb-10">
-                        <h2 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">{t("home.howItWorks.heading")}</h2>
-                        <p className="text-gray-500 text-sm">{t("home.howItWorks.subheading")}</p>
-                    </div>
-                    <div className="relative flex flex-col sm:flex-row items-start sm:items-center justify-center gap-6 sm:gap-0 max-w-4xl mx-auto">
-                        {[
-                            { icon: ShieldCheck, step: t("home.howItWorks.step1.label"), title: t("home.howItWorks.step1.title"), desc: t("home.howItWorks.step1.desc") },
-                            { icon: Gift, step: t("home.howItWorks.step2.label"), title: t("home.howItWorks.step2.title"), desc: t("home.howItWorks.step2.desc") },
-                            { icon: TrendingUp, step: t("home.howItWorks.step3.label"), title: t("home.howItWorks.step3.title"), desc: t("home.howItWorks.step3.desc") },
-                        ].map((item, i) => (
-                            <div key={item.step} className="relative flex-1 sm:px-4">
-                                {i < 2 && (
-                                    <div className="hidden sm:block absolute top-14 left-[60%] w-[calc(80%)] h-px border-t border-dashed border-gray-300" />
-                                )}
-                                <div className="group card-flat p-6 text-center hover:shadow-md transition-all">
-                                    <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-green-100 text-green-700 text-lg font-extrabold">
-                                        {item.step}
-                                    </div>
-                                    <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-xl bg-green-50">
-                                        <item.icon size={26} className="text-green-700" />
-                                    </div>
-                                    <h3 className="text-base font-bold text-gray-800 mb-1.5">{item.title}</h3>
-                                    <p className="text-sm text-gray-500 leading-relaxed">{item.desc}</p>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
 
-            {/* Daily Benefit */}
-            <section className="relative overflow-hidden bg-gradient-to-br from-green-900 via-green-800 to-green-700 text-white pb-6 pt-8 lg:pb-10 lg:pt-10">
-                <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%23ffffff%22%20fill-opacity%3D%220.03%22%3E%3Cpath%20d%3D%22M36%2034v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6%2034v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6%204V0H4v4H0v2h4v4h2V6h4V4H6z%22%2F%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E')]" />
-                <div className="page-container relative">
-                    <div className="text-center mb-4">
-                        <h2 className="text-xl lg:text-2xl font-bold text-white mb-1">{t("home.earningsBanner.heading")}</h2>
-                        <p className="text-green-200/80 text-sm max-w-xl mx-auto mb-4">{t("home.earningsBanner.subtext")}</p>
-                        <Link href="/register" className="inline-flex items-center gap-2 rounded-lg bg-amber-400 hover:bg-amber-300 px-5 py-2 text-xs font-bold text-green-950 shadow-lg hover:shadow-xl transition-all">
-                            {t("home.earningsBanner.cta")} <ArrowRight size={18} />
-                        </Link>
-                    </div>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-4xl mx-auto">
-                        {[
-                            { count: "৫+", amount: "৳১০০" },
-                            { count: "২০+", amount: "৳২০০" },
-                            { count: "৫০+", amount: "৳৩০০" },
-                            { count: "১০০+", amount: "৳৫০০" },
-                            { count: "৫০০+", amount: "৳১,০০০" },
-                            { count: "৫,০০০+", amount: "৳২,০০০" },
-                            { count: "১০,০০০+", amount: "৳৫,০০০" },
-                        ].map((tier) => (
-                            <div key={tier.count} className="group rounded-lg bg-white/10 backdrop-blur-sm border border-white/20 p-3 text-center hover:bg-white/20 hover:border-amber-400/50 transition-all duration-200">
-                                <Award size={16} className="mx-auto mb-1.5 text-amber-400/80 group-hover:text-amber-300 transition-colors" />
-                                <div className="text-amber-300 font-bold text-xs mb-0.5">{tier.count} {t("home.earningsBanner.tier.member")}</div>
-                                <div className="text-white font-extrabold text-xl lg:text-2xl tracking-tight mb-0.5">{tier.amount}</div>
-                                <div className="text-green-300/50 text-[10px] font-medium uppercase tracking-wider">{t("home.earningsBanner.tier.perDay")}</div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
         </div>
     );
 }
