@@ -38,6 +38,9 @@ export default function AdminBannersPage() {
             queryClient.invalidateQueries({ queryKey: ["admin-banners"] });
             resetForm();
         },
+        onError: (err: any) => {
+            alert(err.response?.data?.message || "Failed to create banner");
+        },
     });
 
     const updateMutation = useMutation({
@@ -111,6 +114,7 @@ export default function AdminBannersPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                         <label className="block text-xs font-semibold text-slate-600 mb-1">Banner Image *</label>
+                        <p className="text-[10px] text-gray-400 mb-2">Recommended size: 1200 × 400 px</p>
                         {imageUrl ? (
                             <div className="relative w-full h-40 rounded-lg border border-slate-200 overflow-hidden bg-slate-50">
                                 <img src={imageUrl} alt="Banner preview" className="w-full h-full object-cover" />
