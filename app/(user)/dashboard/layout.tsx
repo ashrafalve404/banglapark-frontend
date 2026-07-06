@@ -6,9 +6,11 @@ import { Menu, Loader2 } from "lucide-react";
 import { DashboardSidebar } from "@/components/layout/DashboardSidebar";
 import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
 import { useAuthStore } from "@/store/auth";
+import { useLocale } from "@/lib/i18n";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     const { isAuthenticated, user } = useAuthStore();
+    const { t } = useLocale();
     const router = useRouter();
     const [sidebarOpen, setSidebarOpen] = useState(false);
     // Hydration guard: Zustand persist reads localStorage only on the client.
@@ -63,10 +65,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     </button>
                     <div className="flex-1" />
                     <div className="flex items-center gap-2">
-                        <span className="text-sm text-gray-500">স্বাগতম,</span>
+                        <span className="text-sm text-gray-500">{t("dashboard.header.welcome")},</span>
                         <span className="text-sm font-semibold text-gray-800">{user.name}</span>
                         <span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${user.status === "ACTIVE" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-500"}`}>
-                            {user.status === "ACTIVE" ? "সক্রিয়" : "নিষ্ক্রিয়"}
+                            {user.status === "ACTIVE" ? t("dashboard.header.active") : t("dashboard.header.inactive")}
                         </span>
                     </div>
                 </header>

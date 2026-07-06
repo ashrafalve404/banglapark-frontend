@@ -13,7 +13,7 @@ export default function ProductDetailPage() {
     const { slug } = useParams() as { slug: string };
     const router = useRouter();
     const addItem = useCartStore((s) => s.addItem);
-    const { t } = useLocale();
+    const { t, locale } = useLocale();
     const [qty, setQty] = useState(1);
     const [selectedSize, setSelectedSize] = useState("");
     const [msg, setMsg] = useState(false);
@@ -85,7 +85,7 @@ export default function ProductDetailPage() {
                     </h1>
 
                     <div className="mt-2 mb-6">
-                        <span className="text-3xl font-extrabold text-green-800">{formatCurrency(product.price)}</span>
+                        <span className="text-3xl font-extrabold text-green-800">{formatCurrency(product.price, locale)}</span>
                         <span className="ml-2 text-sm text-gray-400 font-medium">{t("product.vatLabel")}</span>
                     </div>
 

@@ -142,7 +142,7 @@ export default function DashboardOverview() {
                     <div className="space-y-1">
                         <span className="text-xs text-gray-500 font-semibold uppercase tracking-wider block">{t("dashboard.card.activationEnd")}</span>
                         <span className="text-sm font-semibold text-gray-800 block">
-                            {user?.activeUntil ? formatDate(user.activeUntil) : t("dashboard.card.activationEndNone")}
+                            {user?.activeUntil ? formatDate(user.activeUntil, locale) : t("dashboard.card.activationEndNone")}
                         </span>
                         {!isInactive && (
                             <span className="text-[10px] text-green-700 bg-green-50 px-2 py-0.5 rounded-full inline-block">

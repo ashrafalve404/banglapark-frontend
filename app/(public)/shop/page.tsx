@@ -9,9 +9,10 @@ import { productsApi } from "@/lib/api/products";
 import { categoriesApi } from "@/lib/api/categories";
 import { useCartStore } from "@/store/cart";
 import { useLocale } from "@/lib/i18n";
+import { formatCurrency } from "@/lib/utils";
 
 function ShopPageContent() {
-    const { t } = useLocale();
+    const { t, locale } = useLocale();
     const searchParams = useSearchParams();
     const [search, setSearch] = useState(searchParams.get("search") || "");
     const [selectedCategory, setSelectedCategory] = useState("all");
@@ -155,7 +156,7 @@ function ShopPageContent() {
                                         </h3>
                                         <div className="mt-auto">
                                             <p className="text-base font-bold text-green-800">
-                                                ৳{Number(product.price).toLocaleString("bn-BD")}
+                                                ৳{formatCurrency(product.price, locale).replace("৳", "")}
                                             </p>
                                             <p className={`text-xs mt-0.5 ${product.stock > 0 ? "text-gray-400" : "text-red-500 font-semibold"}`}>
                                                 {product.stock > 0 ? `${t("shop.product.stockLabel")} ${product.stock}` : t("shop.product.stockOut")}

@@ -10,7 +10,7 @@ import { useLocale } from "@/lib/i18n";
 const ACTIVATION_THRESHOLD = 2000;
 
 export default function CartPage() {
-    const { t } = useLocale();
+    const { t, locale } = useLocale();
     const { items, updateQty, removeItem, total, clear } = useCartStore();
     const router = useRouter();
 
@@ -57,7 +57,7 @@ export default function CartPage() {
                                     <span className="text-xs text-gray-500 font-medium">{t("cart.product.sizeLabel", undefined, "Size")}: {item.size}</span>
                                 )}
                                 <div className="mt-1 flex items-center gap-4">
-                                    <span className="text-sm font-bold text-green-800">{formatCurrency(item.product.price)}</span>
+                                    <span className="text-sm font-bold text-green-800">{formatCurrency(item.product.price, locale)}</span>
                                     {Number(item.product.price) >= ACTIVATION_THRESHOLD && (
                                         <span className="text-[10px] font-semibold text-amber-800 bg-amber-50 px-2 py-0.5 rounded-full">{t("cart.product.activationBadge")}</span>
                                     )}
@@ -109,7 +109,7 @@ export default function CartPage() {
                                         <div className="h-full bg-amber-600" style={{ width: `${(cartTotal / ACTIVATION_THRESHOLD) * 100}%` }} />
                                     </div>
                                     <p className="text-xs text-amber-700 font-medium">
-                                        {t("cart.activationStatus.notMet", { amount: formatCurrency(remainingForActivation) })}
+                                        {t("cart.activationStatus.notMet", { amount: formatCurrency(remainingForActivation, locale) })}
                                     </p>
                                 </div>
                             )}
@@ -118,7 +118,7 @@ export default function CartPage() {
                         <div className="space-y-3 mb-6">
                             <div className="flex justify-between text-sm text-gray-500">
                                 <span>{t("cart.summary.subtotal")}</span>
-                                <span className="font-semibold text-gray-900">{formatCurrency(cartTotal)}</span>
+                                <span className="font-semibold text-gray-900">{formatCurrency(cartTotal, locale)}</span>
                             </div>
                             <div className="flex justify-between text-sm text-gray-500">
                                 <span>{t("cart.summary.delivery")}</span>
@@ -127,7 +127,7 @@ export default function CartPage() {
                             <hr className="border-gray-100" />
                             <div className="flex justify-between text-base font-bold text-gray-900">
                                 <span>{t("cart.summary.total")}</span>
-                                <span className="text-green-800">{formatCurrency(cartTotal)}</span>
+                                <span className="text-green-800">{formatCurrency(cartTotal, locale)}</span>
                             </div>
                         </div>
 

@@ -30,6 +30,7 @@
     "supportEmail": "banglaparkltd@gmail.com",
     "supportPhone": "+8801823674796",
     "copyright": "© {year} বাংলা পার্ক লিমিটেড। সকল স্বত্ব সংরক্ষিত।",
+    "paymentMethods": "পেমেন্ট পদ্ধতি",
     "mlmTagline": "MLM ই-কমার্স প্ল্যাটফর্ম",
     "overview": "ওভারভিউ",
     "profile": "প্রোফাইল",
@@ -214,10 +215,15 @@
       "phoneLabel": "মোবাইল নাম্বার",
       "cityLabel": "জেলা / শহর",
       "cityPlaceholder": "ঢাকা",
-      "addressLabel": "সম্পূর্ণ ঠিকানা",
-      "addressPlaceholder": "রোড, ফ্ল্যাট, থানা...",
-      "notesLabel": "অতিরিক্ত নির্দেশনা (ঐচ্ছিক)",
-      "notesPlaceholder": "ডেলিভারি সংক্রান্ত কিছু লিখে রাখতে পারেন..."
+      "addressLabel": "পূর্ণ ঠিকানা",
+      "addressPlaceholder": "রাস্তা, ফ্ল্যাট, থানা...",
+      "notesLabel": "অতিরিক্ত নোট (ঐচ্ছিক)",
+      "notesPlaceholder": "আপনার ডেলিভারি সংক্রান্ত নির্দেশনা লিখতে পারেন...",
+      "deliveryAreaLabel": "ডেলিভারি এলাকা",
+      "insideDhaka": "ঢাকার ভিতরে",
+      "outsideDhaka": "ঢাকার বাহিরে",
+      "deliveryChargeInside": "ডেলিভারি চার্জ: ৳৬০",
+      "deliveryChargeOutside": "ডেলিভারি চার্জ: ৳১৫০"
     },
     "review": {
       "heading": "অর্ডার পুনর্নিরীক্ষণ",
@@ -228,7 +234,13 @@
     },
     "payment": {
       "heading": "পেমেন্ট পদ্ধতি",
-      "method": "ক্যাশ অন ডেলিভারি (পণ্য হাতে পেয়ে পেমেন্ট করুন)"
+      "method": "ক্যাশ অন ডেলিভারি (পণ্য হাতে পেয়ে পেমেন্ট করুন)",
+      "bkash": "বিকাশ সেন্ড মানি",
+      "bkashNumber": "টাকা পাঠান: +8801823674796",
+      "bkashNumberPlaceholder": "আপনার বিকাশ নাম্বার দিন",
+      "transactionId": "বিকাশ TrxID",
+      "transactionIdPlaceholder": "আপনার বিকাশ ট্রানজেকশন আইডি দিন",
+      "transactionIdHelp": "উপরের নাম্বারে টাকা পাঠিয়ে SMS-এ প্রাপ্ত TrxID টি এন্টার করুন"
     },
     "submit": {
       "loading": "অর্ডার সম্পন্ন করা হচ্ছে...",
@@ -295,6 +307,11 @@
     }
   },
   "dashboard": {
+    "header": {
+      "welcome": "স্বাগতম",
+      "active": "সক্রিয়",
+      "inactive": "নিষ্ক্রিয়"
+    },
     "heading": "ড্যাশবোর্ড ওভারভিউ",
     "subheading": "আপনার একাউন্টের তথ্য এখানে দেখতে পাবেন",
     "alert": {
@@ -411,6 +428,8 @@
     "deliveryAddress": "ডেলিভারি ঠিকানা:",
     "addressNotSelected": "সিলেক্ট করা হয়নি",
     "totalLabel": "মোট মূল্য",
+    "paymentLabel": "পেমেন্ট পদ্ধতি",
+    "transactionId": "ট্রানজেকশন আইডি",
     "prev": "পূর্ববর্তী",
     "next": "পরবর্তী",
     "page": "নং পৃষ্ঠা"
@@ -718,6 +737,10 @@
         "colOrderId": "অর্ডার আইডি",
         "colCustomer": "গ্রাহক",
         "colPrice": "মূল্য BDT",
+        "colPayment": "পেমেন্ট",
+        "colTrxID": "TrxID",
+        "colDeliveryArea": "ডেলিভারি এলাকা",
+        "colDeliveryCharge": "ডেলিভারি চার্জ",
         "colAddress": "ডেলিভারি ঠিকানা ও পণ্যসমূহ",
         "colStatus": "স্ট্যাটাস",
         "colAction": "অ্যাকশন",
@@ -787,6 +810,10 @@
         "level1CommissionHint": "সরাসরি রেফার করা মেম্বার সক্রিয় করার বোনাস।",
         "level2to15Commission": "২য় থেকে ১৫তম লেভেল কমিশন (৳ BDT)",
         "level2to15CommissionHint": "পরবর্তী ডাউনলাইন লেভেলের বোনাস কমিশন জেনারেটর।",
+        "deliveryChargeInside": "ঢাকার ভিতরে চার্জ (৳ BDT)",
+        "deliveryChargeInsideHint": "ঢাকা শহরের ভিতরে গ্রাহকদের ডেলিভারি ফি।",
+        "deliveryChargeOutside": "ঢাকার বাইরে চার্জ (৳ BDT)",
+        "deliveryChargeOutsideHint": "ঢাকার বাইরে গ্রাহকদের ডেলিভারি ফি।",
         "submit": "সেটিংস পরিবর্তন নিশ্চিত করুন"
       }
     },

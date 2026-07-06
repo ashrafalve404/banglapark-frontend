@@ -133,7 +133,7 @@ export default function DailyBenefitPage() {
                             <tbody className="divide-y divide-gray-100 bg-white">
                                 {logs.map((lg) => (
                                     <tr key={lg.id} className="hover:bg-gray-50/50">
-                                        <td className="p-4 text-xs text-gray-650">{formatDate(lg.date)}</td>
+                                        <td className="p-4 text-xs text-gray-650">{formatDate(lg.date, locale)}</td>
                                         <td className="p-4 text-xs text-gray-550 text-center font-semibold">{lg.teamCount}{t("dailyBenefit.history.teamUnit")}</td>
                                         <td className="p-4 text-xs font-bold text-green-700 text-right">{formatCurrency(lg.amount, locale)}</td>
                                     </tr>

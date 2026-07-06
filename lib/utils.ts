@@ -11,16 +11,20 @@ export function formatCurrency(amount: number | string, locale = "bn-BD"): strin
     return `৳${Number(amount).toLocaleString(l)}`;
 }
 
-export function formatDate(dateStr: string): string {
-    return new Date(dateStr).toLocaleDateString("bn-BD", {
+export function formatDate(dateStr: string, locale = "bn-BD"): string {
+    const localeMap: Record<string, string> = { bn: "bn-BD", en: "en-IN" };
+    const l = localeMap[locale] || locale;
+    return new Date(dateStr).toLocaleDateString(l, {
         year: "numeric",
         month: "long",
         day: "numeric",
     });
 }
 
-export function formatDateTime(dateStr: string): string {
-    return new Date(dateStr).toLocaleString("bn-BD", {
+export function formatDateTime(dateStr: string, locale = "bn-BD"): string {
+    const localeMap: Record<string, string> = { bn: "bn-BD", en: "en-IN" };
+    const l = localeMap[locale] || locale;
+    return new Date(dateStr).toLocaleString(l, {
         year: "numeric",
         month: "short",
         day: "numeric",

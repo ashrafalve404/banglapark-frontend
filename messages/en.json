@@ -30,6 +30,7 @@
     "supportEmail": "banglaparkltd@gmail.com",
     "supportPhone": "+8801823674796",
     "copyright": "© {year} Bangla Park Limited. All rights reserved.",
+    "paymentMethods": "Pay with",
     "mlmTagline": "MLM E-commerce Platform",
     "overview": "Overview",
     "profile": "Profile",
@@ -217,7 +218,12 @@
       "addressLabel": "Full Address",
       "addressPlaceholder": "Road, Flat, Thana...",
       "notesLabel": "Additional Notes (Optional)",
-      "notesPlaceholder": "You can write delivery instructions here..."
+      "notesPlaceholder": "You can write delivery instructions here...",
+      "deliveryAreaLabel": "Delivery Area",
+      "insideDhaka": "Inside Dhaka",
+      "outsideDhaka": "Outside Dhaka",
+      "deliveryChargeInside": "Delivery charge: ৳60",
+      "deliveryChargeOutside": "Delivery charge: ৳150"
     },
     "review": {
       "heading": "Order Review",
@@ -228,7 +234,13 @@
     },
     "payment": {
       "heading": "Payment Method",
-      "method": "Cash on Delivery (Pay when you receive)"
+      "method": "Cash on Delivery (Pay when you receive)",
+      "bkash": "bKash Send Money",
+      "bkashNumber": "Send money to our bKash number: +8801823674796",
+      "bkashNumberPlaceholder": "Your bKash account number",
+      "transactionId": "bKash TrxID",
+      "transactionIdPlaceholder": "Enter your bKash transaction ID",
+      "transactionIdHelp": "Send money to the number above, enter your bKash number and the TrxID you received via SMS"
     },
     "submit": {
       "loading": "Completing order...",
@@ -295,6 +307,11 @@
     }
   },
   "dashboard": {
+    "header": {
+      "welcome": "Welcome",
+      "active": "Active",
+      "inactive": "Inactive"
+    },
     "heading": "Dashboard Overview",
     "subheading": "Your account information at a glance",
     "alert": {
@@ -411,6 +428,8 @@
     "deliveryAddress": "Delivery Address:",
     "addressNotSelected": "Not Selected",
     "totalLabel": "Total Price",
+    "paymentLabel": "Payment Method",
+    "transactionId": "Transaction ID",
     "prev": "Previous",
     "next": "Next",
     "page": "Page"
@@ -718,6 +737,10 @@
         "colOrderId": "Order ID",
         "colCustomer": "Customer",
         "colPrice": "Price BDT",
+        "colPayment": "Payment",
+        "colTrxID": "TrxID",
+        "colDeliveryArea": "Delivery Area",
+        "colDeliveryCharge": "Delivery Charge",
         "colAddress": "Delivery Address & Products",
         "colStatus": "Status",
         "colAction": "Action",
@@ -787,6 +810,10 @@
         "level1CommissionHint": "Bonus for activating a directly referred member.",
         "level2to15Commission": "Level 2 to 15 Commission (৳ BDT)",
         "level2to15CommissionHint": "Bonus commission generator for subsequent downline levels.",
+        "deliveryChargeInside": "Inside Dhaka Charge (৳ BDT)",
+        "deliveryChargeInsideHint": "Delivery fee for customers inside Dhaka city.",
+        "deliveryChargeOutside": "Outside Dhaka Charge (৳ BDT)",
+        "deliveryChargeOutsideHint": "Delivery fee for customers outside Dhaka.",
         "submit": "Confirm Settings Update"
       }
     },

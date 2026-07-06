@@ -2,7 +2,7 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { Search, ShieldAlert, Loader2, ArrowRight, Trash2 } from "lucide-react";
+import { Search, ShieldAlert, Loader2, ArrowRight, Trash2, Smartphone } from "lucide-react";
 import { ordersApi } from "@/lib/api/orders";
 import { formatCurrency, formatDateTime, getOrderStatusLabel } from "@/lib/utils";
 import type { Order, OrderItem, OrderStatus } from "@/types";
@@ -18,7 +18,7 @@ const ORDER_STATUS_TRANSITIONS: Record<string, string[]> = {
 };
 
 export default function AdminOrdersPage() {
-    const { t } = useLocale();
+    const { t, locale } = useLocale();
     const queryClient = useQueryClient();
     const [page, setPage] = useState(1);
     const [status, setStatus] = useState("");
@@ -119,6 +119,10 @@ export default function AdminOrdersPage() {
                                     <th className="p-4 text-xs font-bold text-slate-600">{t("admin.orders.table.colOrderId")}</th>
                                     <th className="p-4 text-xs font-bold text-slate-600">{t("admin.orders.table.colCustomer")}</th>
                                     <th className="p-4 text-xs font-bold text-slate-600 text-right">{t("admin.orders.table.colPrice")}</th>
+                                    <th className="p-4 text-xs font-bold text-slate-600">{t("admin.orders.table.colPayment")}</th>
+                                    <th className="p-4 text-xs font-bold text-slate-600">{t("admin.orders.table.colTrxID")}</th>
+                                    <th className="p-4 text-xs font-bold text-slate-600">{t("admin.orders.table.colDeliveryArea")}</th>
+                                    <th className="p-4 text-xs font-bold text-slate-600 text-right">{t("admin.orders.table.colDeliveryCharge")}</th>
                                     <th className="p-4 text-xs font-bold text-slate-600">{t("admin.orders.table.colAddress")}</th>
                                     <th className="p-4 text-xs font-bold text-slate-600 text-center">{t("admin.orders.table.colStatus")}</th>
                                     <th className="p-4 text-xs font-bold text-slate-605 text-center">{t("admin.orders.table.colAction")}</th>
@@ -134,7 +138,41 @@ export default function AdminOrdersPage() {
                                                 <div className="text-xs font-semibold text-slate-800">{order.user?.name}</div>
                                                 <div className="text-[10px] text-gray-500">{order.user?.phone}</div>
                                             </td>
-                                            <td className="p-4 text-xs font-bold text-slate-800 text-right">{formatCurrency(order.total)}</td>
+                                            <td className="p-4 text-xs font-bold text-slate-800 text-right">{formatCurrency(order.total, locale)}</td>
+                                            <td className="p-4 text-center">
+                                                {order.paymentMethod === "BKASH" ? (
+                                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold text-pink-700 bg-pink-50 rounded-full px-2 py-0.5 border border-pink-200">
+                                                        <Smartphone size={10} />
+                                                        bKash
+                                                    </span>
+                                                ) : (
+                                                    <span className="text-[10px] text-gray-400 font-semibold">COD</span>
+                                                )}
+                                            </td>
+                                            <td className="p-4 text-center">
+                                                {order.transactionId ? (
+                                                    <div className="flex flex-col items-center gap-0.5">
+                                                        <span className="text-[10px] font-mono font-bold text-gray-700 bg-gray-50 rounded px-1.5 py-0.5 border border-gray-200">{order.transactionId}</span>
+                                                        {order.userBkashNumber && (
+                                                            <span className="text-[9px] text-gray-400">{order.userBkashNumber}</span>
+                                                        )}
+                                                    </div>
+                                                ) : (
+                                                    <span className="text-[10px] text-gray-300">—</span>
+                                                )}
+                                            </td>
+                                            <td className="p-4 text-center">
+                                                {order.deliveryArea ? (
+                                                    <span className="text-[10px] font-semibold text-gray-700">
+                                                        {order.deliveryArea === "INSIDE_DHAKA" ? t("checkout.shipping.insideDhaka") : t("checkout.shipping.outsideDhaka")}
+                                                    </span>
+                                                ) : (
+                                                    <span className="text-[10px] text-gray-300">—</span>
+                                                )}
+                                            </td>
+                                            <td className="p-4 text-right text-xs font-bold text-slate-800">
+                                                {order.deliveryCharge != null ? formatCurrency(order.deliveryCharge, locale) : "—"}
+                                            </td>
                                             <td className="p-4 text-xs text-slate-650 min-w-[200px]">
                                                 <div className="font-bold border-b border-dashed border-slate-150 pb-1 mb-1.5">
                                                     {order.shippingAddress?.address}, {order.shippingAddress?.city}

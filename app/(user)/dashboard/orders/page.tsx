@@ -2,13 +2,13 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { ShoppingBag, Loader2, Clipboard } from "lucide-react";
+import { ShoppingBag, Loader2, Clipboard, Smartphone } from "lucide-react";
 import { ordersApi } from "@/lib/api/orders";
 import { formatCurrency, formatDateTime, getOrderStatusLabel } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
 
 export default function UserOrdersPage() {
-    const { t } = useLocale();
+    const { t, locale } = useLocale();
     const [page, setPage] = useState(1);
 
     const { data, isLoading } = useQuery({
@@ -46,7 +46,7 @@ export default function UserOrdersPage() {
                                     <span className="text-sm font-bold text-gray-800 text-left">{order.id}</span>
                                 </div>
                                 <div className="flex flex-wrap items-center gap-3">
-                                    <span className="text-xs text-gray-500">{formatDateTime(order.createdAt)}</span>
+                                    <span className="text-xs text-gray-500">{formatDateTime(order.createdAt, locale)}</span>
                                     <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${order.status === "DELIVERED"
                                             ? "bg-green-150 text-green-800"
                                             : order.status === "CANCELLED"
@@ -58,6 +58,12 @@ export default function UserOrdersPage() {
                                     {order.isQualifying && (
                                         <span className="text-[10px] font-bold text-amber-800 bg-amber-50 rounded-full px-2 py-0.5 border border-amber-200">
                                             {t("orders.activationBadge")}
+                                        </span>
+                                    )}
+                                    {order.paymentMethod === "BKASH" && (
+                                        <span className="inline-flex items-center gap-1 text-[10px] font-bold text-pink-700 bg-pink-50 rounded-full px-2 py-0.5 border border-pink-200">
+                                            <Smartphone size={10} />
+                                            bKash
                                         </span>
                                     )}
                                 </div>
@@ -76,7 +82,23 @@ export default function UserOrdersPage() {
                             </div>
 
                             <div className="flex justify-between items-center border-t border-gray-100 pt-3">
-                                <span className="text-xs text-gray-550 font-medium">{t("orders.deliveryAddress")} {order.shippingAddress?.address || t("orders.addressNotSelected")}</span>
+                                <div className="flex flex-col gap-0.5">
+                                    <span className="text-xs text-gray-500">{t("orders.deliveryAddress")} {order.shippingAddress?.address || t("orders.addressNotSelected")}</span>
+                                    {order.deliveryArea && (
+                                        <span className="text-xs text-gray-400">
+                                            {order.deliveryArea === "INSIDE_DHAKA" ? t("checkout.shipping.insideDhaka") : t("checkout.shipping.outsideDhaka")} • {t("checkout.review.delivery")}: {formatCurrency(order.deliveryCharge ?? 0, locale)}
+                                        </span>
+                                    )}
+                                    {order.paymentMethod === "BKASH" && order.transactionId && (
+                                        <span className="text-xs text-pink-600 font-medium">
+                                            {t("orders.paymentLabel")}: bKash • {t("orders.transactionId")}: {order.transactionId}
+                                            {order.userBkashNumber && <> • From: {order.userBkashNumber}</>}
+                                        </span>
+                                    )}
+                                    {order.paymentMethod === "CASH_ON_DELIVERY" && (
+                                        <span className="text-xs text-gray-400">{t("orders.paymentLabel")}: Cash on Delivery</span>
+                                    )}
+                                </div>
                                 <div className="text-right">
                                     <span className="text-xs text-gray-400 block">{t("orders.totalLabel")}</span>
                                     <span className="text-sm font-bold text-green-800">{formatCurrency(order.total)}</span>

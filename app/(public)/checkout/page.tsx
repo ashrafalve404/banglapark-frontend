@@ -10,8 +10,8 @@ import { useAuthStore } from "@/store/auth";
 import { ordersApi } from "@/lib/api/orders";
 import { formatCurrency } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
-import { CheckCircle2, PackageCheck, ArrowRight, X } from "lucide-react";
-import type { Order } from "@/types";
+import { CheckCircle2, PackageCheck, ArrowRight, X, Smartphone, MapPin } from "lucide-react";
+import type { Order, PaymentMethod, DeliveryArea } from "@/types";
 
 const checkoutSchema = z.object({
     name: z.string().min(2, "নাম অবশ্যই প্রদান করতে হবে"),
@@ -24,15 +24,21 @@ const checkoutSchema = z.object({
 type CheckoutSchemaInput = z.infer<typeof checkoutSchema>;
 
 export default function CheckoutPage() {
-    const { t } = useLocale();
+    const { t, locale } = useLocale();
     const { items, total, clear } = useCartStore();
     const { isAuthenticated, user } = useAuthStore();
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [confirmedOrder, setConfirmedOrder] = useState<Order | null>(null);
+    const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("CASH_ON_DELIVERY");
+    const [transactionId, setTransactionId] = useState("");
+    const [userBkashNumber, setUserBkashNumber] = useState("");
+    const [deliveryArea, setDeliveryArea] = useState<DeliveryArea>("INSIDE_DHAKA");
 
     const cartTotal = total();
+    const deliveryCharge = deliveryArea === "INSIDE_DHAKA" ? 60 : 150;
+    const finalTotal = cartTotal + deliveryCharge;
 
     // Route back if user has empty cart
     useEffect(() => {
@@ -67,6 +73,10 @@ export default function CheckoutPage() {
 
     const onSubmit = async (data: CheckoutSchemaInput) => {
         setError(null);
+        if (paymentMethod === "BKASH" && (!transactionId.trim() || !userBkashNumber.trim())) {
+            setError(t("checkout.error.default"));
+            return;
+        }
         setLoading(true);
         try {
             const orderItems = items.map((i) => ({
@@ -83,6 +93,10 @@ export default function CheckoutPage() {
                     address: data.address,
                 },
                 notes: data.notes,
+                paymentMethod,
+                transactionId: paymentMethod === "CASH_ON_DELIVERY" ? undefined : transactionId,
+                userBkashNumber: paymentMethod === "CASH_ON_DELIVERY" ? undefined : userBkashNumber,
+                deliveryArea,
             });
 
             // Clear cart and show confirmation modal
@@ -124,7 +138,7 @@ export default function CheckoutPage() {
                         </div>
                         <div className="flex justify-between text-xs text-gray-500">
                             <span className="font-semibold uppercase tracking-wide">Total</span>
-                            <span className="font-bold text-green-800 text-sm">{formatCurrency(Number(confirmedOrder.total))}</span>
+                            <span className="font-bold text-green-800 text-sm">{formatCurrency(Number(confirmedOrder.total), locale)}</span>
                         </div>
                         <div className="flex justify-between text-xs text-gray-500">
                             <span className="font-semibold uppercase tracking-wide">Status</span>
@@ -204,6 +218,40 @@ export default function CheckoutPage() {
                     </div>
 
                     <div>
+                        <label className="label mb-1.5 block">{t("checkout.shipping.deliveryAreaLabel")}</label>
+                        <div className="grid grid-cols-2 gap-3">
+                            <label className={`flex items-center gap-3 rounded-lg border p-3 cursor-pointer transition-colors ${deliveryArea === "INSIDE_DHAKA" ? "border-green-400 bg-green-50" : "border-gray-200 bg-white"}`}>
+                                <input
+                                    type="radio"
+                                    name="deliveryArea"
+                                    value="INSIDE_DHAKA"
+                                    checked={deliveryArea === "INSIDE_DHAKA"}
+                                    onChange={() => setDeliveryArea("INSIDE_DHAKA")}
+                                    className="accent-green-800"
+                                />
+                                <div>
+                                    <span className="text-xs font-semibold text-gray-800">{t("checkout.shipping.insideDhaka")}</span>
+                                    <p className="text-[10px] text-gray-400">{t("checkout.shipping.deliveryChargeInside")}</p>
+                                </div>
+                            </label>
+                            <label className={`flex items-center gap-3 rounded-lg border p-3 cursor-pointer transition-colors ${deliveryArea === "OUTSIDE_DHAKA" ? "border-green-400 bg-green-50" : "border-gray-200 bg-white"}`}>
+                                <input
+                                    type="radio"
+                                    name="deliveryArea"
+                                    value="OUTSIDE_DHAKA"
+                                    checked={deliveryArea === "OUTSIDE_DHAKA"}
+                                    onChange={() => setDeliveryArea("OUTSIDE_DHAKA")}
+                                    className="accent-green-800"
+                                />
+                                <div>
+                                    <span className="text-xs font-semibold text-gray-800">{t("checkout.shipping.outsideDhaka")}</span>
+                                    <p className="text-[10px] text-gray-400">{t("checkout.shipping.deliveryChargeOutside")}</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
                         <label className="label mb-1.5 block">{t("checkout.shipping.notesLabel")}</label>
                         <textarea className="input text-left min-h-[80px]" placeholder={t("checkout.shipping.notesPlaceholder")} {...register("notes")} />
                     </div>
@@ -220,7 +268,7 @@ export default function CheckoutPage() {
                                         <p className="text-xs font-semibold text-gray-800 truncate">{item.product.name}</p>
                                         <p className="text-xs text-gray-400">৳{Number(item.product.price).toLocaleString()} x {item.quantity}</p>
                                     </div>
-                                    <span className="text-sm font-bold text-gray-700">{formatCurrency(Number(item.product.price) * item.quantity)}</span>
+                                    <span className="text-sm font-bold text-gray-700">{formatCurrency(Number(item.product.price) * item.quantity, locale)}</span>
                                 </div>
                             ))}
                         </div>
@@ -228,22 +276,73 @@ export default function CheckoutPage() {
                         <div className="space-y-3 mb-6 border-t border-gray-100 pt-4">
                             <div className="flex justify-between text-sm text-gray-500">
                                 <span>{t("checkout.review.subtotal")}</span>
-                                <span>{formatCurrency(cartTotal)}</span>
+                                <span>{formatCurrency(cartTotal, locale)}</span>
                             </div>
                             <div className="flex justify-between text-sm text-gray-500">
                                 <span>{t("checkout.review.delivery")}</span>
-                                <span className="text-green-700 font-semibold">{t("checkout.review.deliveryFree")}</span>
+                                <span className="text-green-700 font-semibold">{formatCurrency(deliveryCharge, locale)}</span>
                             </div>
                             <hr className="border-gray-100" />
                             <div className="flex justify-between text-base font-bold text-gray-900">
                                 <span>{t("checkout.review.total")}</span>
-                                <span className="text-green-800">{formatCurrency(cartTotal)}</span>
+                                <span className="text-green-800">{formatCurrency(finalTotal, locale)}</span>
                             </div>
                         </div>
 
                         <div className="rounded-xl border border-green-150 bg-green-50 p-4 mb-6">
-                            <p className="text-xs font-bold text-green-800 uppercase tracking-wide mb-1">{t("checkout.payment.heading")}</p>
-                            <p className="text-xs text-green-750 font-medium">{t("checkout.payment.method")}</p>
+                            <p className="text-xs font-bold text-green-800 uppercase tracking-wide mb-3">{t("checkout.payment.heading")}</p>
+                            <div className="space-y-3">
+                                <label className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-3 cursor-pointer hover:border-green-400 transition-colors">
+                                    <input
+                                        type="radio"
+                                        name="paymentMethod"
+                                        value="CASH_ON_DELIVERY"
+                                        checked={paymentMethod === "CASH_ON_DELIVERY"}
+                                        onChange={() => setPaymentMethod("CASH_ON_DELIVERY")}
+                                        className="accent-green-800"
+                                    />
+                                    <div>
+                                        <span className="text-xs font-semibold text-gray-800">{t("checkout.payment.method")}</span>
+                                    </div>
+                                </label>
+                                <label className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-3 cursor-pointer hover:border-green-400 transition-colors">
+                                    <input
+                                        type="radio"
+                                        name="paymentMethod"
+                                        value="BKASH"
+                                        checked={paymentMethod === "BKASH"}
+                                        onChange={() => setPaymentMethod("BKASH")}
+                                        className="accent-green-800"
+                                    />
+                                    <div className="flex items-center gap-2">
+                                        <Smartphone size={16} className="text-pink-600" />
+                                        <span className="text-xs font-semibold text-gray-800">{t("checkout.payment.bkash")}</span>
+                                    </div>
+                                </label>
+                                {paymentMethod === "BKASH" && (
+                                    <div className="space-y-3 rounded-lg border border-pink-200 bg-pink-50 p-3">
+                                        <p className="text-xs font-bold text-pink-800">{t("checkout.payment.bkashNumber")}</p>
+                                        <input
+                                            type="text"
+                                            className="input text-left text-xs"
+                                            placeholder={t("checkout.payment.bkashNumberPlaceholder")}
+                                            value={userBkashNumber}
+                                            onChange={(e) => setUserBkashNumber(e.target.value)}
+                                        />
+                                        <div>
+                                            <label className="text-xs font-semibold text-pink-800 block mb-1">{t("checkout.payment.transactionId")}</label>
+                                            <input
+                                                type="text"
+                                                className="input text-left text-xs"
+                                                placeholder={t("checkout.payment.transactionIdPlaceholder")}
+                                                value={transactionId}
+                                                onChange={(e) => setTransactionId(e.target.value)}
+                                            />
+                                        </div>
+                                        <p className="text-xs text-red-600 font-semibold">{t("checkout.payment.transactionIdHelp")}</p>
+                                    </div>
+                                )}
+                            </div>
                         </div>
 
                         <button type="submit" disabled={loading} className="btn-primary w-full py-4 text-sm font-bold">

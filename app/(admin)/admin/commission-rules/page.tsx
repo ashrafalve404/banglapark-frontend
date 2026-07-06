@@ -22,6 +22,8 @@ export default function AdminCommissionRulesPage() {
     const [gen1Amt, setGen1Amt] = useState(200);
     const [gen2Amt, setGen2Amt] = useState(10);
     const [validDays, setValidDays] = useState(30);
+    const [deliveryChargeInsideDhaka, setDeliveryChargeInsideDhaka] = useState(60);
+    const [deliveryChargeOutsideDhaka, setDeliveryChargeOutsideDhaka] = useState(150);
 
     // Pre-fill fields once data returns
     useEffect(() => {
@@ -30,11 +32,15 @@ export default function AdminCommissionRulesPage() {
             const gen1Obj = config.find(c => c.key === "generationOneCommission");
             const gen2Obj = config.find(c => c.key === "generationTwoToFifteenCommission");
             const validityObj = config.find(c => c.key === "activationValidityDays");
+            const insideObj = config.find(c => c.key === "deliveryChargeInsideDhaka");
+            const outsideObj = config.find(c => c.key === "deliveryChargeOutsideDhaka");
 
             if (minUnlockObj) setMinUnlockAmount(Number(minUnlockObj.value));
             if (gen1Obj) setGen1Amt(Number(gen1Obj.value));
             if (gen2Obj) setGen2Amt(Number(gen2Obj.value));
             if (validityObj) setValidDays(Number(validityObj.value));
+            if (insideObj) setDeliveryChargeInsideDhaka(Number(insideObj.value));
+            if (outsideObj) setDeliveryChargeOutsideDhaka(Number(outsideObj.value));
         }
     }, [config]);
 
@@ -45,12 +51,16 @@ export default function AdminCommissionRulesPage() {
             generationOneCommission: number;
             generationTwoToFifteenCommission: number;
             activationValidityDays: number;
+            deliveryChargeInsideDhaka: number;
+            deliveryChargeOutsideDhaka: number;
         }) => {
             await Promise.all([
                 adminApi.setConfig("minUnlockAmount", payload.minUnlockAmount.toString()),
                 adminApi.setConfig("generationOneCommission", payload.generationOneCommission.toString()),
                 adminApi.setConfig("generationTwoToFifteenCommission", payload.generationTwoToFifteenCommission.toString()),
                 adminApi.setConfig("activationValidityDays", payload.activationValidityDays.toString()),
+                adminApi.setConfig("deliveryChargeInsideDhaka", payload.deliveryChargeInsideDhaka.toString()),
+                adminApi.setConfig("deliveryChargeOutsideDhaka", payload.deliveryChargeOutsideDhaka.toString()),
             ]);
         },
         onSuccess: () => {
@@ -70,6 +80,8 @@ export default function AdminCommissionRulesPage() {
             generationOneCommission: gen1Amt,
             generationTwoToFifteenCommission: gen2Amt,
             activationValidityDays: validDays,
+            deliveryChargeInsideDhaka,
+            deliveryChargeOutsideDhaka,
         });
     };
 
@@ -143,6 +155,30 @@ export default function AdminCommissionRulesPage() {
                                 onChange={(e) => setGen2Amt(Number(e.target.value))}
                             />
                             <span className="text-[10px] text-gray-400 mt-1 block">{t("admin.commissionRules.form.level2to15CommissionHint")}</span>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 border-t border-slate-100 pt-4">
+                        <div>
+                            <label className="label mb-1.5 block">{t("admin.commissionRules.form.deliveryChargeInside")}</label>
+                            <input
+                                type="number"
+                                className="input text-left font-bold text-green-800"
+                                value={deliveryChargeInsideDhaka}
+                                onChange={(e) => setDeliveryChargeInsideDhaka(Number(e.target.value))}
+                            />
+                            <span className="text-[10px] text-gray-400 mt-1 block">{t("admin.commissionRules.form.deliveryChargeInsideHint")}</span>
+                        </div>
+
+                        <div>
+                            <label className="label mb-1.5 block">{t("admin.commissionRules.form.deliveryChargeOutside")}</label>
+                            <input
+                                type="number"
+                                className="input text-left font-bold text-green-800"
+                                value={deliveryChargeOutsideDhaka}
+                                onChange={(e) => setDeliveryChargeOutsideDhaka(Number(e.target.value))}
+                            />
+                            <span className="text-[10px] text-gray-400 mt-1 block">{t("admin.commissionRules.form.deliveryChargeOutsideHint")}</span>
                         </div>
                     </div>
 

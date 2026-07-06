@@ -3,9 +3,13 @@ import type { Order, OrderStatus } from "@/types";
 
 export const ordersApi = {
     checkout: async (data: {
-        items: { productId: string; quantity: number }[];
+        items: { productId: string; quantity: number; size?: string }[];
         shippingAddress: Record<string, string>;
         notes?: string;
+        paymentMethod?: string;
+        transactionId?: string;
+        userBkashNumber?: string;
+        deliveryArea?: string;
     }): Promise<Order> => {
         const res = await api.post("/orders", data);
         return res.data;

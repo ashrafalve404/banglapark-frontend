@@ -3,6 +3,8 @@
 export type Role = "USER" | "ADMIN" | "SUPER_ADMIN";
 export type UserStatus = "ACTIVE" | "INACTIVE";
 export type OrderStatus = "PENDING" | "CONFIRMED" | "PROCESSING" | "SHIPPED" | "DELIVERED" | "CANCELLED";
+export type PaymentMethod = "CASH_ON_DELIVERY" | "BKASH";
+export type DeliveryArea = "INSIDE_DHAKA" | "OUTSIDE_DHAKA";
 export type WithdrawStatus = "PENDING" | "APPROVED" | "REJECTED";
 export type WithdrawMethod = "BKASH" | "NAGAD" | "ROCKET" | "BANK";
 export type TxType = "GENERATION_COMMISSION" | "DAILY_BENEFIT" | "PURCHASE" | "WITHDRAWAL" | "REFUND" | "ADMIN_ADJUSTMENT";
@@ -82,6 +84,11 @@ export interface Order {
     items: OrderItem[];
     total: number;
     status: OrderStatus;
+    paymentMethod: PaymentMethod;
+    transactionId?: string;
+    userBkashNumber?: string;
+    deliveryArea?: DeliveryArea;
+    deliveryCharge?: number;
     isQualifying: boolean;
     shippingAddress?: Record<string, string>;
     notes?: string;
