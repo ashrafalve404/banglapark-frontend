@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { ShoppingCart, ShoppingBag, Loader2, ArrowLeft } from "lucide-react";
 import { productsApi } from "@/lib/api/products";
@@ -22,6 +22,14 @@ export default function ProductDetailPage() {
         queryKey: ["product", slug],
         queryFn: () => productsApi.getBySlug(slug),
     });
+
+    const pageTitle = product?.name
+        ? `${product.name} | Bangla Park Limited`
+        : "Product | Bangla Park Limited";
+
+    useEffect(() => {
+        document.title = pageTitle;
+    }, [pageTitle]);
 
     if (isLoading) {
         return (

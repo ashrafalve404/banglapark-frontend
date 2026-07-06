@@ -86,22 +86,22 @@ export function Header() {
                     {/* Desktop Nav */}
                     <nav className="header-desktop-nav hidden md:flex items-center gap-6">
                         <Link href="/shop" className="text-sm font-medium text-gray-600 hover:text-green-800 transition-colors">{t("nav.shop")}</Link>
+                        {categories.length > 0 && (
                         <div className="relative group">
                             <button className="text-sm font-medium text-gray-600 hover:text-green-800 transition-colors flex items-center gap-1">
                                 {t("nav.category")}
                             </button>
                             <div className="absolute top-full left-0 mt-2 w-48 rounded-lg border border-gray-100 bg-white shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50">
                                 <div className="p-2">
-                                    {categories.length > 0 ? categories.map((cat) => (
+                                    {categories.map((cat) => (
                                         <Link key={cat.id} href={`/shop?categoryId=${cat.id}`} className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-md">
                                             {cat.name}
                                         </Link>
-                                    )) : (
-                                        <span className="block px-3 py-2 text-xs text-gray-400">No categories</span>
-                                    )}
+                                    ))}
                                 </div>
                             </div>
                         </div>
+                        )}
                     </nav>
 
                     {/* Actions */}

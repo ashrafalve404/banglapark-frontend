@@ -19,7 +19,7 @@
     "adminPanel": "Admin Panel",
     "backToSite": "← Back to Public Site",
     "mobileDashboard": "Dashboard",
-    "footerTagline": "Bangladesh's trusted MLM E-commerce Platform. Buy products, build a team, earn income.",
+    "footerTagline": "Bangladesh's trusted E-commerce Platform. Buy products, build a team, earn income.",
     "shopping": "Shopping",
     "allProducts": "All Products",
     "cart": "Cart",
@@ -31,7 +31,7 @@
     "supportPhone": "+8801823674796",
     "copyright": "© {year} Bangla Park Limited. All rights reserved.",
     "paymentMethods": "Pay with",
-    "mlmTagline": "MLM E-commerce Platform",
+    "mlmTagline": "E-commerce Platform",
     "overview": "Overview",
     "profile": "Profile",
     "wallet": "Wallet",
@@ -59,7 +59,7 @@
     "reports": "Reports"
   },
   "home": {
-    "badge": "Bangladesh's Trusted MLM Platform",
+    "badge": "Bangladesh's Trusted E-commerce Platform",
     "hero": {
       "title": {
         "line1": "Buy Products,",
@@ -106,6 +106,11 @@
     },
     "bestSellers": {
       "heading": "Best Sellers",
+      "viewAll": "View All →",
+      "empty": "No products found"
+    },
+    "allProducts": {
+      "heading": "All Products",
       "viewAll": "View All →",
       "empty": "No products found"
     },

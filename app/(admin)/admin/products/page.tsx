@@ -30,7 +30,7 @@ const initialForm: ProductFormState = {
 };
 
 export default function AdminProductsPage() {
-    const { t } = useLocale();
+    const { t, locale } = useLocale();
     const queryClient = useQueryClient();
     const [page, setPage] = useState(1);
     const [view, setView] = useState<"list" | "form">("list");
@@ -113,7 +113,7 @@ export default function AdminProductsPage() {
         setEditingId(null);
         setForm({
             ...initialForm,
-            categoryId: categories[0]?.id || "",
+            categoryId: "",
         });
         setView("form");
     };
@@ -243,7 +243,7 @@ export default function AdminProductsPage() {
                             />
                         </div>
                         <div>
-                            <label className="label mb-1 block">{t("admin.products.form.categoryLabel")}</label>
+                            <label className="label mb-1 block">{t("admin.products.form.categoryLabel")} <span className="text-gray-400 font-normal">({t("admin.products.form.optional", undefined, "Optional")})</span></label>
                             <select
                                 className="input cursor-pointer"
                                 value={form.categoryId}
@@ -400,7 +400,7 @@ export default function AdminProductsPage() {
                                                 </div>
                                             </td>
                                             <td className="p-4 text-xs text-slate-650">{item.category?.name || t("admin.products.list.uncategorized")}</td>
-                                            <td className="p-4 text-sm font-bold text-slate-800 text-right">{formatCurrency(item.price)}</td>
+                                            <td className="p-4 text-sm font-bold text-slate-800 text-right">{formatCurrency(item.price, locale)}</td>
                                             <td className="p-4 text-center">
                                                 <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-bold ${item.stock > 0 ? "bg-slate-100 text-slate-800" : "bg-red-50 text-red-650"
                                                     }`}>

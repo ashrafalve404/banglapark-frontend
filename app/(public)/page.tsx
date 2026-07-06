@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, ShoppingCart, ShoppingBag } from "lucide-react";
+import { ArrowRight, ShoppingCart, Loader2 } from "lucide-react";
 import { BannerCarousel } from "@/components/home/BannerCarousel";
 import { productsApi } from "@/lib/api/products";
 import { categoriesApi } from "@/lib/api/categories";
@@ -11,10 +11,14 @@ import { useLocale } from "@/lib/i18n";
 import { useState } from "react";
 
 export default function HomePage() {
-    const { t } = useLocale();
+    const { t, locale } = useLocale();
     const addItem = useCartStore((s) => s.addItem);
     const [addedId, setAddedId] = useState<string | null>(null);
     const [sizePopups, setSizePopups] = useState<Record<string, string>>({});
+    const [productPage, setProductPage] = useState(1);
+    const [allProducts, setAllProducts] = useState<any[]>([]);
+    const [hasMore, setHasMore] = useState(true);
+    const [loadingMore, setLoadingMore] = useState(false);
 
     const handleAddToCart = (product: any, e: React.MouseEvent) => {
         e.preventDefault();
@@ -32,14 +36,14 @@ export default function HomePage() {
         setTimeout(() => setAddedId(null), 1500);
     };
 
-    const { data: productsData } = useQuery({
-        queryKey: ["products", "featured"],
-        queryFn: () => productsApi.list({ limit: 8 }),
-    });
-
-    const { data: bestSellerData } = useQuery({
-        queryKey: ["products", "best-seller"],
-        queryFn: () => productsApi.list({ sort: "price_desc", limit: 8 }),
+    const { data: firstPageData, isLoading: firstPageLoading } = useQuery({
+        queryKey: ["products", "all", 1],
+        queryFn: async () => {
+            const res = await productsApi.list({ page: 1, limit: 50 });
+            setAllProducts(res.products);
+            setHasMore(res.page * res.limit < res.total);
+            return res;
+        },
     });
 
     const { data: categoriesData } = useQuery({
@@ -47,9 +51,20 @@ export default function HomePage() {
         queryFn: () => categoriesApi.list(),
     });
 
-    const products = productsData?.products ?? [];
-    const bestSellers = bestSellerData?.products ?? [];
     const categories = categoriesData?.categories ?? [];
+
+    const handleLoadMore = async () => {
+        setLoadingMore(true);
+        const nextPage = productPage + 1;
+        try {
+            const res = await productsApi.list({ page: nextPage, limit: 50 });
+            setAllProducts((prev) => [...prev, ...res.products]);
+            setProductPage(nextPage);
+            setHasMore(nextPage * res.limit < res.total);
+        } finally {
+            setLoadingMore(false);
+        }
+    };
 
     return (
         <div>
@@ -95,39 +110,39 @@ export default function HomePage() {
             </section>
 
             {/* Categories */}
+            {categories.length > 0 && (
             <section className="py-12 bg-gray-50">
                 <div className="page-container">
                     <div className="flex items-center justify-between mb-6">
                         <h2 className="section-title text-xl">{t("home.categories.heading")}</h2>
                         <Link href="/shop" className="text-sm font-medium text-green-800 hover:underline">{t("home.categories.viewAll")}</Link>
                     </div>
-                    {categories.length === 0 ? (
-                        <div className="text-center py-10 text-gray-400 text-sm">{t("home.categories.empty", undefined, "No categories found")}</div>
-                    ) : (
-                        <div className="flex flex-wrap gap-3">
-                            {categories.map((cat) => (
-                                <Link key={cat.id} href={`/shop?categoryId=${cat.id}`}
-                                    className="rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:border-green-600 hover:text-green-800 hover:shadow-md transition-all">
-                                    {cat.name}
-                                </Link>
-                            ))}
-                        </div>
-                    )}
+                    <div className="flex flex-wrap gap-3">
+                        {categories.map((cat) => (
+                            <Link key={cat.id} href={`/shop?categoryId=${cat.id}`}
+                                className="rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:border-green-600 hover:text-green-800 hover:shadow-md transition-all">
+                                {cat.name}
+                            </Link>
+                        ))}
+                    </div>
                 </div>
             </section>
+            )}
 
-            {/* Featured Products */}
+            {/* All Products */}
             <section className="py-14 bg-white">
                 <div className="page-container">
                     <div className="flex items-center justify-between mb-8">
-                        <h2 className="section-title text-xl lg:text-2xl">{t("home.featuredProducts.heading")}</h2>
-                        <Link href="/shop" className="text-sm font-medium text-green-800 hover:underline">{t("home.featuredProducts.viewAll")}</Link>
+                        <h2 className="section-title text-xl lg:text-2xl">{t("home.allProducts.heading", undefined, "All Products")}</h2>
+                        <Link href="/shop" className="text-sm font-medium text-green-800 hover:underline">{t("home.allProducts.viewAll", undefined, "View All →")}</Link>
                     </div>
-                    {products.length === 0 ? (
-                        <div className="text-center py-16 text-gray-400">{t("home.featuredProducts.empty")}</div>
+                    {firstPageLoading ? (
+                        <div className="flex justify-center py-16"><Loader2 className="animate-spin text-green-700" size={32} /></div>
+                    ) : allProducts.length === 0 ? (
+                        <div className="text-center py-16 text-gray-400">{t("home.allProducts.empty", undefined, "No products found")}</div>
                     ) : (
                         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-                            {products.map((product) => (
+                            {allProducts.map((product) => (
                                 <Link key={product.id} href={`/product/${product.slug}`} className="group card-flat overflow-hidden hover:shadow-md transition-all">
                                     <div className="aspect-square bg-gray-50 overflow-hidden">
                                         {product.images?.[0] ? (
@@ -141,7 +156,7 @@ export default function HomePage() {
                                             <span className="mb-1 inline-block rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold text-amber-800">{t("home.featuredProducts.activationBadge")}</span>
                                         )}
                                         <h3 className="text-sm font-semibold text-gray-800 line-clamp-2">{product.name}</h3>
-                                        <p className="mt-1 text-base font-bold text-green-800">৳{Number(product.price).toLocaleString()}</p>
+                                        <p className="mt-1 text-base font-bold text-green-800">৳{Number(product.price).toLocaleString(locale === "bn" ? "bn-BD" : "en-IN")}</p>
                                         <p className={`text-xs mt-0.5 ${product.stock > 0 ? 'text-gray-400' : 'text-red-500'}`}>
                                             {product.stock > 0 ? `${t("home.featuredProducts.stockLabel")} ${product.stock}` : t("home.featuredProducts.stockOut")}
                                         </p>
@@ -183,98 +198,12 @@ export default function HomePage() {
                             ))}
                         </div>
                     )}
-                </div>
-            </section>
-
-            {/* Popular Categories */}
-            <section className="py-14 bg-white">
-                <div className="page-container">
-                    <div className="flex items-center justify-between mb-8">
-                        <h2 className="section-title text-xl lg:text-2xl">{t("home.popularCategories.heading", undefined, "Popular Categories")}</h2>
-                        <Link href="/shop" className="text-sm font-medium text-green-800 hover:underline">{t("home.popularCategories.viewAll", undefined, "View All →")}</Link>
-                    </div>
-                    {categories.length === 0 ? (
-                        <div className="text-center py-16 text-gray-400">{t("home.popularCategories.empty", undefined, "No categories found")}</div>
-                    ) : (
-                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-                            {categories.slice(0, 6).map((cat) => (
-                                <Link key={cat.id} href={`/shop?categoryId=${cat.id}`} className="group card-flat p-6 text-center hover:shadow-md hover:border-green-200 transition-all">
-                                    <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-xl bg-green-50 group-hover:bg-green-100 transition-colors">
-                                        <ShoppingBag size={24} className="text-green-700" />
-                                    </div>
-                                    <h3 className="text-sm font-semibold text-gray-800 line-clamp-2">{cat.name}</h3>
-                                </Link>
-                            ))}
-                        </div>
-                    )}
-                </div>
-            </section>
-
-            {/* Best Sellers */}
-            <section className="py-14 bg-gray-50">
-                <div className="page-container">
-                    <div className="flex items-center justify-between mb-8">
-                        <h2 className="section-title text-xl lg:text-2xl">{t("home.bestSellers.heading")}</h2>
-                        <Link href="/shop?sort=price_desc" className="text-sm font-medium text-green-800 hover:underline">{t("home.bestSellers.viewAll")}</Link>
-                    </div>
-                    {bestSellers.length === 0 ? (
-                        <div className="text-center py-16 text-gray-400">{t("home.bestSellers.empty", undefined, "No products found")}</div>
-                    ) : (
-                        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-                            {bestSellers.map((product) => (
-                                <Link key={product.id} href={`/product/${product.slug}`} className="group card-flat overflow-hidden hover:shadow-md transition-all">
-                                    <div className="aspect-square bg-gray-50 overflow-hidden relative">
-                                        {product.images?.[0] ? (
-                                            <img src={product.images[0]} alt={product.name} className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                                        ) : (
-                                            <div className="flex h-full items-center justify-center text-gray-300 text-sm">{t("home.featuredProducts.noImage")}</div>
-                                        )}
-                                    </div>
-                                    <div className="p-3">
-                                        {Number(product.price) >= 2000 && (
-                                            <span className="mb-1 inline-block rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold text-amber-800">{t("home.featuredProducts.activationBadge")}</span>
-                                        )}
-                                        <h3 className="text-sm font-semibold text-gray-800 line-clamp-2">{product.name}</h3>
-                                        <p className="mt-1 text-base font-bold text-green-800">৳{Number(product.price).toLocaleString()}</p>
-                                        <p className={`text-xs mt-0.5 ${product.stock > 0 ? 'text-gray-400' : 'text-red-500'}`}>
-                                            {product.stock > 0 ? `${t("home.featuredProducts.stockLabel")} ${product.stock}` : t("home.featuredProducts.stockOut")}
-                                        </p>
-                                        {product.stock > 0 && (
-                                            <div className="mt-2 space-y-1.5">
-                                                {product.sizes?.length > 0 && (
-                                                    <select
-                                                        value={sizePopups[product.id] || ""}
-                                                        onChange={(e) => setSizePopups({ ...sizePopups, [product.id]: e.target.value })}
-                                                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
-                                                        className="w-full rounded-lg border border-gray-200 bg-white px-2 py-1 text-xs font-medium text-gray-600"
-                                                    >
-                                                        <option value="">{t("shop.product.selectSize", undefined, "Select size")}</option>
-                                                        {product.sizes.map((s: string) => (
-                                                            <option key={s} value={s}>{s}</option>
-                                                        ))}
-                                                    </select>
-                                                )}
-                                                <button
-                                                    onClick={(e) => {
-                                                        if (product.sizes?.length > 0) {
-                                                            handleAddToCartWithSize(product, e, sizePopups[product.id] || undefined);
-                                                        } else {
-                                                            handleAddToCart(product, e);
-                                                        }
-                                                    }}
-                                                    className="w-full rounded-lg bg-green-800 py-1.5 text-xs font-semibold text-white hover:bg-green-700 transition-colors flex items-center justify-center gap-1"
-                                                >
-                                                    {addedId === product.id ? (
-                                                        <span>{t("shop.product.added", undefined, "Added!")}</span>
-                                                    ) : (
-                                                        <><ShoppingCart size={14} /> {t("product.addToCart")}</>
-                                                    )}
-                                                </button>
-                                            </div>
-                                        )}
-                                    </div>
-                                </Link>
-                            ))}
+                    {allProducts.length > 0 && hasMore && (
+                        <div className="flex justify-center mt-8">
+                            <button onClick={handleLoadMore} disabled={loadingMore} className="btn-secondary py-2.5 px-8 text-sm font-semibold flex items-center gap-2">
+                                {loadingMore ? <Loader2 className="animate-spin" size={16} /> : null}
+                                {loadingMore ? (t("home.allProducts.loading", undefined, "Loading...")) : (t("home.allProducts.loadMore", undefined, "Load More"))}
+                            </button>
                         </div>
                     )}
                 </div>

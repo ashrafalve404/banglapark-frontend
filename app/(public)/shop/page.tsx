@@ -18,6 +18,10 @@ function ShopPageContent() {
     const [selectedCategory, setSelectedCategory] = useState("all");
     const [sort, setSort] = useState<"newest" | "price_asc" | "price_desc">("newest");
     const addItem = useCartStore((s) => s.addItem);
+
+    useEffect(() => {
+        document.title = `${t("shop.heading")} | Bangla Park Limited`;
+    }, [t]);
     const [addedId, setAddedId] = useState<string | null>(null);
     const [sizePopups, setSizePopups] = useState<Record<string, string>>({});
 
