@@ -289,7 +289,7 @@ export default function CheckoutPage() {
                             </div>
                         </div>
 
-                        <div className="rounded-xl border border-green-150 bg-green-50 p-4 mb-6">
+                        <div className="rounded-md border border-green-150 bg-green-50 p-4 mb-6">
                             <p className="text-xs font-bold text-green-800 uppercase tracking-wide mb-3">{t("checkout.payment.heading")}</p>
                             <div className="space-y-3">
                                 <label className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-3 cursor-pointer hover:border-green-400 transition-colors">

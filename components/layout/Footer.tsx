@@ -44,21 +44,21 @@ export function Footer() {
                         </ul>
                     </div>
                 </div>
-                <div className="mt-8 border-t border-gray-700 pt-6 flex flex-col items-center gap-3">
+                <div className="mt-8 border-t border-gray-700 pt-6 flex flex-col items-start gap-3">
                     <div className="flex items-center gap-4 text-sm text-gray-300">
                         <span>{t("nav.paymentMethods")}:</span>
-                        <span className="inline-flex items-center gap-1.5 rounded-md bg-white px-2.5 py-1">
+                        <span className="inline-flex items-center gap-1.5 rounded-sm bg-gray-100 px-2.5 py-1">
                             <img src="/bkashlogo.svg" alt="bKash" className="h-5 w-auto" />
                             <span className="text-pink-600 font-semibold text-xs">bKash</span>
                         </span>
-                        <span className="inline-flex items-center gap-1.5 rounded-md bg-white px-2.5 py-1">
+                        <span className="inline-flex items-center gap-1.5 rounded-sm bg-gray-100 px-2.5 py-1">
                             <img src="/cash.png" alt="Cash" className="h-5 w-auto" />
                             <span className="text-green-700 font-semibold text-xs">Cash</span>
                         </span>
                     </div>
-                    <div className="flex flex-col sm:flex-row items-center justify-between w-full gap-2">
-                        <p className="text-xs text-gray-500">{t("nav.copyright", { year: new Date().getFullYear() })}</p>
-                        <p className="text-xs text-gray-500">{t("nav.mlmTagline")}</p>
+                    <div className="flex flex-col sm:flex-row justify-between w-full gap-2">
+                        <p className="text-xs text-gray-500 text-center sm:text-left">{t("nav.copyright", { year: new Date().getFullYear() })}</p>
+                        <p className="text-xs text-gray-500 text-center sm:text-right">{t("nav.mlmTagline")}</p>
                     </div>
                 </div>
             </div>
