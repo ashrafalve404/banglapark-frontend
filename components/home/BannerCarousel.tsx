@@ -69,7 +69,7 @@ export function BannerCarousel() {
     if (banners.length === 0) return null;
 
     return (
-        <section className="relative h-[200px] sm:h-[320px] md:h-[420px] lg:h-[480px] overflow-hidden bg-gray-900 mx-3 sm:mx-10 md:mx-16 lg:mx-24 xl:mx-32 mt-4 mb-4 rounded-lg sm:rounded-xl">
+        <section className="relative h-[200px] sm:h-[320px] md:h-[420px] lg:h-[480px] overflow-hidden bg-gray-900 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-4 mb-4">
             {banners.map((banner, index) => (
                 <div
                     key={banner.id}
