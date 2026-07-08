@@ -31,6 +31,12 @@ export default function ProductDetailPage() {
         document.title = pageTitle;
     }, [pageTitle]);
 
+    useEffect(() => {
+        if (product?.id) {
+            productsApi.recordClick(product.id).catch(() => {});
+        }
+    }, [product?.id]);
+
     if (isLoading) {
         return (
             <div className="flex h-[calc(100vh-16rem)] items-center justify-center">

@@ -16,7 +16,7 @@ function ShopPageContent() {
     const searchParams = useSearchParams();
     const [search, setSearch] = useState(searchParams.get("search") || "");
     const [selectedCategory, setSelectedCategory] = useState("all");
-    const [sort, setSort] = useState<"newest" | "price_asc" | "price_desc">("newest");
+    const [sort, setSort] = useState<"newest" | "price_asc" | "price_desc" | "popular">("popular");
     const addItem = useCartStore((s) => s.addItem);
 
     useEffect(() => {
@@ -39,7 +39,7 @@ function ShopPageContent() {
             productsApi.list({
                 categoryId: selectedCategory === "all" ? undefined : selectedCategory,
                 search: search || undefined,
-                sort: sort === "newest" ? undefined : sort,
+                sort: sort,
                 limit: 50,
             }),
     });
@@ -64,9 +64,10 @@ function ShopPageContent() {
                     <div className="relative">
                         <select
                             value={sort}
-                            onChange={(e) => setSort(e.target.value as "newest" | "price_asc" | "price_desc")}
+                            onChange={(e) => setSort(e.target.value as "newest" | "price_asc" | "price_desc" | "popular")}
                             className="input pr-8 appearance-none text-sm"
                         >
+                            <option value="popular">{t("shop.sort.popular", undefined, "Most Popular")}</option>
                             <option value="newest">{t("shop.sort.newest", undefined, "Newest")}</option>
                             <option value="price_asc">{t("shop.sort.priceLowHigh", undefined, "Price: Low to High")}</option>
                             <option value="price_desc">{t("shop.sort.priceHighLow", undefined, "Price: High to Low")}</option>
@@ -162,9 +163,14 @@ function ShopPageContent() {
                                             <p className="text-base font-bold text-green-800">
                                                 ৳{formatCurrency(product.price, locale).replace("৳", "")}
                                             </p>
-                                            <p className={`text-xs mt-0.5 ${product.stock > 0 ? "text-gray-400" : "text-red-500 font-semibold"}`}>
-                                                {product.stock > 0 ? `${t("shop.product.stockLabel")} ${product.stock}` : t("shop.product.stockOut")}
-                                            </p>
+                                            <div className="flex items-center gap-2 mt-0.5">
+                                                <p className={`text-xs ${product.stock > 0 ? "text-gray-400" : "text-red-500 font-semibold"}`}>
+                                                    {product.stock > 0 ? `${t("shop.product.stockLabel")} ${product.stock}` : t("shop.product.stockOut")}
+                                                </p>
+                                                {product.clicks > 0 && (
+                                                    <span className="text-[10px] text-gray-400">• {product.clicks} views</span>
+                                                )}
+                                            </div>
                                             {product.stock > 0 && (
                                                 <div className="mt-2 space-y-1.5">
                                                     {product.sizes?.length > 0 && (

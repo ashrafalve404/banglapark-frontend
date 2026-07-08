@@ -37,9 +37,9 @@ export default function HomePage() {
     };
 
     const { data: firstPageData, isLoading: firstPageLoading } = useQuery({
-        queryKey: ["products", "all", 1],
+        queryKey: ["products", "all", "popular", 1],
         queryFn: async () => {
-            const res = await productsApi.list({ page: 1, limit: 50 });
+            const res = await productsApi.list({ page: 1, limit: 50, sort: "popular" });
             setAllProducts(res.products);
             setHasMore(res.page * res.limit < res.total);
             return res;
@@ -57,7 +57,7 @@ export default function HomePage() {
         setLoadingMore(true);
         const nextPage = productPage + 1;
         try {
-            const res = await productsApi.list({ page: nextPage, limit: 50 });
+            const res = await productsApi.list({ page: nextPage, limit: 50, sort: "popular" });
             setAllProducts((prev) => [...prev, ...res.products]);
             setProductPage(nextPage);
             setHasMore(nextPage * res.limit < res.total);
@@ -157,9 +157,14 @@ export default function HomePage() {
                                         )}
                                         <h3 className="text-sm font-semibold text-gray-800 line-clamp-2">{product.name}</h3>
                                         <p className="mt-1 text-base font-bold text-green-800">৳{Number(product.price).toLocaleString(locale === "bn" ? "bn-BD" : "en-IN")}</p>
-                                        <p className={`text-xs mt-0.5 ${product.stock > 0 ? 'text-gray-400' : 'text-red-500'}`}>
-                                            {product.stock > 0 ? `${t("home.featuredProducts.stockLabel")} ${product.stock}` : t("home.featuredProducts.stockOut")}
-                                        </p>
+                                        <div className="flex items-center gap-2 mt-0.5">
+                                            <p className={`text-xs ${product.stock > 0 ? 'text-gray-400' : 'text-red-500'}`}>
+                                                {product.stock > 0 ? `${t("home.featuredProducts.stockLabel")} ${product.stock}` : t("home.featuredProducts.stockOut")}
+                                            </p>
+                                            {product.clicks > 0 && (
+                                                <span className="text-[10px] text-gray-400">• {product.clicks} views</span>
+                                            )}
+                                        </div>
                                         {product.stock > 0 && (
                                             <div className="mt-2 space-y-1.5">
                                                 {product.sizes?.length > 0 && (

@@ -65,6 +65,7 @@ export interface Product {
     images: string[];
     sizes: string[];
     isActive: boolean;
+    clicks: number;
     createdAt: string;
 }
 

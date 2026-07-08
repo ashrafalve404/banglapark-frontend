@@ -7,7 +7,7 @@ export const productsApi = {
         limit?: number;
         search?: string;
         categoryId?: string;
-        sort?: 'price_asc' | 'price_desc' | 'newest';
+        sort?: 'price_asc' | 'price_desc' | 'newest' | 'popular';
     }): Promise<{ products: Product[]; total: number; page: number; limit: number }> => {
         const res = await api.get("/products", { params });
         return res.data;
@@ -30,5 +30,9 @@ export const productsApi = {
 
     delete: async (id: string): Promise<void> => {
         await api.delete(`/products/${id}`);
+    },
+
+    recordClick: async (id: string): Promise<void> => {
+        await api.post(`/products/${id}/click`);
     },
 };
