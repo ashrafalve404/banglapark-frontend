@@ -10,28 +10,13 @@ import { useQuery } from "@tanstack/react-query";
 import { useLocale } from "@/lib/i18n";
 import { useState, useEffect } from "react";
 
-const FALLBACK_PRODUCTS = [
-    {
-        id: "fb-borkah", name: "Borkah", slug: "borkah", description: "",
-        price: 1500, stock: 50,
-        images: ["/images/borkah1red.jpeg", "/images/borkha1black.jpeg"],
-        sizes: ["S", "M", "L", "XL"], isActive: true, clicks: 0, category: null,
-    },
-    {
-        id: "fb-punjabi", name: "Punjabi", slug: "punjabi", description: "",
-        price: 1200, stock: 50,
-        images: ["/images/punjabi1ash.jpeg", "/images/punjabi1blue.jpeg"],
-        sizes: ["S", "M", "L", "XL"], isActive: true, clicks: 0, category: null,
-    },
-];
-
 export default function HomePage() {
     const { t, locale } = useLocale();
     const addItem = useCartStore((s) => s.addItem);
     const [addedId, setAddedId] = useState<string | null>(null);
     const [sizePopups, setSizePopups] = useState<Record<string, string>>({});
     const [productPage, setProductPage] = useState(1);
-    const [allProducts, setAllProducts] = useState<any[]>(FALLBACK_PRODUCTS);
+    const [allProducts, setAllProducts] = useState<any[]>([]);
     const [hasMore, setHasMore] = useState(true);
     const [loadingMore, setLoadingMore] = useState(false);
 
@@ -58,7 +43,6 @@ export default function HomePage() {
 
     useEffect(() => {
         if (firstPageError) {
-            setAllProducts(FALLBACK_PRODUCTS);
             setHasMore(false);
         }
     }, [firstPageError]);

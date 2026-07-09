@@ -10,21 +10,6 @@ import { useCartStore } from "@/store/cart";
 import { formatCurrency } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
 
-const FALLBACK_PRODUCTS: Record<string, Product> = {
-    borkah: {
-        id: "fb-borkah", name: "Borkah", slug: "borkah", description: "Premium quality borkah available in multiple colors.",
-        price: 1500, stock: 50, categoryId: "",
-        images: ["/images/borkah1red.jpeg", "/images/borkha1black.jpeg"],
-        sizes: ["S", "M", "L", "XL"], isActive: true, clicks: 0, createdAt: new Date().toISOString(),
-    },
-    punjabi: {
-        id: "fb-punjabi", name: "Punjabi", slug: "punjabi", description: "Traditional punjabi with modern design.",
-        price: 1200, stock: 50, categoryId: "",
-        images: ["/images/punjabi1ash.jpeg", "/images/punjabi1blue.jpeg"],
-        sizes: ["S", "M", "L", "XL"], isActive: true, clicks: 0, createdAt: new Date().toISOString(),
-    },
-};
-
 export default function ProductDetailPage() {
     const { slug } = useParams() as { slug: string };
     const router = useRouter();
@@ -40,7 +25,7 @@ export default function ProductDetailPage() {
         queryFn: () => productsApi.getBySlug(slug),
     });
 
-    const product = apiProduct || FALLBACK_PRODUCTS[slug] || null;
+    const product = apiProduct;
 
     const pageTitle = product?.name
         ? `${product.name} | Bangla Park Limited`

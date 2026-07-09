@@ -11,21 +11,6 @@ import { useCartStore } from "@/store/cart";
 import { useLocale } from "@/lib/i18n";
 import { formatCurrency } from "@/lib/utils";
 
-const FALLBACK_PRODUCTS = [
-    {
-        id: "fb-borkah", name: "Borkah", slug: "borkah", description: "",
-        price: 1500, stock: 50,
-        images: ["/images/borkah1red.jpeg", "/images/borkha1black.jpeg"],
-        sizes: ["S", "M", "L", "XL"], isActive: true, clicks: 0, category: null,
-    },
-    {
-        id: "fb-punjabi", name: "Punjabi", slug: "punjabi", description: "",
-        price: 1200, stock: 50,
-        images: ["/images/punjabi1ash.jpeg", "/images/punjabi1blue.jpeg"],
-        sizes: ["S", "M", "L", "XL"], isActive: true, clicks: 0, category: null,
-    },
-];
-
 function ShopPageContent() {
     const { t, locale } = useLocale();
     const searchParams = useSearchParams();
@@ -59,7 +44,7 @@ function ShopPageContent() {
             }),
     });
 
-    const products = productsData?.products?.length ? productsData.products : FALLBACK_PRODUCTS;
+    const products = productsData?.products ?? [];
 
     const { data: categoriesData } = useQuery({
         queryKey: ["categories"],
