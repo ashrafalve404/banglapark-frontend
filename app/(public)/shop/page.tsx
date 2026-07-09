@@ -11,6 +11,21 @@ import { useCartStore } from "@/store/cart";
 import { useLocale } from "@/lib/i18n";
 import { formatCurrency } from "@/lib/utils";
 
+const FALLBACK_PRODUCTS = [
+    {
+        id: "fb-borkah", name: "Borkah", slug: "borkah", description: "",
+        price: 1500, stock: 50,
+        images: ["/images/borkah1red.jpeg", "/images/borkha1black.jpeg"],
+        sizes: ["S", "M", "L", "XL"], isActive: true, clicks: 0, category: null,
+    },
+    {
+        id: "fb-punjabi", name: "Punjabi", slug: "punjabi", description: "",
+        price: 1200, stock: 50,
+        images: ["/images/punjabi1ash.jpeg", "/images/punjabi1blue.jpeg"],
+        sizes: ["S", "M", "L", "XL"], isActive: true, clicks: 0, category: null,
+    },
+];
+
 function ShopPageContent() {
     const { t, locale } = useLocale();
     const searchParams = useSearchParams();
@@ -33,7 +48,7 @@ function ShopPageContent() {
         setTimeout(() => setAddedId(null), 1500);
     };
 
-    const { data: productsData, isLoading: prodLoading } = useQuery({
+    const { data: productsData, isLoading: prodLoading, isError: prodError } = useQuery({
         queryKey: ["products", selectedCategory, search, sort],
         queryFn: () =>
             productsApi.list({
@@ -44,13 +59,17 @@ function ShopPageContent() {
             }),
     });
 
+    const products =
+        prodError || !productsData?.products?.length
+            ? FALLBACK_PRODUCTS
+            : productsData.products;
+
     const { data: categoriesData } = useQuery({
         queryKey: ["categories"],
         queryFn: () => categoriesApi.list(),
     });
 
     const categories = categoriesData?.categories ?? [];
-    const products = productsData?.products ?? [];
 
     return (
         <div className="page-container py-10">

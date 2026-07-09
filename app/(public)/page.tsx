@@ -10,6 +10,21 @@ import { useQuery } from "@tanstack/react-query";
 import { useLocale } from "@/lib/i18n";
 import { useState, useEffect } from "react";
 
+const FALLBACK_PRODUCTS = [
+    {
+        id: "fb-borkah", name: "Borkah", slug: "borkah", description: "",
+        price: 1500, stock: 50,
+        images: ["/images/borkah1red.jpeg", "/images/borkha1black.jpeg"],
+        sizes: ["S", "M", "L", "XL"], isActive: true, clicks: 0, category: null,
+    },
+    {
+        id: "fb-punjabi", name: "Punjabi", slug: "punjabi", description: "",
+        price: 1200, stock: 50,
+        images: ["/images/punjabi1ash.jpeg", "/images/punjabi1blue.jpeg"],
+        sizes: ["S", "M", "L", "XL"], isActive: true, clicks: 0, category: null,
+    },
+];
+
 export default function HomePage() {
     const { t, locale } = useLocale();
     const addItem = useCartStore((s) => s.addItem);
@@ -36,15 +51,23 @@ export default function HomePage() {
         setTimeout(() => setAddedId(null), 1500);
     };
 
-    const { data: firstPageData, isLoading: firstPageLoading } = useQuery({
+    const { data: firstPageData, isLoading: firstPageLoading, isError: firstPageError } = useQuery({
         queryKey: ["products", "all", "popular", 1],
         queryFn: () => productsApi.list({ page: 1, limit: 50, sort: "popular" }),
     });
 
     useEffect(() => {
-        if (firstPageData && allProducts.length === 0) {
-            setAllProducts(firstPageData.products);
-            setHasMore(firstPageData.page * firstPageData.limit < firstPageData.total);
+        if (firstPageError && allProducts.length === 0) {
+            setAllProducts(FALLBACK_PRODUCTS);
+            setHasMore(false);
+        }
+    }, [firstPageError]);
+
+    useEffect(() => {
+        if (firstPageData) {
+            const data = firstPageData.products?.length > 0 ? firstPageData.products : FALLBACK_PRODUCTS;
+            if (allProducts.length === 0) setAllProducts(data);
+            setHasMore(firstPageData.products?.length > 0 && firstPageData.page * firstPageData.limit < firstPageData.total);
         }
     }, [firstPageData]);
 
