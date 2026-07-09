@@ -31,7 +31,7 @@ export default function HomePage() {
     const [addedId, setAddedId] = useState<string | null>(null);
     const [sizePopups, setSizePopups] = useState<Record<string, string>>({});
     const [productPage, setProductPage] = useState(1);
-    const [allProducts, setAllProducts] = useState<any[]>([]);
+    const [allProducts, setAllProducts] = useState<any[]>(FALLBACK_PRODUCTS);
     const [hasMore, setHasMore] = useState(true);
     const [loadingMore, setLoadingMore] = useState(false);
 
@@ -51,13 +51,13 @@ export default function HomePage() {
         setTimeout(() => setAddedId(null), 1500);
     };
 
-    const { data: firstPageData, isLoading: firstPageLoading, isError: firstPageError } = useQuery({
+    const { data: firstPageData, isError: firstPageError } = useQuery({
         queryKey: ["products", "all", "popular", 1],
         queryFn: () => productsApi.list({ page: 1, limit: 50, sort: "popular" }),
     });
 
     useEffect(() => {
-        if (firstPageError && allProducts.length === 0) {
+        if (firstPageError) {
             setAllProducts(FALLBACK_PRODUCTS);
             setHasMore(false);
         }
@@ -65,9 +65,10 @@ export default function HomePage() {
 
     useEffect(() => {
         if (firstPageData) {
-            const data = firstPageData.products?.length > 0 ? firstPageData.products : FALLBACK_PRODUCTS;
-            if (allProducts.length === 0) setAllProducts(data);
-            setHasMore(firstPageData.products?.length > 0 && firstPageData.page * firstPageData.limit < firstPageData.total);
+            if (firstPageData.products?.length > 0) {
+                setAllProducts(firstPageData.products);
+                setHasMore(firstPageData.page * firstPageData.limit < firstPageData.total);
+            }
         }
     }, [firstPageData]);
 
@@ -161,9 +162,7 @@ export default function HomePage() {
                         <h2 className="section-title text-xl lg:text-2xl">{t("home.allProducts.heading", undefined, "All Products")}</h2>
                         <Link href="/shop" className="text-sm font-medium text-green-800 hover:underline">{t("home.allProducts.viewAll", undefined, "View All →")}</Link>
                     </div>
-                    {firstPageLoading ? (
-                        <div className="flex justify-center py-16"><Loader2 className="animate-spin text-green-700" size={32} /></div>
-                    ) : allProducts.length === 0 ? (
+                    {allProducts.length === 0 ? (
                         <div className="text-center py-16 text-gray-400">{t("home.allProducts.empty", undefined, "No products found")}</div>
                     ) : (
                         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">

@@ -4,10 +4,26 @@ import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { ShoppingCart, ShoppingBag, Loader2, ArrowLeft } from "lucide-react";
+import type { Product } from "@/types";
 import { productsApi } from "@/lib/api/products";
 import { useCartStore } from "@/store/cart";
 import { formatCurrency } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
+
+const FALLBACK_PRODUCTS: Record<string, Product> = {
+    borkah: {
+        id: "fb-borkah", name: "Borkah", slug: "borkah", description: "Premium quality borkah available in multiple colors.",
+        price: 1500, stock: 50, categoryId: "",
+        images: ["/images/borkah1red.jpeg", "/images/borkha1black.jpeg"],
+        sizes: ["S", "M", "L", "XL"], isActive: true, clicks: 0, createdAt: new Date().toISOString(),
+    },
+    punjabi: {
+        id: "fb-punjabi", name: "Punjabi", slug: "punjabi", description: "Traditional punjabi with modern design.",
+        price: 1200, stock: 50, categoryId: "",
+        images: ["/images/punjabi1ash.jpeg", "/images/punjabi1blue.jpeg"],
+        sizes: ["S", "M", "L", "XL"], isActive: true, clicks: 0, createdAt: new Date().toISOString(),
+    },
+};
 
 export default function ProductDetailPage() {
     const { slug } = useParams() as { slug: string };
@@ -19,10 +35,12 @@ export default function ProductDetailPage() {
     const [msg, setMsg] = useState(false);
     const [selectedImage, setSelectedImage] = useState(0);
 
-    const { data: product, isLoading, error } = useQuery({
+    const { data: apiProduct, isLoading, error } = useQuery({
         queryKey: ["product", slug],
         queryFn: () => productsApi.getBySlug(slug),
     });
+
+    const product = apiProduct || FALLBACK_PRODUCTS[slug] || null;
 
     const pageTitle = product?.name
         ? `${product.name} | Bangla Park Limited`
@@ -33,12 +51,12 @@ export default function ProductDetailPage() {
     }, [pageTitle]);
 
     useEffect(() => {
-        if (product?.id) {
+        if (product?.id && !product.id.startsWith("fb-")) {
             productsApi.recordClick(product.id).catch(() => {});
         }
     }, [product?.id]);
 
-    if (isLoading) {
+    if (isLoading && !product) {
         return (
             <div className="flex h-[calc(100vh-16rem)] items-center justify-center">
                 <Loader2 className="animate-spin text-green-800" size={32} />
@@ -46,7 +64,7 @@ export default function ProductDetailPage() {
         );
     }
 
-    if (error || !product) {
+    if (!product) {
         return (
             <div className="page-container py-20 text-center">
                 <h2 className="text-xl font-bold text-gray-800">{t("product.notFound")}</h2>
@@ -89,7 +107,7 @@ export default function ProductDetailPage() {
                     </div>
                     {product.images?.length > 1 && (
                         <div className="flex gap-2 overflow-x-auto pb-1">
-                            {product.images.map((img, i) => (
+                            {product.images.map((img: string, i: number) => (
                                 <button
                                     key={i}
                                     onClick={() => setSelectedImage(i)}

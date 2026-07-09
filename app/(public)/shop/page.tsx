@@ -59,10 +59,7 @@ function ShopPageContent() {
             }),
     });
 
-    const products =
-        prodError || !productsData?.products?.length
-            ? FALLBACK_PRODUCTS
-            : productsData.products;
+    const products = productsData?.products?.length ? productsData.products : FALLBACK_PRODUCTS;
 
     const { data: categoriesData } = useQuery({
         queryKey: ["categories"],
@@ -140,11 +137,7 @@ function ShopPageContent() {
                 </div>
 
                 <div className="flex-1">
-                    {prodLoading ? (
-                        <div className="flex items-center justify-center py-20">
-                            <Loader2 className="animate-spin text-green-800" size={32} />
-                        </div>
-                    ) : products.length === 0 ? (
+                    {products.length === 0 ? (
                         <div className="card-flat py-20 text-center text-gray-400">
                             {t("shop.empty")}
                         </div>

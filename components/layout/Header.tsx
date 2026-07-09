@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { ShoppingCart, Bell, User, Menu, X, LogOut, LayoutDashboard, Shield, Search } from "lucide-react";
@@ -66,7 +65,7 @@ export function Header() {
                 <div className="flex h-16 items-center justify-between">
                     {/* Logo */}
                     <Link href="/" className="flex items-center">
-                        <Image src="/logo.png?v=2" alt="Bangla Park Limited" width={160} height={44} className="h-11 w-auto" priority unoptimized />
+                        <img src="/logo.png?v=2" alt="Bangla Park Limited" className="h-11 w-auto" />
                         <span className="ml-2 text-lg font-bold text-gray-900">Bangla Park</span>
                     </Link>
 

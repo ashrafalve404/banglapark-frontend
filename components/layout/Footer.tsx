@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useLocale } from "@/lib/i18n";
 
 export function Footer() {
@@ -12,7 +11,7 @@ export function Footer() {
                 <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
                     <div>
                         <Link href="/" className="inline-block mb-3">
-                            <Image src="/logo.png?v=2" alt="Bangla Park Limited" width={360} height={96} className="h-16 sm:h-24 md:h-40 w-auto" unoptimized />
+                            <img src="/logo.png?v=2" alt="Bangla Park Limited" className="h-16 sm:h-24 md:h-40 w-auto" />
                         </Link>
                         <p className="text-base sm:text-xl font-bold text-white">Bangla Park Limited</p>
                         <p className="text-sm text-gray-400 leading-relaxed mt-1">
