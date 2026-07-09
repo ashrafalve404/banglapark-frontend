@@ -110,7 +110,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="bn" className={inter.variable} suppressHydrationWarning>
+    <html lang="bn" className={inter.variable} suppressHydrationWarning data-scroll-behavior="smooth">
       <head>
         <meta name="geo.region" content="BD" />
         <meta name="geo.placename" content="Bangladesh" />

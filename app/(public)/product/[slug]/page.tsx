@@ -17,6 +17,7 @@ export default function ProductDetailPage() {
     const [qty, setQty] = useState(1);
     const [selectedSize, setSelectedSize] = useState("");
     const [msg, setMsg] = useState(false);
+    const [selectedImage, setSelectedImage] = useState(0);
 
     const { data: product, isLoading, error } = useQuery({
         queryKey: ["product", slug],
@@ -78,11 +79,30 @@ export default function ProductDetailPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 bg-white card-flat p-6 lg:p-10">
                 {/* Gallery / Image view */}
-                <div className="bg-gray-50 rounded-xl overflow-hidden aspect-square flex items-center justify-center border border-gray-100">
-                    {product.images?.[0] ? (
-                        <img src={product.images[0]} alt={product.name} className="h-full w-full object-cover" />
-                    ) : (
-                        <div className="text-gray-300">{t("product.noImage")}</div>
+                <div className="space-y-3">
+                    <div className="bg-gray-50 rounded-xl overflow-hidden aspect-square flex items-center justify-center border border-gray-100">
+                        {product.images?.[selectedImage] ? (
+                            <img src={product.images[selectedImage]} alt={product.name} className="h-full w-full object-cover" />
+                        ) : (
+                            <div className="text-gray-300">{t("product.noImage")}</div>
+                        )}
+                    </div>
+                    {product.images?.length > 1 && (
+                        <div className="flex gap-2 overflow-x-auto pb-1">
+                            {product.images.map((img, i) => (
+                                <button
+                                    key={i}
+                                    onClick={() => setSelectedImage(i)}
+                                    className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${
+                                        i === selectedImage
+                                            ? "border-green-600 ring-1 ring-green-600"
+                                            : "border-gray-200 hover:border-gray-400"
+                                    }`}
+                                >
+                                    <img src={img} alt="" className="w-full h-full object-cover" />
+                                </button>
+                            ))}
+                        </div>
                     )}
                 </div>
 

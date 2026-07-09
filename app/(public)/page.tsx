@@ -8,7 +8,7 @@ import { categoriesApi } from "@/lib/api/categories";
 import { useCartStore } from "@/store/cart";
 import { useQuery } from "@tanstack/react-query";
 import { useLocale } from "@/lib/i18n";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function HomePage() {
     const { t, locale } = useLocale();
@@ -38,13 +38,15 @@ export default function HomePage() {
 
     const { data: firstPageData, isLoading: firstPageLoading } = useQuery({
         queryKey: ["products", "all", "popular", 1],
-        queryFn: async () => {
-            const res = await productsApi.list({ page: 1, limit: 50, sort: "popular" });
-            setAllProducts(res.products);
-            setHasMore(res.page * res.limit < res.total);
-            return res;
-        },
+        queryFn: () => productsApi.list({ page: 1, limit: 50, sort: "popular" }),
     });
+
+    useEffect(() => {
+        if (firstPageData && allProducts.length === 0) {
+            setAllProducts(firstPageData.products);
+            setHasMore(firstPageData.page * firstPageData.limit < firstPageData.total);
+        }
+    }, [firstPageData]);
 
     const { data: categoriesData } = useQuery({
         queryKey: ["categories"],

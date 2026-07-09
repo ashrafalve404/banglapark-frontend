@@ -125,6 +125,7 @@ export default function AdminProductsPage() {
     };
 
     const addImageUrlInput = () => {
+        if (form.images.length >= 4) return;
         setForm({ ...form, images: [...form.images, ""] });
     };
 
@@ -303,7 +304,7 @@ export default function AdminProductsPage() {
 
                     {/* Image Upload */}
                     <div className="space-y-3">
-                        <label className="label font-bold text-slate-700">{t("admin.products.form.imagesLabel")}</label>
+                        <label className="label font-bold text-slate-700">{t("admin.products.form.imagesLabel")} <span className="text-[10px] text-gray-400 font-normal">(max 4)</span></label>
                         <div className="flex flex-wrap gap-3">
                             {form.images.map((url, i) => url ? (
                                 <div key={i} className="relative group w-24 h-24 rounded-lg border border-slate-200 overflow-hidden bg-slate-50">
