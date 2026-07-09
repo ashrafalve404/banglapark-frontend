@@ -8,11 +8,13 @@ import { useQuery } from "@tanstack/react-query";
 
 const AUTO_PLAY_INTERVAL = 4000;
 
-const FALLBACK_BANNER = {
-    id: "fallback",
-    imageUrl: "/images/demobanner.png",
-    linkUrl: undefined,
-};
+const FALLBACK_BANNERS = [
+    { id: "fb1", imageUrl: "/images/b1.jpg", linkUrl: "/shop" },
+    { id: "fb2", imageUrl: "/images/b2.jpg", linkUrl: "/shop" },
+    { id: "fb3", imageUrl: "/images/b3.jpg", linkUrl: "/register" },
+    { id: "fb4", imageUrl: "/images/b4.jpg", linkUrl: "/shop" },
+    { id: "fb5", imageUrl: "/images/b5.jpg", linkUrl: "/register" },
+];
 
 export function BannerCarousel() {
     const router = useRouter();
@@ -26,7 +28,7 @@ export function BannerCarousel() {
     });
 
     const apiBanners = (bannersData ?? []).filter((b: { isActive: boolean }) => b.isActive);
-    const banners = isError || apiBanners.length === 0 ? [FALLBACK_BANNER] : apiBanners;
+    const banners = isError || apiBanners.length === 0 ? FALLBACK_BANNERS : apiBanners;
 
     const goTo = useCallback((index: number) => {
         if (isTransitioning || banners.length === 0) return;
