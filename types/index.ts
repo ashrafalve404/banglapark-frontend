@@ -12,6 +12,7 @@ export type NotificationType = "ACTIVATION_REMINDER" | "COMMISSION_RECEIVED" | "
 
 export interface User {
     id: string;
+    memberId?: number;
     name: string;
     email: string;
     phone: string;

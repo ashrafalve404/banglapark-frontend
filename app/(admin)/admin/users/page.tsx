@@ -2,7 +2,7 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { Search, ShieldAlert, Check, Ban, XSquare, Loader2, Trash2 } from "lucide-react";
+import { Search, ShieldAlert, Check, Ban, XSquare, Loader2, Trash2, Plus, UserPlus, X } from "lucide-react";
 import { adminApi } from "@/lib/api/admin";
 import { formatDate } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
@@ -13,6 +13,8 @@ export default function AdminUsersPage() {
     const [search, setSearch] = useState("");
     const [page, setPage] = useState(1);
     const [status, setStatus] = useState("");
+    const [showForm, setShowForm] = useState(false);
+    const [form, setForm] = useState({ name: "", email: "", phone: "", password: "", role: "USER" });
 
     const { data, isLoading } = useQuery({
         queryKey: ["admin-users", page, search, status],
@@ -42,6 +44,18 @@ export default function AdminUsersPage() {
     const deactivateMutation = useMutation({
         mutationFn: (id: string) => adminApi.deactivateUser(id),
         onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin-users"] }),
+    });
+
+    const createMutation = useMutation({
+        mutationFn: (data: { name: string; email: string; phone: string; password: string; role?: string }) => adminApi.createUser(data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+            setShowForm(false);
+            setForm({ name: "", email: "", phone: "", password: "", role: "USER" });
+        },
+        onError: (err: any) => {
+            alert(err.response?.data?.message || "Failed to create user");
+        },
     });
 
     const deleteMutation = useMutation({
@@ -90,6 +104,63 @@ export default function AdminUsersPage() {
                     <option value="INACTIVE">{t("admin.users.filter.inactive")}</option>
                 </select>
             </div>
+
+            {/* Add User */}
+            <div className="flex justify-end">
+                <button
+                    onClick={() => setShowForm(!showForm)}
+                    className="btn-primary py-2 px-4 text-sm flex items-center gap-2"
+                >
+                    {showForm ? <X size={16} /> : <UserPlus size={16} />}
+                    {showForm ? "Cancel" : "Add User"}
+                </button>
+            </div>
+
+            {showForm && (
+                <div className="card p-6 bg-white space-y-4">
+                    <h2 className="text-sm font-bold text-slate-800 border-b border-slate-100 pb-2">Create New User</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div>
+                            <label className="block text-xs font-semibold text-slate-600 mb-1">Name</label>
+                            <input type="text" className="input w-full" value={form.name}
+                                onChange={(e) => setForm({ ...form, name: e.target.value })} />
+                        </div>
+                        <div>
+                            <label className="block text-xs font-semibold text-slate-600 mb-1">Email</label>
+                            <input type="email" className="input w-full" value={form.email}
+                                onChange={(e) => setForm({ ...form, email: e.target.value })} />
+                        </div>
+                        <div>
+                            <label className="block text-xs font-semibold text-slate-600 mb-1">Phone</label>
+                            <input type="text" className="input w-full" value={form.phone}
+                                onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+                        </div>
+                        <div>
+                            <label className="block text-xs font-semibold text-slate-600 mb-1">Password</label>
+                            <input type="password" className="input w-full" value={form.password}
+                                onChange={(e) => setForm({ ...form, password: e.target.value })} />
+                        </div>
+                        <div>
+                            <label className="block text-xs font-semibold text-slate-600 mb-1">Role</label>
+                            <select className="input w-full" value={form.role}
+                                onChange={(e) => setForm({ ...form, role: e.target.value })}>
+                                <option value="USER">User</option>
+                                <option value="ADMIN">Admin</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div className="flex gap-2 pt-2">
+                        <button
+                            onClick={() => createMutation.mutate(form)}
+                            disabled={createMutation.isPending || !form.name || !form.email || !form.phone || !form.password}
+                            className="btn-primary py-2 px-4 text-sm flex items-center gap-2"
+                        >
+                            {createMutation.isPending ? <Loader2 className="animate-spin" size={16} /> : <Plus size={16} />}
+                            Create {form.role === "ADMIN" ? "Admin" : "User"}
+                        </button>
+                    </div>
+                </div>
+            )}
 
             {/* Users table list */}
             <div className="card overflow-hidden">

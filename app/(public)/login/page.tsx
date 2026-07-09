@@ -6,6 +6,8 @@ import * as z from "zod";
 import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { GoogleLogin, type CredentialResponse } from "@react-oauth/google";
+import { Loader2 } from "lucide-react";
 import { useAuthStore } from "@/store/auth";
 import { authApi } from "@/lib/api/auth";
 import { useLocale } from "@/lib/i18n";
@@ -21,11 +23,32 @@ function LoginForm() {
     const { t } = useLocale();
     const router = useRouter();
     const searchParams = useSearchParams();
-    const redirect = searchParams.get("redirect") || "/dashboard";
+    const redirectParam = searchParams.get("redirect");
     const setUser = useAuthStore((s) => s.setUser);
 
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
+    const [googleLoading, setGoogleLoading] = useState(false);
+
+    const handleGoogleSuccess = async (credentialResponse: CredentialResponse) => {
+        if (!credentialResponse.credential) return;
+        setError(null);
+        setGoogleLoading(true);
+        try {
+            const res = await authApi.googleLogin(credentialResponse.credential);
+            authApi.saveTokens({
+                accessToken: res.accessToken,
+                refreshToken: res.refreshToken,
+            });
+            setUser(res.user);
+            router.push(redirectParam || (res.user.role === "ADMIN" || res.user.role === "SUPER_ADMIN" ? "/admin" : "/dashboard"));
+            router.refresh();
+        } catch (err: any) {
+            setError(err.response?.data?.message || "Google login failed");
+        } finally {
+            setGoogleLoading(false);
+        }
+    };
 
     const {
         register,
@@ -45,7 +68,7 @@ function LoginForm() {
                 refreshToken: res.refreshToken,
             });
             setUser(res.user);
-            router.push(redirect);
+            router.push(redirectParam || (res.user.role === "ADMIN" || res.user.role === "SUPER_ADMIN" ? "/admin" : "/dashboard"));
             router.refresh();
         } catch (err: any) {
             setError(
@@ -104,6 +127,27 @@ function LoginForm() {
                         {loading ? t("auth.login.submit.loading") : t("auth.login.submit.text")}
                     </button>
                 </form>
+
+                <div className="relative my-6">
+                    <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-gray-200" /></div>
+                    <div className="relative flex justify-center text-xs uppercase"><span className="bg-white px-3 text-gray-400">or</span></div>
+                </div>
+
+                <div className="flex justify-center">
+                    {googleLoading ? (
+                        <div className="flex items-center gap-2 text-sm text-gray-500"><Loader2 className="animate-spin" size={16} /> Connecting...</div>
+                    ) : (
+                        <GoogleLogin
+                            onSuccess={handleGoogleSuccess}
+                            onError={() => setError("Google login failed")}
+                            theme="outline"
+                            size="large"
+                            text="signin_with"
+                            shape="rectangular"
+                            width={300}
+                        />
+                    )}
+                </div>
 
                 <div className="mt-6 text-center text-sm text-gray-500">
                     {t("auth.login.footer.noAccount")}{" "}

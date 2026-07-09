@@ -13,6 +13,11 @@ export const adminApi = {
         return res.data;
     },
 
+    createUser: async (data: { name: string; email: string; phone: string; password: string; role?: string }): Promise<User> => {
+        const res = await api.post("/admin/users", data);
+        return res.data;
+    },
+
     banUser: async (id: string): Promise<User> => {
         const res = await api.patch(`/admin/users/${id}/ban`);
         return res.data;

@@ -2,6 +2,7 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import { LocaleProvider } from "@/lib/i18n";
 
 export function Providers({ children }: { children: React.ReactNode }) {
@@ -18,9 +19,13 @@ export function Providers({ children }: { children: React.ReactNode }) {
             })
     );
 
+    const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "";
+
     return (
-        <QueryClientProvider client={queryClient}>
-            <LocaleProvider>{children}</LocaleProvider>
-        </QueryClientProvider>
+        <GoogleOAuthProvider clientId={googleClientId}>
+            <QueryClientProvider client={queryClient}>
+                <LocaleProvider>{children}</LocaleProvider>
+            </QueryClientProvider>
+        </GoogleOAuthProvider>
     );
 }

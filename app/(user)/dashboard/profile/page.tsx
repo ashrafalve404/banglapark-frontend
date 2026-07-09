@@ -4,6 +4,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useState, useEffect } from "react";
+import { Download, IdCard } from "lucide-react";
+import jsPDF from "jspdf";
 import { useAuthStore } from "@/store/auth";
 import { api } from "@/lib/api/client";
 import { useLocale } from "@/lib/i18n";
@@ -33,6 +35,66 @@ export default function ProfilePage() {
     const [passwordMsg, setPasswordMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
     const [profileLoading, setProfileLoading] = useState(false);
     const [passwordLoading, setPasswordLoading] = useState(false);
+    const [usedReferralCode, setUsedReferralCode] = useState<string | null>(null);
+
+    useEffect(() => {
+        api.get("/users/profile").then((res: any) => {
+            setUsedReferralCode(res.data.usedReferralCode);
+        }).catch(() => {});
+    }, []);
+
+    const downloadPDF = () => {
+        if (!user) return;
+        const doc = new jsPDF({ unit: "mm", format: "a5" });
+        const pageW = doc.internal.pageSize.getWidth();
+        let y = 20;
+
+        doc.setFontSize(16);
+        doc.setFont("helvetica", "bold");
+        doc.text("Bangla Park Limited", pageW / 2, y, { align: "center" });
+        y += 10;
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal");
+        doc.text("Member Registration Card", pageW / 2, y, { align: "center" });
+        y += 10;
+
+        doc.setDrawColor(34, 197, 94);
+        doc.setLineWidth(0.5);
+        doc.line(20, y, pageW - 20, y);
+        y += 8;
+
+        doc.setFontSize(14);
+        doc.setFont("helvetica", "bold");
+        const idText = `ID: BP-${user.memberId || "N/A"}`;
+        doc.text(idText, pageW / 2, y, { align: "center" });
+        y += 10;
+
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal");
+        const refDisplay = usedReferralCode || "No code used";
+        const fields = [
+            { label: "Name", value: user.name },
+            { label: "Email", value: user.email },
+            { label: "Phone", value: user.phone },
+            { label: "Referral Code Used", value: refDisplay },
+        ];
+
+        for (const f of fields) {
+            doc.setFont("helvetica", "bold");
+            doc.text(`${f.label}:`, 25, y);
+            const labelW = doc.getTextWidth(`${f.label}:`);
+            doc.setFont("helvetica", "normal");
+            doc.text(f.value, 25 + labelW + 3, y);
+            y += 8;
+        }
+
+        y += 5;
+        doc.setFontSize(8);
+        doc.setTextColor(128);
+        doc.text("Registration Date: " + new Date().toLocaleDateString(), pageW / 2, y, { align: "center" });
+
+        doc.save(`BanglaPark_Member_BP-${user.memberId || "N/A"}.pdf`);
+    };
 
     const { register: regProfile, handleSubmit: handleProfileSubmit, setValue } = useForm<ProfileInput>({
         resolver: zodResolver(profileSchema),
@@ -87,6 +149,25 @@ export default function ProfilePage() {
                 <h1 className="text-2xl font-bold text-gray-900">{t("profile.heading")}</h1>
                 <p className="text-sm text-gray-500">{t("profile.subheading")}</p>
             </div>
+
+            {/* Member ID Card */}
+            {user?.memberId && (
+                <div className="card p-6 bg-gradient-to-br from-green-900 to-green-800 text-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div className="flex items-start gap-4">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/20">
+                            <IdCard size={24} />
+                        </div>
+                        <div>
+                            <p className="text-xs text-green-200 font-medium uppercase tracking-wider">Member ID</p>
+                            <p className="text-2xl font-black mt-0.5">BP-{user.memberId}</p>
+                            <p className="text-xs text-green-200 mt-1">Referral Code: <span className="font-bold text-white">{user.referralCode}</span></p>
+                        </div>
+                    </div>
+                    <button onClick={downloadPDF} className="flex items-center gap-2 rounded-lg bg-white/20 hover:bg-white/30 px-4 py-2.5 text-sm font-semibold transition-colors whitespace-nowrap">
+                        <Download size={16} /> Download ID Card
+                    </button>
+                </div>
+            )}
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div className="card p-6">

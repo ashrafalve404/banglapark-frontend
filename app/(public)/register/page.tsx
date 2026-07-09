@@ -3,12 +3,14 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { Download, CheckCircle, ArrowRight } from "lucide-react";
 import { useAuthStore } from "@/store/auth";
 import { authApi } from "@/lib/api/auth";
 import { useLocale } from "@/lib/i18n";
+import jsPDF from "jspdf";
 
 import { Suspense } from "react";
 
@@ -31,6 +33,10 @@ function RegisterForm() {
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const [referredByCode, setReferredByCode] = useState<string | null>(null);
+    const [registeredUser, setRegisteredUser] = useState<any>(null);
+    const [usedReferralCode, setUsedReferralCode] = useState<string | null>(null);
+
+    const pdfRef = useRef<HTMLDivElement>(null);
 
     // Auto-detect referral code from query params
     useEffect(() => {
@@ -56,6 +62,60 @@ function RegisterForm() {
         }
     }, [referredByCode, setValue]);
 
+    const downloadPDF = () => {
+        if (!registeredUser) return;
+        const doc = new jsPDF({ unit: "mm", format: "a5" });
+        const pageW = doc.internal.pageSize.getWidth();
+        let y = 20;
+
+        doc.setFontSize(16);
+        doc.setFont("helvetica", "bold");
+        doc.text("Bangla Park Limited", pageW / 2, y, { align: "center" });
+        y += 10;
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal");
+        doc.text("Member Registration Card", pageW / 2, y, { align: "center" });
+        y += 10;
+
+        doc.setDrawColor(34, 197, 94);
+        doc.setLineWidth(0.5);
+        doc.line(20, y, pageW - 20, y);
+        y += 8;
+
+        doc.setFontSize(14);
+        doc.setFont("helvetica", "bold");
+        const idText = `ID: BP-${registeredUser.memberId}`;
+        doc.text(idText, pageW / 2, y, { align: "center" });
+        y += 10;
+
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal");
+
+        const refDisplay = usedReferralCode || "No code used";
+        const fields = [
+            { label: "Name", value: registeredUser.name },
+            { label: "Email", value: registeredUser.email },
+            { label: "Phone", value: registeredUser.phone },
+            { label: "Referral Code Used", value: refDisplay },
+        ];
+
+        for (const f of fields) {
+            doc.setFont("helvetica", "bold");
+            doc.text(`${f.label}:`, 25, y);
+            const labelW = doc.getTextWidth(`${f.label}:`);
+            doc.setFont("helvetica", "normal");
+            doc.text(f.value, 25 + labelW + 3, y);
+            y += 8;
+        }
+
+        y += 5;
+        doc.setFontSize(8);
+        doc.setTextColor(128);
+        doc.text("Registration Date: " + new Date().toLocaleDateString(), pageW / 2, y, { align: "center" });
+
+        doc.save(`BanglaPark_Member_BP-${registeredUser.memberId}.pdf`);
+    };
+
     const onSubmit = async (data: RegisterSchemaInput) => {
         setError(null);
         setLoading(true);
@@ -66,8 +126,8 @@ function RegisterForm() {
                 refreshToken: res.refreshToken,
             });
             setUser(res.user);
-            router.push("/dashboard");
-            router.refresh();
+            setRegisteredUser(res.user);
+            setUsedReferralCode(data.referralCode || null);
         } catch (err: any) {
             setError(
                 err.response?.data?.message ||
@@ -77,6 +137,39 @@ function RegisterForm() {
             setLoading(false);
         }
     };
+
+    if (registeredUser) {
+        return (
+            <div className="flex min-h-[calc(100vh-16rem)] items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+                <div className="card-flat w-full max-w-md p-8 text-center">
+                    <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
+                        <CheckCircle size={36} className="text-green-700" />
+                    </div>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-2">Registration Successful!</h2>
+                    <p className="text-sm text-gray-500 mb-4">Welcome to Bangla Park Limited</p>
+
+                        <div ref={pdfRef} className="bg-gray-50 rounded-xl p-6 text-left space-y-2 mb-6">
+                            <p className="text-center text-lg font-bold text-green-800">BP-{registeredUser.memberId}</p>
+                            <div className="text-sm space-y-1">
+                                <p><span className="font-semibold text-gray-700">Name:</span> {registeredUser.name}</p>
+                                <p><span className="font-semibold text-gray-700">Email:</span> {registeredUser.email}</p>
+                                <p><span className="font-semibold text-gray-700">Phone:</span> {registeredUser.phone}</p>
+                                <p><span className="font-semibold text-gray-700">Referral Code Used:</span> {usedReferralCode || "No code used"}</p>
+                            </div>
+                        </div>
+
+                    <div className="flex flex-col gap-3">
+                        <button onClick={downloadPDF} className="btn-primary w-full py-3 flex items-center justify-center gap-2 text-sm font-semibold">
+                            <Download size={18} /> Download ID Card (PDF)
+                        </button>
+                        <Link href="/dashboard" className="btn-secondary w-full py-3 flex items-center justify-center gap-2 text-sm font-semibold">
+                            Go to Dashboard <ArrowRight size={16} />
+                        </Link>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="flex min-h-[calc(100vh-16rem)] items-center justify-center py-12 px-4 sm:px-6 lg:px-8">

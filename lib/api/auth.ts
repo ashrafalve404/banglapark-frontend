@@ -19,6 +19,11 @@ export const authApi = {
         return res.data;
     },
 
+    googleLogin: async (idToken: string): Promise<AuthResponse> => {
+        const res = await api.post("/auth/google", { idToken });
+        return res.data;
+    },
+
     logout: async () => {
         await api.post("/auth/logout").catch(() => { });
         Cookies.remove("access_token");
