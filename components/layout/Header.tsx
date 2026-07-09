@@ -66,7 +66,8 @@ export function Header() {
                 <div className="flex h-16 items-center justify-between">
                     {/* Logo */}
                     <Link href="/" className="flex items-center">
-                        <Image src="/logo.png" alt="Bangla Park Limited" width={280} height={72} className="h-20 w-auto" priority />
+                        <Image src="/logo.png?v=2" alt="Bangla Park Limited" width={160} height={44} className="h-11 w-auto" priority unoptimized />
+                        <span className="ml-2 text-lg font-bold text-gray-900">Bangla Park</span>
                     </Link>
 
                     {/* Search Bar - Desktop */}

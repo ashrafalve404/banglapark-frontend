@@ -83,7 +83,7 @@ function LoginForm() {
         <div className="flex min-h-[calc(100vh-16rem)] items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
             <div className="card-flat w-full max-w-md p-8">
                 <div className="text-center mb-8">
-                    <img src="/logo.png" alt="Bangla Park" className="mx-auto h-14 w-auto mb-4" />
+                    <img src="/logo.png?v=2" alt="Bangla Park" className="mx-auto h-14 w-auto mb-4" />
                     <h2 className="text-2xl font-bold text-gray-900">{t("auth.login.heading")}</h2>
                     <p className="mt-2 text-sm text-gray-500">{t("auth.login.subheading")}</p>
                 </div>
