@@ -183,11 +183,9 @@ export interface BenefitTier {
 }
 
 export interface AdminStats {
-    totalUsers: number;
-    activeUsers: number;
-    inactiveUsers: number;
-    totalOrders: number;
+    users: { total: number; active: number; inactive: number };
+    orders: { total: number; delivered: number };
     totalRevenue: number;
+    totalCommissionsPaid: number;
     pendingWithdrawals: number;
-    totalCommissionPaid: number;
 }

@@ -30,7 +30,7 @@ export default function AdminOverview() {
                     <div className="space-y-1">
                         <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block">{t("admin.overview.totalUsers")}</span>
                         <span className="text-2xl font-bold text-slate-800">
-                            {isLoading ? "..." : stats?.totalUsers ?? 0} {t("admin.overview.unit")}
+                            {isLoading ? "..." : stats?.users?.total ?? 0} {t("admin.overview.unit")}
                         </span>
                     </div>
                     <div className="rounded-lg bg-teal-50 p-2.5 text-teal-800">
@@ -43,7 +43,7 @@ export default function AdminOverview() {
                     <div className="space-y-1">
                         <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block">{t("admin.overview.activeUsers")}</span>
                         <span className="text-2xl font-bold text-green-700">
-                            {isLoading ? "..." : stats?.activeUsers ?? 0} {t("admin.overview.unit")}
+                            {isLoading ? "..." : stats?.users?.active ?? 0} {t("admin.overview.unit")}
                         </span>
                     </div>
                     <div className="rounded-lg bg-green-50 p-2.5 text-green-800">
@@ -69,7 +69,7 @@ export default function AdminOverview() {
                     <div className="space-y-1">
                         <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block">{t("admin.overview.totalCommission")}</span>
                         <span className="text-2xl font-bold text-indigo-850 text-indigo-700">
-                            {isLoading ? "..." : formatCurrency(stats?.totalCommissionPaid ?? 0)}
+                            {isLoading ? "..." : formatCurrency(stats?.totalCommissionsPaid ?? 0)}
                         </span>
                     </div>
                     <div className="rounded-lg bg-indigo-50 p-2.5 text-indigo-800">
@@ -96,7 +96,7 @@ export default function AdminOverview() {
                             <ShoppingBag className="text-indigo-800 flex-shrink-0" size={24} />
                             <div>
                                 <span className="text-[10px] text-indigo-800 font-bold block uppercase">{t("admin.overview.pendingAlert.orders")}</span>
-                                <span className="text-lg font-bold text-indigo-900 block">{stats?.totalOrders ?? 0} {t("admin.overview.pendingAlert.totalOrders")}</span>
+                                <span className="text-lg font-bold text-indigo-900 block">{stats?.orders?.total ?? 0} {t("admin.overview.pendingAlert.totalOrders")}</span>
                                 <span className="text-xs text-gray-500">{t("admin.overview.pendingAlert.ordersDesc")}</span>
                             </div>
                         </div>

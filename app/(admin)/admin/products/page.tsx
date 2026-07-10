@@ -315,7 +315,7 @@ export default function AdminProductsPage() {
                                             const updated = form.images.filter((_, j) => j !== i);
                                             setForm({ ...form, images: updated });
                                         }}
-                                        className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-600/80 text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                                        className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-600/80 text-white transition-opacity"
                                     >
                                         <X size={12} />
                                     </button>
