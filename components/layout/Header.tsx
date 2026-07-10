@@ -63,7 +63,7 @@ export function Header() {
                     {/* Logo */}
                     <Link href="/" className="flex items-center">
                         <img src="/logo.png?v=2" alt="Bangla Park Limited" className="h-11 w-auto" />
-                        <span className="ml-2 text-lg font-bold text-gray-900">Bangla Park</span>
+                        <span className="ml-2 text-base font-bold text-gray-900">Bangla Park</span>
                     </Link>
 
                     {/* Search Bar - Desktop */}
