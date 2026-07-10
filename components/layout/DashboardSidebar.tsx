@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
     LayoutDashboard, User, Wallet, ShoppingBag, Users,
-    TrendingUp, Gift, ArrowDownToLine, Bell, ChevronRight, X, Home
+    TrendingUp, ArrowDownToLine, Bell, ChevronRight, X, Home
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
@@ -25,7 +25,6 @@ export function DashboardSidebar({ onClose, mobile }: DashboardSidebarProps) {
         { href: "/dashboard/wallet", label: t("nav.wallet"), icon: Wallet },
         { href: "/dashboard/orders", label: t("nav.orders"), icon: ShoppingBag },
         { href: "/dashboard/referrals", label: t("nav.referrals"), icon: Users },
-        { href: "/dashboard/daily-benefit", label: t("nav.dailyBenefit"), icon: Gift },
         { href: "/dashboard/generation-income", label: t("nav.generationIncome"), icon: TrendingUp },
         { href: "/dashboard/withdraw", label: t("nav.withdraw"), icon: ArrowDownToLine },
         { href: "/dashboard/notifications", label: t("nav.notifications"), icon: Bell },

@@ -148,11 +148,6 @@ function ShopPageContent() {
                                         )}
                                     </div>
                                     <div className="p-4 flex flex-col flex-1">
-                                        {Number(product.price) >= 2000 && (
-                                            <span className="mb-2 self-start rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold text-amber-800">
-                                                {t("shop.product.activationBadge")}
-                                            </span>
-                                        )}
                                         <h3 className="text-sm font-semibold text-gray-800 line-clamp-2 mb-1.5 flex-1">
                                             {product.name}
                                         </h3>

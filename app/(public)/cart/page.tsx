@@ -7,16 +7,12 @@ import { useCartStore } from "@/store/cart";
 import { formatCurrency } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
 
-const ACTIVATION_THRESHOLD = 2000;
-
 export default function CartPage() {
     const { t, locale } = useLocale();
     const { items, updateQty, removeItem, total, clear } = useCartStore();
     const router = useRouter();
 
     const cartTotal = total();
-    const activationGoalMet = cartTotal >= ACTIVATION_THRESHOLD;
-    const remainingForActivation = ACTIVATION_THRESHOLD - cartTotal;
 
     if (items.length === 0) {
         return (
@@ -58,9 +54,6 @@ export default function CartPage() {
                                 )}
                                 <div className="mt-1 flex items-center gap-4">
                                     <span className="text-sm font-bold text-green-800">{formatCurrency(item.product.price, locale)}</span>
-                                    {Number(item.product.price) >= ACTIVATION_THRESHOLD && (
-                                        <span className="text-[10px] font-semibold text-amber-800 bg-amber-50 px-2 py-0.5 rounded-full">{t("cart.product.activationBadge")}</span>
-                                    )}
                                 </div>
                             </div>
 
@@ -92,28 +85,6 @@ export default function CartPage() {
                 <div className="space-y-6">
                     <div className="card-flat p-6">
                         <h3 className="text-base font-bold text-gray-900 mb-4 border-b border-gray-100 pb-3">{t("cart.summary.heading")}</h3>
-
-                        {/* Activation Progress bar / notification */}
-                        <div className="mb-6 rounded-xl bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-100 p-4">
-                            <h4 className="text-xs font-bold text-amber-800 uppercase tracking-wide mb-1.5">{t("cart.activationStatus.heading")}</h4>
-                            {activationGoalMet ? (
-                                <div>
-                                    <div className="h-2 w-full bg-amber-200 rounded-full mb-2 overflow-hidden">
-                                        <div className="h-full bg-green-700 w-full" />
-                                    </div>
-                                    <p className="text-xs text-green-800 font-semibold">{t("cart.activationStatus.met")}</p>
-                                </div>
-                            ) : (
-                                <div>
-                                    <div className="h-2 w-full bg-amber-200 rounded-full mb-2 overflow-hidden">
-                                        <div className="h-full bg-amber-600" style={{ width: `${(cartTotal / ACTIVATION_THRESHOLD) * 100}%` }} />
-                                    </div>
-                                    <p className="text-xs text-amber-700 font-medium">
-                                        {t("cart.activationStatus.notMet", { amount: formatCurrency(remainingForActivation, locale) })}
-                                    </p>
-                                </div>
-                            )}
-                        </div>
 
                         <div className="space-y-3 mb-6">
                             <div className="flex justify-between text-sm text-gray-500">

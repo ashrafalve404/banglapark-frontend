@@ -160,9 +160,6 @@ export default function HomePage() {
                                         )}
                                     </div>
                                     <div className="p-3">
-                                        {Number(product.price) >= 2000 && (
-                                            <span className="mb-1 inline-block rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-semibold text-amber-800">{t("home.featuredProducts.activationBadge")}</span>
-                                        )}
                                         <h3 className="text-sm font-semibold text-gray-800 line-clamp-2">{product.name}</h3>
                                         <p className="mt-1 text-base font-bold text-green-800">৳{Number(product.price).toLocaleString(locale === "bn" ? "bn-BD" : "en-IN")}</p>
                                         <div className="flex items-center gap-2 mt-0.5">

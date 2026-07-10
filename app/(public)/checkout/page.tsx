@@ -10,7 +10,7 @@ import { useAuthStore } from "@/store/auth";
 import { ordersApi } from "@/lib/api/orders";
 import { formatCurrency } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
-import { CheckCircle2, PackageCheck, ArrowRight, X, Smartphone, MapPin } from "lucide-react";
+import { CheckCircle2, ArrowRight, X, Smartphone, MapPin } from "lucide-react";
 import type { Order, PaymentMethod, DeliveryArea } from "@/types";
 
 const checkoutSchema = z.object({
@@ -144,12 +144,6 @@ export default function CheckoutPage() {
                             <span className="font-semibold uppercase tracking-wide">Status</span>
                             <span className="rounded-full bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5">Pending</span>
                         </div>
-                        {confirmedOrder.isQualifying && (
-                            <div className="mt-2 rounded-lg bg-green-50 border border-green-200 p-2 text-[11px] text-green-700 font-medium flex items-center gap-1.5">
-                                <PackageCheck size={13} />
-                                This order qualifies for account activation!
-                            </div>
-                        )}
                     </div>
 
                     {/* Actions */}
