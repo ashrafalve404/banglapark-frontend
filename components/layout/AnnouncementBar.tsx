@@ -2,12 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
-import { useAnnouncement } from "@/lib/announcement-context";
 import { useLocale } from "@/lib/i18n";
 
 export function AnnouncementBar() {
     const { t } = useLocale();
-    const { dismissed, dismiss } = useAnnouncement();
+    const [dismissed, setDismissed] = useState(false);
     const [closing, setClosing] = useState(false);
     const [isPaused, setIsPaused] = useState(false);
 
@@ -19,7 +18,7 @@ export function AnnouncementBar() {
 
     const handleClose = () => {
         setClosing(true);
-        setTimeout(dismiss, 300);
+        setTimeout(() => setDismissed(true), 300);
     };
 
     if (dismissed) return null;
@@ -28,9 +27,8 @@ export function AnnouncementBar() {
 
     return (
         <div
-            className="fixed top-0 left-0 right-0 z-[60] bg-neutral-900 text-white overflow-hidden h-8 sm:h-9 flex items-center select-none transition-all duration-300"
+            className="w-full bg-neutral-900 text-white overflow-hidden h-8 sm:h-9 flex items-center select-none transition-all duration-300"
             style={{
-                transform: closing ? "translateY(-100%)" : "translateY(0)",
                 opacity: closing ? 0 : 1,
             }}
         >

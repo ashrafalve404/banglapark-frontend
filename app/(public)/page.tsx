@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ArrowRight, ShoppingCart, Loader2 } from "lucide-react";
 import { BannerCarousel } from "@/components/home/BannerCarousel";
+import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
 import { productsApi } from "@/lib/api/products";
 import { categoriesApi } from "@/lib/api/categories";
 import { useCartStore } from "@/store/cart";
@@ -79,6 +80,8 @@ export default function HomePage() {
     return (
         <div>
             <BannerCarousel />
+
+            <AnnouncementBar />
 
             {/* Hero */}
             <section className="relative overflow-hidden bg-gradient-to-br from-green-900 via-green-800 to-green-700 text-white">
@@ -193,7 +196,7 @@ export default function HomePage() {
                                                             handleAddToCart(product, e);
                                                         }
                                                     }}
-                                                    className="w-full rounded-lg bg-green-800 py-1.5 text-xs font-semibold text-white hover:bg-green-700 transition-colors flex items-center justify-center gap-1"
+                                                    className="w-full rounded-lg bg-green-800 py-2 text-sm font-bold text-white hover:bg-green-700 transition-colors flex items-center justify-center gap-1"
                                                 >
                                                     {addedId === product.id ? (
                                                         <span>{t("shop.product.added", undefined, "Added!")}</span>

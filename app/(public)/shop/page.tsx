@@ -180,7 +180,7 @@ function ShopPageContent() {
                                                     )}
                                                     <button
                                                         onClick={(e) => handleAddToCart(product, e, sizePopups[product.id] || undefined)}
-                                                        className="w-full rounded-lg bg-green-800 py-1.5 text-xs font-semibold text-white hover:bg-green-700 transition-colors flex items-center justify-center gap-1"
+                                                        className="w-full rounded-lg bg-green-800 py-2 text-sm font-bold text-white hover:bg-green-700 transition-colors flex items-center justify-center gap-1"
                                                     >
                                                         {addedId === product.id ? (
                                                             <span>{t("shop.product.added", undefined, "Added!")}</span>
