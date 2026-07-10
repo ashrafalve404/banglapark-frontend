@@ -60,7 +60,6 @@ export default function ProductDetailPage() {
         );
     }
 
-    const isQualifying = Number(product.price) >= 2000;
     const hasSizes = product.sizes && product.sizes.length > 0;
 
     const handleAddToCart = () => {
@@ -111,12 +110,6 @@ export default function ProductDetailPage() {
 
                 {/* Product Details info */}
                 <div className="flex flex-col">
-                    {isQualifying && (
-                        <span className="mb-3 self-start rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-800">
-                            {t("product.qualifyingBadge")}
-                        </span>
-                    )}
-
                     <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 leading-tight mb-2">
                         {product.name}
                     </h1>
