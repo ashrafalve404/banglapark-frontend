@@ -109,7 +109,7 @@ export default function HomePage() {
 
                 <div className="page-container relative py-20 lg:py-28">
                     <div className="max-w-2xl">
-                        <h1 className="mb-6 text-4xl font-bold leading-tight lg:text-5xl xl:text-6xl">
+                        <h1 className="mb-6 text-3xl font-bold leading-tight lg:text-4xl xl:text-5xl">
                             {t("home.hero.title.line1")}<br />
                             <span className="text-white">{t("home.hero.title.line2")}</span>
                         </h1>
