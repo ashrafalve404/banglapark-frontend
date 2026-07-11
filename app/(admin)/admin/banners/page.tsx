@@ -13,6 +13,9 @@ interface Banner {
     linkUrl?: string;
     isActive: boolean;
     sortOrder: number;
+    section: "SLIDER" | "OFFER";
+    title?: string;
+    badge?: string;
 }
 
 export default function AdminBannersPage() {
@@ -20,8 +23,11 @@ export default function AdminBannersPage() {
     const queryClient = useQueryClient();
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [editing, setEditing] = useState<Banner | null>(null);
+    const [section, setSection] = useState<"SLIDER" | "OFFER">("SLIDER");
     const [imageUrl, setImageUrl] = useState("");
     const [linkUrl, setLinkUrl] = useState("");
+    const [title, setTitle] = useState("");
+    const [badge, setBadge] = useState("");
     const [isActive, setIsActive] = useState(true);
     const [sortOrder, setSortOrder] = useState(0);
     const [uploading, setUploading] = useState(false);
@@ -32,7 +38,7 @@ export default function AdminBannersPage() {
     });
 
     const createMutation = useMutation({
-        mutationFn: (data: { imageUrl: string; linkUrl?: string; isActive?: boolean; sortOrder?: number }) =>
+        mutationFn: (data: { section?: string; imageUrl: string; linkUrl?: string; title?: string; badge?: string; isActive?: boolean; sortOrder?: number }) =>
             adminApi.createBanner(data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["admin-banners"] });
@@ -44,7 +50,7 @@ export default function AdminBannersPage() {
     });
 
     const updateMutation = useMutation({
-        mutationFn: ({ id, data }: { id: string; data: { imageUrl?: string; linkUrl?: string; isActive?: boolean; sortOrder?: number } }) =>
+        mutationFn: ({ id, data }: { id: string; data: { section?: string; imageUrl?: string; linkUrl?: string; title?: string; badge?: string; isActive?: boolean; sortOrder?: number } }) =>
             adminApi.updateBanner(id, data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["admin-banners"] });
@@ -61,16 +67,22 @@ export default function AdminBannersPage() {
 
     const resetForm = () => {
         setEditing(null);
+        setSection("SLIDER");
         setImageUrl("");
         setLinkUrl("");
+        setTitle("");
+        setBadge("");
         setIsActive(true);
         setSortOrder(0);
     };
 
     const handleEdit = (banner: Banner) => {
         setEditing(banner);
+        setSection(banner.section);
         setImageUrl(banner.imageUrl);
         setLinkUrl(banner.linkUrl || "");
+        setTitle(banner.title || "");
+        setBadge(banner.badge || "");
         setIsActive(banner.isActive);
         setSortOrder(banner.sortOrder);
     };
@@ -91,7 +103,7 @@ export default function AdminBannersPage() {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (!imageUrl.trim()) return;
-        const data = { imageUrl, linkUrl: linkUrl || undefined, isActive, sortOrder };
+        const data = { section, imageUrl, linkUrl: linkUrl || undefined, title: title || undefined, badge: badge || undefined, isActive, sortOrder };
         if (editing) {
             updateMutation.mutate({ id: editing.id, data });
         } else {
@@ -152,6 +164,13 @@ export default function AdminBannersPage() {
                     </div>
                     <div className="space-y-4">
                         <div>
+                            <label className="block text-xs font-semibold text-slate-600 mb-1">Section</label>
+                            <select value={section} onChange={(e) => setSection(e.target.value as "SLIDER" | "OFFER")} className="input w-full">
+                                <option value="SLIDER">Slider (Homepage Banner)</option>
+                                <option value="OFFER">Offer Section (Below Hero)</option>
+                            </select>
+                        </div>
+                        <div>
                             <label className="block text-xs font-semibold text-slate-600 mb-1">Link URL (optional)</label>
                             <input
                                 type="url"
@@ -161,6 +180,32 @@ export default function AdminBannersPage() {
                                 className="input w-full"
                             />
                         </div>
+                        {section === "OFFER" && (
+                            <>
+                                <div>
+                                    <label className="block text-xs font-semibold text-slate-600 mb-1">Title (optional)</label>
+                                    <input
+                                        type="text"
+                                        value={title}
+                                        onChange={(e) => setTitle(e.target.value)}
+                                        placeholder="Special Deals"
+                                        className="input w-full"
+                                    />
+                                    <p className="text-[10px] text-gray-400 mt-0.5">Shown as overlay text on the offer card</p>
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-semibold text-slate-600 mb-1">Badge (optional)</label>
+                                    <input
+                                        type="text"
+                                        value={badge}
+                                        onChange={(e) => setBadge(e.target.value)}
+                                        placeholder="Offer"
+                                        className="input w-full"
+                                    />
+                                    <p className="text-[10px] text-gray-400 mt-0.5">Small label like "Offer", "New", "Sale"</p>
+                                </div>
+                            </>
+                        )}
                         <div>
                             <label className="block text-xs font-semibold text-slate-600 mb-1">Sort Order</label>
                             <input

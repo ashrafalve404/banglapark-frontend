@@ -3,7 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import Link from "next/link";
-import { Wallet, AlertCircle, RefreshCw } from "lucide-react";
+import { Wallet, AlertCircle, RefreshCw, Gift, TrendingUp, Award, DollarSign, MapPin, PieChart } from "lucide-react";
 import { walletApi } from "@/lib/api/wallet";
 import { useAuthStore } from "@/store/auth";
 import { formatCurrency, formatDateTime, getTxTypeLabel } from "@/lib/utils";
@@ -62,34 +62,103 @@ export default function WalletPage() {
                 </div>
             )}
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="card p-6 bg-gradient-to-br from-green-900 to-green-800 text-white">
-                    <div className="flex items-center justify-between mb-4">
-                        <span className="text-xs text-green-100 font-semibold uppercase tracking-wider">{t("wallet.balance.total")}</span>
-                        <Wallet size={20} className="text-green-300" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                <div className="card p-5 bg-gradient-to-br from-green-900 to-green-800 text-white">
+                    <div className="flex items-center justify-between mb-3">
+                        <span className="text-[10px] text-green-100 font-semibold uppercase tracking-wider">{t("wallet.balance.total")}</span>
+                        <Wallet size={18} className="text-green-300" />
                     </div>
-                    <h2 className="text-3xl font-extrabold text-white">
+                    <h2 className="text-2xl font-extrabold text-white">
                         {balLoading ? "..." : formatCurrency(balanceData?.balance ?? 0)}
                     </h2>
                 </div>
 
-                <div className="card p-6 bg-white border border-gray-150">
-                    <div className="flex items-center justify-between mb-4">
-                        <span className="text-xs text-gray-400 font-semibold uppercase tracking-wider">{t("wallet.balance.pending")}</span>
-                        <AlertCircle size={20} className="text-gray-400" />
+                <div className="card p-5 bg-white border border-gray-150">
+                    <div className="flex items-center justify-between mb-3">
+                        <span className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider">{t("wallet.balance.pending")}</span>
+                        <AlertCircle size={18} className="text-gray-400" />
                     </div>
-                    <h2 className="text-3xl font-extrabold text-gray-800">
+                    <h2 className="text-2xl font-extrabold text-gray-800">
                         {balLoading ? "..." : formatCurrency(balanceData?.pendingWithdrawal ?? 0)}
                     </h2>
                 </div>
 
-                <div className="card p-6 bg-green-50/50 border border-green-100">
-                    <div className="flex items-center justify-between mb-4">
-                        <span className="text-xs text-green-700 font-semibold uppercase tracking-wider">{t("wallet.balance.available")}</span>
-                        <Wallet size={20} className="text-green-700" />
+                <div className="card p-5 bg-green-50/50 border border-green-100">
+                    <div className="flex items-center justify-between mb-3">
+                        <span className="text-[10px] text-green-700 font-semibold uppercase tracking-wider">{t("wallet.balance.available")}</span>
+                        <Wallet size={18} className="text-green-700" />
                     </div>
-                    <h2 className="text-3xl font-extrabold text-green-800">
+                    <h2 className="text-2xl font-extrabold text-green-800">
                         {balLoading ? "..." : formatCurrency(balanceData?.availableBalance ?? 0)}
+                    </h2>
+                </div>
+
+                <div className="card p-5 bg-gradient-to-br from-purple-900 to-purple-800 text-white">
+                    <div className="flex items-center justify-between mb-3">
+                        <span className="text-[10px] text-purple-100 font-semibold uppercase tracking-wider">{t("wallet.balance.dailyReward")}</span>
+                        <Gift size={18} className="text-purple-300" />
+                    </div>
+                    <h2 className="text-2xl font-extrabold text-white">
+                        {balLoading ? "..." : formatCurrency(balanceData?.dailyReward ?? 0)}
+                    </h2>
+                </div>
+
+                <div className="card p-5 bg-gradient-to-br from-indigo-900 to-indigo-800 text-white">
+                    <div className="flex items-center justify-between mb-3">
+                        <span className="text-[10px] text-indigo-100 font-semibold uppercase tracking-wider">{t("wallet.balance.tierBonus")}</span>
+                        <Award size={18} className="text-indigo-300" />
+                    </div>
+                    <h2 className="text-2xl font-extrabold text-white">
+                        {balLoading ? "..." : formatCurrency(balanceData?.tierBonus ?? 0)}
+                    </h2>
+                </div>
+
+                <div className="card p-5 bg-gradient-to-br from-blue-900 to-blue-800 text-white">
+                    <div className="flex items-center justify-between mb-3">
+                        <span className="text-[10px] text-blue-100 font-semibold uppercase tracking-wider">{t("wallet.balance.generationIncome")}</span>
+                        <TrendingUp size={18} className="text-blue-300" />
+                    </div>
+                    <h2 className="text-2xl font-extrabold text-white">
+                        {balLoading ? "..." : formatCurrency(balanceData?.generationIncome ?? 0)}
+                    </h2>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div className="card p-4 border border-dashed border-gray-200 bg-gray-50/50">
+                    <div className="flex items-center justify-between mb-2">
+                        <span className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider">{t("wallet.balance.reward")}</span>
+                        <Award size={16} className="text-gray-300" />
+                    </div>
+                    <h2 className="text-xl font-extrabold text-gray-400">
+                        {balLoading ? "..." : formatCurrency(balanceData?.reward ?? 0)}
+                    </h2>
+                </div>
+                <div className="card p-4 border border-dashed border-gray-200 bg-gray-50/50">
+                    <div className="flex items-center justify-between mb-2">
+                        <span className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider">{t("wallet.balance.salary")}</span>
+                        <DollarSign size={16} className="text-gray-300" />
+                    </div>
+                    <h2 className="text-xl font-extrabold text-gray-400">
+                        {balLoading ? "..." : formatCurrency(balanceData?.salary ?? 0)}
+                    </h2>
+                </div>
+                <div className="card p-4 border border-dashed border-gray-200 bg-gray-50/50">
+                    <div className="flex items-center justify-between mb-2">
+                        <span className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider">{t("wallet.balance.travelling")}</span>
+                        <MapPin size={16} className="text-gray-300" />
+                    </div>
+                    <h2 className="text-xl font-extrabold text-gray-400">
+                        {balLoading ? "..." : formatCurrency(balanceData?.travelling ?? 0)}
+                    </h2>
+                </div>
+                <div className="card p-4 border border-dashed border-gray-200 bg-gray-50/50">
+                    <div className="flex items-center justify-between mb-2">
+                        <span className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider">{t("wallet.balance.share")}</span>
+                        <PieChart size={16} className="text-gray-300" />
+                    </div>
+                    <h2 className="text-xl font-extrabold text-gray-400">
+                        {balLoading ? "..." : formatCurrency(balanceData?.share ?? 0)}
                     </h2>
                 </div>
             </div>

@@ -401,7 +401,15 @@
     "balance": {
       "total": "মোট ব্যালেন্স",
       "pending": "চলতি উত্তোলন (পেন্ডিং)",
-      "available": "উত্তোলনযোগ্য ব্যালেন্স"
+      "available": "উত্তোলনযোগ্য ব্যালেন্স",
+      "dailyBenefit": "দৈনিক বেনিফিট",
+      "dailyReward": "দৈনিক রিওয়ার্ড",
+      "tierBonus": "টায়ার বোনাস",
+      "generationIncome": "জেনারেশন ইনকাম",
+      "reward": "রিওয়ার্ড",
+      "salary": "স্যালারি",
+      "travelling": "ট্রাভেলিং",
+      "share": "শেয়ার"
     },
     "ledger": {
       "heading": "লেনদেনের ইতিহাস (Ledger)",

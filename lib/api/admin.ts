@@ -1,6 +1,7 @@
 import { api } from "./client";
 import type { AdminStats, User, PlatformConfig } from "@/types";
 import type { Banner } from "./banners";
+import { BannerSection } from "@/types";
 
 export const adminApi = {
     stats: async (): Promise<AdminStats> => {
@@ -58,12 +59,12 @@ export const adminApi = {
         return res.data;
     },
 
-    createBanner: async (data: { imageUrl: string; linkUrl?: string; isActive?: boolean; sortOrder?: number }) => {
+    createBanner: async (data: { section?: string; imageUrl: string; linkUrl?: string; title?: string; badge?: string; isActive?: boolean; sortOrder?: number }) => {
         const res = await api.post("/banners", data);
         return res.data;
     },
 
-    updateBanner: async (id: string, data: { imageUrl?: string; linkUrl?: string; isActive?: boolean; sortOrder?: number }) => {
+    updateBanner: async (id: string, data: { section?: string; imageUrl?: string; linkUrl?: string; title?: string; badge?: string; isActive?: boolean; sortOrder?: number }) => {
         const res = await api.patch(`/banners/${id}`, data);
         return res.data;
     },

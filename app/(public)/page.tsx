@@ -6,6 +6,7 @@ import { BannerCarousel } from "@/components/home/BannerCarousel";
 import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
 import { productsApi } from "@/lib/api/products";
 import { categoriesApi } from "@/lib/api/categories";
+import { bannersApi } from "@/lib/api/banners";
 import { useCartStore } from "@/store/cart";
 import { useQuery } from "@tanstack/react-query";
 import { useLocale } from "@/lib/i18n";
@@ -64,6 +65,11 @@ export default function HomePage() {
 
     const categories = categoriesData?.categories ?? [];
 
+    const { data: offers = [] } = useQuery({
+        queryKey: ["offers"],
+        queryFn: () => bannersApi.findOffers(),
+    });
+
     const handleLoadMore = async () => {
         setLoadingMore(true);
         const nextPage = productPage + 1;
@@ -121,6 +127,32 @@ export default function HomePage() {
                     </div>
                 </div>
             </section>
+
+            {/* Offer Section */}
+            {offers.length > 0 && (
+            <section className="py-10 bg-white">
+                <div className="page-container">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {offers.map((offer) => (
+                            <Link key={offer.id} href={offer.linkUrl || "/shop"} className="group relative rounded-lg overflow-hidden aspect-[16/9] bg-gray-100 block">
+                                <img src={offer.imageUrl} alt={offer.title || "Offer"} className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                                {(offer.badge || offer.title) && (
+                                <div className="absolute bottom-3 left-3 right-3">
+                                    {offer.badge && (
+                                        <span className="inline-block rounded-full bg-green-600 px-2.5 py-0.5 text-[10px] font-bold text-white uppercase tracking-wide mb-1">{offer.badge}</span>
+                                    )}
+                                    {offer.title && (
+                                        <h3 className="text-sm font-bold text-white">{offer.title}</h3>
+                                    )}
+                                </div>
+                                )}
+                            </Link>
+                        ))}
+                    </div>
+                </div>
+            </section>
+            )}
 
             {/* Categories */}
             {categories.length > 0 && (

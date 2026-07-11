@@ -401,7 +401,15 @@
     "balance": {
       "total": "Total Balance",
       "pending": "Pending Withdrawal",
-      "available": "Withdrawable Balance"
+      "available": "Withdrawable Balance",
+      "dailyBenefit": "Daily Benefit",
+      "dailyReward": "Daily Reward",
+      "tierBonus": "Tier Bonus",
+      "generationIncome": "Generation Income",
+      "reward": "Reward",
+      "salary": "Salary",
+      "travelling": "Travelling",
+      "share": "Share"
     },
     "ledger": {
       "heading": "Transaction History (Ledger)",
