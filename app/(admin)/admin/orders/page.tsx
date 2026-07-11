@@ -2,7 +2,7 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { Search, ShieldAlert, Loader2, ArrowRight, Trash2, Smartphone } from "lucide-react";
+import { Search, ShieldAlert, Loader2, ArrowRight, Trash2, Smartphone, Minus } from "lucide-react";
 import { ordersApi } from "@/lib/api/orders";
 import { formatCurrency, formatDateTime, getOrderStatusLabel } from "@/lib/utils";
 import type { Order, OrderItem, OrderStatus } from "@/types";
@@ -33,6 +33,21 @@ export default function AdminOrdersPage() {
     const totalPages = Math.ceil(total / 12) || 1;
 
     const [mutatingId, setMutatingId] = useState<string | null>(null);
+    const [reducingItem, setReducingItem] = useState<string | null>(null);
+
+    // Reduce item quantity mutation
+    const reduceQtyMutation = useMutation({
+        mutationFn: async ({ orderId, itemId, quantity }: { orderId: string; itemId: string; quantity: number }) => {
+            setReducingItem(itemId);
+            return ordersApi.updateItemQuantity(orderId, itemId, quantity);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["admin-orders"] });
+        },
+        onSettled: () => {
+            setReducingItem(null);
+        },
+    });
 
     // Delete order mutation
     const deleteMutation = useMutation({
@@ -179,8 +194,17 @@ export default function AdminOrdersPage() {
                                                 </div>
                                                 <div className="space-y-0.5">
                                                     {order.items.map((item) => (
-                                                        <div key={item.id} className="text-[10px] text-gray-500 flex justify-between">
-                                                            <span>- {item.product?.name || t("admin.orders.table.productFallback")} (x{item.quantity})</span>
+                                                        <div key={item.id} className="text-[10px] text-gray-500 flex justify-between items-center gap-1">
+                                                            <span className="truncate">- {item.product?.name || t("admin.orders.table.productFallback")} (x{item.quantity})</span>
+                                                            {item.quantity > 1 && (
+                                                                <button
+                                                                    onClick={() => reduceQtyMutation.mutate({ orderId: order.id, itemId: item.id, quantity: item.quantity - 1 })}
+                                                                    disabled={reducingItem === item.id}
+                                                                    className="flex-shrink-0 flex items-center justify-center w-4 h-4 rounded-full bg-red-100 text-red-600 hover:bg-red-200 disabled:opacity-50 cursor-pointer"
+                                                                >
+                                                                    {reducingItem === item.id ? <Loader2 size={8} className="animate-spin" /> : <Minus size={8} />}
+                                                                </button>
+                                                            )}
                                                         </div>
                                                     ))}
                                                 </div>

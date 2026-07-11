@@ -44,4 +44,9 @@ export const ordersApi = {
         const res = await api.delete(`/admin/orders/${id}`);
         return res.data;
     },
+
+    updateItemQuantity: async (orderId: string, itemId: string, quantity: number): Promise<Order> => {
+        const res = await api.patch(`/orders/admin/${orderId}/items/${itemId}`, { quantity });
+        return res.data;
+    },
 };

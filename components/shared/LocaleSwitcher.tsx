@@ -8,7 +8,7 @@ export function LocaleSwitcher() {
     return (
         <button
             onClick={() => setLocale(locale === "bn" ? "en" : "bn")}
-            className="flex items-center gap-1 rounded-lg border border-gray-200 px-2.5 py-1 text-xs font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-800 transition-colors"
+            className="flex items-center gap-0.5 sm:gap-1 rounded-lg border border-gray-200 px-1.5 sm:px-2.5 py-1 text-[10px] sm:text-xs font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-800 transition-colors"
             title={locale === "bn" ? "Switch to English" : "বাংলায় সুইচ করুন"}
         >
             <span className={`${locale === "bn" ? "text-green-700 font-bold" : "text-gray-400"}`}>BN</span>
