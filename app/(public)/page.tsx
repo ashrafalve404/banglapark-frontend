@@ -107,13 +107,24 @@ export default function HomePage() {
                     <path d="M0 100C360 20 720 80 1440 30V100H0Z" fill="currentColor" />
                 </svg>
 
-                <div className="page-container relative py-20 lg:py-28">
+                <div className="page-container relative py-16 lg:py-20">
                     <div className="max-w-2xl">
-                        <h1 className="mb-6 text-3xl font-bold leading-tight lg:text-4xl xl:text-5xl">
-                            {t("home.hero.title.line1")}<br />
-                            <span className="text-white">{t("home.hero.title.line2")}</span>
+                        <h1 className="mb-4 text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold leading-tight">
+                            {locale === "en" ? (
+                                <>
+                                    <span className="block whitespace-nowrap">Buy from the</span>
+                                    <span className="block whitespace-nowrap">Affiliate Marketplace,</span>
+                                    <span className="block whitespace-nowrap">Start Earning</span>
+                                </>
+                            ) : (
+                                <>
+                                    <span className="block whitespace-nowrap">অ্যাফিলিয়েট মার্কেটপ্লেস</span>
+                                    <span className="block whitespace-nowrap">থেকে পণ্য কিনুন,</span>
+                                    <span className="block whitespace-nowrap">আয় শুরু করুন</span>
+                                </>
+                            )}
                         </h1>
-                        <p className="mb-8 text-lg text-green-100 leading-relaxed">
+                        <p className="mb-6 text-sm sm:text-base lg:text-lg text-green-100 leading-relaxed">
                             {t("home.hero.subtitle")}
                         </p>
                         <div className="flex flex-wrap gap-3">
@@ -130,52 +141,52 @@ export default function HomePage() {
 
             {/* Offer Section */}
             {offers.length > 0 && (
-            <section className="py-10 bg-white">
-                <div className="page-container">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {offers.map((offer) => (
-                            <Link key={offer.id} href={offer.linkUrl || "/shop"} className="group relative rounded-lg overflow-hidden aspect-[16/9] bg-gray-100 block">
-                                <img src={offer.imageUrl} alt={offer.title || "Offer"} className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                                {(offer.badge || offer.title) && (
-                                <div className="absolute bottom-3 left-3 right-3">
-                                    {offer.badge && (
-                                        <span className="inline-block rounded-full bg-green-600 px-2.5 py-0.5 text-[10px] font-bold text-white uppercase tracking-wide mb-1">{offer.badge}</span>
+                <section className="py-4 bg-white">
+                    <div className="page-container">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {offers.map((offer) => (
+                                <Link key={offer.id} href={offer.linkUrl || "/shop"} className="group relative rounded-lg overflow-hidden aspect-[16/9] bg-gray-100 block">
+                                    <img src={offer.imageUrl} alt={offer.title || "Offer"} className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                                    {(offer.badge || offer.title) && (
+                                        <div className="absolute bottom-3 left-3 right-3">
+                                            {offer.badge && (
+                                                <span className="inline-block rounded-full bg-green-600 px-2.5 py-0.5 text-[10px] font-bold text-white uppercase tracking-wide mb-1">{offer.badge}</span>
+                                            )}
+                                            {offer.title && (
+                                                <h3 className="text-sm font-bold text-white">{offer.title}</h3>
+                                            )}
+                                        </div>
                                     )}
-                                    {offer.title && (
-                                        <h3 className="text-sm font-bold text-white">{offer.title}</h3>
-                                    )}
-                                </div>
-                                )}
-                            </Link>
-                        ))}
+                                </Link>
+                            ))}
+                        </div>
                     </div>
-                </div>
-            </section>
+                </section>
             )}
 
             {/* Categories */}
             {categories.length > 0 && (
-            <section className="py-12 bg-gray-50">
-                <div className="page-container">
-                    <div className="flex items-center justify-between mb-6">
-                        <h2 className="section-title text-xl">{t("home.categories.heading")}</h2>
-                        <Link href="/shop" className="text-sm font-medium text-green-800 hover:underline">{t("home.categories.viewAll")}</Link>
+                <section className="py-8 bg-gray-50">
+                    <div className="page-container">
+                        <div className="flex items-center justify-between mb-6">
+                            <h2 className="section-title text-xl">{t("home.categories.heading")}</h2>
+                            <Link href="/shop" className="text-sm font-medium text-green-800 hover:underline">{t("home.categories.viewAll")}</Link>
+                        </div>
+                        <div className="flex flex-wrap gap-3">
+                            {categories.map((cat) => (
+                                <Link key={cat.id} href={`/shop?categoryId=${cat.id}`}
+                                    className="rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:border-green-600 hover:text-green-800 hover:shadow-md transition-all">
+                                    {cat.name}
+                                </Link>
+                            ))}
+                        </div>
                     </div>
-                    <div className="flex flex-wrap gap-3">
-                        {categories.map((cat) => (
-                            <Link key={cat.id} href={`/shop?categoryId=${cat.id}`}
-                                className="rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:border-green-600 hover:text-green-800 hover:shadow-md transition-all">
-                                {cat.name}
-                            </Link>
-                        ))}
-                    </div>
-                </div>
-            </section>
+                </section>
             )}
 
             {/* All Products */}
-            <section className="py-14 bg-white">
+            <section className="py-8 bg-white">
                 <div className="page-container">
                     <div className="flex items-center justify-between mb-8">
                         <h2 className="section-title text-xl lg:text-2xl">{t("home.allProducts.heading", undefined, "All Products")}</h2>

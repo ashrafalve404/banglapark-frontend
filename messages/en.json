@@ -19,7 +19,7 @@
     "adminPanel": "Admin Panel",
     "backToSite": "← Back to Public Site",
     "mobileDashboard": "Dashboard",
-    "footerTagline": "Bangladesh's trusted E-commerce Platform. Buy products, build a team, earn income.",
+    "footerTagline": "Bangladesh's trusted e-commerce & affiliate marketplace platform. Buy products, build your team, and earn.",
     "shopping": "Shopping",
     "allProducts": "All Products",
     "cart": "Cart",
@@ -62,8 +62,7 @@
     "badge": "Bangladesh's Trusted E-commerce Platform",
     "hero": {
       "title": {
-        "line1": "From Affiliate Marketplace",
-        "line2": "Buy Products, Start Earning"
+        "line1": "From Affiliate Marketplace Buy Products, Start Earning"
       },
       "subtitle": "Join Bangla Park Limited. Activate your account by purchasing products from our Affiliate Marketplace and start earning from Daily Benefits & Generation Commission.",
       "cta": {
