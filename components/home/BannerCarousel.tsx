@@ -22,13 +22,11 @@ export function BannerCarousel() {
     const [isTransitioning, setIsTransitioning] = useState(false);
 
     const { data: bannersData, isError } = useQuery({
-        queryKey: ["banners"],
-        queryFn: () => bannersApi.findActive(),
+        queryKey: ["banners", "slider"],
+        queryFn: () => bannersApi.findActive("SLIDER"),
         retry: 0,
     });
-
-    const apiBanners = (bannersData ?? []).filter((b: { isActive: boolean }) => b.isActive);
-    const banners = isError || apiBanners.length === 0 ? FALLBACK_BANNERS : apiBanners;
+    const banners = isError || !bannersData || bannersData.length === 0 ? FALLBACK_BANNERS : bannersData;
 
     const goTo = useCallback((index: number) => {
         if (isTransitioning || banners.length === 0) return;

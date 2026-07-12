@@ -26,7 +26,7 @@ export function Footer() {
     const followHeader = isEn ? "FOLLOW US" : "আমাদের ফলো করুন";
 
     return (
-        <footer className="mt-auto bg-[#111c2a] border-t border-slate-800 text-slate-350">
+        <><footer className="mt-auto bg-[#111c2a] border-t border-slate-800 text-slate-350">
             <div className="page-container py-12 lg:py-16">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 items-start">
 
@@ -45,7 +45,7 @@ export function Footer() {
                     <div className="lg:col-span-4 space-y-6 lg:px-10 lg:border-x border-slate-700/60 pt-8 lg:pt-0">
                         {/* PAGE */}
                         <div className="space-y-3 lg:pl-6">
-                            <h4 className="text-sm font-bold text-white tracking-widest uppercase flex items-center gap-2">
+                            <h4 className={`text-sm font-bold text-white uppercase flex items-center gap-2 ${isEn ? "tracking-widest" : ""}`}>
                                 <svg className="w-5 h-5 fill-white" viewBox="0 0 24 24"><path d="M4 6H2v14a2 2 0 0 0 2 2h14v-2H4V6zm16-4H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg>
                                 <span>{pageHeader}</span>
                             </h4>
@@ -70,7 +70,7 @@ export function Footer() {
 
                         {/* FOLLOW US */}
                         <div className="space-y-3 lg:pl-6">
-                            <h4 className="text-sm font-bold text-white tracking-widest uppercase flex items-center gap-2">
+                            <h4 className={`text-sm font-bold text-white uppercase flex items-center gap-2 ${isEn ? "tracking-widest" : ""}`}>
                                     <svg className="w-5 h-5 fill-white" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
                                 <span>{followHeader}</span>
                             </h4>
@@ -105,7 +105,7 @@ export function Footer() {
 
                     {/* Right Column: Head Office */}
                     <div className="lg:col-span-4 space-y-4 lg:pl-10 pt-8 lg:pt-0">
-                        <h4 className="text-sm font-bold text-white tracking-widest uppercase flex items-center gap-2">
+                        <h4 className={`text-sm font-bold text-white uppercase flex items-center gap-2 ${isEn ? "tracking-widest" : ""}`}>
                                 <svg className="w-5 h-5 fill-white" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
                             <span>{officeHeader}</span>
                         </h4>
@@ -136,13 +136,15 @@ export function Footer() {
 
                 </div>
 
-                {/* Bottom Bar: Copyright */}
-                <div className="mt-12 pt-6 border-t border-slate-800/80 flex flex-col sm:flex-row justify-between items-center gap-3">
-                    <p className="text-xs text-slate-500 font-semibold tracking-wide text-center sm:text-left">
-                        {t("nav.copyright", { year: new Date().getFullYear() })}
-                    </p>
-                </div>
             </div>
+
         </footer>
+
+        {/* Bottom Bar: Announcement-style Copyright */}
+        <div className="w-full bg-green-600 py-3 px-4 pb-16 md:pb-3">
+            <p className="text-xs sm:text-sm text-white font-bold text-center tracking-wide">
+                &copy; 2026 Bangla Park Limited. All rights reserved.
+            </p>
+        </div></>
     );
 }

@@ -17,8 +17,8 @@ export const bannersApi = {
         return res.data;
     },
 
-    findActive: async (): Promise<Banner[]> => {
-        const res = await api.get("/banners/active");
+    findActive: async (section?: string): Promise<Banner[]> => {
+        const res = await api.get("/banners/active", { params: section ? { section } : {} });
         return res.data;
     },
 
