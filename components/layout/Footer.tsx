@@ -2,70 +2,145 @@
 
 import Link from "next/link";
 import { useLocale } from "@/lib/i18n";
+import { MapPin, Phone, Mail } from "lucide-react";
 
 export function Footer() {
-    const { t } = useLocale();
+    const { t, locale } = useLocale();
+
+    // Localized strings
+    const isEn = locale === "en";
+    const officeHeader = isEn ? "HEAD OFFICE" : "প্রধান কার্যালয়";
+    const addressLabel = isEn ? "Address" : "ঠিকানা";
+    const addressValue = isEn
+        ? "Navana Shopping Centre, Gulshan Avenue-1, Dhaka-1212"
+        : "নাভানা শপিং সেন্টার, গুলশান এভিনিউ-১, ঢাকা-১২১২";
+    const hotlineLabel = isEn ? "Hotline" : "হটলাইন";
+    const emailLabel = isEn ? "E-mail" : "ই-মেইল";
+
+    const pageHeader = isEn ? "PAGE" : "পেজ";
+    const pageAbout = isEn ? "About Ecom" : "আমাদের সম্পর্কে";
+    const pageDelivery = isEn ? "Delivery Policy" : "ডেলিভারি পলিসি";
+    const pageTerms = isEn ? "Terms & Condition" : "শর্তাবলী";
+    const pageReturn = isEn ? "Return Policy" : "রিটার্ন পলিসি";
+
+    const followHeader = isEn ? "FOLLOW US" : "আমাদের ফলো করুন";
+
     return (
-        <footer className="mt-auto border-t border-gray-700 bg-neutral-900">
-            <div className="page-container py-10">
-                <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-                    <div>
-                        <Link href="/" className="inline-block mb-3">
-                            <img src="/logo.png?v=2" alt="Bangla Park Limited" className="h-16 sm:h-24 md:h-40 w-auto" />
+        <footer className="mt-auto bg-[#111c2a] border-t border-slate-800 text-slate-350">
+            <div className="page-container py-12 lg:py-16">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 items-start">
+
+                    {/* Left Column: Brand & Tagline */}
+                    <div className="lg:col-span-4 space-y-4 lg:pr-10">
+                        <Link href="/" className="inline-block transition-transform hover:scale-102">
+                            <img src="/logo.png?v=2" alt="Bangla Park Limited" className="h-16 sm:h-20 lg:h-28 w-auto" />
                         </Link>
-                        <p className="text-base sm:text-xl font-bold text-white">Bangla Park Limited</p>
-                        <p className="text-sm text-gray-400 leading-relaxed mt-1">
+                        <p className="text-2xl font-extrabold text-white tracking-wide">Bangla Park Limited</p>
+                        <p className="text-sm text-slate-400 leading-relaxed font-medium">
                             {t("nav.footerTagline")}
                         </p>
                     </div>
-                    <div>
-                        <h4 className="text-sm font-semibold text-gray-200 mb-3">{t("nav.shopping")}</h4>
-                        <ul className="space-y-2">
-                            <li><Link href="/shop" className="text-sm text-gray-400 hover:text-white transition-colors">{t("nav.allProducts")}</Link></li>
-                            <li><Link href="/cart" className="text-sm text-gray-400 hover:text-white transition-colors">{t("nav.cart")}</Link></li>
-                            <li><Link href="/checkout" className="text-sm text-gray-400 hover:text-white transition-colors">{t("nav.checkout")}</Link></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 className="text-sm font-semibold text-gray-200 mb-3">{t("nav.account")}</h4>
-                        <ul className="space-y-2">
-                            <li><Link href="/login" className="text-sm text-gray-400 hover:text-white transition-colors">{t("nav.login")}</Link></li>
-                            <li><Link href="/register" className="text-sm text-gray-400 hover:text-white transition-colors">{t("nav.register")}</Link></li>
-                            <li><Link href="/dashboard" className="text-sm text-gray-400 hover:text-white transition-colors">{t("nav.dashboard")}</Link></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 className="text-sm font-semibold text-gray-200 mb-3">{t("nav.support")}</h4>
-                        <ul className="space-y-2">
-                            <li><span className="text-sm text-gray-400">{t("nav.supportHours")}</span></li>
-                            <li><span className="text-sm text-gray-400">{t("nav.supportEmail")}</span></li>
-                            <li><span className="text-sm text-gray-400">{t("nav.supportPhone")}</span></li>
-                            <li className="pt-2 flex gap-3">
-                                <a href="https://www.facebook.com/profile.php?id=61589186879275" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-600 transition-colors" title="Facebook">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+
+                    {/* Middle Column: Page & Follow Us */}
+                    <div className="lg:col-span-4 space-y-6 lg:px-10 lg:border-x border-slate-700/60 pt-8 lg:pt-0">
+                        {/* PAGE */}
+                        <div className="space-y-3 lg:pl-6">
+                            <h4 className="text-sm font-bold text-white tracking-widest uppercase flex items-center gap-2">
+                                <svg className="w-5 h-5 fill-white" viewBox="0 0 24 24"><path d="M4 6H2v14a2 2 0 0 0 2 2h14v-2H4V6zm16-4H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg>
+                                <span>{pageHeader}</span>
+                            </h4>
+                            <ul className="space-y-2.5 text-sm font-bold text-slate-300">
+                                <li>
+                                    <Link href="/shop" className="hover:text-white transition-colors">{isEn ? "Shop" : "শপ"}</Link>
+                                </li>
+                                <li>
+                                    <Link href="/" className="hover:text-white transition-colors">{pageAbout}</Link>
+                                </li>
+                                <li>
+                                    <Link href="/" className="hover:text-white transition-colors">{pageDelivery}</Link>
+                                </li>
+                                <li>
+                                    <Link href="/" className="hover:text-white transition-colors">{pageTerms}</Link>
+                                </li>
+                                <li>
+                                    <Link href="/" className="hover:text-white transition-colors">{pageReturn}</Link>
+                                </li>
+                            </ul>
+                        </div>
+
+                        {/* FOLLOW US */}
+                        <div className="space-y-3 lg:pl-6">
+                            <h4 className="text-sm font-bold text-white tracking-widest uppercase flex items-center gap-2">
+                                    <svg className="w-5 h-5 fill-white" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                <span>{followHeader}</span>
+                            </h4>
+                            <div className="flex gap-3">
+                                {/* Facebook */}
+                                <a
+                                    href="https://www.facebook.com/profile.php?id=61589186879275"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="w-10 h-10 rounded bg-[#1877F2] hover:opacity-90 flex items-center justify-center text-white transition-opacity"
+                                    title="Facebook"
+                                >
+                                    <svg className="w-5.5 h-5.5 fill-current" viewBox="0 0 24 24">
+                                        <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3l-.5 3h-2.5v6.8c4.56-.93 8-4.96 8-9.8z" />
+                                    </svg>
                                 </a>
-                                <a href="https://youtube.com/@banglapark?si=7mFnhHpG0s9fE0Hf" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-red-600 transition-colors" title="YouTube">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                                {/* YouTube */}
+                                <a
+                                    href="https://youtube.com/@banglapark?si=7mFnhHpG0s9fE0Hf"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="w-10 h-10 rounded bg-[#FF0000] hover:opacity-90 flex items-center justify-center text-white transition-opacity"
+                                    title="YouTube"
+                                >
+                                    <svg className="w-5.5 h-5.5 fill-current" viewBox="0 0 24 24">
+                                        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                                    </svg>
                                 </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Right Column: Head Office */}
+                    <div className="lg:col-span-4 space-y-4 lg:pl-10 pt-8 lg:pt-0">
+                        <h4 className="text-sm font-bold text-white tracking-widest uppercase flex items-center gap-2">
+                                <svg className="w-5 h-5 fill-white" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                            <span>{officeHeader}</span>
+                        </h4>
+                        <ul className="space-y-4 text-sm font-bold text-slate-300">
+                            <li className="flex items-start gap-2.5 leading-normal">
+                                <MapPin size={16} className="text-slate-400 flex-shrink-0 mt-0.5" />
+                                <span>
+                                    <b className="text-white block mb-0.5">{addressLabel}:</b>
+                                    <span className="font-bold">{addressValue}</span>
+                                </span>
+                            </li>
+                            <li className="flex items-center gap-2.5">
+                                <Phone size={16} className="text-slate-400 flex-shrink-0" />
+                                <span>
+                                    <b className="text-white mr-1">{hotlineLabel}:</b>
+                                    <span className="font-bold">+8801823674796</span>
+                                </span>
+                            </li>
+                            <li className="flex items-center gap-2.5">
+                                <Mail size={16} className="text-slate-400 flex-shrink-0" />
+                                <span className="break-all">
+                                    <b className="text-white mr-1">{emailLabel}:</b>
+                                    <span className="font-bold">banglaparkltd@gmail.com</span>
+                                </span>
                             </li>
                         </ul>
                     </div>
+
                 </div>
-                <div className="mt-8 border-t border-gray-700 pt-6 flex flex-col items-start gap-3">
-                    <div className="flex items-center gap-4 text-sm text-gray-300">
-                        <span>{t("nav.paymentMethods")}:</span>
-                        <span className="inline-flex items-center gap-1 rounded-sm bg-gray-100 px-2.5 py-1">
-                            <img src="/bkash_logo.svg" alt="bKash" className="h-5 w-auto" />
-                            <span className="text-pink-600 font-semibold text-xs">bKash</span>
-                        </span>
-                        <span className="inline-flex items-center gap-1 rounded-sm bg-gray-100 px-2.5 py-1">
-                            <img src="/cash.png" alt="Cash" className="h-5 w-auto" />
-                            <span className="text-green-700 font-semibold text-xs">Cash</span>
-                        </span>
-                    </div>
-                    <div className="flex flex-col sm:flex-row justify-between w-full gap-2">
-                        <p className="text-xs text-gray-500 text-center sm:text-left">{t("nav.copyright", { year: new Date().getFullYear() })}</p>
-                    </div>
+
+                {/* Bottom Bar: Copyright */}
+                <div className="mt-12 pt-6 border-t border-slate-800/80 flex flex-col sm:flex-row justify-between items-center gap-3">
+                    <p className="text-xs text-slate-500 font-semibold tracking-wide text-center sm:text-left">
+                        {t("nav.copyright", { year: new Date().getFullYear() })}
+                    </p>
                 </div>
             </div>
         </footer>
