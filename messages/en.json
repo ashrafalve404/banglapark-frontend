@@ -573,7 +573,7 @@
     },
     "sidebar": {
       "availableBalance": "Withdrawable Balance",
-      "minLimit": "Minimum Withdrawal Limit: ৳1,000",
+      "minLimit": "Minimum Withdrawal Limit: ৳2,000",
       "timing": {
         "heading": "Payment Processing Time:",
         "mobile": "1. Mobile balance requests are processed within 24-48 hours.",

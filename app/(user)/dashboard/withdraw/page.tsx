@@ -12,7 +12,7 @@ import { formatCurrency, formatDateTime, getWithdrawStatusLabel, getWithdrawMeth
 import { useLocale } from "@/lib/i18n";
 
 const withdrawSchema = z.object({
-    amount: z.number().min(1000, "সর্বনিম্ন উত্তোলন মূল্য ৳১,০০০ হতে হবে"),
+    amount: z.number().min(2000, "সর্বনিম্ন উত্তোলন মূল্য ৳২,০০০ হতে হবে"),
     method: z.enum(["BKASH", "NAGAD", "ROCKET", "BANK"]),
     accountNo: z.string().min(5, "হিসাব নাম্বার অথবা মোবাইল নাম্বার প্রদান করুন"),
     bankName: z.string().optional(),
