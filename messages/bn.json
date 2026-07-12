@@ -537,7 +537,7 @@
   },
   "withdraw": {
     "schema": {
-      "amount": "সর্বনিম্ন উত্তোলন মূল্য ৳১,০০০ হতে হবে",
+      "amount": "সর্বনিম্ন উত্তোলন মূল্য ৳২,০০০ হতে হবে",
       "account": "হিসাব নাম্বার অথবা মোবাইল নাম্বার প্রদান করুন"
     },
     "error": {
@@ -550,7 +550,7 @@
     "form": {
       "heading": "নতুন উত্তোলনের অনুরোধ",
       "amountLabel": "পরিমাণ (BDT)",
-      "amountPlaceholder": "৳১,০০০ বা তার বেশি",
+      "amountPlaceholder": "৳২,০০০ বা তার বেশি",
       "methodLabel": "উত্তোলন মেথড",
       "methodBkash": "বিকাশ (bKash)",
       "methodNagad": "নগদ (Nagad)",

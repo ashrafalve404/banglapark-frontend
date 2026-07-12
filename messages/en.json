@@ -537,7 +537,7 @@
   },
   "withdraw": {
     "schema": {
-      "amount": "Minimum withdrawal amount must be ৳1,000",
+      "amount": "Minimum withdrawal amount must be ৳2,000",
       "account": "Provide account number or mobile number"
     },
     "error": {
@@ -550,7 +550,7 @@
     "form": {
       "heading": "New Withdrawal Request",
       "amountLabel": "Amount (BDT)",
-      "amountPlaceholder": "৳1,000 or more",
+      "amountPlaceholder": "৳2,000 or more",
       "methodLabel": "Withdrawal Method",
       "methodBkash": "bKash",
       "methodNagad": "Nagad",
