@@ -108,26 +108,32 @@ export default function HomePage() {
                 </svg>
 
                 <div className="page-container relative py-16 lg:py-20">
-                    <div className="max-w-2xl">
+                    <div className="max-w-4xl mx-auto text-center">
                         <h1 className="mb-4 text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold leading-tight">
                             {locale === "en" ? (
                                 <>
-                                    <span className="block whitespace-nowrap">Buy from the</span>
-                                    <span className="block whitespace-nowrap">Affiliate Marketplace,</span>
-                                    <span className="block whitespace-nowrap">Start Earning</span>
+                                    <span className="md:whitespace-nowrap">
+                                        Buy from the
+                                        <br className="block md:hidden" /> Affiliate Marketplace,
+                                    </span>
+                                    <br />
+                                    <span className="md:whitespace-nowrap">Start Earning</span>
                                 </>
                             ) : (
                                 <>
-                                    <span className="block whitespace-nowrap">অ্যাফিলিয়েট মার্কেটপ্লেস</span>
-                                    <span className="block whitespace-nowrap">থেকে পণ্য কিনুন,</span>
-                                    <span className="block whitespace-nowrap">আয় শুরু করুন</span>
+                                    <span className="md:whitespace-nowrap">
+                                        অ্যাফিলিয়েট মার্কেটপ্লেস থেকে
+                                        <br className="block md:hidden" /> পণ্য কিনুন,
+                                    </span>
+                                    <br />
+                                    <span className="md:whitespace-nowrap">আয় শুরু করুন</span>
                                 </>
                             )}
                         </h1>
-                        <p className="mb-6 text-sm sm:text-base lg:text-lg text-green-100 leading-relaxed">
+                        <p className="mb-6 text-sm sm:text-base lg:text-lg text-green-100 leading-relaxed max-w-3xl mx-auto">
                             {t("home.hero.subtitle")}
                         </p>
-                        <div className="flex flex-wrap gap-3">
+                        <div className="flex flex-wrap gap-3 justify-center">
                             <Link href="/shop" className="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-green-900 hover:bg-green-50 transition-all shadow-lg hover:shadow-xl">
                                 {t("home.hero.cta.shop")} <ArrowRight size={16} />
                             </Link>

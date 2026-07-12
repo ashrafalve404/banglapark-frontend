@@ -10,7 +10,7 @@ import { useAuthStore } from "@/store/auth";
 import { walletApi } from "@/lib/api/wallet";
 import { referralApi } from "@/lib/api/categories";
 import { authApi } from "@/lib/api/auth";
-import { formatCurrency, daysUntil, formatDate } from "@/lib/utils";
+import { formatCurrency, formatDate } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
 import { useEffect } from "react";
 
@@ -47,7 +47,15 @@ export default function DashboardOverview() {
         refetchOnWindowFocus: true,
     });
 
-    const activeDays = user?.activeUntil ? daysUntil(user.activeUntil) : 0;
+    const { data: activation } = useQuery({
+        queryKey: ["my-activation"],
+        queryFn: () => authApi.activation(),
+        refetchOnWindowFocus: true,
+        staleTime: 60_000,
+    });
+
+    const activeDays = activation?.daysLeft ?? 0;
+    const activeUntilDate = activation?.activeUntil ?? user?.activeUntil;
     const isExpiringSoon = activeDays > 0 && activeDays <= 5;
     const isInactive = user?.status === "INACTIVE";
 
@@ -131,7 +139,7 @@ export default function DashboardOverview() {
                     <div className="space-y-1">
                         <span className="text-xs text-gray-500 font-semibold uppercase tracking-wider block">{t("dashboard.card.activationEnd")}</span>
                         <span className="text-sm font-semibold text-gray-800 block">
-                            {user?.activeUntil ? formatDate(user.activeUntil, locale) : t("dashboard.card.activationEndNone")}
+                            {activeUntilDate ? formatDate(activeUntilDate, locale) : t("dashboard.card.activationEndNone")}
                         </span>
                         {!isInactive && (
                             <span className="text-[10px] text-green-700 bg-green-50 px-2 py-0.5 rounded-full inline-block">

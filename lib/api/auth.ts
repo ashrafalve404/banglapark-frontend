@@ -36,6 +36,11 @@ export const authApi = {
         return res.data;
     },
 
+    activation: async (): Promise<{ status: string; activeUntil: string; isFirstActivated: boolean; isExpired: boolean; daysLeft: number }> => {
+        const res = await api.get("/users/me/activation");
+        return res.data;
+    },
+
     saveTokens: (tokens: { accessToken: string; refreshToken: string }) => {
         Cookies.set("access_token", tokens.accessToken, { expires: 1 / 96 });
         Cookies.set("refresh_token", tokens.refreshToken, { expires: 7 });
