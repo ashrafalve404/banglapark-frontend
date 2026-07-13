@@ -388,6 +388,44 @@
         "loading": "পরিবর্তন হচ্ছে...",
         "text": "পাসওয়ার্ড পরিবর্তন করুন"
       }
+    }
+  },
+  "dashboard": {
+    "header": {
+      "welcome": "স্বাগতম",
+      "active": "একটিভ",
+      "inactive": "নিষ্ক্রিয়"
+    },
+    "heading": "ড্যাশবোর্ড ওভারভিউ",
+    "subheading": "আপনার একাউন্টের তথ্য এখানে দেখতে পাবেন",
+    "alert": {
+      "inactive": {
+        "title": "একাউন্ট একটিভ করুন",
+        "desc": "",
+        "cta": "পণ্য কিনুন"
+      },
+      "expiring": {
+        "title": "একটিভেশন মেয়াদ শেষ হতে চলেছে",
+        "desc": "আপনার একাউন্টের মেয়াদ আর মাত্র {days} দিন আছে। যেকোনো অর্ডার করে মেয়াদ নবায়ন করুন।",
+        "cta": "নবায়ন করুন"
+      }
+    },
+    "card": {
+      "walletBalance": "বর্তমান ব্যালেন্স",
+      "pendingWithdrawal": "পেন্ডিং উত্তোলন",
+      "activeTeam": "একটিভ টিম সদস্য",
+      "activeTeamUnit": "জন",
+      "activationEnd": "একটিভেশন শেষ",
+      "activationEndNone": "নেই",
+      "daysRemaining": "অবশিষ্ট:",
+      "daysUnit": "দিন"
+    },
+    "quickLinks": {
+      "heading": "দ্রুত লিংক",
+      "wallet": "ওয়ালেট লেজার",
+      "withdraw": "উত্তোলন",
+      "referrals": "রেফারেল লিংক",
+      "orders": "অর্ডার হিস্টোরি"
     },
     "statement": {
       "heading": "একাউন্ট স্টেটমেন্ট",

@@ -388,6 +388,44 @@
         "loading": "Changing...",
         "text": "Change Password"
       }
+    }
+  },
+  "dashboard": {
+    "header": {
+      "welcome": "Welcome",
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "heading": "Dashboard Overview",
+    "subheading": "Your account information at a glance",
+    "alert": {
+      "inactive": {
+        "title": "Activate Your Account",
+        "desc": "",
+        "cta": "Buy Products"
+      },
+      "expiring": {
+        "title": "Activation Period Expiring Soon",
+        "desc": "Your account expires in {days} days. Renew by placing any order.",
+        "cta": "Renew"
+      }
+    },
+    "card": {
+      "walletBalance": "Current Balance",
+      "pendingWithdrawal": "Pending Withdrawal",
+      "activeTeam": "Active Team Members",
+      "activeTeamUnit": "person(s)",
+      "activationEnd": "Activation Period",
+      "activationEndNone": "No Period",
+      "daysRemaining": "Remaining:",
+      "daysUnit": "Day(s)"
+    },
+    "quickLinks": {
+      "heading": "Quick Links",
+      "wallet": "Wallet Ledger",
+      "withdraw": "Withdraw Balance",
+      "referrals": "Referral Links",
+      "orders": "Order History"
     },
     "statement": {
       "heading": "Account Statement",
