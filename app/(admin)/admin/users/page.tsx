@@ -455,7 +455,7 @@ export default function AdminUsersPage() {
                                     <div className="grid grid-cols-3 gap-3">
                                         <InfoCard label="Balance" value={`৳${editUserData.wallet?.balance ?? 0}`} />
                                         <InfoCard label="Total Earned" value={`৳${editUserData.wallet?.totalEarned ?? 0}`} />
-                                        <InfoCard label="Total Withdrawn" value={`৳${editUserData.wallet?.totalWithdrawn ?? 0}`} />
+                                        <InfoCard label="Pending Withdrawal" value={`৳${editUserData.wallet?.pendingWithdrawal ?? 0}`} />
                                     </div>
                                     <div className="grid grid-cols-2 gap-3 mt-2">
                                         <InfoCard label="Commission Earned" value={`৳${editUserData.totalCommission ?? 0}`} />
