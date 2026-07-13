@@ -39,6 +39,21 @@ export const adminApi = {
         return res.data;
     },
 
+    getUserDetails: async (id: string): Promise<any> => {
+        const res = await api.get(`/admin/users/${id}/details`);
+        return res.data;
+    },
+
+    updateUser: async (id: string, data: { name?: string; email?: string; phone?: string; password?: string; role?: string }): Promise<User> => {
+        const res = await api.patch(`/admin/users/${id}`, data);
+        return res.data;
+    },
+
+    getUserStatement: async (id: string): Promise<any> => {
+        const res = await api.get(`/admin/users/${id}/statement`);
+        return res.data;
+    },
+
     deleteUser: async (id: string): Promise<void> => {
         const res = await api.delete(`/admin/users/${id}`);
         return res.data;
