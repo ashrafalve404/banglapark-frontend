@@ -40,6 +40,7 @@
     "dailyBenefit": "দৈনিক বেনিফিট",
     "generationIncome": "জেনারেশন ইনকাম",
     "withdraw": "উত্তোলন",
+    "statement": "স্টেটমেন্ট",
     "adminOverview": "ওভারভিউ",
     "adminLabel": "Admin",
     "adminUsers": "ব্যবহারকারী",
@@ -320,8 +321,8 @@
     "subheading": "আপনার একাউন্টের তথ্য এখানে দেখতে পাবেন",
     "alert": {
       "inactive": {
-        "title": "কমিশন বন্ধ আছে — একাউন্ট একটিভ করুন",
-        "desc": "৳২,০০০ বা তার বেশি মূল্যের প্রোডাক্ট কিনে ৩ দিনের মধ্যে একাউন্ট একটিভ করুন।",
+        "title": "একাউন্ট একটিভ করুন",
+        "desc": "",
         "cta": "পণ্য কিনুন"
       },
       "expiring": {
@@ -387,6 +388,62 @@
         "loading": "পরিবর্তন হচ্ছে...",
         "text": "পাসওয়ার্ড পরিবর্তন করুন"
       }
+    },
+    "statement": {
+      "heading": "একাউন্ট স্টেটমেন্ট",
+      "subheading": "আপনার একাউন্ট, আর্থিক তথ্য ও কার্যক্রমের সম্পূর্ণ সারসংক্ষেপ",
+      "downloadBtn": "পিডিএফ ডাউনলোড",
+      "downloadLoading": "পিডিএফ তৈরি হচ্ছে...",
+      "accountSection": "একাউন্টের তথ্য",
+      "walletSection": "ওয়ালেট সারসংক্ষেপ",
+      "transactionSection": "লেনদেনের ইতিহাস",
+      "withdrawalSection": "উত্তোলনের ইতিহাস",
+      "teamSection": "টিম সারসংক্ষেপ",
+      "orderSection": "অর্ডার সারসংক্ষেপ",
+      "memberId": "মেম্বার আইডি",
+      "name": "নাম",
+      "email": "ইমেইল",
+      "phone": "ফোন",
+      "status": "স্ট্যাটাস",
+      "referralCode": "রেফারেল কোড",
+      "usedReferralCode": "ব্যবহৃত রেফারেল কোড",
+      "activeFrom": "একটিভ হয়েছে",
+      "activeUntil": "একটিভ পর্যন্ত",
+      "joinDate": "যোগদানের তারিখ",
+      "totalBalance": "মোট ব্যালেন্স",
+      "dailyReward": "দৈনিক রিওয়ার্ড",
+      "tierBonus": "টিয়ার বোনাস",
+      "generationIncome": "জেনারেশন ইনকাম",
+      "pendingWithdrawal": "পেন্ডিং উত্তোলন",
+      "withdrawable": "উত্তোলনযোগ্য ব্যালেন্স",
+      "totalTeam": "মোট টিম সদস্য",
+      "totalOrders": "মোট অর্ডার",
+      "totalSpent": "মোট ব্যয়",
+      "date": "তারিখ",
+      "type": "ধরন",
+      "amount": "পরিমাণ",
+      "balanceAfter": "পরবর্তী ব্যালেন্স",
+      "description": "বিবরণ",
+      "method": "পদ্ধতি",
+      "account": "একাউন্ট",
+      "transactionType": {
+        "DAILY_BENEFIT": "দৈনিক বেনিফিট",
+        "GENERATION_COMMISSION": "জেনারেশন কমিশন",
+        "PURCHASE": "ক্রয়",
+        "WITHDRAWAL": "উত্তোলন",
+        "REFUND": "রিফান্ড",
+        "ADMIN_ADJUSTMENT": "এডজাস্টমেন্ট"
+      },
+      "withdrawStatus": {
+        "PENDING": "পেন্ডিং",
+        "APPROVED": "অনুমোদিত",
+        "REJECTED": "বাতিল"
+      },
+      "noTransactions": "কোনো লেনদেন নেই",
+      "noWithdrawals": "কোনো উত্তোলন নেই",
+      "active": "একটিভ",
+      "inactive": "নিষ্ক্রিয়",
+      "none": "কোনটিই নয়"
     }
   },
   "wallet": {

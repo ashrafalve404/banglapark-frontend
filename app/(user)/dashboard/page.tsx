@@ -74,7 +74,9 @@ export default function DashboardOverview() {
                         </div>
                         <div>
                             <h3 className="font-bold text-red-800 text-sm sm:text-base">{t("dashboard.alert.inactive.title")}</h3>
-                            <p className="text-xs sm:text-sm text-red-600">{t("dashboard.alert.inactive.desc")}</p>
+                            {t("dashboard.alert.inactive.desc") && (
+                                <p className="text-xs sm:text-sm text-red-600">{t("dashboard.alert.inactive.desc")}</p>
+                            )}
                         </div>
                     </div>
                     <Link href="/shop" className="btn-primary bg-red-600 hover:bg-red-700 whitespace-nowrap text-xs py-2 px-4">

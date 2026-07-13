@@ -40,6 +40,7 @@
     "dailyBenefit": "Daily Benefit",
     "generationIncome": "Generation Income",
     "withdraw": "Withdraw",
+    "statement": "Statement",
     "adminOverview": "Overview",
     "adminLabel": "Admin",
     "adminUsers": "Users",
@@ -320,8 +321,8 @@
     "subheading": "Your account information at a glance",
     "alert": {
       "inactive": {
-        "title": "Commission Paused — Activate Your Account",
-        "desc": "Activate your account within 3 days by purchasing products worth ৳2,000 or more.",
+        "title": "Activate Your Account",
+        "desc": "",
         "cta": "Buy Products"
       },
       "expiring": {
@@ -387,6 +388,62 @@
         "loading": "Changing...",
         "text": "Change Password"
       }
+    },
+    "statement": {
+      "heading": "Account Statement",
+      "subheading": "Full summary of your account, finances, and activities",
+      "downloadBtn": "Download PDF",
+      "downloadLoading": "Generating PDF...",
+      "accountSection": "Account Information",
+      "walletSection": "Wallet Summary",
+      "transactionSection": "Transaction History",
+      "withdrawalSection": "Withdrawal History",
+      "teamSection": "Team Summary",
+      "orderSection": "Order Summary",
+      "memberId": "Member ID",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "status": "Status",
+      "referralCode": "Referral Code",
+      "usedReferralCode": "Referral Code Used",
+      "activeFrom": "Active From",
+      "activeUntil": "Active Until",
+      "joinDate": "Join Date",
+      "totalBalance": "Total Balance",
+      "dailyReward": "Daily Reward",
+      "tierBonus": "Tier Bonus",
+      "generationIncome": "Generation Income",
+      "pendingWithdrawal": "Pending Withdrawal",
+      "withdrawable": "Withdrawable Balance",
+      "totalTeam": "Total Team Members",
+      "totalOrders": "Total Orders",
+      "totalSpent": "Total Amount Spent",
+      "date": "Date",
+      "type": "Type",
+      "amount": "Amount",
+      "balanceAfter": "Balance After",
+      "description": "Description",
+      "method": "Method",
+      "account": "Account",
+      "transactionType": {
+        "DAILY_BENEFIT": "Daily Benefit",
+        "GENERATION_COMMISSION": "Generation Commission",
+        "PURCHASE": "Purchase",
+        "WITHDRAWAL": "Withdrawal",
+        "REFUND": "Refund",
+        "ADMIN_ADJUSTMENT": "Adjustment"
+      },
+      "withdrawStatus": {
+        "PENDING": "Pending",
+        "APPROVED": "Approved",
+        "REJECTED": "Rejected"
+      },
+      "noTransactions": "No transactions yet",
+      "noWithdrawals": "No withdrawals yet",
+      "active": "Active",
+      "inactive": "Inactive",
+      "none": "None"
     }
   },
   "wallet": {
