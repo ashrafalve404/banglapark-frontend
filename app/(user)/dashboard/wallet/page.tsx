@@ -57,7 +57,6 @@ export default function WalletPage() {
                     <AlertCircle size={24} className="text-red-600 flex-shrink-0" />
                     <div>
                         <h3 className="font-bold text-red-800 text-sm">{t("wallet.inactiveAlert.title")}</h3>
-                        <p className="text-xs text-red-600">{t("wallet.inactiveAlert.desc")}</p>
                     </div>
                 </div>
             )}

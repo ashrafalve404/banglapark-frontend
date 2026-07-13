@@ -322,86 +322,6 @@
     "alert": {
       "inactive": {
         "title": "Activate Your Account",
-        "desc": "",
-        "cta": "Buy Products"
-      },
-      "expiring": {
-        "title": "Activation Period Expiring Soon",
-        "desc": "Your account expires in {days} days. Renew by placing any order.",
-        "cta": "Renew"
-      }
-    },
-    "card": {
-      "walletBalance": "Current Balance",
-      "pendingWithdrawal": "Pending Withdrawal",
-      "activeTeam": "Active Team Members",
-      "activeTeamUnit": "person(s)",
-      "activationEnd": "Activation Period",
-      "activationEndNone": "No Period",
-      "daysRemaining": "Remaining:",
-      "daysUnit": "Day(s)"
-    },
-    "quickLinks": {
-      "heading": "Quick Links",
-      "wallet": "Wallet Ledger",
-      "withdraw": "Withdraw Balance",
-      "referrals": "Referral Links",
-      "orders": "Order History"
-    }
-  },
-  "profile": {
-    "schema": {
-      "name": "Name is required",
-      "email": "Enter a valid email",
-      "phone": "Enter a valid mobile number"
-    },
-    "passwordSchema": {
-      "current": "Enter current password",
-      "new": "New password must be at least 6 characters",
-      "confirm": "Re-enter new password",
-      "mismatch": "New passwords do not match"
-    },
-    "msg": {
-      "updateSuccess": "Profile updated successfully.",
-      "updateError": "Could not update profile.",
-      "passwordSuccess": "Password changed successfully.",
-      "passwordError": "Could not change password."
-    },
-    "heading": "Profile Settings",
-    "subheading": "Update your personal information and password",
-    "personalInfo": {
-      "heading": "Personal Information",
-      "nameLabel": "Full Name",
-      "emailLabel": "Email",
-      "phoneLabel": "Mobile Number",
-      "submit": {
-        "loading": "Updating...",
-        "text": "Save Information"
-      }
-    },
-    "password": {
-      "heading": "Change Password",
-      "currentLabel": "Current Password",
-      "newLabel": "New Password",
-      "confirmLabel": "Confirm New Password",
-      "submit": {
-        "loading": "Changing...",
-        "text": "Change Password"
-      }
-    }
-  },
-  "dashboard": {
-    "header": {
-      "welcome": "Welcome",
-      "active": "Active",
-      "inactive": "Inactive"
-    },
-    "heading": "Dashboard Overview",
-    "subheading": "Your account information at a glance",
-    "alert": {
-      "inactive": {
-        "title": "Activate Your Account",
-        "desc": "",
         "cta": "Buy Products"
       },
       "expiring": {
@@ -484,13 +404,53 @@
       "none": "None"
     }
   },
+  "profile": {
+    "schema": {
+      "name": "Name is required",
+      "email": "Enter a valid email",
+      "phone": "Enter a valid mobile number"
+    },
+    "passwordSchema": {
+      "current": "Enter current password",
+      "new": "New password must be at least 6 characters",
+      "confirm": "Re-enter new password",
+      "mismatch": "New passwords do not match"
+    },
+    "msg": {
+      "updateSuccess": "Profile updated successfully.",
+      "updateError": "Could not update profile.",
+      "passwordSuccess": "Password changed successfully.",
+      "passwordError": "Could not change password."
+    },
+    "heading": "Profile Settings",
+    "subheading": "Update your personal information and password",
+    "personalInfo": {
+      "heading": "Personal Information",
+      "nameLabel": "Full Name",
+      "emailLabel": "Email",
+      "phoneLabel": "Mobile Number",
+      "submit": {
+        "loading": "Updating...",
+        "text": "Save Information"
+      }
+    },
+    "password": {
+      "heading": "Change Password",
+      "currentLabel": "Current Password",
+      "newLabel": "New Password",
+      "confirmLabel": "Confirm New Password",
+      "submit": {
+        "loading": "Changing...",
+        "text": "Change Password"
+      }
+    }
+  },
   "wallet": {
     "heading": "My Wallet",
     "subheading": "Detailed ledger of your income and expenses",
     "refresh": "Refresh",
     "inactiveAlert": {
-      "title": "Commission Paused — Activate Your Account",
-      "desc": "You are currently inactive. Purchase any product to activate your account and receive team commission & benefits."
+      "title": "Activate Your Account"
     },
     "balance": {
       "total": "Total Balance",
