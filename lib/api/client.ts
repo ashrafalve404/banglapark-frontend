@@ -16,12 +16,32 @@ api.interceptors.request.use((config) => {
     return config;
 });
 
+function fixImageProtocols(obj: unknown): void {
+    if (!obj || typeof obj !== 'object') return;
+    for (const value of Object.values(obj)) {
+        if (typeof value === 'string') {
+            const idx = value.indexOf('://');
+            if (idx !== -1) {
+                const afterProtocol = value.slice(idx + 3);
+                if (afterProtocol.startsWith('api.banglapark.com/')) {
+                    (obj as Record<string, unknown>)[Object.keys(obj).find(k => (obj as Record<string, unknown>)[k] === value)!] =
+                        'https://' + afterProtocol;
+                }
+            }
+        } else if (typeof value === 'object') {
+            fixImageProtocols(value);
+        }
+    }
+}
+
 // Unwrap backend's { success, data } wrapper from TransformInterceptor
+// and fix HTTP→HTTPS for image URLs (Safari mixed content fix)
 api.interceptors.response.use(
     (res) => {
         if (res.data && typeof res.data === 'object' && 'success' in res.data && 'data' in res.data) {
             res.data = res.data.data;
         }
+        if (typeof res.data === 'object') fixImageProtocols(res.data);
         return res;
     },
     async (error) => {
