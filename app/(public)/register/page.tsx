@@ -237,7 +237,7 @@ function RegisterForm() {
                         <input
                             type="password"
                             className="input text-left"
-                            placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                            placeholder="••••••••"
                             {...register("password")}
                         />
                         {errors.password && (

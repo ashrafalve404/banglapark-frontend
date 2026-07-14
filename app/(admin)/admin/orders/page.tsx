@@ -173,7 +173,7 @@ export default function AdminOrdersPage() {
                                                         )}
                                                     </div>
                                                 ) : (
-                                                    <span className="text-[10px] text-gray-300">â€”</span>
+                                                    <span className="text-[10px] text-gray-300">—</span>
                                                 )}
                                             </td>
                                             <td className="p-4 text-center">
@@ -182,11 +182,11 @@ export default function AdminOrdersPage() {
                                                         {order.deliveryArea === "INSIDE_DHAKA" ? t("checkout.shipping.insideDhaka") : t("checkout.shipping.outsideDhaka")}
                                                     </span>
                                                 ) : (
-                                                    <span className="text-[10px] text-gray-300">â€”</span>
+                                                    <span className="text-[10px] text-gray-300">—</span>
                                                 )}
                                             </td>
                                             <td className="p-4 text-right text-xs font-bold text-slate-800">
-                                                {order.deliveryCharge != null ? formatCurrency(order.deliveryCharge, locale) : "â€”"}
+                                                {order.deliveryCharge != null ? formatCurrency(order.deliveryCharge, locale) : "—"}
                                             </td>
                                             <td className="p-4 text-xs text-slate-650 min-w-[200px]">
                                                 <div className="font-bold border-b border-dashed border-slate-150 pb-1 mb-1.5">

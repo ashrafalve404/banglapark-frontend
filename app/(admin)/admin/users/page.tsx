@@ -164,7 +164,7 @@ export default function AdminUsersPage() {
         l("Bangla Park Limited");
         doc.setFontSize(10);
         doc.setFont("helvetica", "normal");
-        l(`Account Statement â€” ${acc.name} (#${acc.memberId})`);
+        l(`Account Statement — ${acc.name} (#${acc.memberId})`);
         l(`Email: ${acc.email} | Phone: ${acc.phone}`);
         l(`Referral: ${acc.referralCode} | Used Code: ${acc.usedReferralCode || "None"}`);
         l(`Generated: ${new Date().toLocaleDateString("en-GB")}`);
@@ -527,7 +527,7 @@ export default function AdminUsersPage() {
                         onClick={(e) => e.stopPropagation()}
                     >
                         <div className="flex items-center justify-between p-6 border-b border-slate-100 sticky top-0 bg-white z-10">
-                            <h2 className="text-lg font-bold text-slate-800">Statement â€” {statementUserName}</h2>
+                            <h2 className="text-lg font-bold text-slate-800">Statement — {statementUserName}</h2>
                             <div className="flex items-center gap-2">
                                 {statementData && (
                                     <button onClick={downloadStatementPDF} className="btn-primary py-1.5 px-3 text-xs flex items-center gap-1.5">

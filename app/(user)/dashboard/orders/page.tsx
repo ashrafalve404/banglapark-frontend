@@ -86,13 +86,13 @@ export default function UserOrdersPage() {
                                     <span className="text-xs text-gray-500">{t("orders.deliveryAddress")} {order.shippingAddress?.address || t("orders.addressNotSelected")}</span>
                                     {order.deliveryArea && (
                                         <span className="text-xs text-gray-400">
-                                            {order.deliveryArea === "INSIDE_DHAKA" ? t("checkout.shipping.insideDhaka") : t("checkout.shipping.outsideDhaka")} â€¢ {t("checkout.review.delivery")}: {formatCurrency(order.deliveryCharge ?? 0, locale)}
+                                            {order.deliveryArea === "INSIDE_DHAKA" ? t("checkout.shipping.insideDhaka") : t("checkout.shipping.outsideDhaka")} • {t("checkout.review.delivery")}: {formatCurrency(order.deliveryCharge ?? 0, locale)}
                                         </span>
                                     )}
                                     {order.paymentMethod === "BKASH" && order.transactionId && (
                                         <span className="text-xs text-pink-600 font-medium">
-                                            {t("orders.paymentLabel")}: bKash â€¢ {t("orders.transactionId")}: {order.transactionId}
-                                            {order.userBkashNumber && <> â€¢ From: {order.userBkashNumber}</>}
+                                            {t("orders.paymentLabel")}: bKash • {t("orders.transactionId")}: {order.transactionId}
+                                            {order.userBkashNumber && <> • From: {order.userBkashNumber}</>}
                                         </span>
                                     )}
                                     {order.paymentMethod === "CASH_ON_DELIVERY" && (

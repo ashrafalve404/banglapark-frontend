@@ -206,15 +206,15 @@ export default function ProfilePage() {
                     <form onSubmit={handlePassSubmit(onUpdatePassword)} className="space-y-4">
                         <div>
                             <label className="label mb-1 block">{t("profile.password.currentLabel")}</label>
-                            <input type="password" className="input text-left" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" {...regPass("currentPassword")} />
+                            <input type="password" className="input text-left" placeholder="••••••••" {...regPass("currentPassword")} />
                         </div>
                         <div>
                             <label className="label mb-1 block">{t("profile.password.newLabel")}</label>
-                            <input type="password" className="input text-left" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" {...regPass("newPassword")} />
+                            <input type="password" className="input text-left" placeholder="••••••••" {...regPass("newPassword")} />
                         </div>
                         <div>
                             <label className="label mb-1 block">{t("profile.password.confirmLabel")}</label>
-                            <input type="password" className="input text-left" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" {...regPass("confirmPassword")} />
+                            <input type="password" className="input text-left" placeholder="••••••••" {...regPass("confirmPassword")} />
                         </div>
                         <button type="submit" disabled={passwordLoading} className="btn-primary w-full">
                             {passwordLoading ? t("profile.password.submit.loading") : t("profile.password.submit.text")}

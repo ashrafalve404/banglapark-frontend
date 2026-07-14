@@ -53,7 +53,7 @@ export default function CartPage() {
                                     <span className="text-xs text-gray-500 font-medium">{t("cart.product.sizeLabel", undefined, "Size")}: {item.size}</span>
                                 )}
                                 <div className="mt-1 flex items-center gap-4">
-                                    <span className="text-sm font-bold text-red-800">{formatCurrency(item.product.price, locale)}</span>
+                                    <span className="text-sm font-bold text-green-700">{formatCurrency(item.product.price, locale)}</span>
                                 </div>
                             </div>
 

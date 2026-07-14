@@ -14,7 +14,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     const router = useRouter();
     const [sidebarOpen, setSidebarOpen] = useState(false);
     // Hydration guard: Zustand persist reads localStorage only on the client.
-    // Without this, isAuthenticated is false during SSR/hydration â†’ false redirect to login.
+    // Without this, isAuthenticated is false during SSR/hydration → false redirect to login.
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {

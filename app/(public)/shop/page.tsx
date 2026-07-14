@@ -152,7 +152,7 @@ function ShopPageContent() {
                                             {product.name}
                                         </h3>
                                         <div className="mt-auto">
-                                            <p className="text-base font-bold text-red-800">
+                                            <p className="text-base font-bold text-green-700">
                                                 ৳{formatCurrency(product.price, locale).replace("৳", "")}
                                             </p>
                                             <div className="flex items-center gap-2 mt-0.5">
@@ -160,7 +160,7 @@ function ShopPageContent() {
                                                     {product.stock > 0 ? `${t("shop.product.stockLabel")} ${product.stock}` : t("shop.product.stockOut")}
                                                 </p>
                                                 {product.clicks > 0 && (
-                                                    <span className="text-[10px] text-gray-400">â€¢ {product.clicks} views</span>
+                                                    <span className="text-[10px] text-gray-400">• {product.clicks} views</span>
                                                 )}
                                             </div>
                                             {product.stock > 0 && (

@@ -18,7 +18,7 @@ export default function DashboardOverview() {
     const { user: storeUser, setUser } = useAuthStore();
     const { t, locale } = useLocale();
 
-    // Always fetch fresh user profile â€” the auth store can be stale from login time
+    // Always fetch fresh user profile — the auth store can be stale from login time
     const { data: freshUser } = useQuery({
         queryKey: ["user-me"],
         queryFn: () => authApi.me(),

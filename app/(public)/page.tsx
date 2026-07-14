@@ -196,7 +196,7 @@ export default function HomePage() {
                 <div className="page-container">
                     <div className="flex items-center justify-between mb-8">
                         <h2 className="section-title text-xl lg:text-2xl">{t("home.allProducts.heading", undefined, "All Products")}</h2>
-                        <Link href="/shop" className="text-sm font-medium text-red-800 hover:underline">{t("home.allProducts.viewAll", undefined, "View All â†’")}</Link>
+                        <Link href="/shop" className="text-sm font-medium text-red-800 hover:underline">{t("home.allProducts.viewAll", undefined, "View All →")}</Link>
                     </div>
                     {allProducts.length === 0 ? (
                         <div className="text-center py-16 text-gray-400">{t("home.allProducts.empty", undefined, "No products found")}</div>
@@ -213,13 +213,13 @@ export default function HomePage() {
                                     </div>
                                     <div className="p-3">
                                         <h3 className="text-sm font-semibold text-gray-800 line-clamp-2">{product.name}</h3>
-                                        <p className="mt-1 text-base font-bold text-red-800">৳{Number(product.price).toLocaleString(locale === "bn" ? "bn-BD" : "en-IN")}</p>
+                                        <p className="mt-1 text-base font-bold text-green-700">৳{Number(product.price).toLocaleString(locale === "bn" ? "bn-BD" : "en-IN")}</p>
                                         <div className="flex items-center gap-2 mt-0.5">
                                             <p className={`text-xs ${product.stock > 0 ? 'text-gray-400' : 'text-red-500'}`}>
                                                 {product.stock > 0 ? `${t("home.featuredProducts.stockLabel")} ${product.stock}` : t("home.featuredProducts.stockOut")}
                                             </p>
                                             {product.clicks > 0 && (
-                                                <span className="text-[10px] text-gray-400">â€¢ {product.clicks} views</span>
+                                                <span className="text-[10px] text-gray-400">• {product.clicks} views</span>
                                             )}
                                         </div>
                                         {product.stock > 0 && (
