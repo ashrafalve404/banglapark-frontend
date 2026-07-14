@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -26,7 +26,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     if (!mounted) {
         return (
             <div className="flex h-screen items-center justify-center bg-slate-50">
-                <Loader2 className="animate-spin text-red-700" size={32} />
+                <Loader2 className="animate-spin text-green-700" size={32} />
             </div>
         );
     }
@@ -58,7 +58,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     </button>
                     <div className="flex-1" />
                     <span className="text-sm font-semibold text-slate-700">{user.name}</span>
-                    <span className="text-xs px-2 py-0.5 rounded-full bg-red-100 text-red-800 font-semibold">{user.role}</span>
+                    <span className="text-xs px-2 py-0.5 rounded-full bg-green-100 text-green-800 font-semibold">{user.role}</span>
                 </header>
                 <main className="flex-1 overflow-y-auto p-4 lg:p-6">{children}</main>
             </div>

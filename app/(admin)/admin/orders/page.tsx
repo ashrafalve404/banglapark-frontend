@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
@@ -200,7 +200,7 @@ export default function AdminOrdersPage() {
                                                                 <button
                                                                     onClick={() => reduceQtyMutation.mutate({ orderId: order.id, itemId: item.id, quantity: item.quantity - 1 })}
                                                                     disabled={reducingItem === item.id}
-                                                                    className="flex-shrink-0 flex items-center justify-center w-4 h-4 rounded-full bg-red-100 text-red-600 hover:bg-red-200 disabled:opacity-50 cursor-pointer"
+                                                                    className="flex-shrink-0 flex items-center justify-center w-4 h-4 rounded-full bg-green-100 text-green-600 hover:bg-green-200 disabled:opacity-50 cursor-pointer"
                                                                 >
                                                                     {reducingItem === item.id ? <Loader2 size={8} className="animate-spin" /> : <Minus size={8} />}
                                                                 </button>
@@ -211,9 +211,9 @@ export default function AdminOrdersPage() {
                                             </td>
                                             <td className="p-4 text-center">
                                                 <span className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${order.status === "DELIVERED"
-                                                    ? "bg-red-100 text-red-800"
+                                                    ? "bg-green-100 text-green-800"
                                                     : order.status === "CANCELLED"
-                                                        ? "bg-red-100 text-red-700"
+                                                        ? "bg-green-100 text-green-700"
                                                         : "bg-amber-105 bg-amber-50 text-amber-800"
                                                     }`}>
                                                     {getOrderStatusLabel(order.status)}
@@ -237,8 +237,8 @@ export default function AdminOrdersPage() {
                                                                     className={`text-[10px] py-1 px-2.5 rounded font-bold border flex items-center justify-center gap-1 ${isMutating
                                                                             ? "opacity-50 cursor-not-allowed bg-slate-100 text-slate-400 border-slate-200"
                                                                             : next === "CANCELLED"
-                                                                                ? "bg-red-50 text-red-650 border-red-200 hover:bg-red-100 cursor-pointer"
-                                                                                : "bg-red-50 text-red-700 border-red-200 hover:bg-red-100 cursor-pointer"
+                                                                                ? "bg-green-50 text-green-650 border-green-200 hover:bg-green-100 cursor-pointer"
+                                                                                : "bg-green-50 text-green-700 border-green-200 hover:bg-green-100 cursor-pointer"
                                                                         }`}
                                                                 >
                                                                     {isMutating && <Loader2 className="animate-spin" size={10} />}
@@ -251,7 +251,7 @@ export default function AdminOrdersPage() {
                                                     )}
                                                     <button
                                                         onClick={() => handleDeleteOrder(order.id)}
-                                                        className="text-[10px] py-1 px-2.5 rounded font-bold border bg-red-50 text-red-600 border-red-200 hover:bg-red-100 cursor-pointer flex items-center gap-1"
+                                                        className="text-[10px] py-1 px-2.5 rounded font-bold border bg-green-50 text-green-600 border-green-200 hover:bg-green-100 cursor-pointer flex items-center gap-1"
                                                         title="Delete order"
                                                     >
                                                         <Trash2 size={10} />

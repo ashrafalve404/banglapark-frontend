@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -152,15 +152,15 @@ export default function ProfilePage() {
 
             {/* Member ID Card */}
             {user?.memberId && (
-                <div className="card p-6 bg-gradient-to-br from-red-900 to-red-800 text-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div className="card p-6 bg-gradient-to-br from-green-900 to-green-800 text-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div className="flex items-start gap-4">
                         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/20">
                             <IdCard size={24} />
                         </div>
                         <div>
-                            <p className="text-xs text-red-200 font-medium uppercase tracking-wider">Member ID</p>
+                            <p className="text-xs text-green-200 font-medium uppercase tracking-wider">Member ID</p>
                             <p className="text-2xl font-black mt-0.5">BP-{user.memberId}</p>
-                            <p className="text-xs text-red-200 mt-1">Referral Code: <span className="font-bold text-white">{user.referralCode}</span></p>
+                            <p className="text-xs text-green-200 mt-1">Referral Code: <span className="font-bold text-white">{user.referralCode}</span></p>
                         </div>
                     </div>
                     <button onClick={downloadPDF} className="flex items-center gap-2 rounded-lg bg-white/20 hover:bg-white/30 px-4 py-2.5 text-sm font-semibold transition-colors whitespace-nowrap">
@@ -173,7 +173,7 @@ export default function ProfilePage() {
                 <div className="card p-6">
                     <h2 className="text-base font-bold text-gray-900 mb-4 border-b border-gray-100 pb-2">{t("profile.personalInfo.heading")}</h2>
                     {profileMsg && (
-                        <div className={`mb-4 rounded-lg p-3 text-xs font-semibold ${profileMsg.type === "success" ? "bg-red-50 text-red-700" : "bg-red-50 text-red-600"}`}>
+                        <div className={`mb-4 rounded-lg p-3 text-xs font-semibold ${profileMsg.type === "success" ? "bg-green-50 text-green-700" : "bg-green-50 text-green-600"}`}>
                             {profileMsg.text}
                         </div>
                     )}
@@ -199,7 +199,7 @@ export default function ProfilePage() {
                 <div className="card p-6">
                     <h2 className="text-base font-bold text-gray-900 mb-4 border-b border-gray-100 pb-2">{t("profile.password.heading")}</h2>
                     {passwordMsg && (
-                        <div className={`mb-4 rounded-lg p-3 text-xs font-semibold ${passwordMsg.type === "success" ? "bg-red-50 text-red-700" : "bg-red-50 text-red-600"}`}>
+                        <div className={`mb-4 rounded-lg p-3 text-xs font-semibold ${passwordMsg.type === "success" ? "bg-green-50 text-green-700" : "bg-green-50 text-green-600"}`}>
                             {passwordMsg.text}
                         </div>
                     )}

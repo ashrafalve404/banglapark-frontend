@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect, Suspense } from "react";
@@ -152,7 +152,7 @@ function ShopPageContent() {
                                             {product.name}
                                         </h3>
                                         <div className="mt-auto">
-                                            <p className="text-base font-bold text-red-800">
+                                            <p className="text-base font-bold text-green-800">
                                                 ৳{formatCurrency(product.price, locale).replace("৳", "")}
                                             </p>
                                             <div className="flex items-center gap-2 mt-0.5">
@@ -206,7 +206,7 @@ export default function ShopPage() {
     return (
         <Suspense fallback={
             <div className="flex items-center justify-center py-20">
-                <Loader2 className="animate-spin text-red-800" size={32} />
+                <Loader2 className="animate-spin text-green-800" size={32} />
             </div>
         }>
             <ShopPageContent />

@@ -2,18 +2,18 @@
 
 import { useLocale } from "@/lib/i18n";
 
-export function LocaleSwitcher() {
+export function LocaleSwitcher({ light }: { light?: boolean }) {
     const { locale, setLocale } = useLocale();
 
     return (
         <button
             onClick={() => setLocale(locale === "bn" ? "en" : "bn")}
-            className="flex items-center gap-0.5 sm:gap-1 rounded-lg border border-gray-200 px-1.5 sm:px-2.5 py-1 text-[10px] sm:text-xs font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-800 transition-colors"
+            className={`flex items-center gap-0.5 sm:gap-1 rounded-lg border px-1.5 sm:px-2.5 py-1 text-[10px] sm:text-xs font-medium transition-colors ${light ? "border-white/30 text-white/85 hover:bg-white/10 hover:text-white" : "border-gray-200 text-gray-800 hover:bg-gray-100"}`}
             title={locale === "bn" ? "Switch to English" : "বাংলায় সুইচ করুন"}
         >
-            <span className={`${locale === "bn" ? "text-red-700 font-bold" : "text-gray-400"}`}>BN</span>
-            <span className="text-gray-300">/</span>
-            <span className={`${locale === "en" ? "text-red-700 font-bold" : "text-gray-400"}`}>EN</span>
+            <span className={`${locale === "bn" ? "font-bold" : ""} ${light ? (locale === "bn" ? "text-white" : "text-white/50") : (locale === "bn" ? "text-gray-900" : "text-gray-500")}`}>BN</span>
+            <span className={light ? "text-white/30" : "text-gray-400"}>/</span>
+            <span className={`${locale === "en" ? "font-bold" : ""} ${light ? (locale === "en" ? "text-white" : "text-white/50") : (locale === "en" ? "text-gray-900" : "text-gray-500")}`}>EN</span>
         </button>
     );
 }

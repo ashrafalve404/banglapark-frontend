@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, useRef } from "react";
@@ -133,15 +133,15 @@ export default function AdminBannersPage() {
                                 <button
                                     type="button"
                                     onClick={() => setImageUrl("")}
-                                    className="absolute top-2 right-2 flex h-6 w-6 items-center justify-center rounded-full bg-red-600/80 text-white hover:bg-red-600"
+                                    className="absolute top-2 right-2 flex h-6 w-6 items-center justify-center rounded-full bg-green-600/80 text-white hover:bg-green-600"
                                 >
                                     <X size={14} />
                                 </button>
                             </div>
                         ) : (
-                            <label className="flex flex-col items-center justify-center w-full h-40 rounded-lg border-2 border-dashed border-slate-300 cursor-pointer hover:border-red-400 hover:bg-red-50/50 transition-colors">
+                            <label className="flex flex-col items-center justify-center w-full h-40 rounded-lg border-2 border-dashed border-slate-300 cursor-pointer hover:border-green-400 hover:bg-green-50/50 transition-colors">
                                 {uploading ? (
-                                    <Loader2 size={24} className="animate-spin text-red-700" />
+                                    <Loader2 size={24} className="animate-spin text-green-700" />
                                 ) : (
                                     <ImagePlus size={28} className="text-slate-400" />
                                 )}
@@ -219,7 +219,7 @@ export default function AdminBannersPage() {
                         <div className="flex items-center gap-2 pt-2">
                             <label className="relative inline-flex items-center cursor-pointer">
                                 <input type="checkbox" checked={isActive} onChange={(e) => setIsActive(e.target.checked)} className="sr-only peer" />
-                                <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-red-600"></div>
+                                <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600"></div>
                             </label>
                             <span className="text-sm text-slate-600">{isActive ? "Active" : "Inactive"}</span>
                         </div>
@@ -254,7 +254,7 @@ export default function AdminBannersPage() {
                                     <p className="text-sm font-medium text-slate-800 truncate">{banner.imageUrl}</p>
                                     {banner.linkUrl && <p className="text-xs text-gray-400 truncate">{banner.linkUrl}</p>}
                                     <div className="flex items-center gap-2 mt-1">
-                                        <span className={`text-[10px] px-2 py-0.5 rounded-full font-semibold ${banner.isActive ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-500'}`}>
+                                        <span className={`text-[10px] px-2 py-0.5 rounded-full font-semibold ${banner.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-500'}`}>
                                             {banner.isActive ? 'Active' : 'Inactive'}
                                         </span>
                                         <span className="text-[10px] text-gray-400">Sort: {banner.sortOrder}</span>
@@ -264,7 +264,7 @@ export default function AdminBannersPage() {
                                     <button onClick={() => handleEdit(banner)} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg">
                                         <ImageIcon size={16} />
                                     </button>
-                                    <button onClick={() => deleteMutation.mutate(banner.id)} className="p-2 text-red-600 hover:bg-red-50 rounded-lg">
+                                    <button onClick={() => deleteMutation.mutate(banner.id)} className="p-2 text-green-600 hover:bg-green-50 rounded-lg">
                                         <Trash2 size={16} />
                                     </button>
                                 </div>

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
@@ -49,16 +49,16 @@ export default function DailyBenefitPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="card p-6 flex flex-col justify-between bg-gradient-to-br from-red-900 to-red-800 text-white">
+                <div className="card p-6 flex flex-col justify-between bg-gradient-to-br from-green-900 to-green-800 text-white">
                     <div className="flex items-center justify-between mb-4">
-                        <span className="text-xs text-red-100 font-semibold uppercase tracking-wider">{t("dailyBenefit.currentTier.label")}</span>
+                        <span className="text-xs text-green-100 font-semibold uppercase tracking-wider">{t("dailyBenefit.currentTier.label")}</span>
                         <Award size={20} className="text-amber-400" />
                     </div>
                     <div>
                         <h2 className="text-2xl font-extrabold mb-1">
                             {currentTier ? `${formatCurrency(currentTier.amount, locale)} ${t("dailyBenefit.currentTier.perDay")}` : t("dailyBenefit.currentTier.none")}
                         </h2>
-                        <p className="text-xs text-red-200">
+                        <p className="text-xs text-green-200">
                             {t("dailyBenefit.currentTier.teamLabel")} <strong className="text-white">{activeCount}{t("dailyBenefit.currentTier.teamUnit")}</strong>
                         </p>
                     </div>
@@ -67,7 +67,7 @@ export default function DailyBenefitPage() {
                 <div className="card p-6 flex flex-col justify-between bg-white border border-gray-150">
                     <div className="flex items-center justify-between mb-3.5">
                         <span className="text-xs text-gray-400 font-semibold uppercase tracking-wider">{t("dailyBenefit.nextTier.label")}</span>
-                        <TrendingUp size={20} className="text-red-700" />
+                        <TrendingUp size={20} className="text-green-700" />
                     </div>
 
                     {nextTargetTier ? (
@@ -76,7 +76,7 @@ export default function DailyBenefitPage() {
                                 {t("dailyBenefit.nextTier.text", { count: nextTargetTier.minCount, amount: formatCurrency(nextTargetTier.amount, locale) })}
                             </p>
                             <div className="h-2 w-full bg-gray-150 rounded-full mb-1 bg-gray-100 overflow-hidden">
-                                <div className="h-full bg-red-755" style={{ width: `${Math.min(100, (activeCount / nextTargetTier.minCount) * 100)}%` }} />
+                                <div className="h-full bg-green-755" style={{ width: `${Math.min(100, (activeCount / nextTargetTier.minCount) * 100)}%` }} />
                             </div>
                             <div className="flex justify-between items-center text-[10px] text-gray-500 font-bold">
                                 <span>{activeCount}{t("dailyBenefit.nextTier.unit")}</span>
@@ -84,7 +84,7 @@ export default function DailyBenefitPage() {
                             </div>
                         </div>
                     ) : (
-                        <p className="text-xs text-red-770 font-semibold">{t("dailyBenefit.nextTier.maxReached")}</p>
+                        <p className="text-xs text-green-770 font-semibold">{t("dailyBenefit.nextTier.maxReached")}</p>
                     )}
                 </div>
             </div>
@@ -96,14 +96,14 @@ export default function DailyBenefitPage() {
                         const isSelfOrMore = activeCount >= tier.minCount;
                         return (
                             <div key={tier.minCount} className={`rounded-xl p-4 text-center border transition-all ${isSelfOrMore
-                                    ? "bg-red-50/50 border-red-777 shadow-sm"
+                                    ? "bg-green-50/50 border-green-777 shadow-sm"
                                     : "bg-gray-50 border-gray-150"
                                 }`}>
-                                <Users size={16} className={`mx-auto mb-1.5 ${isSelfOrMore ? "text-red-800" : "text-gray-400"}`} />
+                                <Users size={16} className={`mx-auto mb-1.5 ${isSelfOrMore ? "text-green-800" : "text-gray-400"}`} />
                                 <div className="text-xs font-semibold text-gray-600 mb-1">{t("dailyBenefit.chart.memberLabel")}</div>
                                 <div className="text-sm font-bold text-gray-900 mb-1">{tier.minCount}{t("dailyBenefit.chart.memberCount")}</div>
                                 <hr className="my-1.5 border-gray-100" />
-                                <div className={`text-base font-extrabold ${isSelfOrMore ? "text-red-850" : "text-gray-600"}`}>{formatCurrency(tier.amount, locale)}</div>
+                                <div className={`text-base font-extrabold ${isSelfOrMore ? "text-green-850" : "text-gray-600"}`}>{formatCurrency(tier.amount, locale)}</div>
                                 <div className="text-[10px] text-gray-500">{t("dailyBenefit.chart.perDay")}</div>
                             </div>
                         );
@@ -135,7 +135,7 @@ export default function DailyBenefitPage() {
                                     <tr key={lg.id} className="hover:bg-gray-50/50">
                                         <td className="p-4 text-xs text-gray-650">{formatDate(lg.date, locale)}</td>
                                         <td className="p-4 text-xs text-gray-550 text-center font-semibold">{lg.teamCount}{t("dailyBenefit.history.teamUnit")}</td>
-                                        <td className="p-4 text-xs font-bold text-red-700 text-right">{formatCurrency(lg.amount, locale)}</td>
+                                        <td className="p-4 text-xs font-bold text-green-700 text-right">{formatCurrency(lg.amount, locale)}</td>
                                     </tr>
                                 ))}
                             </tbody>

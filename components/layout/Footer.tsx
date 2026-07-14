@@ -140,7 +140,7 @@ export function Footer() {
         </footer>
 
         {/* Bottom Bar: Announcement-style Copyright */}
-        <div className="w-full bg-red-600 py-3 px-4 pb-16 md:pb-3">
+        <div className="w-full bg-green-600 py-3 px-4 pb-16 md:pb-3">
             <p className="text-xs sm:text-sm text-white font-bold text-center tracking-wide">
                 &copy; 2026 Bangla Park Limited. All rights reserved.
             </p>

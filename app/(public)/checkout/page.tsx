@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -117,9 +117,9 @@ export default function CheckoutPage() {
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
                 <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 text-center animate-[fadeInUp_0.4s_ease]">
                     {/* Icon */}
-                    <div className="relative mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-red-50">
-                        <div className="absolute inset-0 rounded-full bg-red-100 animate-ping opacity-40" />
-                        <CheckCircle2 className="text-red-600 relative z-10" size={44} strokeWidth={1.5} />
+                    <div className="relative mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-green-50">
+                        <div className="absolute inset-0 rounded-full bg-green-100 animate-ping opacity-40" />
+                        <CheckCircle2 className="text-green-600 relative z-10" size={44} strokeWidth={1.5} />
                     </div>
 
                     {/* Heading */}
@@ -138,7 +138,7 @@ export default function CheckoutPage() {
                         </div>
                         <div className="flex justify-between text-xs text-gray-500">
                             <span className="font-semibold uppercase tracking-wide">Total</span>
-                            <span className="font-bold text-red-800 text-sm">{formatCurrency(Number(confirmedOrder.total), locale)}</span>
+                            <span className="font-bold text-green-800 text-sm">{formatCurrency(Number(confirmedOrder.total), locale)}</span>
                         </div>
                         <div className="flex justify-between text-xs text-gray-500">
                             <span className="font-semibold uppercase tracking-wide">Status</span>
@@ -173,7 +173,7 @@ export default function CheckoutPage() {
             <h1 className="text-3xl font-bold text-gray-900 mb-8">{t("checkout.heading")}</h1>
 
             {error && (
-                <div className="mb-6 rounded-lg bg-red-50 p-4 text-sm text-red-600 font-medium">
+                <div className="mb-6 rounded-lg bg-green-50 p-4 text-sm text-green-600 font-medium">
                     {error}
                 </div>
             )}
@@ -214,28 +214,28 @@ export default function CheckoutPage() {
                     <div>
                         <label className="label mb-1.5 block">{t("checkout.shipping.deliveryAreaLabel")}</label>
                         <div className="grid grid-cols-2 gap-3">
-                            <label className={`flex items-center gap-3 rounded-lg border p-3 cursor-pointer transition-colors ${deliveryArea === "INSIDE_DHAKA" ? "border-red-400 bg-red-50" : "border-gray-200 bg-white"}`}>
+                            <label className={`flex items-center gap-3 rounded-lg border p-3 cursor-pointer transition-colors ${deliveryArea === "INSIDE_DHAKA" ? "border-green-400 bg-green-50" : "border-gray-200 bg-white"}`}>
                                 <input
                                     type="radio"
                                     name="deliveryArea"
                                     value="INSIDE_DHAKA"
                                     checked={deliveryArea === "INSIDE_DHAKA"}
                                     onChange={() => setDeliveryArea("INSIDE_DHAKA")}
-                                    className="accent-red-800"
+                                    className="accent-green-800"
                                 />
                                 <div>
                                     <span className="text-xs font-semibold text-gray-800">{t("checkout.shipping.insideDhaka")}</span>
                                     <p className="text-[10px] text-gray-400">{t("checkout.shipping.deliveryChargeInside")}</p>
                                 </div>
                             </label>
-                            <label className={`flex items-center gap-3 rounded-lg border p-3 cursor-pointer transition-colors ${deliveryArea === "OUTSIDE_DHAKA" ? "border-red-400 bg-red-50" : "border-gray-200 bg-white"}`}>
+                            <label className={`flex items-center gap-3 rounded-lg border p-3 cursor-pointer transition-colors ${deliveryArea === "OUTSIDE_DHAKA" ? "border-green-400 bg-green-50" : "border-gray-200 bg-white"}`}>
                                 <input
                                     type="radio"
                                     name="deliveryArea"
                                     value="OUTSIDE_DHAKA"
                                     checked={deliveryArea === "OUTSIDE_DHAKA"}
                                     onChange={() => setDeliveryArea("OUTSIDE_DHAKA")}
-                                    className="accent-red-800"
+                                    className="accent-green-800"
                                 />
                                 <div>
                                     <span className="text-xs font-semibold text-gray-800">{t("checkout.shipping.outsideDhaka")}</span>
@@ -274,39 +274,39 @@ export default function CheckoutPage() {
                             </div>
                             <div className="flex justify-between text-sm text-gray-500">
                                 <span>{t("checkout.review.delivery")}</span>
-                                <span className="text-red-700 font-semibold">{formatCurrency(deliveryCharge, locale)}</span>
+                                <span className="text-green-700 font-semibold">{formatCurrency(deliveryCharge, locale)}</span>
                             </div>
                             <hr className="border-gray-100" />
                             <div className="flex justify-between text-base font-bold text-gray-900">
                                 <span>{t("checkout.review.total")}</span>
-                                <span className="text-red-800">{formatCurrency(finalTotal, locale)}</span>
+                                <span className="text-green-800">{formatCurrency(finalTotal, locale)}</span>
                             </div>
                         </div>
 
-                        <div className="rounded-md border border-red-150 bg-red-50 p-4 mb-6">
-                            <p className="text-xs font-bold text-red-800 uppercase tracking-wide mb-3">{t("checkout.payment.heading")}</p>
+                        <div className="rounded-md border border-green-150 bg-green-50 p-4 mb-6">
+                            <p className="text-xs font-bold text-green-800 uppercase tracking-wide mb-3">{t("checkout.payment.heading")}</p>
                             <div className="space-y-3">
-                                <label className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-3 cursor-pointer hover:border-red-400 transition-colors">
+                                <label className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-3 cursor-pointer hover:border-green-400 transition-colors">
                                     <input
                                         type="radio"
                                         name="paymentMethod"
                                         value="CASH_ON_DELIVERY"
                                         checked={paymentMethod === "CASH_ON_DELIVERY"}
                                         onChange={() => setPaymentMethod("CASH_ON_DELIVERY")}
-                                        className="accent-red-800"
+                                        className="accent-green-800"
                                     />
                                     <div>
                                         <span className="text-xs font-semibold text-gray-800">{t("checkout.payment.method")}</span>
                                     </div>
                                 </label>
-                                <label className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-3 cursor-pointer hover:border-red-400 transition-colors">
+                                <label className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-3 cursor-pointer hover:border-green-400 transition-colors">
                                     <input
                                         type="radio"
                                         name="paymentMethod"
                                         value="BKASH"
                                         checked={paymentMethod === "BKASH"}
                                         onChange={() => setPaymentMethod("BKASH")}
-                                        className="accent-red-800"
+                                        className="accent-green-800"
                                     />
                                     <div className="flex items-center gap-2">
                                         <Smartphone size={16} className="text-pink-600" />
@@ -333,13 +333,13 @@ export default function CheckoutPage() {
                                                 onChange={(e) => setTransactionId(e.target.value)}
                                             />
                                         </div>
-                                        <p className="text-xs text-red-600 font-semibold">{t("checkout.payment.transactionIdHelp")}</p>
+                                        <p className="text-xs text-green-600 font-semibold">{t("checkout.payment.transactionIdHelp")}</p>
                                     </div>
                                 )}
                             </div>
                         </div>
 
-                        <button type="submit" disabled={loading} className="btn-primary w-full py-4 text-sm font-bold">
+                        <button type="submit" disabled={loading} className="w-full py-4 text-sm font-bold rounded-lg bg-red-800 px-4 text-white transition-all hover:bg-red-900 focus:outline-none focus:ring-2 focus:ring-red-700 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2">
                             {loading ? t("checkout.submit.loading") : t("checkout.submit.text")}
                         </button>
                     </div>

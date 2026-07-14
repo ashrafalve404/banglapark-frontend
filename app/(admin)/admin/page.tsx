@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -46,11 +46,11 @@ export default function AdminOverview() {
                 <div className="card p-5 bg-white flex items-center justify-between">
                     <div className="space-y-1">
                         <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block">{t("admin.overview.activeUsers")}</span>
-                        <span className="text-2xl font-bold text-red-700">
+                        <span className="text-2xl font-bold text-green-700">
                             {isLoading ? "..." : stats?.users?.active ?? 0} {t("admin.overview.unit")}
                         </span>
                     </div>
-                    <div className="rounded-lg bg-red-50 p-2.5 text-red-800">
+                    <div className="rounded-lg bg-green-50 p-2.5 text-green-800">
                         <CheckCircle2 size={20} />
                     </div>
                 </div>

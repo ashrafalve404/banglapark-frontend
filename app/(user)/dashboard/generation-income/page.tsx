@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
@@ -30,7 +30,7 @@ export default function GenerationIncomePage() {
             </div>
 
             <div className="card p-5 bg-white flex items-start gap-3.5">
-                <HelpCircle size={20} className="text-red-700 flex-shrink-0 mt-0.5" />
+                <HelpCircle size={20} className="text-green-700 flex-shrink-0 mt-0.5" />
                 <div className="text-xs text-gray-500 space-y-1">
                     <p className="font-bold text-gray-800">{t("generationIncome.rules.heading")}</p>
                     <p>{t("generationIncome.rules.level1")}</p>
@@ -68,7 +68,7 @@ export default function GenerationIncomePage() {
                                         <td className="p-4 text-xs text-center font-bold text-gray-700">
                                             {t("generationIncome.history.level")} {comm.level}
                                         </td>
-                                        <td className="p-4 text-xs font-bold text-red-700 text-right">
+                                        <td className="p-4 text-xs font-bold text-green-700 text-right">
                                             +{formatCurrency(comm.amount)}
                                         </td>
                                     </tr>

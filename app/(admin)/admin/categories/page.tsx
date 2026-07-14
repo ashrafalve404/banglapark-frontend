@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
@@ -93,7 +93,7 @@ export default function AdminCategoriesPage() {
             </div>
 
             {msg && (
-                <div className={`rounded-lg p-4 text-xs font-semibold ${msg.type === "success" ? "bg-red-50 text-red-700 font-bold" : "bg-red-50 text-red-650"}`}>
+                <div className={`rounded-lg p-4 text-xs font-semibold ${msg.type === "success" ? "bg-green-50 text-green-700 font-bold" : "bg-green-50 text-green-650"}`}>
                     {msg.type === "success" ? <CheckCircle2 size={16} className="inline mr-2" /> : <AlertCircle size={16} className="inline mr-2" />}
                     {msg.text}
                 </div>
@@ -144,7 +144,7 @@ export default function AdminCategoriesPage() {
                                                 autoFocus
                                             />
                                             <button type="submit" className="btn-primary py-1 px-3 text-xs">{t("admin.categories.list.save")}</button>
-                                            <button type="button" onClick={() => setEditingId(null)} className="btn-secondary py-1 px-3 text-xs text-red-500 hover:bg-red-50">{t("admin.categories.list.cancel")}</button>
+                                            <button type="button" onClick={() => setEditingId(null)} className="btn-secondary py-1 px-3 text-xs text-red-500 hover:bg-green-50">{t("admin.categories.list.cancel")}</button>
                                         </form>
                                     ) : (
                                         <>
@@ -161,7 +161,7 @@ export default function AdminCategoriesPage() {
                                                 </button>
                                                 <button
                                                     onClick={() => { if (confirm(t("admin.categories.list.confirmDelete"))) deleteMutation.mutate(item.id); }}
-                                                    className="rounded-lg p-1.5 text-slate-500 hover:text-red-650 hover:bg-red-50/50 transition-colors border border-gray-100"
+                                                    className="rounded-lg p-1.5 text-slate-500 hover:text-green-650 hover:bg-green-50/50 transition-colors border border-gray-100"
                                                 >
                                                     <Trash2 size={14} />
                                                 </button>

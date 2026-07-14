@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
@@ -93,7 +93,7 @@ export default function AdminCommissionRulesPage() {
             </div>
 
             {msg && (
-                <div className={`rounded-xl p-4 text-xs font-semibold ${msg.type === "success" ? "bg-red-50 text-red-700" : "bg-red-50 text-red-650"}`}>
+                <div className={`rounded-xl p-4 text-xs font-semibold ${msg.type === "success" ? "bg-green-50 text-green-700" : "bg-green-50 text-green-650"}`}>
                     {msg.text}
                 </div>
             )}
@@ -138,7 +138,7 @@ export default function AdminCommissionRulesPage() {
                             <label className="label mb-1.5 block">{t("admin.commissionRules.form.level1Commission")}</label>
                             <input
                                 type="number"
-                                className="input text-left font-bold text-red-800"
+                                className="input text-left font-bold text-green-800"
                                 value={gen1Amt}
                                 onChange={(e) => setGen1Amt(Number(e.target.value))}
                             />
@@ -150,7 +150,7 @@ export default function AdminCommissionRulesPage() {
                             <label className="label mb-1.5 block">{t("admin.commissionRules.form.level2to15Commission")}</label>
                             <input
                                 type="number"
-                                className="input text-left font-bold text-red-850"
+                                className="input text-left font-bold text-green-850"
                                 value={gen2Amt}
                                 onChange={(e) => setGen2Amt(Number(e.target.value))}
                             />
@@ -163,7 +163,7 @@ export default function AdminCommissionRulesPage() {
                             <label className="label mb-1.5 block">{t("admin.commissionRules.form.deliveryChargeInside")}</label>
                             <input
                                 type="number"
-                                className="input text-left font-bold text-red-800"
+                                className="input text-left font-bold text-green-800"
                                 value={deliveryChargeInsideDhaka}
                                 onChange={(e) => setDeliveryChargeInsideDhaka(Number(e.target.value))}
                             />
@@ -174,7 +174,7 @@ export default function AdminCommissionRulesPage() {
                             <label className="label mb-1.5 block">{t("admin.commissionRules.form.deliveryChargeOutside")}</label>
                             <input
                                 type="number"
-                                className="input text-left font-bold text-red-800"
+                                className="input text-left font-bold text-green-800"
                                 value={deliveryChargeOutsideDhaka}
                                 onChange={(e) => setDeliveryChargeOutsideDhaka(Number(e.target.value))}
                             />

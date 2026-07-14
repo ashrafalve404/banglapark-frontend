@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -44,14 +44,14 @@ export function AdminSidebar({ onClose, mobile }: AdminSidebarProps) {
             {!mobile && (
                 <div className="flex h-16 items-center px-4 border-b border-slate-700">
                     <span className="font-bold text-white">{t("nav.banglaPark")}</span>
-                    <span className="ml-2 rounded-full bg-red-600/20 px-2 py-0.5 text-[10px] font-semibold text-red-400 uppercase">{t("nav.adminPanel")}</span>
+                    <span className="ml-2 rounded-full bg-green-600/20 px-2 py-0.5 text-[10px] font-semibold text-green-400 uppercase">{t("nav.adminPanel")}</span>
                 </div>
             )}
             <nav className="flex-1 overflow-y-auto p-3 space-y-0.5">
                 <Link
                     href="/"
                     onClick={onClose}
-                    className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-red-400 hover:bg-slate-800 transition-all mb-1 border border-slate-700"
+                    className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-green-400 hover:bg-slate-800 transition-all mb-1 border border-slate-700"
                 >
                     <Home size={17} />
                     {t("nav.backToSite")}
@@ -67,7 +67,7 @@ export function AdminSidebar({ onClose, mobile }: AdminSidebarProps) {
                             className={cn(
                                 "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all",
                                 active
-                                    ? "bg-red-600/20 text-red-400"
+                                    ? "bg-green-600/20 text-green-400"
                                     : "text-slate-400 hover:bg-slate-800 hover:text-slate-200"
                             )}
                         >

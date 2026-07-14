@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
@@ -29,7 +29,7 @@ export default function UserOrdersPage() {
 
             {isLoading ? (
                 <div className="flex justify-center items-center py-20">
-                    <Loader2 className="animate-spin text-red-800" size={32} />
+                    <Loader2 className="animate-spin text-green-800" size={32} />
                 </div>
             ) : orders.length === 0 ? (
                 <div className="card py-20 text-center text-gray-400">
@@ -48,9 +48,9 @@ export default function UserOrdersPage() {
                                 <div className="flex flex-wrap items-center gap-3">
                                     <span className="text-xs text-gray-500">{formatDateTime(order.createdAt, locale)}</span>
                                     <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${order.status === "DELIVERED"
-                                            ? "bg-red-150 text-red-800"
+                                            ? "bg-green-150 text-green-800"
                                             : order.status === "CANCELLED"
-                                                ? "bg-red-100 text-red-700"
+                                                ? "bg-green-100 text-green-700"
                                                 : "bg-amber-100 text-amber-800"
                                         }`}>
                                         {getOrderStatusLabel(order.status)}
@@ -101,7 +101,7 @@ export default function UserOrdersPage() {
                                 </div>
                                 <div className="text-right">
                                     <span className="text-xs text-gray-400 block">{t("orders.totalLabel")}</span>
-                                    <span className="text-sm font-bold text-red-800">{formatCurrency(order.total)}</span>
+                                    <span className="text-sm font-bold text-green-800">{formatCurrency(order.total)}</span>
                                 </div>
                             </div>
                         </div>

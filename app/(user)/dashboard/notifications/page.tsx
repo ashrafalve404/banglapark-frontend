@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
@@ -63,7 +63,7 @@ export default function UserNotificationsPage() {
 
             {isLoading ? (
                 <div className="flex justify-center items-center py-20">
-                    <Loader2 className="animate-spin text-red-800" size={32} />
+                    <Loader2 className="animate-spin text-green-800" size={32} />
                 </div>
             ) : notifications.length === 0 ? (
                 <div className="card py-20 text-center text-gray-400">
@@ -76,7 +76,7 @@ export default function UserNotificationsPage() {
                         <div
                             key={notif.id}
                             onClick={() => handleMarkSingleRead(notif.id, notif.isRead)}
-                            className={`card p-4 transition-all hover:bg-gray-50/50 cursor-pointer border-l-4 ${notif.isRead ? "border-l-gray-300 bg-white" : "border-l-red-800 bg-red-50/30"
+                            className={`card p-4 transition-all hover:bg-gray-50/50 cursor-pointer border-l-4 ${notif.isRead ? "border-l-gray-300 bg-white" : "border-l-green-800 bg-green-50/30"
                                 }`}
                         >
                             <div className="flex justify-between items-start gap-4 mb-1">

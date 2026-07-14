@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -32,7 +32,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     if (!mounted) {
         return (
             <div className="flex h-screen items-center justify-center bg-gray-50">
-                <Loader2 className="animate-spin text-red-700" size={32} />
+                <Loader2 className="animate-spin text-green-700" size={32} />
             </div>
         );
     }
@@ -67,7 +67,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     <div className="flex items-center gap-2">
                         <span className="text-sm text-gray-500">{t("dashboard.header.welcome")},</span>
                         <span className="text-sm font-semibold text-gray-800">{user.name}</span>
-                        <span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${user.status === "ACTIVE" ? "bg-red-100 text-red-800" : "bg-gray-100 text-gray-500"}`}>
+                        <span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${user.status === "ACTIVE" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-500"}`}>
                             {user.status === "ACTIVE" ? t("dashboard.header.active") : t("dashboard.header.inactive")}
                         </span>
                     </div>

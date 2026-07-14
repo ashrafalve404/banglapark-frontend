@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
@@ -122,9 +122,9 @@ export default function AdminWithdrawalsPage() {
                                         </td>
                                         <td className="p-4 text-center">
                                             <span className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${req.status === "APPROVED"
-                                                ? "bg-red-150 text-red-800"
+                                                ? "bg-green-150 text-green-800"
                                                 : req.status === "REJECTED"
-                                                    ? "bg-red-155 bg-red-50 text-red-700"
+                                                    ? "bg-green-155 bg-green-50 text-green-700"
                                                     : "bg-amber-100 text-amber-800"
                                                 }`}>
                                                 {getWithdrawStatusLabel(req.status)}
@@ -135,13 +135,13 @@ export default function AdminWithdrawalsPage() {
                                                 <div className="flex gap-2 justify-center">
                                                     <button
                                                         onClick={() => { if (confirm(t("admin.withdrawals.confirm.approve"))) approveMutation.mutate(req.id); }}
-                                                        className="bg-red-50 text-red-700 border border-red-200 hover:bg-red-100 font-bold text-[10px] py-1.5 px-3 rounded"
+                                                        className="bg-green-50 text-green-700 border border-green-200 hover:bg-green-100 font-bold text-[10px] py-1.5 px-3 rounded"
                                                     >
                                                         {t("admin.withdrawals.table.btnApprove")}
                                                     </button>
                                                     <button
                                                         onClick={() => handleLaunchReject(req.id)}
-                                                        className="bg-red-50 text-red-650 border border-red-200 hover:bg-red-100 font-bold text-[10px] py-1.5 px-3 rounded"
+                                                        className="bg-green-50 text-green-650 border border-green-200 hover:bg-green-100 font-bold text-[10px] py-1.5 px-3 rounded"
                                                     >
                                                         {t("admin.withdrawals.table.btnReject")}
                                                     </button>
@@ -181,7 +181,7 @@ export default function AdminWithdrawalsPage() {
                             onChange={(e) => setRejectReason(e.target.value)}
                         />
                         <div className="flex gap-2">
-                            <button type="submit" className="btn-primary flex-1 py-1.5 text-xs bg-red-600 hover:bg-red-750">
+                            <button type="submit" className="btn-primary flex-1 py-1.5 text-xs bg-green-600 hover:bg-green-750">
                                 {t("admin.withdrawals.modal.confirm")}
                             </button>
                             <button type="button" onClick={() => setRejectingId(null)} className="btn-secondary flex-1 py-1.5 text-xs">

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, useRef } from "react";
@@ -347,7 +347,7 @@ export default function AdminUsersPage() {
                                             <div className="text-sm font-semibold text-slate-800 flex items-center gap-1.5">
                                                 {item.name}
                                                 {item.isBanned && (
-                                                    <span className="text-[9px] font-bold text-red-700 bg-red-50 rounded-full px-1.5 py-0.5 border border-red-200">{t("admin.users.table.bannedBadge")}</span>
+                                                    <span className="text-[9px] font-bold text-green-700 bg-green-50 rounded-full px-1.5 py-0.5 border border-green-200">{t("admin.users.table.bannedBadge")}</span>
                                                 )}
                                             </div>
                                             <div className="text-xs text-laravel text-gray-500 font-medium">{item.phone}</div>
@@ -358,7 +358,7 @@ export default function AdminUsersPage() {
                                             {item.activeUntil ? formatDate(item.activeUntil) : t("admin.users.table.noActivation")}
                                         </td>
                                         <td className="p-4 text-center">
-                                            <span className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${item.status === "ACTIVE" ? "bg-red-100 text-red-800" : "bg-slate-100 text-slate-500"
+                                            <span className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${item.status === "ACTIVE" ? "bg-green-100 text-green-800" : "bg-slate-100 text-slate-500"
                                                 }`}>
                                                 {item.status === "ACTIVE" ? t("admin.users.table.statusActive") : t("admin.users.table.statusInactive")}
                                             </span>
@@ -377,11 +377,11 @@ export default function AdminUsersPage() {
 
                                                 {/* Ban / Unban triggers */}
                                                 {item.isBanned ? (
-                                                    <button onClick={() => unbanMutation.mutate(item.id)} className="rounded-lg p-1.5 bg-red-50 text-red-700 border border-red-200 hover:bg-red-100 transition-colors" title={t("admin.users.table.unbanTitle")}>
+                                                    <button onClick={() => unbanMutation.mutate(item.id)} className="rounded-lg p-1.5 bg-green-50 text-green-700 border border-green-200 hover:bg-green-100 transition-colors" title={t("admin.users.table.unbanTitle")}>
                                                         <Check size={14} />
                                                     </button>
                                                 ) : (
-                                                    <button onClick={() => banMutation.mutate(item.id)} className="rounded-lg p-1.5 bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 transition-colors" title={t("admin.users.table.banTitle")}>
+                                                    <button onClick={() => banMutation.mutate(item.id)} className="rounded-lg p-1.5 bg-green-50 text-green-600 border border-green-200 hover:bg-green-100 transition-colors" title={t("admin.users.table.banTitle")}>
                                                         <Ban size={14} />
                                                     </button>
                                                 )}
@@ -397,7 +397,7 @@ export default function AdminUsersPage() {
                                                     </button>
                                                 )}
 
-                                                <button onClick={() => handleDelete(item.id, item.name)} className="rounded-lg p-1.5 bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 transition-colors" title={t("admin.users.table.deleteTitle")}>
+                                                <button onClick={() => handleDelete(item.id, item.name)} className="rounded-lg p-1.5 bg-green-50 text-green-600 border border-green-200 hover:bg-green-100 transition-colors" title={t("admin.users.table.deleteTitle")}>
                                                     <Trash2 size={14} />
                                                 </button>
                                             </div>
@@ -582,7 +582,7 @@ export default function AdminUsersPage() {
                                         <div className="overflow-x-auto border border-slate-200 rounded-xl">
                                             <table className="w-full text-left text-xs">
                                                 <thead>
-                                                    <tr className="bg-red-600 text-white">
+                                                    <tr className="bg-green-600 text-white">
                                                         <th className="p-2.5 font-semibold">Date</th>
                                                         <th className="p-2.5 font-semibold">Type</th>
                                                         <th className="p-2.5 font-semibold text-right">Amount</th>
@@ -595,7 +595,7 @@ export default function AdminUsersPage() {
                                                         <tr key={tx.id} className="hover:bg-slate-50">
                                                             <td className="p-2.5 text-slate-500 whitespace-nowrap">{formatDate(tx.createdAt)}</td>
                                                             <td className="p-2.5 font-medium">{tx.type}</td>
-                                                            <td className={`p-2.5 text-right font-semibold ${Number(tx.amount) >= 0 ? "text-red-700" : "text-red-600"}`}>
+                                                            <td className={`p-2.5 text-right font-semibold ${Number(tx.amount) >= 0 ? "text-green-700" : "text-green-600"}`}>
                                                                 ৳{tx.amount}
                                                             </td>
                                                             <td className="p-2.5 text-right text-slate-600">৳{tx.balanceAfter ?? ""}</td>
@@ -617,7 +617,7 @@ export default function AdminUsersPage() {
                                         <div className="overflow-x-auto border border-slate-200 rounded-xl">
                                             <table className="w-full text-left text-xs">
                                                 <thead>
-                                                    <tr className="bg-red-600 text-white">
+                                                    <tr className="bg-green-600 text-white">
                                                         <th className="p-2.5 font-semibold">Date</th>
                                                         <th className="p-2.5 font-semibold text-right">Amount</th>
                                                         <th className="p-2.5 font-semibold">Method</th>
@@ -631,7 +631,7 @@ export default function AdminUsersPage() {
                                                             <td className="p-2.5 text-right font-semibold text-slate-800">৳{w.amount}</td>
                                                             <td className="p-2.5 text-slate-600">{w.method}</td>
                                                             <td className="p-2.5">
-                                                                <span className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold ${w.status === "APPROVED" ? "bg-red-100 text-red-800" : w.status === "REJECTED" ? "bg-red-100 text-red-800" : "bg-amber-100 text-amber-800"}`}>
+                                                                <span className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold ${w.status === "APPROVED" ? "bg-green-100 text-green-800" : w.status === "REJECTED" ? "bg-green-100 text-green-800" : "bg-amber-100 text-amber-800"}`}>
                                                                     {w.status}
                                                                 </span>
                                                             </td>

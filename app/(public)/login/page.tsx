@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -89,7 +89,7 @@ function LoginForm() {
                 </div>
 
                 {error && (
-                    <div className="mb-4 rounded-lg bg-red-50 p-4 text-sm text-red-600 font-medium">
+                    <div className="mb-4 rounded-lg bg-green-50 p-4 text-sm text-green-600 font-medium">
                         {error}
                     </div>
                 )}
@@ -151,7 +151,7 @@ function LoginForm() {
 
                 <div className="mt-6 text-center text-sm text-gray-500">
                     {t("auth.login.footer.noAccount")}{" "}
-                    <Link href="/register" className="font-semibold text-red-800 hover:underline">
+                    <Link href="/register" className="font-semibold text-green-800 hover:underline">
                         {t("auth.login.footer.registerLink")}
                     </Link>
                 </div>
@@ -166,7 +166,7 @@ export default function LoginPage() {
         <Suspense fallback={
             <div className="flex min-h-[calc(100vh-16rem)] items-center justify-center">
                 <div className="text-center space-y-2">
-                    <div className="h-8 w-8 animate-spin rounded-full border-4 border-red-700 border-t-transparent mx-auto"></div>
+                    <div className="h-8 w-8 animate-spin rounded-full border-4 border-green-700 border-t-transparent mx-auto"></div>
                     <p className="text-xs text-gray-500">{t("auth.login.suspense.loading")}</p>
                 </div>
             </div>

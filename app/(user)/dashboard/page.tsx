@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
@@ -67,16 +67,16 @@ export default function DashboardOverview() {
             </div>
 
             {isInactive ? (
-                <div className="rounded-xl border border-red-200 bg-red-50 p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="rounded-xl border border-green-200 bg-green-50 p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div className="flex items-center gap-3">
-                        <div className="rounded-full bg-red-100 p-2 text-red-600">
+                        <div className="rounded-full bg-green-100 p-2 text-green-600">
                             <AlertCircle size={20} />
                         </div>
                         <div>
-                            <h3 className="font-bold text-red-800 text-sm sm:text-base">{t("dashboard.alert.inactive.title")}</h3>
+                            <h3 className="font-bold text-green-800 text-sm sm:text-base">{t("dashboard.alert.inactive.title")}</h3>
                         </div>
                     </div>
-                    <Link href="/shop" className="btn-primary bg-red-600 hover:bg-red-700 whitespace-nowrap text-xs py-2 px-4">
+                    <Link href="/shop" className="btn-primary bg-green-600 hover:bg-green-700 whitespace-nowrap text-xs py-2 px-4">
                         {t("dashboard.alert.inactive.cta")}
                     </Link>
                 </div>
@@ -101,11 +101,11 @@ export default function DashboardOverview() {
                 <div className="card p-5 flex items-center justify-between">
                     <div className="space-y-1">
                         <span className="text-xs text-gray-500 font-semibold uppercase tracking-wider block">{t("dashboard.card.walletBalance")}</span>
-                        <span className="text-2xl font-bold text-red-800">
+                        <span className="text-2xl font-bold text-green-800">
                             {walletLoading ? "..." : formatCurrency(wallet?.balance ?? 0, locale)}
                         </span>
                     </div>
-                    <div className="rounded-lg bg-red-50 p-2.5 text-red-800">
+                    <div className="rounded-lg bg-green-50 p-2.5 text-green-800">
                         <Wallet size={20} />
                     </div>
                 </div>
@@ -125,11 +125,11 @@ export default function DashboardOverview() {
                 <div className="card p-5 flex items-center justify-between">
                     <div className="space-y-1">
                         <span className="text-xs text-gray-500 font-semibold uppercase tracking-wider block">{t("dashboard.card.activeTeam")}</span>
-                        <span className="text-2xl font-bold text-red-800">
+                        <span className="text-2xl font-bold text-green-800">
                             {refLoading ? "..." : referralStats?.activeTeam ?? 0}{t("dashboard.card.activeTeamUnit")}
                         </span>
                     </div>
-                    <div className="rounded-lg bg-red-50 p-2.5 text-red-800">
+                    <div className="rounded-lg bg-green-50 p-2.5 text-green-800">
                         <Users size={20} />
                     </div>
                 </div>
@@ -141,12 +141,12 @@ export default function DashboardOverview() {
                             {activeUntilDate ? formatDate(activeUntilDate, locale) : t("dashboard.card.activationEndNone")}
                         </span>
                         {!isInactive && (
-                            <span className="text-[10px] text-red-700 bg-red-50 px-2 py-0.5 rounded-full inline-block">
+                            <span className="text-[10px] text-green-700 bg-green-50 px-2 py-0.5 rounded-full inline-block">
                                 {t("dashboard.card.daysRemaining")} {activeDays} {t("dashboard.card.daysUnit")}
                             </span>
                         )}
                     </div>
-                    <div className="rounded-lg bg-red-50 p-2.5 text-red-800">
+                    <div className="rounded-lg bg-green-50 p-2.5 text-green-800">
                         <ShieldCheck size={20} />
                     </div>
                 </div>
@@ -156,7 +156,7 @@ export default function DashboardOverview() {
                 <h3 className="text-base font-bold text-gray-900 mb-4 pb-2 border-b border-gray-100">{t("dashboard.quickLinks.heading")}</h3>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     {[
-                        { href: "/dashboard/wallet", title: t("dashboard.quickLinks.wallet"), bg: "bg-red-50", text: "text-red-800" },
+                        { href: "/dashboard/wallet", title: t("dashboard.quickLinks.wallet"), bg: "bg-green-50", text: "text-green-800" },
                         { href: "/dashboard/withdraw", title: t("dashboard.quickLinks.withdraw"), bg: "bg-blue-50", text: "text-blue-800" },
                         { href: "/dashboard/referrals", title: t("dashboard.quickLinks.referrals"), bg: "bg-amber-50", text: "text-amber-800" },
                         { href: "/dashboard/orders", title: t("dashboard.quickLinks.orders"), bg: "bg-purple-50", text: "text-purple-800" },
@@ -178,7 +178,7 @@ export default function DashboardOverview() {
                         { icon: TrendingUp, label: t("home.howItWorks.step3.label"), title: t("home.howItWorks.step3.title"), desc: t("home.howItWorks.step3.desc") },
                     ].map((item) => (
                         <div key={item.label} className="flex items-start gap-3 rounded-lg bg-gray-50 p-3">
-                            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-red-100 text-xs font-extrabold text-red-700">
+                            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-green-100 text-xs font-extrabold text-green-700">
                                 {item.label}
                             </div>
                             <div className="min-w-0">

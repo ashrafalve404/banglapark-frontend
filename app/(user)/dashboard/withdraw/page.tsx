@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -110,7 +110,7 @@ export default function WithdrawPage() {
                     <h2 className="text-base font-bold text-gray-800 border-b border-gray-100 pb-2">{t("withdraw.form.heading")}</h2>
 
                     {msg && (
-                        <div className={`rounded-lg p-4 text-xs font-semibold ${msg.type === "success" ? "bg-red-50 text-red-700" : "bg-red-50 text-red-600"}`}>
+                        <div className={`rounded-lg p-4 text-xs font-semibold ${msg.type === "success" ? "bg-green-50 text-green-700" : "bg-green-50 text-green-600"}`}>
                             {msg.text}
                         </div>
                     )}
@@ -182,16 +182,16 @@ export default function WithdrawPage() {
                 </div>
 
                 <div className="space-y-4">
-                    <div className="card p-6 bg-gradient-to-br from-red-900 to-red-800 text-white flex flex-col justify-between">
-                        <span className="text-xs text-red-150 font-bold block mb-4 uppercase tracking-wider">{t("withdraw.sidebar.availableBalance")}</span>
+                    <div className="card p-6 bg-gradient-to-br from-green-900 to-green-800 text-white flex flex-col justify-between">
+                        <span className="text-xs text-green-150 font-bold block mb-4 uppercase tracking-wider">{t("withdraw.sidebar.availableBalance")}</span>
                         <div>
                             <h2 className="text-3xl font-extrabold">{walletLoading ? "..." : formatCurrency(availableBalance)}</h2>
-                            <span className="text-xs text-red-200 mt-1 block">{t("withdraw.sidebar.minLimit")}</span>
+                            <span className="text-xs text-green-200 mt-1 block">{t("withdraw.sidebar.minLimit")}</span>
                         </div>
                     </div>
 
                     <div className="card p-5 bg-white flex items-start gap-3">
-                        <HelpCircle size={18} className="text-red-700 mt-0.5 flex-shrink-0" />
+                        <HelpCircle size={18} className="text-green-700 mt-0.5 flex-shrink-0" />
                         <div className="text-xs text-gray-500 space-y-1">
                             <p className="font-bold text-gray-800">{t("withdraw.sidebar.timing.heading")}</p>
                             <p>{t("withdraw.sidebar.timing.mobile")}</p>
@@ -239,9 +239,9 @@ export default function WithdrawPage() {
                                         <td className="p-4 text-xs font-bold text-gray-900 text-right">{formatCurrency(req.amount)}</td>
                                         <td className="p-4 text-center">
                                             <span className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${req.status === "APPROVED"
-                                                ? "bg-red-100 text-red-800"
+                                                ? "bg-green-100 text-green-800"
                                                 : req.status === "REJECTED"
-                                                    ? "bg-red-150 text-red-700"
+                                                    ? "bg-green-150 text-green-700"
                                                     : "bg-amber-100 text-amber-800"
                                                 }`}>
                                                 {getWithdrawStatusLabel(req.status)}

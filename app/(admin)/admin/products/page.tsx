@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, useRef, useTransition } from "react";
@@ -201,7 +201,7 @@ export default function AdminProductsPage() {
             </div>
 
             {msg && (
-                <div className={`rounded-xl p-4 text-xs font-semibold ${msg.type === "success" ? "bg-red-50 text-red-700" : "bg-red-50 text-red-650"}`}>
+                <div className={`rounded-xl p-4 text-xs font-semibold ${msg.type === "success" ? "bg-green-50 text-green-700" : "bg-green-50 text-green-650"}`}>
                     {msg.text}
                 </div>
             )}
@@ -285,9 +285,9 @@ export default function AdminProductsPage() {
                         <label className="label font-bold text-slate-700">{t("admin.products.form.sizesLabel")}</label>
                         <div className="flex flex-wrap gap-1.5 mb-2">
                             {form.sizes.map((s) => (
-                                <span key={s} className="inline-flex items-center gap-1 rounded-md bg-red-50 text-red-800 border border-red-200 px-2.5 py-1 text-xs font-semibold">
+                                <span key={s} className="inline-flex items-center gap-1 rounded-md bg-green-50 text-green-800 border border-green-200 px-2.5 py-1 text-xs font-semibold">
                                     {s}
-                                    <button type="button" onClick={() => removeSize(s)} className="hover:text-red-600"><X size={11} /></button>
+                                    <button type="button" onClick={() => removeSize(s)} className="hover:text-green-600"><X size={11} /></button>
                                 </span>
                             ))}
                         </div>
@@ -307,7 +307,7 @@ export default function AdminProductsPage() {
                                     key={s}
                                     type="button"
                                     onClick={() => addSize(s)}
-                                    className="px-2.5 py-1 rounded-md border border-slate-200 text-xs font-medium text-slate-500 hover:border-red-300 hover:text-red-700 hover:bg-red-50 transition-colors"
+                                    className="px-2.5 py-1 rounded-md border border-slate-200 text-xs font-medium text-slate-500 hover:border-green-300 hover:text-green-700 hover:bg-green-50 transition-colors"
                                 >
                                     + {s}
                                 </button>
@@ -328,15 +328,15 @@ export default function AdminProductsPage() {
                                             const updated = form.images.filter((_, j) => j !== i);
                                             setForm({ ...form, images: updated });
                                         }}
-                                        className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-600/80 text-white transition-opacity"
+                                        className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-green-600/80 text-white transition-opacity"
                                     >
                                         <X size={12} />
                                     </button>
                                 </div>
                             ) : null)}
-                            <label className="flex flex-col items-center justify-center w-24 h-24 rounded-lg border-2 border-dashed border-slate-300 cursor-pointer hover:border-red-400 hover:bg-red-50/50 transition-colors">
+                            <label className="flex flex-col items-center justify-center w-24 h-24 rounded-lg border-2 border-dashed border-slate-300 cursor-pointer hover:border-green-400 hover:bg-green-50/50 transition-colors">
                                 {uploadingIdx !== null ? (
-                                    <Loader2 size={20} className="animate-spin text-red-700" />
+                                    <Loader2 size={20} className="animate-spin text-green-700" />
                                 ) : (
                                     <ImagePlus size={20} className="text-slate-400" />
                                 )}
@@ -416,7 +416,7 @@ export default function AdminProductsPage() {
                                             <td className="p-4 text-xs text-slate-650">{item.category?.name || t("admin.products.list.uncategorized")}</td>
                                             <td className="p-4 text-sm font-bold text-slate-800 text-right">{formatCurrency(item.price, locale)}</td>
                                             <td className="p-4 text-center">
-                                                <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-bold ${item.stock > 0 ? "bg-slate-100 text-slate-800" : "bg-red-50 text-red-650"
+                                                <span className={`inline-block rounded-full px-2 py-0.5 text-xs font-bold ${item.stock > 0 ? "bg-slate-100 text-slate-800" : "bg-green-50 text-green-650"
                                                     }`}>
                                                     {item.stock} {t("admin.products.list.stockUnit")}
                                                 </span>
@@ -426,7 +426,7 @@ export default function AdminProductsPage() {
                                                     <button onClick={() => handleEditInit(item)} className="p-1.5 rounded-lg border border-slate-150 text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors">
                                                         <Edit2 size={13} />
                                                     </button>
-                                                    <button onClick={() => { if (confirm(t("admin.products.list.confirmDelete"))) deleteMutation.mutate(item.id); }} className="p-1.5 rounded-lg border border-slate-150 text-slate-600 hover:text-red-600 hover:bg-red-50 transition-colors">
+                                                    <button onClick={() => { if (confirm(t("admin.products.list.confirmDelete"))) deleteMutation.mutate(item.id); }} className="p-1.5 rounded-lg border border-slate-150 text-slate-600 hover:text-green-600 hover:bg-green-50 transition-colors">
                                                         <Trash2 size={13} />
                                                     </button>
                                                 </div>
