@@ -13,6 +13,7 @@ interface ProductFormState {
     name: string;
     description: string;
     price: number;
+    costPrice: number;
     stock: number;
     categoryId: string;
     images: string[];
@@ -23,6 +24,7 @@ const initialForm: ProductFormState = {
     name: "",
     description: "",
     price: 0,
+    costPrice: 0,
     stock: 10,
     categoryId: "",
     images: [],
@@ -101,6 +103,7 @@ export default function AdminProductsPage() {
             name: prod.name,
             description: prod.description || "",
             price: Number(prod.price),
+            costPrice: prod.costPrice ? Number(prod.costPrice) : 0,
             stock: prod.stock,
             categoryId: prod.categoryId || "",
             images: prod.images && prod.images.length > 0 ? [...prod.images] : [],
@@ -165,6 +168,7 @@ export default function AdminProductsPage() {
             name: form.name,
             description: form.description,
             price: Number(form.price),
+            costPrice: form.costPrice ? Number(form.costPrice) : undefined,
             stock: Number(form.stock),
             categoryId: form.categoryId || undefined,
             images: cleanImages,
@@ -222,7 +226,7 @@ export default function AdminProductsPage() {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
                         <div>
                             <label className="label mb-1 block">{t("admin.products.form.priceLabel")}</label>
                             <input
@@ -231,6 +235,15 @@ export default function AdminProductsPage() {
                                 required
                                 value={form.price || ""}
                                 onChange={(e) => setForm({ ...form, price: Number(e.target.value) })}
+                            />
+                        </div>
+                        <div>
+                            <label className="label mb-1 block">Cost Price</label>
+                            <input
+                                type="number"
+                                className="input text-left font-semibold"
+                                value={form.costPrice || ""}
+                                onChange={(e) => setForm({ ...form, costPrice: Number(e.target.value) })}
                             />
                         </div>
                         <div>

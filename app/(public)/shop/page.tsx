@@ -152,7 +152,7 @@ function ShopPageContent() {
                                             {product.name}
                                         </h3>
                                         <div className="mt-auto">
-                                            <p className="text-base font-bold text-green-700">
+                                            <p className="text-base font-bold text-red-800">
                                                 ৳{formatCurrency(product.price, locale).replace("৳", "")}
                                             </p>
                                             <div className="flex items-center gap-2 mt-0.5">

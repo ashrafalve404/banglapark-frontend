@@ -115,7 +115,7 @@ export default function ProductDetailPage() {
                     </h1>
 
                     <div className="mt-2 mb-6">
-                        <span className="text-3xl font-extrabold text-green-700">{formatCurrency(product.price, locale)}</span>
+                        <span className="text-3xl font-extrabold text-red-800">{formatCurrency(product.price, locale)}</span>
                         <span className="ml-2 text-sm text-gray-400 font-medium">{t("product.vatLabel")}</span>
                     </div>
 
