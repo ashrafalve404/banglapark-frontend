@@ -11,17 +11,17 @@ import { api } from "@/lib/api/client";
 import { useLocale } from "@/lib/i18n";
 
 const profileSchema = z.object({
-    name: z.string().min(2, "à¦¨à¦¾à¦® à¦…à¦¬à¦¶à§à¦¯à¦‡ à¦¦à¦¿à¦¤à§‡ à¦¹à¦¬à§‡"),
-    email: z.string().email("à¦¸à¦ à¦¿à¦• à¦‡à¦®à§‡à¦‡à¦² à¦¦à¦¿à¦¨"),
-    phone: z.string().min(10, "à¦¸à¦ à¦¿à¦• à¦®à§‹à¦¬à¦¾à¦‡à¦² à¦¨à¦¾à¦®à§à¦¬à¦¾à¦° à¦¦à¦¿à¦¨"),
+    name: z.string().min(2, "নাম অবশ্যই দিতে হবে"),
+    email: z.string().email("সঠিক ইমেইল দিন"),
+    phone: z.string().min(10, "সঠিক মোবাইল নাম্বার দিন"),
 });
 
 const passwordSchema = z.object({
-    currentPassword: z.string().min(6, "à¦¬à¦°à§à¦¤à¦®à¦¾à¦¨ à¦ªà¦¾à¦¸à¦“à¦¯à¦¼à¦¾à¦°à§à¦¡ à¦¦à¦¿à¦¨"),
-    newPassword: z.string().min(6, "à¦¨à¦¤à§à¦¨ à¦ªà¦¾à¦¸à¦“à¦¯à¦¼à¦¾à¦°à§à¦¡ à¦•à¦®à¦ªà¦•à§à¦·à§‡ à§¬ à¦…à¦•à§à¦·à¦°à§‡à¦° à¦¹à¦¤à§‡ à¦¹à¦¬à§‡"),
-    confirmPassword: z.string().min(6, "à¦ªà§à¦¨à¦°à¦¾à§Ÿ à¦¨à¦¤à§à¦¨ à¦ªà¦¾à¦¸à¦“à¦¯à¦¼à¦¾à¦°à§à¦¡ à¦²à¦¿à¦–à§à¦¨"),
+    currentPassword: z.string().min(6, "বর্তমান পাসওয়ার্ড দিন"),
+    newPassword: z.string().min(6, "নতুন পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে"),
+    confirmPassword: z.string().min(6, "পুনরায় নতুন পাসওয়ার্ড লিখুন"),
 }).refine((data) => data.newPassword === data.confirmPassword, {
-    message: "à¦¨à¦¤à§à¦¨ à¦ªà¦¾à¦¸à¦“à¦¯à¦¼à¦¾à¦°à§à¦¡ à¦¦à§à¦Ÿà¦¿ à¦®à¦¿à¦²à¦›à§‡ à¦¨à¦¾",
+    message: "নতুন পাসওয়ার্ড দুটি মিলছে না",
     path: ["confirmPassword"],
 });
 

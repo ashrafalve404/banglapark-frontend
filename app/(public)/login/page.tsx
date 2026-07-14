@@ -13,8 +13,8 @@ import { authApi } from "@/lib/api/auth";
 import { useLocale } from "@/lib/i18n";
 
 const loginSchema = z.object({
-    email: z.string().email("à¦¸à¦ à¦¿à¦• à¦‡à¦®à§‡à¦‡à¦² à¦à¦¡à§à¦°à§‡à¦¸ à¦²à¦¿à¦–à§à¦¨"),
-    password: z.string().min(6, "à¦ªà¦¾à¦¸à¦“à¦¯à¦¼à¦¾à¦°à§à¦¡ à¦•à¦®à¦ªà¦•à§à¦·à§‡ à§¬ à¦…à¦•à§à¦·à¦°à§‡à¦° à¦¹à¦¤à§‡ à¦¹à¦¬à§‡"),
+    email: z.string().email("সঠিক ইমেইল এড্রেস লিখুন"),
+    password: z.string().min(6, "পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে"),
 });
 
 type LoginSchemaInput = z.infer<typeof loginSchema>;

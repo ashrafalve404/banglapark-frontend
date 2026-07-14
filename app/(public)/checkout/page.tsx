@@ -14,10 +14,10 @@ import { CheckCircle2, ArrowRight, X, Smartphone, MapPin } from "lucide-react";
 import type { Order, PaymentMethod, DeliveryArea } from "@/types";
 
 const checkoutSchema = z.object({
-    name: z.string().min(2, "à¦¨à¦¾à¦® à¦…à¦¬à¦¶à§à¦¯à¦‡ à¦ªà§à¦°à¦¦à¦¾à¦¨ à¦•à¦°à¦¤à§‡ à¦¹à¦¬à§‡"),
-    phone: z.string().min(10, "à¦¸à¦ à¦¿à¦• à¦®à§‹à¦¬à¦¾à¦‡à¦² à¦¨à¦¾à¦®à§à¦¬à¦¾à¦° à¦ªà§à¦°à¦¦à¦¾à¦¨ à¦•à¦°à§à¦¨"),
-    city: z.string().min(2, "à¦œà§‡à¦²à¦¾/à¦¶à¦¹à¦° à¦²à¦¿à¦–à§à¦¨"),
-    address: z.string().min(5, "à¦¸à¦®à§à¦ªà§‚à¦°à§à¦£ à¦ à¦¿à¦•à¦¾à¦¨à¦¾ à¦²à¦¿à¦–à§à¦¨"),
+    name: z.string().min(2, "নাম অবশ্যই প্রদান করতে হবে"),
+    phone: z.string().min(10, "সঠিক মোবাইল নাম্বার প্রদান করুন"),
+    city: z.string().min(2, "জেলা/শহর লিখুন"),
+    address: z.string().min(5, "সম্পূর্ণ ঠিকানা লিখুন"),
     notes: z.string().optional(),
 });
 

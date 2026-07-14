@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import { ArrowRight, ShoppingCart, Loader2 } from "lucide-react";
@@ -122,11 +122,11 @@ export default function HomePage() {
                             ) : (
                                 <>
                                     <span className="md:whitespace-nowrap">
-                                        à¦…à§à¦¯à¦¾à¦«à¦¿à¦²à¦¿à¦¯à¦¼à§‡à¦Ÿ à¦®à¦¾à¦°à§à¦•à§‡à¦Ÿà¦ªà§à¦²à§‡à¦¸ à¦¥à§‡à¦•à§‡
-                                        <br className="block md:hidden" /> à¦ªà¦£à§à¦¯ à¦•à¦¿à¦¨à§à¦¨,
+                                        অ্যাফিলিয়েট মার্কেটপ্লেস থেকে
+                                        <br className="block md:hidden" /> পণ্য কিনুন,
                                     </span>
                                     <br />
-                                    <span className="md:whitespace-nowrap">à¦†à¦¯à¦¼ à¦¶à§à¦°à§ à¦•à¦°à§à¦¨</span>
+                                    <span className="md:whitespace-nowrap">আয় শুরু করুন</span>
                                 </>
                             )}
                         </h1>

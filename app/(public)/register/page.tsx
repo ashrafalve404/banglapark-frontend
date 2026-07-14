@@ -15,10 +15,10 @@ import jsPDF from "jspdf";
 import { Suspense } from "react";
 
 const registerSchema = z.object({
-    name: z.string().min(2, "à¦¨à¦¾à¦® à¦•à¦®à¦ªà¦•à§à¦·à§‡ à§¨ à¦…à¦•à§à¦·à¦°à§‡à¦° à¦¹à¦¤à§‡ à¦¹à¦¬à§‡"),
-    email: z.string().email("à¦¸à¦ à¦¿à¦• à¦‡à¦®à§‡à¦‡à¦² à¦à¦¡à§à¦°à§‡à¦¸ à¦²à¦¿à¦–à§à¦¨"),
-    phone: z.string().min(10, "à¦¸à¦ à¦¿à¦• à¦®à§‹à¦¬à¦¾à¦‡à¦² à¦¨à¦¾à¦®à§à¦¬à¦¾à¦° à¦¦à¦¿à¦¨"),
-    password: z.string().min(6, "à¦ªà¦¾à¦¸à¦“à¦¯à¦¼à¦¾à¦°à§à¦¡ à¦•à¦®à¦ªà¦•à§à¦·à§‡ à§¬ à¦…à¦•à§à¦·à¦°à§‡à¦° à¦¹à¦¤à§‡ à¦¹à¦¬à§‡"),
+    name: z.string().min(2, "নাম কমপক্ষে ২ অক্ষরের হতে হবে"),
+    email: z.string().email("সঠিক ইমেইল এড্রেস লিখুন"),
+    phone: z.string().min(10, "সঠিক মোবাইল নাম্বার দিন"),
+    password: z.string().min(6, "পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে"),
     referralCode: z.string().optional(),
 });
 

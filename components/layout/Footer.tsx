@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import { useLocale } from "@/lib/i18n";
@@ -9,21 +9,20 @@ export function Footer() {
 
     // Localized strings
     const isEn = locale === "en";
-    const officeHeader = isEn ? "HEAD OFFICE" : "à¦ªà§à¦°à¦§à¦¾à¦¨ à¦•à¦¾à¦°à§à¦¯à¦¾à¦²à¦¯à¦¼";
-    const addressLabel = isEn ? "Address" : "à¦ à¦¿à¦•à¦¾à¦¨à¦¾";
+    const officeHeader = isEn ? "HEAD OFFICE" : "প্রধান কার্যালয়";
+    const addressLabel = isEn ? "Address" : "ঠিকানা";
     const addressValue = isEn
         ? "Navana Shopping Centre, Gulshan Avenue-1, Dhaka-1212"
-        : "à¦¨à¦¾à¦­à¦¾à¦¨à¦¾ à¦¶à¦ªà¦¿à¦‚ à¦¸à§‡à¦¨à§à¦Ÿà¦¾à¦°, à¦—à§à¦²à¦¶à¦¾à¦¨ à¦à¦­à¦¿à¦¨à¦¿à¦‰-à§§, à¦¢à¦¾à¦•à¦¾-à§§à§¨à§§à§¨";
-    const hotlineLabel = isEn ? "Hotline" : "à¦¹à¦Ÿà¦²à¦¾à¦‡à¦¨";
-    const emailLabel = isEn ? "E-mail" : "à¦‡-à¦®à§‡à¦‡à¦²";
+        : "নাভানা শপিং সেন্টার, গুলশান এভিনিউ-০১, ঢাকা-১২১২";
+    const hotlineLabel = isEn ? "Hotline" : "হটলাইন";
+    const emailLabel = isEn ? "E-mail" : "ই-মেইল";
 
-    const pageHeader = isEn ? "PAGE" : "à¦ªà§‡à¦œ";
-    const pageAbout = isEn ? "About Ecom" : "à¦†à¦®à¦¾à¦¦à§‡à¦° à¦¸à¦®à§à¦ªà¦°à§à¦•à§‡";
-    const pageDelivery = isEn ? "Delivery Policy" : "à¦¡à§‡à¦²à¦¿à¦­à¦¾à¦°à¦¿ à¦ªà¦²à¦¿à¦¸à¦¿";
-    const pageTerms = isEn ? "Terms & Condition" : "à¦¶à¦°à§à¦¤à¦¾à¦¬à¦²à§€";
-    const pageReturn = isEn ? "Return Policy" : "à¦°à¦¿à¦Ÿà¦¾à¦°à§à¦¨ à¦ªà¦²à¦¿à¦¸à¦¿";
-
-    const followHeader = isEn ? "FOLLOW US" : "à¦†à¦®à¦¾à¦¦à§‡à¦° à¦«à¦²à§‹ à¦•à¦°à§à¦¨";
+    const pageHeader = isEn ? "PAGE" : "পেজ";
+    const pageAbout = isEn ? "About Ecom" : "আমাদের সম্পর্কে";
+    const pageDelivery = isEn ? "Delivery Policy" : "ডেলিভারি পলিসি";
+    const pageTerms = isEn ? "Terms & Condition" : "শর্তাবলী";
+    const pageReturn = isEn ? "Return Policy" : "রিটার্ন পলিসি";
+    const followHeader = isEn ? "FOLLOW US" : "আমাদের ফলো করুন";
 
     return (
         <><footer className="mt-auto bg-[#111c2a] border-t border-slate-800 text-slate-350">
@@ -51,7 +50,7 @@ export function Footer() {
                             </h4>
                             <ul className="space-y-2.5 text-sm font-bold text-slate-300">
                                 <li>
-                                    <Link href="/shop" className="hover:text-white transition-colors">{isEn ? "Shop" : "à¦¶à¦ª"}</Link>
+                                    <Link href="/shop" className="hover:text-white transition-colors">{isEn ? "Shop" : "শপ"}</Link>
                                 </li>
                                 <li>
                                     <Link href="/" className="hover:text-white transition-colors">{pageAbout}</Link>

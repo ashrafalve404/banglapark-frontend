@@ -115,7 +115,7 @@ export default function AdminWithdrawalsPage() {
                                             </div>
                                             {req.method === "BANK" && (
                                                 <div className="text-[9px] text-gray-400 mt-0.5">
-                                                    {t("admin.withdrawals.table.bankLabel")} {req.accountDetails?.bankName} ({req.accountDetails?.branchName}), à¦¨à¦¾à¦®: {req.accountDetails?.holderName}
+                                                    {t("admin.withdrawals.table.bankLabel")} {req.accountDetails?.bankName} ({req.accountDetails?.branchName}), নাম: {req.accountDetails?.holderName}
                                                 </div>
                                             )}
                                             {req.reason && <div className="text-[10px] text-red-500 font-bold mt-1">{t("admin.withdrawals.table.reasonLabel")} {req.reason}</div>}
