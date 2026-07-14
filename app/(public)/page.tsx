@@ -213,7 +213,7 @@ export default function HomePage() {
                                     </div>
                                     <div className="p-3">
                                         <h3 className="text-sm font-semibold text-gray-800 line-clamp-2">{product.name}</h3>
-                                        <p className="mt-1 text-base font-bold text-red-800">à§³{Number(product.price).toLocaleString(locale === "bn" ? "bn-BD" : "en-IN")}</p>
+                                        <p className="mt-1 text-base font-bold text-red-800">৳{Number(product.price).toLocaleString(locale === "bn" ? "bn-BD" : "en-IN")}</p>
                                         <div className="flex items-center gap-2 mt-0.5">
                                             <p className={`text-xs ${product.stock > 0 ? 'text-gray-400' : 'text-red-500'}`}>
                                                 {product.stock > 0 ? `${t("home.featuredProducts.stockLabel")} ${product.stock}` : t("home.featuredProducts.stockOut")}

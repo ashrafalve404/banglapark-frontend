@@ -175,12 +175,12 @@ export default function AdminUsersPage() {
         l("Wallet Summary");
         doc.setFont("helvetica", "normal");
         doc.setFontSize(9);
-        l(`Balance: à§³${acc.walletBalance}`);
-        l(`Daily Reward: à§³${acc.dailyReward}`);
-        l(`Tier Bonus: à§³${acc.tierBonus}`);
-        l(`Generation Income: à§³${acc.generationIncome}`);
-        l(`Pending Withdrawal: à§³${acc.pendingWithdrawal}`);
-        l(`Withdrawable: à§³${acc.withdrawable}`);
+        l(`Balance: ৳${acc.walletBalance}`);
+        l(`Daily Reward: ৳${acc.dailyReward}`);
+        l(`Tier Bonus: ৳${acc.tierBonus}`);
+        l(`Generation Income: ৳${acc.generationIncome}`);
+        l(`Pending Withdrawal: ৳${acc.pendingWithdrawal}`);
+        l(`Withdrawable: ৳${acc.withdrawable}`);
         y += 4;
 
         if (tx.length > 0) {
@@ -193,8 +193,8 @@ export default function AdminUsersPage() {
                 body: tx.map((t: any) => [
                     new Date(t.createdAt).toLocaleDateString("en-GB"),
                     t.type,
-                    `à§³${t.amount}`,
-                    `à§³${t.balanceAfter ?? ""}`,
+                    `৳${t.amount}`,
+                    `৳${t.balanceAfter ?? ""}`,
                     t.description ?? "",
                 ]),
                 styles: { fontSize: 7 },
@@ -212,7 +212,7 @@ export default function AdminUsersPage() {
                 head: [["Date", "Amount", "Method", "Status"]],
                 body: wd.map((w: any) => [
                     new Date(w.createdAt).toLocaleDateString("en-GB"),
-                    `à§³${w.amount}`,
+                    `৳${w.amount}`,
                     w.method,
                     w.status,
                 ]),
@@ -225,7 +225,7 @@ export default function AdminUsersPage() {
         doc.setFontSize(9);
         doc.setFont("helvetica", "normal");
         l(`Team Members: ${statementData.team?.totalTeam ?? 0}`);
-        l(`Total Orders: ${statementData.orders?.totalOrders ?? 0} | Total Spent: à§³${statementData.orders?.totalSpent ?? 0}`);
+        l(`Total Orders: ${statementData.orders?.totalOrders ?? 0} | Total Spent: ৳${statementData.orders?.totalSpent ?? 0}`);
 
         doc.save(`statement_${acc.memberId}_${acc.name.replace(/\s+/g, "_")}.pdf`);
     };
@@ -453,13 +453,13 @@ export default function AdminUsersPage() {
                                 <div>
                                     <h3 className="text-sm font-bold text-slate-700 mb-2">Wallet</h3>
                                     <div className="grid grid-cols-3 gap-3">
-                                        <InfoCard label="Balance" value={`à§³${editUserData.wallet?.balance ?? 0}`} />
-                                        <InfoCard label="Total Earned" value={`à§³${editUserData.wallet?.totalEarned ?? 0}`} />
-                                        <InfoCard label="Pending Withdrawal" value={`à§³${editUserData.wallet?.pendingWithdrawal ?? 0}`} />
+                                        <InfoCard label="Balance" value={`৳${editUserData.wallet?.balance ?? 0}`} />
+                                        <InfoCard label="Total Earned" value={`৳${editUserData.wallet?.totalEarned ?? 0}`} />
+                                        <InfoCard label="Pending Withdrawal" value={`৳${editUserData.wallet?.pendingWithdrawal ?? 0}`} />
                                     </div>
                                     <div className="grid grid-cols-2 gap-3 mt-2">
-                                        <InfoCard label="Commission Earned" value={`à§³${editUserData.totalCommission ?? 0}`} />
-                                        <InfoCard label="Withdrawals Approved" value={`à§³${editUserData.totalWithdrawnApproved ?? 0}`} />
+                                        <InfoCard label="Commission Earned" value={`৳${editUserData.totalCommission ?? 0}`} />
+                                        <InfoCard label="Withdrawals Approved" value={`৳${editUserData.totalWithdrawnApproved ?? 0}`} />
                                     </div>
                                 </div>
 
@@ -566,12 +566,12 @@ export default function AdminUsersPage() {
                                 <div>
                                     <h3 className="text-sm font-bold text-slate-700 mb-3">Wallet Summary</h3>
                                     <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
-                                        <InfoCard label="Balance" value={`à§³${statementData.account.walletBalance}`} />
-                                        <InfoCard label="Daily Reward" value={`à§³${statementData.account.dailyReward}`} />
-                                        <InfoCard label="Tier Bonus" value={`à§³${statementData.account.tierBonus}`} />
-                                        <InfoCard label="Generation Income" value={`à§³${statementData.account.generationIncome}`} />
-                                        <InfoCard label="Pending Withdrawal" value={`à§³${statementData.account.pendingWithdrawal}`} />
-                                        <InfoCard label="Withdrawable" value={`à§³${statementData.account.withdrawable}`} />
+                                        <InfoCard label="Balance" value={`৳${statementData.account.walletBalance}`} />
+                                        <InfoCard label="Daily Reward" value={`৳${statementData.account.dailyReward}`} />
+                                        <InfoCard label="Tier Bonus" value={`৳${statementData.account.tierBonus}`} />
+                                        <InfoCard label="Generation Income" value={`৳${statementData.account.generationIncome}`} />
+                                        <InfoCard label="Pending Withdrawal" value={`৳${statementData.account.pendingWithdrawal}`} />
+                                        <InfoCard label="Withdrawable" value={`৳${statementData.account.withdrawable}`} />
                                     </div>
                                 </div>
 
@@ -596,9 +596,9 @@ export default function AdminUsersPage() {
                                                             <td className="p-2.5 text-slate-500 whitespace-nowrap">{formatDate(tx.createdAt)}</td>
                                                             <td className="p-2.5 font-medium">{tx.type}</td>
                                                             <td className={`p-2.5 text-right font-semibold ${Number(tx.amount) >= 0 ? "text-red-700" : "text-red-600"}`}>
-                                                                à§³{tx.amount}
+                                                                ৳{tx.amount}
                                                             </td>
-                                                            <td className="p-2.5 text-right text-slate-600">à§³{tx.balanceAfter ?? ""}</td>
+                                                            <td className="p-2.5 text-right text-slate-600">৳{tx.balanceAfter ?? ""}</td>
                                                             <td className="p-2.5 text-slate-500 max-w-[200px] truncate">{tx.description ?? ""}</td>
                                                         </tr>
                                                     ))}
@@ -628,7 +628,7 @@ export default function AdminUsersPage() {
                                                     {statementData.withdrawals.map((w: any) => (
                                                         <tr key={w.id} className="hover:bg-slate-50">
                                                             <td className="p-2.5 text-slate-500 whitespace-nowrap">{formatDate(w.createdAt)}</td>
-                                                            <td className="p-2.5 text-right font-semibold text-slate-800">à§³{w.amount}</td>
+                                                            <td className="p-2.5 text-right font-semibold text-slate-800">৳{w.amount}</td>
                                                             <td className="p-2.5 text-slate-600">{w.method}</td>
                                                             <td className="p-2.5">
                                                                 <span className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold ${w.status === "APPROVED" ? "bg-red-100 text-red-800" : w.status === "REJECTED" ? "bg-red-100 text-red-800" : "bg-amber-100 text-amber-800"}`}>
@@ -651,7 +651,7 @@ export default function AdminUsersPage() {
                                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                                         <InfoCard label="Team Members" value={String(statementData.team?.totalTeam ?? 0)} />
                                         <InfoCard label="Total Orders" value={String(statementData.orders?.totalOrders ?? 0)} />
-                                        <InfoCard label="Total Spent" value={`à§³${statementData.orders?.totalSpent ?? 0}`} />
+                                        <InfoCard label="Total Spent" value={`৳${statementData.orders?.totalSpent ?? 0}`} />
                                         <InfoCard label="Generated" value={new Date().toLocaleDateString("en-GB")} />
                                     </div>
                                 </div>

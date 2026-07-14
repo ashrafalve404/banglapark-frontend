@@ -260,7 +260,7 @@ export default function CheckoutPage() {
                                 <div key={item.product.id} className="flex justify-between items-center gap-4 py-1">
                                     <div className="min-w-0 flex-1">
                                         <p className="text-xs font-semibold text-gray-800 truncate">{item.product.name}</p>
-                                        <p className="text-xs text-gray-400">à§³{Number(item.product.price).toLocaleString()} x {item.quantity}</p>
+                                        <p className="text-xs text-gray-400">৳{Number(item.product.price).toLocaleString()} x {item.quantity}</p>
                                     </div>
                                     <span className="text-sm font-bold text-gray-700">{formatCurrency(Number(item.product.price) * item.quantity, locale)}</span>
                                 </div>

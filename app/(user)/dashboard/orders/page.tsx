@@ -74,7 +74,7 @@ export default function UserOrdersPage() {
                                     <div key={item.id} className="flex justify-between items-center py-2">
                                         <div className="min-w-0">
                                             <p className="text-xs font-bold text-gray-800 truncate">{item.product?.name || t("orders.productFallback")}</p>
-                                            <p className="text-xs text-gray-400">à§³{Number(item.price).toLocaleString()} x {item.quantity}</p>
+                                            <p className="text-xs text-gray-400">৳{Number(item.price).toLocaleString()} x {item.quantity}</p>
                                         </div>
                                         <span className="text-xs font-semibold text-gray-700">{formatCurrency(Number(item.price) * item.quantity)}</span>
                                     </div>

@@ -153,7 +153,7 @@ function ShopPageContent() {
                                         </h3>
                                         <div className="mt-auto">
                                             <p className="text-base font-bold text-red-800">
-                                                à§³{formatCurrency(product.price, locale).replace("à§³", "")}
+                                                ৳{formatCurrency(product.price, locale).replace("৳", "")}
                                             </p>
                                             <div className="flex items-center gap-2 mt-0.5">
                                                 <p className={`text-xs ${product.stock > 0 ? "text-gray-400" : "text-red-500 font-semibold"}`}>
