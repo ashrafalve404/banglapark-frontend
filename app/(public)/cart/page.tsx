@@ -102,7 +102,7 @@ export default function CartPage() {
                             </div>
                         </div>
 
-                        <button onClick={() => router.push("/checkout")} className="w-full py-3.5 flex items-center justify-center gap-2 rounded-lg bg-red-800 px-4 text-sm font-semibold text-white transition-all hover:bg-red-900 focus:outline-none focus:ring-2 focus:ring-red-700 focus:ring-offset-2">
+                        <button onClick={() => router.push("/checkout")} className="btn-primary w-full py-3.5 flex items-center justify-center gap-2">
                             {t("cart.checkout.cta")} <ArrowRight size={18} />
                         </button>
                     </div>

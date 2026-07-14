@@ -339,7 +339,7 @@ export default function CheckoutPage() {
                             </div>
                         </div>
 
-                        <button type="submit" disabled={loading} className="w-full py-4 text-sm font-bold rounded-lg bg-red-800 px-4 text-white transition-all hover:bg-red-900 focus:outline-none focus:ring-2 focus:ring-red-700 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2">
+                        <button type="submit" disabled={loading} className="btn-primary w-full py-4 text-sm font-bold">
                             {loading ? t("checkout.submit.loading") : t("checkout.submit.text")}
                         </button>
                     </div>

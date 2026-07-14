@@ -169,7 +169,7 @@ export default function ProductDetailPage() {
                                 <button onClick={handleAddToCart} className="btn-secondary flex-1 py-3.5 flex items-center justify-center gap-2">
                                     <ShoppingCart size={18} /> {t("product.addToCart")}
                                 </button>
-                                <button onClick={handleBuyNow} className="flex-1 py-3.5 flex items-center justify-center gap-2 rounded-lg bg-red-800 px-4 text-sm font-semibold text-white transition-all hover:bg-red-900 focus:outline-none focus:ring-2 focus:ring-red-700 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                                <button onClick={handleBuyNow} className="btn-primary flex-1 py-3.5 flex items-center justify-center gap-2">
                                     <ShoppingBag size={18} /> {t("product.buyNow")}
                                 </button>
                             </div>
