@@ -61,7 +61,7 @@ export default function ReferralsPage() {
                         <span className="text-xs text-gray-500 font-semibold uppercase block">{t("referrals.referralLink.linkLabel")}</span>
                         <div className="flex border border-gray-250 rounded-lg overflow-hidden bg-gray-50 w-full">
                             <input type="text" readOnly className="flex-1 bg-transparent px-3 py-2 text-xs font-semibold text-gray-600 outline-none text-left select-all" value={referralLink} />
-                            <button onClick={handleCopyLink} className="bg-green-800 text-white px-3 flex items-center justify-center gap-1.5 hover:bg-green-950 transition-colors text-xs font-semibold">
+                            <button onClick={handleCopyLink} className="bg-red-800 text-white px-3 flex items-center justify-center gap-1.5 hover:bg-red-950 transition-colors text-xs font-semibold">
                                 {copied ? <Check size={14} /> : <Copy size={14} />} Copy
                             </button>
                         </div>
@@ -69,7 +69,7 @@ export default function ReferralsPage() {
 
                     <div className="space-y-1.5">
                         <span className="text-xs text-gray-500 font-semibold uppercase block">{t("referrals.referralLink.codeLabel")}</span>
-                        <div className="border border-gray-250 rounded-lg px-3 py-2 bg-gray-50 text-sm font-bold text-green-900 tracking-wider flex items-center justify-between">
+                        <div className="border border-gray-250 rounded-lg px-3 py-2 bg-gray-50 text-sm font-bold text-red-900 tracking-wider flex items-center justify-between">
                             <span>{referralCode}</span>
                         </div>
                     </div>
@@ -84,9 +84,9 @@ export default function ReferralsPage() {
                     </span>
                 </div>
 
-                <div className="card p-5 text-center border-l-4 border-l-green-600">
-                    <span className="text-xs text-green-700 font-bold block mb-1">{t("referrals.stats.active")}</span>
-                    <span className="text-3xl font-extrabold text-green-800">
+                <div className="card p-5 text-center border-l-4 border-l-red-600">
+                    <span className="text-xs text-red-700 font-bold block mb-1">{t("referrals.stats.active")}</span>
+                    <span className="text-3xl font-extrabold text-red-800">
                         {statsLoading ? "..." : stats?.activeTeam ?? 0}
                     </span>
                 </div>
@@ -133,7 +133,7 @@ export default function ReferralsPage() {
                                         </td>
                                         <td className="p-4 text-xs text-gray-550">{formatDate(member.createdAt)}</td>
                                         <td className="p-4 text-center">
-                                            <span className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${member.status === "ACTIVE" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-550"
+                                            <span className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${member.status === "ACTIVE" ? "bg-red-100 text-red-800" : "bg-gray-100 text-gray-550"
                                                 }`}>
                                                 {member.status === "ACTIVE" ? t("referrals.table.statusActive") : t("referrals.table.statusInactive")}
                                             </span>

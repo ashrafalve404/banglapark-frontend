@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { ArrowRight, ShoppingCart, Loader2 } from "lucide-react";
@@ -90,20 +90,20 @@ export default function HomePage() {
             <AnnouncementBar />
 
             {/* Hero */}
-            <section className="relative overflow-hidden bg-gradient-to-br from-green-900 via-green-800 to-green-700 text-white">
+            <section className="relative overflow-hidden bg-gradient-to-br from-red-900 via-red-800 to-red-700 text-white">
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width=%2760%27%20height=%2760%27%20viewBox=%270%200%2060%2060%27%20xmlns=%27http://www.w3.org/2000/svg%27%3E%3Cg%20fill=%27none%27%20fill-rule=%27evenodd%27%3E%3Cg%20fill=%27%23ffffff%27%2520fill-opacity=%270.03%27%3E%3Cpath%20d=%27M36%2034v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6%2034v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6%204V0H4v4H0v2h4v4h2V6h4V4H6z%27/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-50" />
 
                 {/* Decorative curved shapes */}
-                <div className="absolute -top-32 -right-20 h-[28rem] w-[28rem] opacity-25 blur-3xl" style={{ borderRadius: "42% 58% 35% 65% / 55% 40% 60% 45%", background: "linear-gradient(135deg, #166534, #14532d)" }} />
-                <div className="absolute -bottom-40 -left-28 h-[35rem] w-[35rem] opacity-20 blur-3xl" style={{ borderRadius: "55% 45% 65% 35% / 40% 60% 40% 60%", background: "linear-gradient(225deg, #052e16, #14532d)" }} />
-                <div className="absolute top-1/4 right-1/4 h-72 w-72 opacity-15 blur-2xl" style={{ borderRadius: "60% 40% 50% 50% / 40% 55% 45% 60%", background: "linear-gradient(180deg, #047857, #065f46)" }} />
-                <div className="absolute bottom-1/3 left-1/5 h-56 w-56 opacity-15 blur-2xl rotate-12" style={{ borderRadius: "38% 62% 45% 55% / 50% 40% 60% 50%", background: "linear-gradient(300deg, #052e16, #166534)" }} />
+                <div className="absolute -top-32 -right-20 h-[28rem] w-[28rem] opacity-25 blur-3xl" style={{ borderRadius: "42% 58% 35% 65% / 55% 40% 60% 45%", background: "linear-gradient(135deg, #991b1b, #7f1d1d)" }} />
+                <div className="absolute -bottom-40 -left-28 h-[35rem] w-[35rem] opacity-20 blur-3xl" style={{ borderRadius: "55% 45% 65% 35% / 40% 60% 40% 60%", background: "linear-gradient(225deg, #450a0a, #7f1d1d)" }} />
+                <div className="absolute top-1/4 right-1/4 h-72 w-72 opacity-15 blur-2xl" style={{ borderRadius: "60% 40% 50% 50% / 40% 55% 45% 60%", background: "linear-gradient(180deg, #b91c1c, #991b1b)" }} />
+                <div className="absolute bottom-1/3 left-1/5 h-56 w-56 opacity-15 blur-2xl rotate-12" style={{ borderRadius: "38% 62% 45% 55% / 50% 40% 60% 50%", background: "linear-gradient(300deg, #450a0a, #991b1b)" }} />
 
                 {/* Curved accent lines */}
-                <svg className="absolute top-0 right-0 h-full w-64 text-green-950/20" viewBox="0 0 100 100" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg className="absolute top-0 right-0 h-full w-64 text-red-950/20" viewBox="0 0 100 100" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M100 0C60 20 40 60 60 100H100V0Z" fill="currentColor" />
                 </svg>
-                <svg className="absolute bottom-0 left-0 h-32 w-full text-green-950/15" viewBox="0 0 1440 100" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg className="absolute bottom-0 left-0 h-32 w-full text-red-950/15" viewBox="0 0 1440 100" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M0 100C360 20 720 80 1440 30V100H0Z" fill="currentColor" />
                 </svg>
 
@@ -122,19 +122,19 @@ export default function HomePage() {
                             ) : (
                                 <>
                                     <span className="md:whitespace-nowrap">
-                                        অ্যাফিলিয়েট মার্কেটপ্লেস থেকে
-                                        <br className="block md:hidden" /> পণ্য কিনুন,
+                                        à¦…à§à¦¯à¦¾à¦«à¦¿à¦²à¦¿à¦¯à¦¼à§‡à¦Ÿ à¦®à¦¾à¦°à§à¦•à§‡à¦Ÿà¦ªà§à¦²à§‡à¦¸ à¦¥à§‡à¦•à§‡
+                                        <br className="block md:hidden" /> à¦ªà¦£à§à¦¯ à¦•à¦¿à¦¨à§à¦¨,
                                     </span>
                                     <br />
-                                    <span className="md:whitespace-nowrap">আয় শুরু করুন</span>
+                                    <span className="md:whitespace-nowrap">à¦†à¦¯à¦¼ à¦¶à§à¦°à§ à¦•à¦°à§à¦¨</span>
                                 </>
                             )}
                         </h1>
-                        <p className="mb-6 text-sm sm:text-base lg:text-lg text-green-100 leading-relaxed max-w-3xl mx-auto">
+                        <p className="mb-6 text-sm sm:text-base lg:text-lg text-red-100 leading-relaxed max-w-3xl mx-auto">
                             {t("home.hero.subtitle")}
                         </p>
                         <div className="flex flex-wrap gap-3 justify-center">
-                            <Link href="/shop" className="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-green-900 hover:bg-green-50 transition-all shadow-lg hover:shadow-xl">
+                            <Link href="/shop" className="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-red-900 hover:bg-red-50 transition-all shadow-lg hover:shadow-xl">
                                 {t("home.hero.cta.shop")} <ArrowRight size={16} />
                             </Link>
                             <Link href="/register" className="inline-flex items-center gap-2 rounded-lg border-2 border-white/40 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10 transition-all backdrop-blur-sm">
@@ -157,7 +157,7 @@ export default function HomePage() {
                                     {(offer.badge || offer.title) && (
                                         <div className="absolute bottom-3 left-3 right-3">
                                             {offer.badge && (
-                                                <span className="inline-block rounded-full bg-green-600 px-2.5 py-0.5 text-[10px] font-bold text-white uppercase tracking-wide mb-1">{offer.badge}</span>
+                                                <span className="inline-block rounded-full bg-red-600 px-2.5 py-0.5 text-[10px] font-bold text-white uppercase tracking-wide mb-1">{offer.badge}</span>
                                             )}
                                             {offer.title && (
                                                 <h3 className="text-sm font-bold text-white">{offer.title}</h3>
@@ -177,12 +177,12 @@ export default function HomePage() {
                     <div className="page-container">
                         <div className="flex items-center justify-between mb-6">
                             <h2 className="section-title text-xl">{t("home.categories.heading")}</h2>
-                            <Link href="/shop" className="text-sm font-medium text-green-800 hover:underline">{t("home.categories.viewAll")}</Link>
+                            <Link href="/shop" className="text-sm font-medium text-red-800 hover:underline">{t("home.categories.viewAll")}</Link>
                         </div>
                         <div className="flex flex-wrap gap-3">
                             {categories.map((cat) => (
                                 <Link key={cat.id} href={`/shop?categoryId=${cat.id}`}
-                                    className="rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:border-green-600 hover:text-green-800 hover:shadow-md transition-all">
+                                    className="rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:border-red-600 hover:text-red-800 hover:shadow-md transition-all">
                                     {cat.name}
                                 </Link>
                             ))}
@@ -196,7 +196,7 @@ export default function HomePage() {
                 <div className="page-container">
                     <div className="flex items-center justify-between mb-8">
                         <h2 className="section-title text-xl lg:text-2xl">{t("home.allProducts.heading", undefined, "All Products")}</h2>
-                        <Link href="/shop" className="text-sm font-medium text-green-800 hover:underline">{t("home.allProducts.viewAll", undefined, "View All →")}</Link>
+                        <Link href="/shop" className="text-sm font-medium text-red-800 hover:underline">{t("home.allProducts.viewAll", undefined, "View All â†’")}</Link>
                     </div>
                     {allProducts.length === 0 ? (
                         <div className="text-center py-16 text-gray-400">{t("home.allProducts.empty", undefined, "No products found")}</div>
@@ -213,13 +213,13 @@ export default function HomePage() {
                                     </div>
                                     <div className="p-3">
                                         <h3 className="text-sm font-semibold text-gray-800 line-clamp-2">{product.name}</h3>
-                                        <p className="mt-1 text-base font-bold text-green-800">৳{Number(product.price).toLocaleString(locale === "bn" ? "bn-BD" : "en-IN")}</p>
+                                        <p className="mt-1 text-base font-bold text-red-800">à§³{Number(product.price).toLocaleString(locale === "bn" ? "bn-BD" : "en-IN")}</p>
                                         <div className="flex items-center gap-2 mt-0.5">
                                             <p className={`text-xs ${product.stock > 0 ? 'text-gray-400' : 'text-red-500'}`}>
                                                 {product.stock > 0 ? `${t("home.featuredProducts.stockLabel")} ${product.stock}` : t("home.featuredProducts.stockOut")}
                                             </p>
                                             {product.clicks > 0 && (
-                                                <span className="text-[10px] text-gray-400">• {product.clicks} views</span>
+                                                <span className="text-[10px] text-gray-400">â€¢ {product.clicks} views</span>
                                             )}
                                         </div>
                                         {product.stock > 0 && (
@@ -245,7 +245,7 @@ export default function HomePage() {
                                                             handleAddToCart(product, e);
                                                         }
                                                     }}
-                                                    className="w-full rounded-lg bg-green-800 py-2 text-sm font-bold text-white hover:bg-green-700 transition-colors flex items-center justify-center gap-1"
+                                                    className="w-full rounded-lg bg-red-800 py-2 text-sm font-bold text-white hover:bg-red-700 transition-colors flex items-center justify-center gap-1"
                                                 >
                                                     {addedId === product.id ? (
                                                         <span>{t("shop.product.added", undefined, "Added!")}</span>

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
@@ -173,7 +173,7 @@ export default function AdminOrdersPage() {
                                                         )}
                                                     </div>
                                                 ) : (
-                                                    <span className="text-[10px] text-gray-300">—</span>
+                                                    <span className="text-[10px] text-gray-300">â€”</span>
                                                 )}
                                             </td>
                                             <td className="p-4 text-center">
@@ -182,11 +182,11 @@ export default function AdminOrdersPage() {
                                                         {order.deliveryArea === "INSIDE_DHAKA" ? t("checkout.shipping.insideDhaka") : t("checkout.shipping.outsideDhaka")}
                                                     </span>
                                                 ) : (
-                                                    <span className="text-[10px] text-gray-300">—</span>
+                                                    <span className="text-[10px] text-gray-300">â€”</span>
                                                 )}
                                             </td>
                                             <td className="p-4 text-right text-xs font-bold text-slate-800">
-                                                {order.deliveryCharge != null ? formatCurrency(order.deliveryCharge, locale) : "—"}
+                                                {order.deliveryCharge != null ? formatCurrency(order.deliveryCharge, locale) : "â€”"}
                                             </td>
                                             <td className="p-4 text-xs text-slate-650 min-w-[200px]">
                                                 <div className="font-bold border-b border-dashed border-slate-150 pb-1 mb-1.5">
@@ -211,7 +211,7 @@ export default function AdminOrdersPage() {
                                             </td>
                                             <td className="p-4 text-center">
                                                 <span className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${order.status === "DELIVERED"
-                                                    ? "bg-green-100 text-green-800"
+                                                    ? "bg-red-100 text-red-800"
                                                     : order.status === "CANCELLED"
                                                         ? "bg-red-100 text-red-700"
                                                         : "bg-amber-105 bg-amber-50 text-amber-800"
@@ -238,7 +238,7 @@ export default function AdminOrdersPage() {
                                                                             ? "opacity-50 cursor-not-allowed bg-slate-100 text-slate-400 border-slate-200"
                                                                             : next === "CANCELLED"
                                                                                 ? "bg-red-50 text-red-650 border-red-200 hover:bg-red-100 cursor-pointer"
-                                                                                : "bg-green-50 text-green-700 border-green-200 hover:bg-green-100 cursor-pointer"
+                                                                                : "bg-red-50 text-red-700 border-red-200 hover:bg-red-100 cursor-pointer"
                                                                         }`}
                                                                 >
                                                                     {isMutating && <Loader2 className="animate-spin" size={10} />}

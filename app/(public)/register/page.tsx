@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,10 +15,10 @@ import jsPDF from "jspdf";
 import { Suspense } from "react";
 
 const registerSchema = z.object({
-    name: z.string().min(2, "নাম কমপক্ষে ২ অক্ষরের হতে হবে"),
-    email: z.string().email("সঠিক ইমেইল এড্রেস লিখুন"),
-    phone: z.string().min(10, "সঠিক মোবাইল নাম্বার দিন"),
-    password: z.string().min(6, "পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে"),
+    name: z.string().min(2, "à¦¨à¦¾à¦® à¦•à¦®à¦ªà¦•à§à¦·à§‡ à§¨ à¦…à¦•à§à¦·à¦°à§‡à¦° à¦¹à¦¤à§‡ à¦¹à¦¬à§‡"),
+    email: z.string().email("à¦¸à¦ à¦¿à¦• à¦‡à¦®à§‡à¦‡à¦² à¦à¦¡à§à¦°à§‡à¦¸ à¦²à¦¿à¦–à§à¦¨"),
+    phone: z.string().min(10, "à¦¸à¦ à¦¿à¦• à¦®à§‹à¦¬à¦¾à¦‡à¦² à¦¨à¦¾à¦®à§à¦¬à¦¾à¦° à¦¦à¦¿à¦¨"),
+    password: z.string().min(6, "à¦ªà¦¾à¦¸à¦“à¦¯à¦¼à¦¾à¦°à§à¦¡ à¦•à¦®à¦ªà¦•à§à¦·à§‡ à§¬ à¦…à¦•à§à¦·à¦°à§‡à¦° à¦¹à¦¤à§‡ à¦¹à¦¬à§‡"),
     referralCode: z.string().optional(),
 });
 
@@ -142,14 +142,14 @@ function RegisterForm() {
         return (
             <div className="flex min-h-[calc(100vh-16rem)] items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
                 <div className="card-flat w-full max-w-md p-8 text-center">
-                    <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
-                        <CheckCircle size={36} className="text-green-700" />
+                    <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100">
+                        <CheckCircle size={36} className="text-red-700" />
                     </div>
                     <h2 className="text-2xl font-bold text-gray-900 mb-2">Registration Successful!</h2>
                     <p className="text-sm text-gray-500 mb-4">Welcome to Bangla Park Limited</p>
 
                         <div ref={pdfRef} className="bg-gray-50 rounded-xl p-6 text-left space-y-2 mb-6">
-                            <p className="text-center text-lg font-bold text-green-800">BP-{registeredUser.memberId}</p>
+                            <p className="text-center text-lg font-bold text-red-800">BP-{registeredUser.memberId}</p>
                             <div className="text-sm space-y-1">
                                 <p><span className="font-semibold text-gray-700">Name:</span> {registeredUser.name}</p>
                                 <p><span className="font-semibold text-gray-700">Email:</span> {registeredUser.email}</p>
@@ -237,7 +237,7 @@ function RegisterForm() {
                         <input
                             type="password"
                             className="input text-left"
-                            placeholder="••••••••"
+                            placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                             {...register("password")}
                         />
                         {errors.password && (
@@ -263,7 +263,7 @@ function RegisterForm() {
 
                 <div className="mt-6 text-center text-sm text-gray-500">
                     {t("auth.register.footer.hasAccount")}{" "}
-                    <Link href="/login" className="font-semibold text-green-800 hover:underline">
+                    <Link href="/login" className="font-semibold text-red-800 hover:underline">
                         {t("auth.register.footer.loginLink")}
                     </Link>
                 </div>
@@ -278,7 +278,7 @@ export default function RegisterPage() {
         <Suspense fallback={
             <div className="flex min-h-[calc(100vh-16rem)] items-center justify-center">
                 <div className="text-center space-y-2">
-                    <div className="h-8 w-8 animate-spin rounded-full border-4 border-green-700 border-t-transparent mx-auto"></div>
+                    <div className="h-8 w-8 animate-spin rounded-full border-4 border-red-700 border-t-transparent mx-auto"></div>
                     <p className="text-xs text-gray-500">{t("auth.register.suspense.loading")}</p>
                 </div>
             </div>

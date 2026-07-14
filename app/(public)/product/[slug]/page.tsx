@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
@@ -44,7 +44,7 @@ export default function ProductDetailPage() {
     if (isLoading && !product) {
         return (
             <div className="flex h-[calc(100vh-16rem)] items-center justify-center">
-                <Loader2 className="animate-spin text-green-800" size={32} />
+                <Loader2 className="animate-spin text-red-800" size={32} />
             </div>
         );
     }
@@ -75,7 +75,7 @@ export default function ProductDetailPage() {
 
     return (
         <div className="page-container py-10">
-            <button onClick={() => router.back()} className="mb-6 inline-flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-green-800 transition-colors">
+            <button onClick={() => router.back()} className="mb-6 inline-flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-red-800 transition-colors">
                 <ArrowLeft size={16} /> {t("product.backButton")}
             </button>
 
@@ -97,7 +97,7 @@ export default function ProductDetailPage() {
                                     onClick={() => setSelectedImage(i)}
                                     className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${
                                         i === selectedImage
-                                            ? "border-green-600 ring-1 ring-green-600"
+                                            ? "border-red-600 ring-1 ring-red-600"
                                             : "border-gray-200 hover:border-gray-400"
                                     }`}
                                 >
@@ -115,7 +115,7 @@ export default function ProductDetailPage() {
                     </h1>
 
                     <div className="mt-2 mb-6">
-                        <span className="text-3xl font-extrabold text-green-800">{formatCurrency(product.price, locale)}</span>
+                        <span className="text-3xl font-extrabold text-red-800">{formatCurrency(product.price, locale)}</span>
                         <span className="ml-2 text-sm text-gray-400 font-medium">{t("product.vatLabel")}</span>
                     </div>
 
@@ -139,8 +139,8 @@ export default function ProductDetailPage() {
                                                 type="button"
                                                 onClick={() => setSelectedSize(s === selectedSize ? "" : s)}
                                                 className={`px-4 py-2 rounded-lg border text-sm font-semibold transition-all ${selectedSize === s
-                                                    ? "border-green-800 bg-green-800 text-white"
-                                                    : "border-gray-200 text-gray-600 hover:border-green-300 hover:text-green-700"
+                                                    ? "border-red-800 bg-red-800 text-white"
+                                                    : "border-gray-200 text-gray-600 hover:border-red-300 hover:text-red-700"
                                                     }`}
                                             >
                                                 {s}
@@ -160,7 +160,7 @@ export default function ProductDetailPage() {
                             </div>
 
                             {msg && (
-                                <div className="rounded-lg bg-green-50 p-3 text-xs text-green-700 font-semibold">
+                                <div className="rounded-lg bg-red-50 p-3 text-xs text-red-700 font-semibold">
                                     {t("product.addedToCartMsg")}
                                 </div>
                             )}

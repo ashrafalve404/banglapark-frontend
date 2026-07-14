@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,8 +13,8 @@ import { authApi } from "@/lib/api/auth";
 import { useLocale } from "@/lib/i18n";
 
 const loginSchema = z.object({
-    email: z.string().email("সঠিক ইমেইল এড্রেস লিখুন"),
-    password: z.string().min(6, "পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে"),
+    email: z.string().email("à¦¸à¦ à¦¿à¦• à¦‡à¦®à§‡à¦‡à¦² à¦à¦¡à§à¦°à§‡à¦¸ à¦²à¦¿à¦–à§à¦¨"),
+    password: z.string().min(6, "à¦ªà¦¾à¦¸à¦“à¦¯à¦¼à¦¾à¦°à§à¦¡ à¦•à¦®à¦ªà¦•à§à¦·à§‡ à§¬ à¦…à¦•à§à¦·à¦°à§‡à¦° à¦¹à¦¤à§‡ à¦¹à¦¬à§‡"),
 });
 
 type LoginSchemaInput = z.infer<typeof loginSchema>;
@@ -115,7 +115,7 @@ function LoginForm() {
                         <input
                             type="password"
                             className="input text-left"
-                            placeholder="••••••••"
+                            placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                             {...register("password")}
                         />
                         {errors.password && (
@@ -151,7 +151,7 @@ function LoginForm() {
 
                 <div className="mt-6 text-center text-sm text-gray-500">
                     {t("auth.login.footer.noAccount")}{" "}
-                    <Link href="/register" className="font-semibold text-green-800 hover:underline">
+                    <Link href="/register" className="font-semibold text-red-800 hover:underline">
                         {t("auth.login.footer.registerLink")}
                     </Link>
                 </div>
@@ -166,7 +166,7 @@ export default function LoginPage() {
         <Suspense fallback={
             <div className="flex min-h-[calc(100vh-16rem)] items-center justify-center">
                 <div className="text-center space-y-2">
-                    <div className="h-8 w-8 animate-spin rounded-full border-4 border-green-700 border-t-transparent mx-auto"></div>
+                    <div className="h-8 w-8 animate-spin rounded-full border-4 border-red-700 border-t-transparent mx-auto"></div>
                     <p className="text-xs text-gray-500">{t("auth.login.suspense.loading")}</p>
                 </div>
             </div>

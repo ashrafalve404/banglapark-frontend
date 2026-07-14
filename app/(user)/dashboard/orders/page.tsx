@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
@@ -29,7 +29,7 @@ export default function UserOrdersPage() {
 
             {isLoading ? (
                 <div className="flex justify-center items-center py-20">
-                    <Loader2 className="animate-spin text-green-800" size={32} />
+                    <Loader2 className="animate-spin text-red-800" size={32} />
                 </div>
             ) : orders.length === 0 ? (
                 <div className="card py-20 text-center text-gray-400">
@@ -48,7 +48,7 @@ export default function UserOrdersPage() {
                                 <div className="flex flex-wrap items-center gap-3">
                                     <span className="text-xs text-gray-500">{formatDateTime(order.createdAt, locale)}</span>
                                     <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${order.status === "DELIVERED"
-                                            ? "bg-green-150 text-green-800"
+                                            ? "bg-red-150 text-red-800"
                                             : order.status === "CANCELLED"
                                                 ? "bg-red-100 text-red-700"
                                                 : "bg-amber-100 text-amber-800"
@@ -74,7 +74,7 @@ export default function UserOrdersPage() {
                                     <div key={item.id} className="flex justify-between items-center py-2">
                                         <div className="min-w-0">
                                             <p className="text-xs font-bold text-gray-800 truncate">{item.product?.name || t("orders.productFallback")}</p>
-                                            <p className="text-xs text-gray-400">৳{Number(item.price).toLocaleString()} x {item.quantity}</p>
+                                            <p className="text-xs text-gray-400">à§³{Number(item.price).toLocaleString()} x {item.quantity}</p>
                                         </div>
                                         <span className="text-xs font-semibold text-gray-700">{formatCurrency(Number(item.price) * item.quantity)}</span>
                                     </div>
@@ -86,13 +86,13 @@ export default function UserOrdersPage() {
                                     <span className="text-xs text-gray-500">{t("orders.deliveryAddress")} {order.shippingAddress?.address || t("orders.addressNotSelected")}</span>
                                     {order.deliveryArea && (
                                         <span className="text-xs text-gray-400">
-                                            {order.deliveryArea === "INSIDE_DHAKA" ? t("checkout.shipping.insideDhaka") : t("checkout.shipping.outsideDhaka")} • {t("checkout.review.delivery")}: {formatCurrency(order.deliveryCharge ?? 0, locale)}
+                                            {order.deliveryArea === "INSIDE_DHAKA" ? t("checkout.shipping.insideDhaka") : t("checkout.shipping.outsideDhaka")} â€¢ {t("checkout.review.delivery")}: {formatCurrency(order.deliveryCharge ?? 0, locale)}
                                         </span>
                                     )}
                                     {order.paymentMethod === "BKASH" && order.transactionId && (
                                         <span className="text-xs text-pink-600 font-medium">
-                                            {t("orders.paymentLabel")}: bKash • {t("orders.transactionId")}: {order.transactionId}
-                                            {order.userBkashNumber && <> • From: {order.userBkashNumber}</>}
+                                            {t("orders.paymentLabel")}: bKash â€¢ {t("orders.transactionId")}: {order.transactionId}
+                                            {order.userBkashNumber && <> â€¢ From: {order.userBkashNumber}</>}
                                         </span>
                                     )}
                                     {order.paymentMethod === "CASH_ON_DELIVERY" && (
@@ -101,7 +101,7 @@ export default function UserOrdersPage() {
                                 </div>
                                 <div className="text-right">
                                     <span className="text-xs text-gray-400 block">{t("orders.totalLabel")}</span>
-                                    <span className="text-sm font-bold text-green-800">{formatCurrency(order.total)}</span>
+                                    <span className="text-sm font-bold text-red-800">{formatCurrency(order.total)}</span>
                                 </div>
                             </div>
                         </div>

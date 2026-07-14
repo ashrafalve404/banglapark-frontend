@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
@@ -93,7 +93,7 @@ export default function AdminCategoriesPage() {
             </div>
 
             {msg && (
-                <div className={`rounded-lg p-4 text-xs font-semibold ${msg.type === "success" ? "bg-green-50 text-green-700 font-bold" : "bg-red-50 text-red-650"}`}>
+                <div className={`rounded-lg p-4 text-xs font-semibold ${msg.type === "success" ? "bg-red-50 text-red-700 font-bold" : "bg-red-50 text-red-650"}`}>
                     {msg.type === "success" ? <CheckCircle2 size={16} className="inline mr-2" /> : <AlertCircle size={16} className="inline mr-2" />}
                     {msg.text}
                 </div>

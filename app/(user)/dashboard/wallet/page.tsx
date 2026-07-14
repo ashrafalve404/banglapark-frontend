@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
@@ -62,10 +62,10 @@ export default function WalletPage() {
             )}
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                <div className="card p-5 bg-gradient-to-br from-green-900 to-green-800 text-white">
+                <div className="card p-5 bg-gradient-to-br from-red-900 to-red-800 text-white">
                     <div className="flex items-center justify-between mb-3">
-                        <span className="text-[10px] text-green-100 font-semibold uppercase tracking-wider">{t("wallet.balance.total")}</span>
-                        <Wallet size={18} className="text-green-300" />
+                        <span className="text-[10px] text-red-100 font-semibold uppercase tracking-wider">{t("wallet.balance.total")}</span>
+                        <Wallet size={18} className="text-red-300" />
                     </div>
                     <h2 className="text-2xl font-extrabold text-white">
                         {balLoading ? "..." : formatCurrency(balanceData?.balance ?? 0)}
@@ -112,12 +112,12 @@ export default function WalletPage() {
                     </h2>
                 </div>
 
-                <div className="card p-5 bg-green-50/50 border border-green-100">
+                <div className="card p-5 bg-red-50/50 border border-red-100">
                     <div className="flex items-center justify-between mb-3">
-                        <span className="text-[10px] text-green-700 font-semibold uppercase tracking-wider">{t("wallet.balance.available")}</span>
-                        <Wallet size={18} className="text-green-700" />
+                        <span className="text-[10px] text-red-700 font-semibold uppercase tracking-wider">{t("wallet.balance.available")}</span>
+                        <Wallet size={18} className="text-red-700" />
                     </div>
-                    <h2 className="text-2xl font-extrabold text-green-800">
+                    <h2 className="text-2xl font-extrabold text-red-800">
                         {balLoading ? "..." : formatCurrency(balanceData?.availableBalance ?? 0)}
                     </h2>
                 </div>
@@ -166,7 +166,7 @@ export default function WalletPage() {
                 <div className="p-5 border-b border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-3 bg-white">
                     <h3 className="text-base font-bold text-gray-800">{t("wallet.ledger.heading")}</h3>
 
-                    <select className="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-green-700 w-full sm:w-44" value={type} onChange={(e) => { setType(e.target.value); setPage(1); }}>
+                    <select className="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-red-700 w-full sm:w-44" value={type} onChange={(e) => { setType(e.target.value); setPage(1); }}>
                         <option value="">{t("wallet.ledger.filterAll")}</option>
                         <option value="GENERATION_COMMISSION">{t("wallet.ledger.filterGeneration")}</option>
                         <option value="DAILY_BENEFIT">{t("wallet.ledger.filterDailyBenefit")}</option>
@@ -199,12 +199,12 @@ export default function WalletPage() {
                                         <tr key={tx.id} className="hover:bg-gray-50/50">
                                             <td className="p-4 text-xs text-gray-600">{formatDateTime(tx.createdAt)}</td>
                                             <td className="p-4 text-xs">
-                                                <span className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${isDebit ? "bg-red-50 text-red-700" : "bg-green-50 text-green-700"}`}>
+                                                <span className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${isDebit ? "bg-red-50 text-red-700" : "bg-red-50 text-red-700"}`}>
                                                     {getTxTypeLabel(tx.type)}
                                                 </span>
                                             </td>
                                             <td className="p-4 text-xs text-gray-500">{tx.description}</td>
-                                            <td className={`p-4 text-xs font-bold text-right ${isDebit ? "text-red-650" : "text-green-700"}`}>
+                                            <td className={`p-4 text-xs font-bold text-right ${isDebit ? "text-red-650" : "text-red-700"}`}>
                                                 {isDebit ? "-" : "+"}{formatCurrency(Math.abs(tx.amount))}
                                             </td>
                                             <td className="p-4 text-xs font-semibold text-gray-700 text-right">{formatCurrency(tx.balanceAfter)}</td>

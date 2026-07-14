@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -46,14 +46,14 @@ export default function CartPage() {
                                 )}
                             </div>
                             <div className="flex-1 min-w-0">
-                                <Link href={`/product/${item.product.slug}`} className="text-sm font-semibold text-gray-900 hover:text-green-800 line-clamp-2">
+                                <Link href={`/product/${item.product.slug}`} className="text-sm font-semibold text-gray-900 hover:text-red-800 line-clamp-2">
                                     {item.product.name}
                                 </Link>
                                 {item.size && (
                                     <span className="text-xs text-gray-500 font-medium">{t("cart.product.sizeLabel", undefined, "Size")}: {item.size}</span>
                                 )}
                                 <div className="mt-1 flex items-center gap-4">
-                                    <span className="text-sm font-bold text-green-800">{formatCurrency(item.product.price, locale)}</span>
+                                    <span className="text-sm font-bold text-red-800">{formatCurrency(item.product.price, locale)}</span>
                                 </div>
                             </div>
 
@@ -75,7 +75,7 @@ export default function CartPage() {
                         <button onClick={clear} className="text-sm font-semibold text-gray-400 hover:text-red-500 transition-colors">
                             {t("cart.clearCart")}
                         </button>
-                        <Link href="/shop" className="text-sm font-semibold text-green-800 hover:underline">
+                        <Link href="/shop" className="text-sm font-semibold text-red-800 hover:underline">
                             {t("cart.continueShopping")}
                         </Link>
                     </div>
@@ -93,12 +93,12 @@ export default function CartPage() {
                             </div>
                             <div className="flex justify-between text-sm text-gray-500">
                                 <span>{t("cart.summary.delivery")}</span>
-                                <span className="text-green-700 font-semibold">{t("cart.summary.deliveryFree")}</span>
+                                <span className="text-red-700 font-semibold">{t("cart.summary.deliveryFree")}</span>
                             </div>
                             <hr className="border-gray-100" />
                             <div className="flex justify-between text-base font-bold text-gray-900">
                                 <span>{t("cart.summary.total")}</span>
-                                <span className="text-green-800">{formatCurrency(cartTotal, locale)}</span>
+                                <span className="text-red-800">{formatCurrency(cartTotal, locale)}</span>
                             </div>
                         </div>
 

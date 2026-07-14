@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
@@ -74,7 +74,7 @@ export function Header() {
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 placeholder={t("shop.search.placeholder")}
-                                className="w-full rounded-lg border border-gray-200 bg-gray-50 pl-10 pr-4 py-2 text-sm outline-none transition-colors focus:border-green-600 focus:bg-white focus:ring-2 focus:ring-green-600/20"
+                                className="w-full rounded-lg border border-gray-200 bg-gray-50 pl-10 pr-4 py-2 text-sm outline-none transition-colors focus:border-red-600 focus:bg-white focus:ring-2 focus:ring-red-600/20"
                             />
                             <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                         </div>
@@ -82,10 +82,10 @@ export function Header() {
 
                     {/* Desktop Nav */}
                     <nav className="header-desktop-nav hidden md:flex items-center gap-6">
-                        <Link href="/shop" className="text-sm font-medium text-gray-600 hover:text-green-800 transition-colors">{t("nav.shop")}</Link>
+                        <Link href="/shop" className="text-sm font-medium text-gray-600 hover:text-red-800 transition-colors">{t("nav.shop")}</Link>
                         {categories.length > 0 && (
                         <div className="relative group">
-                            <button className="text-sm font-medium text-gray-600 hover:text-green-800 transition-colors flex items-center gap-1">
+                            <button className="text-sm font-medium text-gray-600 hover:text-red-800 transition-colors flex items-center gap-1">
                                 {t("nav.category")}
                             </button>
                             <div className="absolute top-full left-0 mt-2 w-48 rounded-lg border border-gray-100 bg-white shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50">
@@ -103,14 +103,16 @@ export function Header() {
 
                     {/* Actions */}
                     <div className="flex items-center gap-3">
-                        {/* Locale Switcher */}
-                        <LocaleSwitcher />
+                        {/* Locale Switcher - Desktop only */}
+                        <div className="hidden md:block">
+                            <LocaleSwitcher />
+                        </div>
 
                         {/* Cart */}
-                        <Link href="/cart" className="relative p-2 text-gray-600 hover:text-green-800 transition-colors">
+                        <Link href="/cart" className="relative p-2 text-gray-600 hover:text-red-800 transition-colors">
                             <ShoppingCart size={20} />
                             {mounted && cartCount > 0 && (
-                                <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-green-800 text-[10px] font-bold text-white">
+                                <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-800 text-[10px] font-bold text-white">
                                     {cartCount > 9 ? "9+" : cartCount}
                                 </span>
                             )}
@@ -168,18 +170,21 @@ export function Header() {
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                     placeholder={t("shop.search.placeholder")}
-                                    className="w-full rounded-lg border border-gray-200 bg-gray-50 pl-10 pr-4 py-2.5 text-sm outline-none focus:border-green-600 focus:bg-white"
+                                    className="w-full rounded-lg border border-gray-200 bg-gray-50 pl-10 pr-4 py-2.5 text-sm outline-none focus:border-red-600 focus:bg-white"
                                 />
                                 <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                             </div>
                         </form>
+                        <div className="px-3 py-2">
+                            <LocaleSwitcher />
+                        </div>
                         <Link href="/shop" onClick={() => setMenuOpen(false)} className="block px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50">{t("nav.shop")}</Link>
                         {categories.length > 0 && (
                             <div className="px-3 py-2">
                                 <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">{t("nav.category")}</p>
                                 <div className="flex flex-wrap gap-2">
                                     {categories.map((cat) => (
-                                        <Link key={cat.id} href={`/shop?categoryId=${cat.id}`} onClick={() => setMenuOpen(false)} className="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-medium text-gray-700 hover:border-green-600 hover:text-green-800">
+                                        <Link key={cat.id} href={`/shop?categoryId=${cat.id}`} onClick={() => setMenuOpen(false)} className="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-medium text-gray-700 hover:border-red-600 hover:text-red-800">
                                             {cat.name}
                                         </Link>
                                     ))}
@@ -191,7 +196,7 @@ export function Header() {
                         ) : (
                             <>
                                 <Link href="/login" onClick={() => setMenuOpen(false)} className="block px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50">{t("nav.login")}</Link>
-                                <Link href="/register" onClick={() => setMenuOpen(false)} className="block px-3 py-2 rounded-lg text-sm font-medium text-green-800 hover:bg-green-50 font-semibold">{t("nav.register")}</Link>
+                                <Link href="/register" onClick={() => setMenuOpen(false)} className="block px-3 py-2 rounded-lg text-sm font-medium text-red-800 hover:bg-red-50 font-semibold">{t("nav.register")}</Link>
                             </>
                         )}
                     </div>

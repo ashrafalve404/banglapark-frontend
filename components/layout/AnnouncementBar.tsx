@@ -27,7 +27,7 @@ export function AnnouncementBar() {
 
     return (
         <div
-            className="w-full bg-neutral-900 text-white overflow-hidden h-8 sm:h-9 flex items-center select-none transition-all duration-300"
+            className="w-full bg-[#111c2a] text-white overflow-hidden h-8 sm:h-9 flex items-center select-none transition-all duration-300"
             style={{
                 opacity: closing ? 0 : 1,
             }}

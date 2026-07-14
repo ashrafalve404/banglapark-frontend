@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
@@ -115,14 +115,14 @@ export default function AdminWithdrawalsPage() {
                                             </div>
                                             {req.method === "BANK" && (
                                                 <div className="text-[9px] text-gray-400 mt-0.5">
-                                                    {t("admin.withdrawals.table.bankLabel")} {req.accountDetails?.bankName} ({req.accountDetails?.branchName}), নাম: {req.accountDetails?.holderName}
+                                                    {t("admin.withdrawals.table.bankLabel")} {req.accountDetails?.bankName} ({req.accountDetails?.branchName}), à¦¨à¦¾à¦®: {req.accountDetails?.holderName}
                                                 </div>
                                             )}
                                             {req.reason && <div className="text-[10px] text-red-500 font-bold mt-1">{t("admin.withdrawals.table.reasonLabel")} {req.reason}</div>}
                                         </td>
                                         <td className="p-4 text-center">
                                             <span className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${req.status === "APPROVED"
-                                                ? "bg-green-150 text-green-800"
+                                                ? "bg-red-150 text-red-800"
                                                 : req.status === "REJECTED"
                                                     ? "bg-red-155 bg-red-50 text-red-700"
                                                     : "bg-amber-100 text-amber-800"
@@ -135,7 +135,7 @@ export default function AdminWithdrawalsPage() {
                                                 <div className="flex gap-2 justify-center">
                                                     <button
                                                         onClick={() => { if (confirm(t("admin.withdrawals.confirm.approve"))) approveMutation.mutate(req.id); }}
-                                                        className="bg-green-50 text-green-700 border border-green-200 hover:bg-green-100 font-bold text-[10px] py-1.5 px-3 rounded"
+                                                        className="bg-red-50 text-red-700 border border-red-200 hover:bg-red-100 font-bold text-[10px] py-1.5 px-3 rounded"
                                                     >
                                                         {t("admin.withdrawals.table.btnApprove")}
                                                     </button>

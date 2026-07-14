@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,10 +14,10 @@ import { CheckCircle2, ArrowRight, X, Smartphone, MapPin } from "lucide-react";
 import type { Order, PaymentMethod, DeliveryArea } from "@/types";
 
 const checkoutSchema = z.object({
-    name: z.string().min(2, "নাম অবশ্যই প্রদান করতে হবে"),
-    phone: z.string().min(10, "সঠিক মোবাইল নাম্বার প্রদান করুন"),
-    city: z.string().min(2, "জেলা/শহর লিখুন"),
-    address: z.string().min(5, "সম্পূর্ণ ঠিকানা লিখুন"),
+    name: z.string().min(2, "à¦¨à¦¾à¦® à¦…à¦¬à¦¶à§à¦¯à¦‡ à¦ªà§à¦°à¦¦à¦¾à¦¨ à¦•à¦°à¦¤à§‡ à¦¹à¦¬à§‡"),
+    phone: z.string().min(10, "à¦¸à¦ à¦¿à¦• à¦®à§‹à¦¬à¦¾à¦‡à¦² à¦¨à¦¾à¦®à§à¦¬à¦¾à¦° à¦ªà§à¦°à¦¦à¦¾à¦¨ à¦•à¦°à§à¦¨"),
+    city: z.string().min(2, "à¦œà§‡à¦²à¦¾/à¦¶à¦¹à¦° à¦²à¦¿à¦–à§à¦¨"),
+    address: z.string().min(5, "à¦¸à¦®à§à¦ªà§‚à¦°à§à¦£ à¦ à¦¿à¦•à¦¾à¦¨à¦¾ à¦²à¦¿à¦–à§à¦¨"),
     notes: z.string().optional(),
 });
 
@@ -111,15 +111,15 @@ export default function CheckoutPage() {
         }
     };
 
-    // ── Order Confirmation Modal ───────────────────────────────────────────────
+    // â”€â”€ Order Confirmation Modal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     if (confirmedOrder) {
         return (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
                 <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 text-center animate-[fadeInUp_0.4s_ease]">
                     {/* Icon */}
-                    <div className="relative mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-green-50">
-                        <div className="absolute inset-0 rounded-full bg-green-100 animate-ping opacity-40" />
-                        <CheckCircle2 className="text-green-600 relative z-10" size={44} strokeWidth={1.5} />
+                    <div className="relative mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-red-50">
+                        <div className="absolute inset-0 rounded-full bg-red-100 animate-ping opacity-40" />
+                        <CheckCircle2 className="text-red-600 relative z-10" size={44} strokeWidth={1.5} />
                     </div>
 
                     {/* Heading */}
@@ -138,7 +138,7 @@ export default function CheckoutPage() {
                         </div>
                         <div className="flex justify-between text-xs text-gray-500">
                             <span className="font-semibold uppercase tracking-wide">Total</span>
-                            <span className="font-bold text-green-800 text-sm">{formatCurrency(Number(confirmedOrder.total), locale)}</span>
+                            <span className="font-bold text-red-800 text-sm">{formatCurrency(Number(confirmedOrder.total), locale)}</span>
                         </div>
                         <div className="flex justify-between text-xs text-gray-500">
                             <span className="font-semibold uppercase tracking-wide">Status</span>
@@ -214,28 +214,28 @@ export default function CheckoutPage() {
                     <div>
                         <label className="label mb-1.5 block">{t("checkout.shipping.deliveryAreaLabel")}</label>
                         <div className="grid grid-cols-2 gap-3">
-                            <label className={`flex items-center gap-3 rounded-lg border p-3 cursor-pointer transition-colors ${deliveryArea === "INSIDE_DHAKA" ? "border-green-400 bg-green-50" : "border-gray-200 bg-white"}`}>
+                            <label className={`flex items-center gap-3 rounded-lg border p-3 cursor-pointer transition-colors ${deliveryArea === "INSIDE_DHAKA" ? "border-red-400 bg-red-50" : "border-gray-200 bg-white"}`}>
                                 <input
                                     type="radio"
                                     name="deliveryArea"
                                     value="INSIDE_DHAKA"
                                     checked={deliveryArea === "INSIDE_DHAKA"}
                                     onChange={() => setDeliveryArea("INSIDE_DHAKA")}
-                                    className="accent-green-800"
+                                    className="accent-red-800"
                                 />
                                 <div>
                                     <span className="text-xs font-semibold text-gray-800">{t("checkout.shipping.insideDhaka")}</span>
                                     <p className="text-[10px] text-gray-400">{t("checkout.shipping.deliveryChargeInside")}</p>
                                 </div>
                             </label>
-                            <label className={`flex items-center gap-3 rounded-lg border p-3 cursor-pointer transition-colors ${deliveryArea === "OUTSIDE_DHAKA" ? "border-green-400 bg-green-50" : "border-gray-200 bg-white"}`}>
+                            <label className={`flex items-center gap-3 rounded-lg border p-3 cursor-pointer transition-colors ${deliveryArea === "OUTSIDE_DHAKA" ? "border-red-400 bg-red-50" : "border-gray-200 bg-white"}`}>
                                 <input
                                     type="radio"
                                     name="deliveryArea"
                                     value="OUTSIDE_DHAKA"
                                     checked={deliveryArea === "OUTSIDE_DHAKA"}
                                     onChange={() => setDeliveryArea("OUTSIDE_DHAKA")}
-                                    className="accent-green-800"
+                                    className="accent-red-800"
                                 />
                                 <div>
                                     <span className="text-xs font-semibold text-gray-800">{t("checkout.shipping.outsideDhaka")}</span>
@@ -260,7 +260,7 @@ export default function CheckoutPage() {
                                 <div key={item.product.id} className="flex justify-between items-center gap-4 py-1">
                                     <div className="min-w-0 flex-1">
                                         <p className="text-xs font-semibold text-gray-800 truncate">{item.product.name}</p>
-                                        <p className="text-xs text-gray-400">৳{Number(item.product.price).toLocaleString()} x {item.quantity}</p>
+                                        <p className="text-xs text-gray-400">à§³{Number(item.product.price).toLocaleString()} x {item.quantity}</p>
                                     </div>
                                     <span className="text-sm font-bold text-gray-700">{formatCurrency(Number(item.product.price) * item.quantity, locale)}</span>
                                 </div>
@@ -274,39 +274,39 @@ export default function CheckoutPage() {
                             </div>
                             <div className="flex justify-between text-sm text-gray-500">
                                 <span>{t("checkout.review.delivery")}</span>
-                                <span className="text-green-700 font-semibold">{formatCurrency(deliveryCharge, locale)}</span>
+                                <span className="text-red-700 font-semibold">{formatCurrency(deliveryCharge, locale)}</span>
                             </div>
                             <hr className="border-gray-100" />
                             <div className="flex justify-between text-base font-bold text-gray-900">
                                 <span>{t("checkout.review.total")}</span>
-                                <span className="text-green-800">{formatCurrency(finalTotal, locale)}</span>
+                                <span className="text-red-800">{formatCurrency(finalTotal, locale)}</span>
                             </div>
                         </div>
 
-                        <div className="rounded-md border border-green-150 bg-green-50 p-4 mb-6">
-                            <p className="text-xs font-bold text-green-800 uppercase tracking-wide mb-3">{t("checkout.payment.heading")}</p>
+                        <div className="rounded-md border border-red-150 bg-red-50 p-4 mb-6">
+                            <p className="text-xs font-bold text-red-800 uppercase tracking-wide mb-3">{t("checkout.payment.heading")}</p>
                             <div className="space-y-3">
-                                <label className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-3 cursor-pointer hover:border-green-400 transition-colors">
+                                <label className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-3 cursor-pointer hover:border-red-400 transition-colors">
                                     <input
                                         type="radio"
                                         name="paymentMethod"
                                         value="CASH_ON_DELIVERY"
                                         checked={paymentMethod === "CASH_ON_DELIVERY"}
                                         onChange={() => setPaymentMethod("CASH_ON_DELIVERY")}
-                                        className="accent-green-800"
+                                        className="accent-red-800"
                                     />
                                     <div>
                                         <span className="text-xs font-semibold text-gray-800">{t("checkout.payment.method")}</span>
                                     </div>
                                 </label>
-                                <label className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-3 cursor-pointer hover:border-green-400 transition-colors">
+                                <label className="flex items-center gap-3 rounded-lg border border-gray-200 bg-white p-3 cursor-pointer hover:border-red-400 transition-colors">
                                     <input
                                         type="radio"
                                         name="paymentMethod"
                                         value="BKASH"
                                         checked={paymentMethod === "BKASH"}
                                         onChange={() => setPaymentMethod("BKASH")}
-                                        className="accent-green-800"
+                                        className="accent-red-800"
                                     />
                                     <div className="flex items-center gap-2">
                                         <Smartphone size={16} className="text-pink-600" />

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -44,13 +44,13 @@ export function MobileBottomNav() {
                             key={item.href}
                             href={item.href}
                             className={`flex flex-col items-center justify-center py-2 px-3 min-w-[56px] relative ${
-                                isActive ? "text-green-800" : "text-gray-400"
+                                isActive ? "text-red-800" : "text-gray-400"
                             }`}
                         >
                             <div className="relative">
                                 <Icon size={22} strokeWidth={isActive ? 2.5 : 1.8} />
                                 {item.showBadge && mounted && cartCount > 0 && (
-                                    <span className="absolute -top-1.5 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-green-800 text-[10px] font-bold text-white">
+                                    <span className="absolute -top-1.5 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-red-800 text-[10px] font-bold text-white">
                                         {cartCount > 9 ? "9+" : cartCount}
                                     </span>
                                 )}

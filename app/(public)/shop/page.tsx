@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect, Suspense } from "react";
@@ -99,7 +99,7 @@ function ShopPageContent() {
                             <button
                                 onClick={() => setSelectedCategory("all")}
                                 className={`text-left rounded-lg px-3 py-2 text-sm font-medium transition-colors ${selectedCategory === "all"
-                                        ? "bg-green-800 text-white"
+                                        ? "bg-red-800 text-white"
                                         : "text-gray-600 hover:bg-gray-50"
                                     }`}
                             >
@@ -110,7 +110,7 @@ function ShopPageContent() {
                                     key={cat.id}
                                     onClick={() => setSelectedCategory(cat.id)}
                                     className={`text-left rounded-lg px-3 py-2 text-sm font-medium transition-colors ${selectedCategory === cat.id
-                                            ? "bg-green-800 text-white"
+                                            ? "bg-red-800 text-white"
                                             : "text-gray-600 hover:bg-gray-50"
                                         }`}
                                 >
@@ -152,15 +152,15 @@ function ShopPageContent() {
                                             {product.name}
                                         </h3>
                                         <div className="mt-auto">
-                                            <p className="text-base font-bold text-green-800">
-                                                ৳{formatCurrency(product.price, locale).replace("৳", "")}
+                                            <p className="text-base font-bold text-red-800">
+                                                à§³{formatCurrency(product.price, locale).replace("à§³", "")}
                                             </p>
                                             <div className="flex items-center gap-2 mt-0.5">
                                                 <p className={`text-xs ${product.stock > 0 ? "text-gray-400" : "text-red-500 font-semibold"}`}>
                                                     {product.stock > 0 ? `${t("shop.product.stockLabel")} ${product.stock}` : t("shop.product.stockOut")}
                                                 </p>
                                                 {product.clicks > 0 && (
-                                                    <span className="text-[10px] text-gray-400">• {product.clicks} views</span>
+                                                    <span className="text-[10px] text-gray-400">â€¢ {product.clicks} views</span>
                                                 )}
                                             </div>
                                             {product.stock > 0 && (
@@ -180,7 +180,7 @@ function ShopPageContent() {
                                                     )}
                                                     <button
                                                         onClick={(e) => handleAddToCart(product, e, sizePopups[product.id] || undefined)}
-                                                        className="w-full rounded-lg bg-green-800 py-2 text-sm font-bold text-white hover:bg-green-700 transition-colors flex items-center justify-center gap-1"
+                                                        className="w-full rounded-lg bg-red-800 py-2 text-sm font-bold text-white hover:bg-red-700 transition-colors flex items-center justify-center gap-1"
                                                     >
                                                         {addedId === product.id ? (
                                                             <span>{t("shop.product.added", undefined, "Added!")}</span>
@@ -206,7 +206,7 @@ export default function ShopPage() {
     return (
         <Suspense fallback={
             <div className="flex items-center justify-center py-20">
-                <Loader2 className="animate-spin text-green-800" size={32} />
+                <Loader2 className="animate-spin text-red-800" size={32} />
             </div>
         }>
             <ShopPageContent />
