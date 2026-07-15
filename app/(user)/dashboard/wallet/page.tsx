@@ -53,10 +53,10 @@ export default function WalletPage() {
             </div>
 
             {isInactive && (
-                <div className="rounded-xl border border-green-200 bg-green-50 p-5 flex items-center gap-3.5">
-                    <AlertCircle size={24} className="text-green-600 flex-shrink-0" />
+                <div className="rounded-xl border border-red-200 bg-red-50 p-5 flex items-center gap-3.5">
+                    <AlertCircle size={24} className="text-red-600 flex-shrink-0" />
                     <div>
-                        <h3 className="font-bold text-green-800 text-sm">{t("wallet.inactiveAlert.title")}</h3>
+                        <h3 className="font-bold text-red-800 text-sm">{t("wallet.inactiveAlert.title")}</h3>
                     </div>
                 </div>
             )}

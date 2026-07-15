@@ -67,16 +67,16 @@ export default function DashboardOverview() {
             </div>
 
             {isInactive ? (
-                <div className="rounded-xl border border-green-200 bg-green-50 p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="rounded-xl border border-red-200 bg-red-50 p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div className="flex items-center gap-3">
-                        <div className="rounded-full bg-green-100 p-2 text-green-600">
+                        <div className="rounded-full bg-red-100 p-2 text-red-600">
                             <AlertCircle size={20} />
                         </div>
                         <div>
-                            <h3 className="font-bold text-green-800 text-sm sm:text-base">{t("dashboard.alert.inactive.title")}</h3>
+                            <h3 className="font-bold text-red-800 text-sm sm:text-base">{t("dashboard.alert.inactive.title")}</h3>
                         </div>
                     </div>
-                    <Link href="/shop" className="btn-primary bg-green-600 hover:bg-green-700 whitespace-nowrap text-xs py-2 px-4">
+                    <Link href="/shop" className="btn-primary bg-red-600 hover:bg-red-700 whitespace-nowrap text-xs py-2 px-4">
                         {t("dashboard.alert.inactive.cta")}
                     </Link>
                 </div>

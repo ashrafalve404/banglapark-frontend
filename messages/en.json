@@ -877,25 +877,64 @@
       "page": "Page"
     },
     "commissionRules": {
-      "heading": "System Configuration",
-      "subheading": "Modify business logic, activation limits, and generation slab values for Bangla Park Limited",
+      "heading": "Commission Rules & System Config",
+      "subheading": "View commission structure, daily benefit tiers, and update business rules for Bangla Park Limited",
       "updateSuccess": "System rules configuration updated successfully.",
       "updateError": "Could not update configuration.",
+      "summary": {
+        "heading": "Platform Summary",
+        "activeUsers": "Active Members",
+        "commissionPaid": "Commission Distributed"
+      },
+      "genCommission": {
+        "heading": "Generation Commission Structure",
+        "subheading": "When a new member activates (first qualifying order ≥ 2,000 BDT delivered), all eligible sponsors up to 10 levels above receive a flat commission.",
+        "colLevel": "Level",
+        "colType": "Type",
+        "colAmount": "Amount",
+        "colTotal": "Cumulative",
+        "direct": "Direct Referral",
+        "indirect": "Indirect (Downline)",
+        "totalLabel": "Max per activation:",
+        "note": "All levels pay the same flat amount. Inactive sponsors are skipped but the chain continues upward."
+      },
+      "dailyBenefit": {
+        "heading": "Daily Benefit Tiers",
+        "subheading": "Every active member gets 100 BDT base reward daily. Additional tier bonus based on active team size.",
+        "baseLabel": "Base Daily Reward",
+        "baseDesc": "All active users",
+        "colTeam": "Active Team",
+        "colBonus": "Tier Bonus",
+        "colTotal": "Total Daily",
+        "maxLabel": "Maximum daily benefit:"
+      },
+      "withdrawal": {
+        "heading": "Withdrawal Rules",
+        "minLabel": "Minimum Withdrawal",
+        "minValue": "2,000 BDT",
+        "dayLabel": "Allowed Day",
+        "dayValue": "Friday Only"
+      },
+      "example": {
+        "heading": "Commission Flow Example",
+        "desc": "When a new user's first qualifying order (≥ 2,000 BDT) is delivered:",
+        "step1": "The user account is activated for 30 days.",
+        "step2": "Level 1 (direct referrer) gets 200 BDT credited instantly.",
+        "step3": "Levels 2 to 10 each get 200 BDT credited instantly.",
+        "step4": "Total 2,000 BDT distributed across the upline.",
+        "total": "Total Commission Distributed: 2,000 BDT"
+      },
       "form": {
         "heading": "Business Rules Settings",
-        "activationLimit": "Account Activation Limit (৳ BDT)",
-        "activationLimitHint": "Customer becomes eligible for account activation upon purchasing products worth the specified limit.",
-        "validityDays": "Activation Validity (Days)",
-        "validityDaysHint": "How many days the account will remain active after an order.",
-        "level1Commission": "Level 1 Direct Referral Commission (৳ BDT)",
-        "level1CommissionHint": "Bonus for activating a directly referred member.",
-        "level2to15Commission": "Level 2 to 15 Commission (৳ BDT)",
-        "level2to15CommissionHint": "Bonus commission generator for subsequent downline levels.",
-        "deliveryChargeInside": "Inside Dhaka Charge (৳ BDT)",
-        "deliveryChargeInsideHint": "Delivery fee for customers inside Dhaka city.",
-        "deliveryChargeOutside": "Outside Dhaka Charge (৳ BDT)",
-        "deliveryChargeOutsideHint": "Delivery fee for customers outside Dhaka.",
-        "submit": "Confirm Settings Update"
+        "activationLimit": "Activation Order Minimum (৳ BDT)",
+        "activationLimitHint": "Minimum order total required for a new user to qualify for activation.",
+        "validityDays": "Activation Duration (Days)",
+        "validityDaysHint": "How many days the account remains active after activation.",
+        "deliveryChargeInside": "Inside Dhaka Delivery (৳ BDT)",
+        "deliveryChargeInsideHint": "Delivery fee for orders inside Dhaka city.",
+        "deliveryChargeOutside": "Outside Dhaka Delivery (৳ BDT)",
+        "deliveryChargeOutsideHint": "Delivery fee for orders outside Dhaka.",
+        "submit": "Save Settings"
       }
     },
     "reports": {
