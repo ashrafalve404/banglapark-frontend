@@ -126,24 +126,6 @@ export default function AdminCommissionRulesPage() {
                 </div>
             ) : (
                 <>
-                    {/* ── Commission Rules Images ── */}
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <div className="card overflow-hidden bg-white">
-                            <img
-                                src="/images/comissionrulesimage1.jpeg"
-                                alt="Commission rules overview"
-                                className="w-full h-auto object-contain"
-                            />
-                        </div>
-                        <div className="card overflow-hidden bg-white">
-                            <img
-                                src="/images/comissionrulesimage2.jpeg"
-                                alt="Commission rules details"
-                                className="w-full h-auto object-contain"
-                            />
-                        </div>
-                    </div>
-
                     {/* ── Withdrawal Rules ── */}
                     <div className="card p-6 bg-white">
                         <div className="flex items-center gap-2.5 mb-3">
@@ -197,6 +179,24 @@ export default function AdminCommissionRulesPage() {
                             <Check size={18} /> {t("admin.commissionRules.form.submit")}
                         </button>
                     </form>
+
+                    {/* ── Commission Rules Images ── */}
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div className="card overflow-hidden bg-white">
+                            <img
+                                src="/images/comissionrulesimage1.jpeg"
+                                alt="Commission rules overview"
+                                className="w-full h-auto object-contain"
+                            />
+                        </div>
+                        <div className="card overflow-hidden bg-white">
+                            <img
+                                src="/images/comissionrulesimage2.jpeg"
+                                alt="Commission rules details"
+                                className="w-full h-auto object-contain"
+                            />
+                        </div>
+                    </div>
                 </>
             )}
         </div>
