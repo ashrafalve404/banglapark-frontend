@@ -1,15 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
     LayoutDashboard, User, Wallet, ShoppingBag, Users,
     TrendingUp, ArrowDownToLine, Bell, ChevronRight, X, Home,
-    FileText
+    FileText, LogOut
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
 import { LocaleSwitcher } from "@/components/shared/LocaleSwitcher";
+import { authApi } from "@/lib/api/auth";
 
 interface DashboardSidebarProps {
     onClose?: () => void;
@@ -18,7 +19,13 @@ interface DashboardSidebarProps {
 
 export function DashboardSidebar({ onClose, mobile }: DashboardSidebarProps) {
     const pathname = usePathname();
+    const router = useRouter();
     const { t } = useLocale();
+
+    const handleLogout = async () => {
+        await authApi.logout();
+        router.push("/login");
+    };
 
     const navItems = [
         { href: "/dashboard", label: t("nav.overview"), icon: LayoutDashboard, exact: true },
@@ -73,7 +80,14 @@ export function DashboardSidebar({ onClose, mobile }: DashboardSidebarProps) {
                     );
                 })}
             </nav>
-            <div className="border-t border-gray-100 p-3">
+            <div className="border-t border-gray-100 p-3 space-y-3">
+                <button
+                    onClick={() => { handleLogout(); onClose?.(); }}
+                    className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 transition-all"
+                >
+                    <LogOut size={17} />
+                    {t("nav.logout")}
+                </button>
                 <div className="flex items-center justify-between">
                     <span className="text-xs text-gray-400">{t("nav.language")}</span>
                     <LocaleSwitcher />
