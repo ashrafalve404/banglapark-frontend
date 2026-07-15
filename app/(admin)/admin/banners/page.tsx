@@ -13,7 +13,7 @@ interface Banner {
     linkUrl?: string;
     isActive: boolean;
     sortOrder: number;
-    section: "SLIDER" | "OFFER";
+    section: "SLIDER" | "OFFER" | "DAILY_WORK";
     title?: string;
     badge?: string;
 }
@@ -23,7 +23,7 @@ export default function AdminBannersPage() {
     const queryClient = useQueryClient();
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [editing, setEditing] = useState<Banner | null>(null);
-    const [section, setSection] = useState<"SLIDER" | "OFFER">("SLIDER");
+    const [section, setSection] = useState<Banner["section"]>("SLIDER");
     const [imageUrl, setImageUrl] = useState("");
     const [linkUrl, setLinkUrl] = useState("");
     const [title, setTitle] = useState("");
