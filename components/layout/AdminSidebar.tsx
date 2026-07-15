@@ -4,7 +4,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
     LayoutDashboard, Users, Package, Tag, ShoppingBag,
-    Wallet, ArrowDownToLine, Settings, BarChart2, X, ChevronRight, Home, Image, TrendingDown
+    Wallet, ArrowDownToLine, Settings, BarChart2, X, ChevronRight, Home, Image, TrendingDown,
+    ClipboardList
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
@@ -22,6 +23,7 @@ export function AdminSidebar({ onClose, mobile }: AdminSidebarProps) {
     const navItems = [
         { href: "/admin", label: t("nav.overview"), icon: LayoutDashboard, exact: true },
         { href: "/admin/banners", label: t("nav.banners"), icon: Image },
+        { href: "/admin/daily-work", label: t("nav.dailyWork"), icon: ClipboardList },
         { href: "/admin/users", label: t("nav.users"), icon: Users },
         { href: "/admin/products", label: t("nav.products"), icon: Package },
         { href: "/admin/categories", label: t("nav.categories"), icon: Tag },

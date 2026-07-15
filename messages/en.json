@@ -33,6 +33,7 @@
     "paymentMethods": "Pay with",
     "mlmTagline": "E-commerce Platform",
     "overview": "Overview",
+    "dailyWork": "Daily Work",
     "profile": "Profile",
     "wallet": "Wallet",
     "orders": "Orders",
@@ -403,6 +404,15 @@
       "active": "Active",
       "inactive": "Inactive",
       "none": "None"
+    },
+    "dailyWork": {
+      "description": "Download today's daily work image and share it with your referral link.",
+      "noImage": "No daily work image available today.",
+      "yourLink": "Your Referral Link",
+      "download": "Download Image",
+      "copyLink": "Copy Link",
+      "copied": "Copied!",
+      "shareHint": "Download the image and share it on any platform with your copied referral link."
     }
   },
   "profile": {

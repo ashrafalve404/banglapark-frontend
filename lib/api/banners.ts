@@ -2,7 +2,7 @@ import { api } from "./client";
 
 export interface Banner {
     id: string;
-    section: "SLIDER" | "OFFER";
+    section: "SLIDER" | "OFFER" | "DAILY_WORK";
     imageUrl: string;
     linkUrl?: string;
     title?: string;
@@ -24,6 +24,11 @@ export const bannersApi = {
 
     findOffers: async (): Promise<Banner[]> => {
         const res = await api.get("/banners/offers");
+        return res.data;
+    },
+
+    findDailyWork: async (): Promise<Banner | null> => {
+        const res = await api.get("/banners/daily-work");
         return res.data;
     },
 };
