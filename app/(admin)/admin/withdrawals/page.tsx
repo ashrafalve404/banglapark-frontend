@@ -9,7 +9,7 @@ import type { WithdrawalRequest, WithdrawStatus } from "@/types";
 import { useLocale } from "@/lib/i18n";
 
 export default function AdminWithdrawalsPage() {
-    const { t } = useLocale();
+    const { t, locale } = useLocale();
     const queryClient = useQueryClient();
     const [page, setPage] = useState(1);
     const [status, setStatus] = useState("PENDING");
@@ -102,12 +102,12 @@ export default function AdminWithdrawalsPage() {
                             <tbody className="divide-y divide-slate-100">
                                 {requests.map((req) => (
                                     <tr key={req.id} className="hover:bg-slate-50/50">
-                                        <td className="p-4 text-xs text-gray-500 font-medium">{formatDateTime(req.createdAt)}</td>
+                                        <td className="p-4 text-xs text-gray-500 font-medium">{formatDateTime(req.createdAt, locale)}</td>
                                         <td className="p-4">
                                             <div className="text-xs font-semibold text-slate-800">{req.user?.name}</div>
                                             <div className="text-[10px] text-gray-500">{req.user?.phone}</div>
                                         </td>
-                                        <td className="p-4 text-xs font-bold text-slate-800 text-right">{formatCurrency(req.amount)}</td>
+                                        <td className="p-4 text-xs font-bold text-slate-800 text-right">{formatCurrency(req.amount, locale)}</td>
                                         <td className="p-4 text-xs text-slate-650 min-w-[200px]">
                                             <div className="font-bold">{getWithdrawMethodLabel(req.method)}</div>
                                             <div className="text-[10px] text-gray-500 mt-0.5">

@@ -7,7 +7,7 @@ import { formatCurrency } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
 
 export default function AdminProfitLossPage() {
-    const { t } = useLocale();
+    const { t, locale } = useLocale();
     const { data: stats, isLoading } = useQuery({
         queryKey: ["admin-stats"],
         queryFn: () => adminApi.stats(),
@@ -37,35 +37,35 @@ export default function AdminProfitLossPage() {
                                 <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">{t("admin.overview.profitLoss.salesRevenue")}</span>
                                 <TrendingUp size={18} className="text-emerald-600" />
                             </div>
-                            <span className="text-2xl font-bold text-emerald-700">{formatCurrency(stats.totalSales)}</span>
+                            <span className="text-2xl font-bold text-emerald-700">{formatCurrency(stats.totalSales, locale)}</span>
                         </div>
                         <div className="card p-5 bg-white">
                             <div className="flex items-center justify-between mb-2">
                                 <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">{t("admin.overview.profitLoss.minusCostOfSold")}</span>
                                 <DollarSign size={18} className="text-orange-600" />
                             </div>
-                            <span className="text-2xl font-bold text-orange-700">- {formatCurrency(stats.totalSoldCost)}</span>
+                            <span className="text-2xl font-bold text-orange-700">- {formatCurrency(stats.totalSoldCost, locale)}</span>
                         </div>
                         <div className="card p-5 bg-white">
                             <div className="flex items-center justify-between mb-2">
                                 <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">{t("admin.overview.profitLoss.minusDelivery")}</span>
                                 <Truck size={18} className="text-yellow-600" />
                             </div>
-                            <span className="text-2xl font-bold text-yellow-700">- {formatCurrency(stats.totalDeliveryCharges)}</span>
+                            <span className="text-2xl font-bold text-yellow-700">- {formatCurrency(stats.totalDeliveryCharges, locale)}</span>
                         </div>
                         <div className="card p-5 bg-white">
                             <div className="flex items-center justify-between mb-2">
                                 <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">{t("admin.overview.profitLoss.minusCommission")}</span>
                                 <ArrowUpRight size={18} className="text-indigo-600" />
                             </div>
-                            <span className="text-2xl font-bold text-indigo-700">- {formatCurrency(stats.totalCommissionsPaid)}</span>
+                            <span className="text-2xl font-bold text-indigo-700">- {formatCurrency(stats.totalCommissionsPaid, locale)}</span>
                         </div>
                         <div className="card p-5 bg-white">
                             <div className="flex items-center justify-between mb-2">
                                 <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">{t("admin.overview.profitLoss.minusWithdrawals")}</span>
                                 <Wallet size={18} className="text-rose-600" />
                             </div>
-                            <span className="text-2xl font-bold text-rose-700">- {formatCurrency(stats.totalWithdrawalsApproved)}</span>
+                            <span className="text-2xl font-bold text-rose-700">- {formatCurrency(stats.totalWithdrawalsApproved, locale)}</span>
                         </div>
                     </div>
 
@@ -77,7 +77,7 @@ export default function AdminProfitLossPage() {
                                 <BarChart3 size={20} className="text-slate-400" />
                             </div>
                             <span className={`text-3xl font-bold block ${stats.grossProfit >= 0 ? "text-green-700" : "text-red-700"}`}>
-                                {stats.grossProfit >= 0 ? "" : "- "}{formatCurrency(Math.abs(stats.grossProfit))}
+                                {stats.grossProfit >= 0 ? "" : "- "}{formatCurrency(Math.abs(stats.grossProfit), locale)}
                             </span>
                             <p className="text-[10px] text-slate-400 mt-1">
                                 {t("admin.overview.profitLoss.grossProfit")}: {t("admin.overview.profitLoss.salesRevenue")} - {t("admin.overview.profitLoss.minusCostOfSold")} - {t("admin.overview.profitLoss.minusDelivery")}
@@ -89,7 +89,7 @@ export default function AdminProfitLossPage() {
                                 <BarChart3 size={20} className="text-slate-500" />
                             </div>
                             <span className={`text-4xl font-bold block ${profitColor}`}>
-                                {stats.netProfit >= 0 ? "+ " : "- "}{formatCurrency(Math.abs(stats.netProfit))}
+                                {stats.netProfit >= 0 ? "+ " : "- "}{formatCurrency(Math.abs(stats.netProfit), locale)}
                             </span>
                             <p className="text-[10px] text-slate-500 mt-1">
                                 {t("admin.overview.profitLoss.netProfit")}: {t("admin.overview.profitLoss.salesRevenue")} - {t("admin.overview.profitLoss.minusCostOfSold")} - {t("admin.overview.profitLoss.minusDelivery")} - {t("admin.overview.profitLoss.minusCommission")} - {t("admin.overview.profitLoss.minusWithdrawals")}
@@ -111,7 +111,7 @@ export default function AdminProfitLossPage() {
                         <div className="card p-4 bg-white flex items-center justify-between">
                             <div>
                                 <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider block">{t("admin.overview.productValue")}</span>
-                                <span className="text-lg font-bold text-amber-700">{formatCurrency(stats.totalProductValue)}</span>
+                                <span className="text-lg font-bold text-amber-700">{formatCurrency(stats.totalProductValue, locale)}</span>
                             </div>
                             <div className="rounded-lg bg-amber-50 p-2 text-amber-700">
                                 <DollarSign size={16} />
@@ -120,7 +120,7 @@ export default function AdminProfitLossPage() {
                         <div className="card p-4 bg-white flex items-center justify-between">
                             <div>
                                 <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider block">{t("admin.overview.totalCostPrice")}</span>
-                                <span className="text-lg font-bold text-orange-700">{formatCurrency(stats.totalCostValue)}</span>
+                                <span className="text-lg font-bold text-orange-700">{formatCurrency(stats.totalCostValue, locale)}</span>
                             </div>
                             <div className="rounded-lg bg-orange-50 p-2 text-orange-700">
                                 <DollarSign size={16} />
@@ -129,7 +129,7 @@ export default function AdminProfitLossPage() {
                         <div className="card p-4 bg-white flex items-center justify-between">
                             <div>
                                 <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider block">{t("admin.overview.benefitsWithdrawals")}</span>
-                                <span className="text-lg font-bold text-rose-700">{formatCurrency(stats.totalWithdrawalsApproved)}</span>
+                                <span className="text-lg font-bold text-rose-700">{formatCurrency(stats.totalWithdrawalsApproved, locale)}</span>
                             </div>
                             <div className="rounded-lg bg-rose-50 p-2 text-rose-700">
                                 <Wallet size={16} />

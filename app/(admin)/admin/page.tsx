@@ -12,7 +12,7 @@ import { formatCurrency } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
 
 export default function AdminOverview() {
-    const { t } = useLocale();
+    const { t, locale } = useLocale();
     const { data: stats, isLoading } = useQuery({
         queryKey: ["admin-stats"],
         queryFn: () => adminApi.stats(),
@@ -71,7 +71,7 @@ export default function AdminOverview() {
                     <div className="space-y-1">
                         <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block">{t("admin.overview.totalRevenue")}</span>
                         <span className="text-2xl font-bold text-emerald-800">
-                            {isLoading ? "..." : formatCurrency(stats?.totalSales ?? 0)}
+                            {isLoading ? "..." : formatCurrency(stats?.totalSales ?? 0, locale)}
                         </span>
                     </div>
                     <div className="rounded-lg bg-emerald-50 p-2.5 text-emerald-800">
@@ -84,7 +84,7 @@ export default function AdminOverview() {
                     <div className="space-y-1">
                         <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block">{t("admin.overview.productValue")}</span>
                         <span className="text-2xl font-bold text-amber-700">
-                            {isLoading ? "..." : formatCurrency(stats?.totalProductValue ?? 0)}
+                            {isLoading ? "..." : formatCurrency(stats?.totalProductValue ?? 0, locale)}
                         </span>
                     </div>
                     <div className="rounded-lg bg-amber-50 p-2.5 text-amber-800">
@@ -97,7 +97,7 @@ export default function AdminOverview() {
                     <div className="space-y-1">
                         <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block">{t("admin.overview.totalCostPrice")}</span>
                         <span className="text-2xl font-bold text-orange-700">
-                            {isLoading ? "..." : formatCurrency(stats?.totalCostValue ?? 0)}
+                            {isLoading ? "..." : formatCurrency(stats?.totalCostValue ?? 0, locale)}
                         </span>
                     </div>
                     <div className="rounded-lg bg-orange-50 p-2.5 text-orange-800">
@@ -110,7 +110,7 @@ export default function AdminOverview() {
                     <div className="space-y-1">
                         <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block">{t("admin.overview.totalCommission")}</span>
                         <span className="text-2xl font-bold text-indigo-700">
-                            {isLoading ? "..." : formatCurrency(stats?.totalCommissionsPaid ?? 0)}
+                            {isLoading ? "..." : formatCurrency(stats?.totalCommissionsPaid ?? 0, locale)}
                         </span>
                     </div>
                     <div className="rounded-lg bg-indigo-50 p-2.5 text-indigo-800">
@@ -123,7 +123,7 @@ export default function AdminOverview() {
                     <div className="space-y-1">
                         <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block">{t("admin.overview.benefitsWithdrawals")}</span>
                         <span className="text-2xl font-bold text-rose-700">
-                            {isLoading ? "..." : formatCurrency(stats?.totalWithdrawalsApproved ?? 0)}
+                            {isLoading ? "..." : formatCurrency(stats?.totalWithdrawalsApproved ?? 0, locale)}
                         </span>
                     </div>
                     <div className="rounded-lg bg-rose-50 p-2.5 text-rose-800">

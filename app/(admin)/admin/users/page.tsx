@@ -355,7 +355,7 @@ export default function AdminUsersPage() {
                                         </td>
                                         <td className="p-4 text-xs font-bold text-slate-700">{item.referralCode}</td>
                                         <td className="p-4 text-xs text-slate-500">
-                                            {item.activeUntil ? formatDate(item.activeUntil) : t("admin.users.table.noActivation")}
+                                            {item.activeUntil ? formatDate(item.activeUntil, locale) : t("admin.users.table.noActivation")}
                                         </td>
                                         <td className="p-4 text-center">
                                             <span className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${item.status === "ACTIVE" ? "bg-green-100 text-green-800" : "bg-slate-100 text-slate-500"
@@ -446,7 +446,7 @@ export default function AdminUsersPage() {
                                     <InfoCard label="Banned" value={editUserData.isBanned ? "Yes" : "No"} />
                                     <InfoCard label="Referrals" value={String(editUserData.referralsCount)} />
                                     <InfoCard label="Orders" value={String(editUserData.ordersCount)} />
-                                    <InfoCard label="Joined" value={formatDate(editUserData.createdAt)} />
+                                    <InfoCard label="Joined" value={formatDate(editUserData.createdAt, locale)} />
                                     <InfoCard label="Parent" value={editUserData.parent ? `${editUserData.parent.name} (#${editUserData.parent.memberId})` : "None"} />
                                 </div>
 
@@ -593,7 +593,7 @@ export default function AdminUsersPage() {
                                                 <tbody className="divide-y divide-slate-100">
                                                     {statementData.transactions.map((tx: any) => (
                                                         <tr key={tx.id} className="hover:bg-slate-50">
-                                                            <td className="p-2.5 text-slate-500 whitespace-nowrap">{formatDate(tx.createdAt)}</td>
+                                                            <td className="p-2.5 text-slate-500 whitespace-nowrap">{formatDate(tx.createdAt, locale)}</td>
                                                             <td className="p-2.5 font-medium">{tx.type}</td>
                                                             <td className={`p-2.5 text-right font-semibold ${Number(tx.amount) >= 0 ? "text-green-700" : "text-green-600"}`}>
                                                                 ৳{tx.amount}
@@ -627,7 +627,7 @@ export default function AdminUsersPage() {
                                                 <tbody className="divide-y divide-slate-100">
                                                     {statementData.withdrawals.map((w: any) => (
                                                         <tr key={w.id} className="hover:bg-slate-50">
-                                                            <td className="p-2.5 text-slate-500 whitespace-nowrap">{formatDate(w.createdAt)}</td>
+                                                            <td className="p-2.5 text-slate-500 whitespace-nowrap">{formatDate(w.createdAt, locale)}</td>
                                                             <td className="p-2.5 text-right font-semibold text-slate-800">৳{w.amount}</td>
                                                             <td className="p-2.5 text-slate-600">{w.method}</td>
                                                             <td className="p-2.5">

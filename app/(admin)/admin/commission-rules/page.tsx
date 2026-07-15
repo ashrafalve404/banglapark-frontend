@@ -8,7 +8,7 @@ import { formatCurrency } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
 
 export default function AdminCommissionRulesPage() {
-    const { t } = useLocale();
+    const { t, locale } = useLocale();
     const queryClient = useQueryClient();
     const [msg, setMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
@@ -106,7 +106,7 @@ export default function AdminCommissionRulesPage() {
                     </div>
                     <div>
                         <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider block">{t("admin.commissionRules.summary.commissionPaid")}</span>
-                        <span className="text-xl font-bold text-slate-800">{stats ? formatCurrency(stats.totalCommissionsPaid) : "..."}</span>
+                        <span className="text-xl font-bold text-slate-800">{stats ? formatCurrency(stats.totalCommissionsPaid, locale) : "..."}</span>
                     </div>
                 </div>
                 <div className="card p-4 bg-white flex items-center gap-3.5">
