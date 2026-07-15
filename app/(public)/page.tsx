@@ -113,7 +113,7 @@ export default function HomePage() {
                             {locale === "en" ? (
                                 <>
                                     <span className="md:whitespace-nowrap">
-                                        Buy from the
+                                        Buy products from the
                                         <br className="block md:hidden" /> Affiliate Marketplace,
                                     </span>
                                     <br />

@@ -681,6 +681,20 @@
         "heading": "Quick Approval Guide",
         "text": "Direct referral commission distribution and daily benefit calculation for new members are processed automatically via backend cron jobs. As an admin, you only need to approve withdrawal requests and update order statuses."
       },
+      "totalProducts": "Total Products",
+      "productValue": "Product Value",
+      "totalCostPrice": "Total Cost Price",
+      "benefitsWithdrawals": "Benefits/Withdrawals",
+      "profitLoss": {
+        "heading": "Profit & Loss Summary",
+        "salesRevenue": "Sales Revenue",
+        "minusCostOfSold": "Minus: Cost of Sold Goods",
+        "minusCommission": "Minus: Commissions Paid",
+        "minusWithdrawals": "Minus: Withdrawals (Approved)",
+        "grossProfit": "Gross Profit (Sales - Cost)",
+        "netProfit": "Net Profit / Loss",
+        "formula": "Net Profit = Sales Revenue - Cost of Sold Goods - Commissions - Withdrawals Approved"
+      },
       "footer": "Bangla Park Limited Management Panel"
     },
     "users": {

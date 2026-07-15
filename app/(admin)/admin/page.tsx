@@ -58,7 +58,7 @@ export default function AdminOverview() {
                 {/* Total Products */}
                 <div className="card p-5 bg-white flex items-center justify-between">
                     <div className="space-y-1">
-                        <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block">Total Products</span>
+                        <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block">{t("admin.overview.totalProducts")}</span>
                         <span className="text-2xl font-bold text-violet-700">
                             {isLoading ? "..." : stats?.totalProducts ?? 0}
                         </span>
@@ -84,7 +84,7 @@ export default function AdminOverview() {
                 {/* Total Product Value (Inventory) */}
                 <div className="card p-5 bg-white flex items-center justify-between">
                     <div className="space-y-1">
-                        <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block">Product Value</span>
+                        <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block">{t("admin.overview.productValue")}</span>
                         <span className="text-2xl font-bold text-amber-700">
                             {isLoading ? "..." : formatCurrency(stats?.totalProductValue ?? 0)}
                         </span>
@@ -97,7 +97,7 @@ export default function AdminOverview() {
                 {/* Total Cost Value */}
                 <div className="card p-5 bg-white flex items-center justify-between">
                     <div className="space-y-1">
-                        <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block">Total Cost Price</span>
+                        <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block">{t("admin.overview.totalCostPrice")}</span>
                         <span className="text-2xl font-bold text-orange-700">
                             {isLoading ? "..." : formatCurrency(stats?.totalCostValue ?? 0)}
                         </span>
@@ -123,7 +123,7 @@ export default function AdminOverview() {
                 {/* Withdrawals Approved */}
                 <div className="card p-5 bg-white flex items-center justify-between">
                     <div className="space-y-1">
-                        <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block">Benefits/Withdrawals</span>
+                        <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block">{t("admin.overview.benefitsWithdrawals")}</span>
                         <span className="text-2xl font-bold text-rose-700">
                             {isLoading ? "..." : formatCurrency(stats?.totalWithdrawalsApproved ?? 0)}
                         </span>
@@ -137,41 +137,41 @@ export default function AdminOverview() {
             {/* Profit & Loss Section */}
             {!isLoading && stats && (
                 <div className="card p-6 bg-white">
-                    <h3 className="text-sm font-bold text-slate-800 border-b border-slate-100 pb-2 mb-4">Profit & Loss Summary</h3>
+                    <h3 className="text-sm font-bold text-slate-800 border-b border-slate-100 pb-2 mb-4">{t("admin.overview.profitLoss.heading")}</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                         <div className="rounded-xl bg-slate-50 p-4">
-                            <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block">Sales Revenue</span>
+                            <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block">{t("admin.overview.profitLoss.salesRevenue")}</span>
                             <span className="text-xl font-bold text-emerald-700 block mt-1">{formatCurrency(stats.totalSales)}</span>
                         </div>
                         <div className="rounded-xl bg-slate-50 p-4">
-                            <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block">Minus: Cost of Sold Goods</span>
+                            <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block">{t("admin.overview.profitLoss.minusCostOfSold")}</span>
                             <span className="text-xl font-bold text-orange-700 block mt-1">- {formatCurrency(stats.totalSoldCost)}</span>
                         </div>
                         <div className="rounded-xl bg-slate-50 p-4">
-                            <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block">Minus: Commissions Paid</span>
+                            <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block">{t("admin.overview.profitLoss.minusCommission")}</span>
                             <span className="text-xl font-bold text-indigo-700 block mt-1">- {formatCurrency(stats.totalCommissionsPaid)}</span>
                         </div>
                         <div className="rounded-xl bg-slate-50 p-4">
-                            <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block">Minus: Withdrawals (Approved)</span>
+                            <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block">{t("admin.overview.profitLoss.minusWithdrawals")}</span>
                             <span className="text-xl font-bold text-rose-700 block mt-1">- {formatCurrency(stats.totalWithdrawalsApproved)}</span>
                         </div>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                         <div className="rounded-xl bg-slate-100 p-4">
-                            <span className="text-[10px] font-semibold text-slate-600 uppercase tracking-wider block">Gross Profit (Sales - Cost)</span>
+                            <span className="text-[10px] font-semibold text-slate-600 uppercase tracking-wider block">{t("admin.overview.profitLoss.grossProfit")}</span>
                             <span className={`text-xl font-bold block mt-1 ${stats.grossProfit >= 0 ? "text-green-700" : "text-red-700"}`}>
                                 {stats.grossProfit >= 0 ? "" : "- "}{formatCurrency(Math.abs(stats.grossProfit))}
                             </span>
                         </div>
                         <div className="rounded-xl bg-slate-800 p-4">
-                            <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">Net Profit / Loss</span>
+                            <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">{t("admin.overview.profitLoss.netProfit")}</span>
                             <span className={`text-2xl font-bold block mt-1 ${profitColor}`}>
                                 {stats.netProfit >= 0 ? "+ " : "- "}{formatCurrency(Math.abs(stats.netProfit))}
                             </span>
                         </div>
                     </div>
                     <p className="text-[10px] text-slate-400 mt-3">
-                        Net Profit = Sales Revenue - Cost of Sold Goods - Commissions - Withdrawals Approved
+                        {t("admin.overview.profitLoss.formula")}
                     </p>
                 </div>
             )}
