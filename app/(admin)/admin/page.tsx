@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import {
     Users, ShoppingBag, ArrowUpRight, TrendingUp,
     AlertCircle, ShieldAlert, BadgeAlert, CheckCircle2,
-    Package, DollarSign, CreditCard, BarChart3, Wallet,
+    Package, DollarSign, CreditCard, Wallet,
     AlertTriangle, TrendingDown
 } from "lucide-react";
 import { adminApi } from "@/lib/api/admin";
@@ -17,8 +17,6 @@ export default function AdminOverview() {
         queryKey: ["admin-stats"],
         queryFn: () => adminApi.stats(),
     });
-
-    const profitColor = !stats ? "text-slate-800" : stats.netProfit >= 0 ? "text-green-700" : "text-red-700";
 
     return (
         <div className="space-y-6">
@@ -133,48 +131,6 @@ export default function AdminOverview() {
                     </div>
                 </div>
             </div>
-
-            {/* Profit & Loss Section */}
-            {!isLoading && stats && (
-                <div className="card p-6 bg-white">
-                    <h3 className="text-sm font-bold text-slate-800 border-b border-slate-100 pb-2 mb-4">{t("admin.overview.profitLoss.heading")}</h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <div className="rounded-xl bg-slate-50 p-4">
-                            <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block">{t("admin.overview.profitLoss.salesRevenue")}</span>
-                            <span className="text-xl font-bold text-emerald-700 block mt-1">{formatCurrency(stats.totalSales)}</span>
-                        </div>
-                        <div className="rounded-xl bg-slate-50 p-4">
-                            <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block">{t("admin.overview.profitLoss.minusCostOfSold")}</span>
-                            <span className="text-xl font-bold text-orange-700 block mt-1">- {formatCurrency(stats.totalSoldCost)}</span>
-                        </div>
-                        <div className="rounded-xl bg-slate-50 p-4">
-                            <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block">{t("admin.overview.profitLoss.minusCommission")}</span>
-                            <span className="text-xl font-bold text-indigo-700 block mt-1">- {formatCurrency(stats.totalCommissionsPaid)}</span>
-                        </div>
-                        <div className="rounded-xl bg-slate-50 p-4">
-                            <span className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider block">{t("admin.overview.profitLoss.minusWithdrawals")}</span>
-                            <span className="text-xl font-bold text-rose-700 block mt-1">- {formatCurrency(stats.totalWithdrawalsApproved)}</span>
-                        </div>
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-                        <div className="rounded-xl bg-slate-100 p-4">
-                            <span className="text-[10px] font-semibold text-slate-600 uppercase tracking-wider block">{t("admin.overview.profitLoss.grossProfit")}</span>
-                            <span className={`text-xl font-bold block mt-1 ${stats.grossProfit >= 0 ? "text-green-700" : "text-red-700"}`}>
-                                {stats.grossProfit >= 0 ? "" : "- "}{formatCurrency(Math.abs(stats.grossProfit))}
-                            </span>
-                        </div>
-                        <div className="rounded-xl bg-slate-800 p-4">
-                            <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">{t("admin.overview.profitLoss.netProfit")}</span>
-                            <span className={`text-2xl font-bold block mt-1 ${profitColor}`}>
-                                {stats.netProfit >= 0 ? "+ " : "- "}{formatCurrency(Math.abs(stats.netProfit))}
-                            </span>
-                        </div>
-                    </div>
-                    <p className="text-[10px] text-slate-400 mt-3">
-                        {t("admin.overview.profitLoss.formula")}
-                    </p>
-                </div>
-            )}
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Pending Alerts columns */}
