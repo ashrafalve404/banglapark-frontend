@@ -5,20 +5,16 @@ import { useState } from "react";
 import { Download, Copy, Check, Loader2, ImageIcon } from "lucide-react";
 import { bannersApi, type Banner } from "@/lib/api/banners";
 import { useLocale } from "@/lib/i18n";
-import { useAuthStore } from "@/store/auth";
 
 export default function DailyWorkPage() {
-    const { t, locale } = useLocale();
-    const user = useAuthStore((s) => s.user);
+    const { t } = useLocale();
     const [copied, setCopied] = useState(false);
+    const [userLink, setUserLink] = useState("");
 
     const { data: dailyWork, isLoading } = useQuery<Banner | null>({
         queryKey: ["daily-work"],
         queryFn: () => bannersApi.findDailyWork(),
     });
-
-    const referralLink = user?.referralLink || `${window.location.origin}/register?ref=${user?.referralCode}`;
-    const [userLink, setUserLink] = useState(referralLink);
 
     const handleCopy = async () => {
         try {
