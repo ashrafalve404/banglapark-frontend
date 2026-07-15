@@ -40,7 +40,7 @@ export function DashboardSidebar({ onClose, mobile }: DashboardSidebarProps) {
     ];
 
     return (
-        <aside className={cn("flex h-full flex-col bg-white", mobile && "border-r border-gray-100")}>
+        <aside className={cn("flex h-full flex-col bg-white", mobile && "border-r border-gray-100 pb-16")}>
             {mobile && (
                 <div className="flex h-16 items-center justify-between px-4 border-b border-gray-100">
                     <span className="font-bold text-green-800">{t("nav.banglaPark")}</span>
