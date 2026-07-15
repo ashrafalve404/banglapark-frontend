@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { TrendingUp, DollarSign, Wallet, ArrowUpRight, BarChart3, Info } from "lucide-react";
+import { TrendingUp, DollarSign, Wallet, ArrowUpRight, BarChart3, Info, Truck } from "lucide-react";
 import { adminApi } from "@/lib/api/admin";
 import { formatCurrency } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
@@ -31,7 +31,7 @@ export default function AdminProfitLossPage() {
             ) : (
                 <>
                     {/* ── Revenue & Costs Grid ── */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                         <div className="card p-5 bg-white">
                             <div className="flex items-center justify-between mb-2">
                                 <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">{t("admin.overview.profitLoss.salesRevenue")}</span>
@@ -45,6 +45,13 @@ export default function AdminProfitLossPage() {
                                 <DollarSign size={18} className="text-orange-600" />
                             </div>
                             <span className="text-2xl font-bold text-orange-700">- {formatCurrency(stats.totalSoldCost)}</span>
+                        </div>
+                        <div className="card p-5 bg-white">
+                            <div className="flex items-center justify-between mb-2">
+                                <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">{t("admin.overview.profitLoss.minusDelivery")}</span>
+                                <Truck size={18} className="text-yellow-600" />
+                            </div>
+                            <span className="text-2xl font-bold text-yellow-700">- {formatCurrency(stats.totalDeliveryCharges)}</span>
                         </div>
                         <div className="card p-5 bg-white">
                             <div className="flex items-center justify-between mb-2">
@@ -73,7 +80,7 @@ export default function AdminProfitLossPage() {
                                 {stats.grossProfit >= 0 ? "" : "- "}{formatCurrency(Math.abs(stats.grossProfit))}
                             </span>
                             <p className="text-[10px] text-slate-400 mt-1">
-                                {t("admin.overview.profitLoss.grossProfit")}: {t("admin.overview.profitLoss.salesRevenue")} - {t("admin.overview.profitLoss.minusCostOfSold")}
+                                {t("admin.overview.profitLoss.grossProfit")}: {t("admin.overview.profitLoss.salesRevenue")} - {t("admin.overview.profitLoss.minusCostOfSold")} - {t("admin.overview.profitLoss.minusDelivery")}
                             </p>
                         </div>
                         <div className="card p-6 bg-slate-800">
@@ -85,7 +92,7 @@ export default function AdminProfitLossPage() {
                                 {stats.netProfit >= 0 ? "+ " : "- "}{formatCurrency(Math.abs(stats.netProfit))}
                             </span>
                             <p className="text-[10px] text-slate-500 mt-1">
-                                {t("admin.overview.profitLoss.netProfit")}: {t("admin.overview.profitLoss.salesRevenue")} - {t("admin.overview.profitLoss.minusCostOfSold")} - {t("admin.overview.profitLoss.minusCommission")} - {t("admin.overview.profitLoss.minusWithdrawals")}
+                                {t("admin.overview.profitLoss.netProfit")}: {t("admin.overview.profitLoss.salesRevenue")} - {t("admin.overview.profitLoss.minusCostOfSold")} - {t("admin.overview.profitLoss.minusDelivery")} - {t("admin.overview.profitLoss.minusCommission")} - {t("admin.overview.profitLoss.minusWithdrawals")}
                             </p>
                         </div>
                     </div>

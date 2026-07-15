@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { TrendingUp, Users, HelpCircle } from "lucide-react";
+import { TrendingUp, Users } from "lucide-react";
 import { commissionsApi } from "@/lib/api/commissions";
 import { formatCurrency, formatDateTime } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
@@ -26,15 +26,6 @@ export default function GenerationIncomePage() {
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900">{t("generationIncome.heading")}</h1>
                     <p className="text-sm text-gray-500">{t("generationIncome.subheading")}</p>
-                </div>
-            </div>
-
-            <div className="card p-5 bg-white flex items-start gap-3.5">
-                <HelpCircle size={20} className="text-green-700 flex-shrink-0 mt-0.5" />
-                <div className="text-xs text-gray-500 space-y-1">
-                    <p className="font-bold text-gray-800">{t("generationIncome.rules.heading")}</p>
-                    <p>{t("generationIncome.rules.level1")}</p>
-                    <p>{t("generationIncome.rules.level2to15")}</p>
                 </div>
             </div>
 

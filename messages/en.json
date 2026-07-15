@@ -690,11 +690,12 @@
         "heading": "Profit & Loss Summary",
         "salesRevenue": "Sales Revenue",
         "minusCostOfSold": "Minus: Cost of Sold Goods",
+        "minusDelivery": "Minus: Delivery Charges",
         "minusCommission": "Minus: Commissions Paid",
         "minusWithdrawals": "Minus: Withdrawals (Approved)",
-        "grossProfit": "Gross Profit (Sales - Cost)",
+        "grossProfit": "Gross Profit (Sales - Cost - Delivery)",
         "netProfit": "Net Profit / Loss",
-        "formula": "Net Profit = Sales Revenue - Cost of Sold Goods - Commissions - Withdrawals Approved"
+        "formula": "Net Profit = Sales Revenue - Cost of Sold Goods - Delivery Charges - Commissions - Withdrawals Approved"
       },
       "footer": "Bangla Park Limited Management Panel"
     },
