@@ -94,6 +94,32 @@ export default function DashboardOverview() {
                 </div>
             ) : null}
 
+            {/* Quiz Categories Section */}
+            {quizCategories.length > 0 && (
+                <div className="card p-5 bg-white">
+                    <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-2">
+                            <FolderOpen size={18} className="text-green-700" />
+                            <h3 className="text-sm font-bold text-gray-900">{t("nav.quiz")}</h3>
+                        </div>
+                        <Link href="/dashboard/quiz" className="text-xs text-green-700 font-semibold hover:underline">{t("dashboard.quiz.viewAll")}</Link>
+                    </div>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                        {quizCategories.map((cat) => (
+                            <Link key={cat.id} href={`/dashboard/quiz?category=${cat.id}`} className="group rounded-xl overflow-hidden border border-gray-200 bg-white hover:-translate-y-0.5 transition-transform">
+                                <div className="aspect-[4/3] bg-gray-100">
+                                    <img src={cat.imageUrl} alt={cat.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                                </div>
+                                <div className="p-2.5 text-center">
+                                    <p className="text-xs font-bold text-gray-800 truncate">{cat.name}</p>
+                                    <p className="text-[10px] text-gray-400">{cat._count?.questions ?? 0} questions</p>
+                                </div>
+                            </Link>
+                        ))}
+                    </div>
+                </div>
+            )}
+
             {/* Daily Work Section */}
             {dailyWork && (
                 <div className="card p-5 bg-white">
@@ -126,32 +152,6 @@ export default function DashboardOverview() {
                                 </Link>
                             </div>
                         </div>
-                    </div>
-                </div>
-            )}
-
-            {/* Quiz Categories Section */}
-            {quizCategories.length > 0 && (
-                <div className="card p-5 bg-white">
-                    <div className="flex items-center justify-between mb-3">
-                        <div className="flex items-center gap-2">
-                            <FolderOpen size={18} className="text-green-700" />
-                            <h3 className="text-sm font-bold text-gray-900">{t("nav.quiz")}</h3>
-                        </div>
-                        <Link href="/dashboard/quiz" className="text-xs text-green-700 font-semibold hover:underline">{t("dashboard.quiz.viewAll")}</Link>
-                    </div>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                        {quizCategories.map((cat) => (
-                            <Link key={cat.id} href={`/dashboard/quiz?category=${cat.id}`} className="group rounded-xl overflow-hidden border border-gray-200 bg-white hover:-translate-y-0.5 transition-transform">
-                                <div className="aspect-[4/3] bg-gray-100">
-                                    <img src={cat.imageUrl} alt={cat.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                                </div>
-                                <div className="p-2.5 text-center">
-                                    <p className="text-xs font-bold text-gray-800 truncate">{cat.name}</p>
-                                    <p className="text-[10px] text-gray-400">{cat._count?.questions ?? 0} questions</p>
-                                </div>
-                            </Link>
-                        ))}
                     </div>
                 </div>
             )}
