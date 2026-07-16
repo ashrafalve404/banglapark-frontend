@@ -80,7 +80,7 @@ export default function WalletPage() {
                 </div>
             )}
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-7 gap-3">
                 <div className="card p-5 bg-gradient-to-br from-green-900 to-green-800 text-white">
                     <div className="flex items-center justify-between mb-3">
                         <span className="text-[10px] text-green-100 font-semibold uppercase tracking-wider">{t("wallet.balance.total")}</span>
@@ -118,6 +118,16 @@ export default function WalletPage() {
                     </div>
                     <h2 className="text-2xl font-extrabold text-white">
                         {balLoading ? "..." : formatCurrency(balanceData?.generationIncome ?? 0)}
+                    </h2>
+                </div>
+
+                <div className="card p-5 bg-gradient-to-br from-amber-900 to-amber-800 text-white">
+                    <div className="flex items-center justify-between mb-3">
+                        <span className="text-[10px] text-amber-100 font-semibold uppercase tracking-wider">{t("wallet.balance.quizEarning")}</span>
+                        <TrendingUp size={18} className="text-amber-300" />
+                    </div>
+                    <h2 className="text-2xl font-extrabold text-white">
+                        {balLoading ? "..." : formatCurrency(balanceData?.quizEarning ?? 0)}
                     </h2>
                 </div>
 

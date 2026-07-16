@@ -336,7 +336,9 @@
     "card": {
       "walletBalance": "Current Balance",
       "pendingWithdrawal": "Pending Withdrawal",
+      "teamMembers": "Team Members",
       "activeTeam": "Active Team Members",
+      "activeTeamMembers": "Active Team Members",
       "activeTeamUnit": "person(s)",
       "activationEnd": "Activation Period",
       "activationEndNone": "No Period",
@@ -510,6 +512,7 @@
       "dailyReward": "Daily Reward",
       "tierBonus": "Tier Bonus",
       "generationIncome": "Generation Income",
+      "quizEarning": "Quiz Earning",
       "reward": "Reward",
       "salary": "Salary",
       "travelling": "Travelling",

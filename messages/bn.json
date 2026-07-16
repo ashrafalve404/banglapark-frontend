@@ -336,7 +336,9 @@
     "card": {
       "walletBalance": "বর্তমান ব্যালেন্স",
       "pendingWithdrawal": "পেন্ডিং উত্তোলন",
+      "teamMembers": "টিম সদস্য",
       "activeTeam": "সক্রিয় টিম সদস্য",
+      "activeTeamMembers": "সক্রিয় টিম সদস্য",
       "activeTeamUnit": "জন",
       "activationEnd": "একটিভেশনের মেয়াদ",
       "activationEndNone": "মেয়াদ নেই",
@@ -510,6 +512,7 @@
       "dailyReward": "দৈনিক রিওয়ার্ড",
       "tierBonus": "টায়ার বোনাস",
       "generationIncome": "জেনারেশন ইনকাম",
+      "quizEarning": "কুইজ আয়",
       "reward": "রিওয়ার্ড",
       "salary": "স্যালারি",
       "travelling": "ট্রাভেলিং",
