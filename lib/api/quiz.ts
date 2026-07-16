@@ -5,6 +5,7 @@ export interface QuizCategoryItem {
     name: string;
     imageUrl: string;
     isActive?: boolean;
+    sortOrder?: number;
     _count?: { questions: number };
     createdAt?: string;
     updatedAt?: string;
@@ -97,12 +98,12 @@ export const quizApi = {
     },
 
     // Admin: Category CRUD
-    adminCreateCategory: async (data: { name: string; imageUrl: string }): Promise<QuizCategoryItem> => {
+    adminCreateCategory: async (data: { name: string; imageUrl: string; sortOrder?: number }): Promise<QuizCategoryItem> => {
         const res = await api.post("/quiz-categories", data);
         return res.data;
     },
 
-    adminUpdateCategory: async (id: string, data: { name?: string; imageUrl?: string; isActive?: boolean }): Promise<QuizCategoryItem> => {
+    adminUpdateCategory: async (id: string, data: { name?: string; imageUrl?: string; isActive?: boolean; sortOrder?: number }): Promise<QuizCategoryItem> => {
         const res = await api.patch(`/quiz-categories/${id}`, data);
         return res.data;
     },

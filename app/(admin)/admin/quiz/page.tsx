@@ -27,6 +27,7 @@ export default function AdminQuizPage() {
     // Category form
     const [showCatForm, setShowCatForm] = useState(false);
     const [catName, setCatName] = useState("");
+    const [catSortOrder, setCatSortOrder] = useState(0);
     const [catImage, setCatImage] = useState<File | null>(null);
     const [catImagePreview, setCatImagePreview] = useState("");
     const [catUploading, setCatUploading] = useState(false);
@@ -52,7 +53,7 @@ export default function AdminQuizPage() {
     });
 
     const createCatMutation = useMutation({
-        mutationFn: (data: { name: string; imageUrl: string }) => quizApi.adminCreateCategory(data),
+        mutationFn: (data: { name: string; imageUrl: string; sortOrder?: number }) => quizApi.adminCreateCategory(data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["admin-quiz-categories"] });
             resetCatForm();
@@ -86,6 +87,7 @@ export default function AdminQuizPage() {
     const resetCatForm = () => {
         setShowCatForm(false);
         setCatName("");
+        setCatSortOrder(0);
         setCatImage(null);
         setCatImagePreview("");
         setCatError(null);
@@ -111,7 +113,7 @@ export default function AdminQuizPage() {
         setCatUploading(true);
         try {
             const url = await uploadImage(catImage);
-            createCatMutation.mutate({ name: catName.trim(), imageUrl: url });
+            createCatMutation.mutate({ name: catName.trim(), imageUrl: url, sortOrder: catSortOrder });
         } catch (err: any) {
             setCatError(err?.response?.data?.message || err?.message || "Image upload failed");
         } finally { setCatUploading(false); }
@@ -165,10 +167,14 @@ export default function AdminQuizPage() {
                     {showCatForm && (
                         <form onSubmit={handleCreateCategory} className="card p-6 bg-white space-y-4">
                             <h2 className="text-sm font-bold text-slate-800 border-b border-slate-100 pb-2">Create New Category</h2>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div>
                                     <label className="block text-xs font-semibold text-slate-600 mb-1">Category Name</label>
                                     <input value={catName} onChange={(e) => setCatName(e.target.value)} className="input w-full" required />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-semibold text-slate-600 mb-1">Sort Order</label>
+                                    <input type="number" min="0" value={catSortOrder} onChange={(e) => setCatSortOrder(Number(e.target.value))} className="input w-full" />
                                 </div>
                                 <div>
                                     <label className="block text-xs font-semibold text-slate-600 mb-1">Category Image</label>
@@ -208,7 +214,7 @@ export default function AdminQuizPage() {
                                         <div className="flex items-center justify-between">
                                             <div>
                                                 <h3 className="text-sm font-bold text-slate-800">{cat.name}</h3>
-                                                <p className="text-[10px] text-slate-400">{cat._count?.questions ?? 0} questions</p>
+                                                <p className="text-[10px] text-slate-400">{cat._count?.questions ?? 0} questions &middot; Order: {cat.sortOrder ?? 0}</p>
                                             </div>
                                             <button onClick={() => { if (confirm("Delete this category and all its questions?")) deleteCatMutation.mutate(cat.id); }} className="p-1.5 text-red-400 hover:text-red-600"><Trash2 size={16} /></button>
                                         </div>
