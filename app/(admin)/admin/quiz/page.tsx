@@ -2,7 +2,7 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, useRef } from "react";
-import { Plus, Trash2, Loader2, X, ImageIcon, FolderOpen, ListOrdered, Eye, EyeOff, AlertCircle } from "lucide-react";
+import { Plus, Trash2, Loader2, X, ImageIcon, FolderOpen, ListOrdered, Eye, EyeOff, AlertCircle, Edit2 } from "lucide-react";
 import { quizApi, uploadImage, type QuizCategoryItem, type QuizQuestion } from "@/lib/api/quiz";
 import { useLocale } from "@/lib/i18n";
 
@@ -26,6 +26,7 @@ export default function AdminQuizPage() {
 
     // Category form
     const [showCatForm, setShowCatForm] = useState(false);
+    const [editCatId, setEditCatId] = useState<string | null>(null);
     const [catName, setCatName] = useState("");
     const [catSortOrder, setCatSortOrder] = useState(0);
     const [catImage, setCatImage] = useState<File | null>(null);
@@ -64,6 +65,19 @@ export default function AdminQuizPage() {
         },
     });
 
+    const updateCatMutation = useMutation({
+        mutationFn: ({ id, data }: { id: string; data: { name?: string; imageUrl?: string; sortOrder?: number } }) =>
+            quizApi.adminUpdateCategory(id, data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["admin-quiz-categories"] });
+            resetCatForm();
+            setCatError(null);
+        },
+        onError: (err: any) => {
+            setCatError(err?.response?.data?.message || err?.message || "Failed to update category");
+        },
+    });
+
     const deleteCatMutation = useMutation({
         mutationFn: (id: string) => quizApi.adminDeleteCategory(id),
         onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin-quiz-categories"] }),
@@ -86,6 +100,7 @@ export default function AdminQuizPage() {
 
     const resetCatForm = () => {
         setShowCatForm(false);
+        setEditCatId(null);
         setCatName("");
         setCatSortOrder(0);
         setCatImage(null);
@@ -106,16 +121,36 @@ export default function AdminQuizPage() {
         }
     };
 
-    const handleCreateCategory = async (e: React.FormEvent) => {
+    const handleEditCategory = (cat: QuizCategoryItem) => {
+        setEditCatId(cat.id);
+        setCatName(cat.name);
+        setCatSortOrder(cat.sortOrder ?? 0);
+        setCatImage(null);
+        setCatImagePreview(cat.imageUrl);
+        setShowCatForm(true);
+        setCatError(null);
+    };
+
+    const handleSaveCategory = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!catName.trim() || !catImage) return;
+        if (!catName.trim()) return;
         setCatError(null);
         setCatUploading(true);
         try {
-            const url = await uploadImage(catImage);
-            createCatMutation.mutate({ name: catName.trim(), imageUrl: url, sortOrder: catSortOrder });
+            if (editCatId) {
+                if (catImage) {
+                    const url = await uploadImage(catImage);
+                    updateCatMutation.mutate({ id: editCatId, data: { name: catName.trim(), imageUrl: url, sortOrder: catSortOrder } });
+                } else {
+                    updateCatMutation.mutate({ id: editCatId, data: { name: catName.trim(), sortOrder: catSortOrder } });
+                }
+            } else {
+                if (!catImage) { setCatError("Please select an image"); setCatUploading(false); return; }
+                const url = await uploadImage(catImage);
+                createCatMutation.mutate({ name: catName.trim(), imageUrl: url, sortOrder: catSortOrder });
+            }
         } catch (err: any) {
-            setCatError(err?.response?.data?.message || err?.message || "Image upload failed");
+            setCatError(err?.response?.data?.message || err?.message || "Save failed");
         } finally { setCatUploading(false); }
     };
 
@@ -165,8 +200,8 @@ export default function AdminQuizPage() {
                     </div>
 
                     {showCatForm && (
-                        <form onSubmit={handleCreateCategory} className="card p-6 bg-white space-y-4">
-                            <h2 className="text-sm font-bold text-slate-800 border-b border-slate-100 pb-2">Create New Category</h2>
+                        <form onSubmit={handleSaveCategory} className="card p-6 bg-white space-y-4">
+                            <h2 className="text-sm font-bold text-slate-800 border-b border-slate-100 pb-2">{editCatId ? "Edit Category" : "Create New Category"}</h2>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div>
                                     <label className="block text-xs font-semibold text-slate-600 mb-1">Category Name</label>
@@ -184,6 +219,7 @@ export default function AdminQuizPage() {
                                             <ImageIcon size={14} /> Choose Image
                                         </button>
                                         {catImagePreview && <img src={catImagePreview} className="h-10 w-10 rounded object-cover border" />}
+                                        {editCatId && !catImage && catImagePreview && <span className="text-[10px] text-slate-400">(current)</span>}
                                     </div>
                                 </div>
                             </div>
@@ -193,8 +229,8 @@ export default function AdminQuizPage() {
                                 </div>
                             )}
                             <div className="flex gap-3">
-                                <button type="submit" disabled={catUploading || createCatMutation.isPending} className="btn-primary text-sm">
-                                    {catUploading || createCatMutation.isPending ? <span className="flex items-center gap-2"><Loader2 size={14} className="animate-spin" /> Saving...</span> : "Save Category"}
+                                <button type="submit" disabled={catUploading || createCatMutation.isPending || updateCatMutation.isPending} className="btn-primary text-sm">
+                                    {catUploading || createCatMutation.isPending || updateCatMutation.isPending ? <span className="flex items-center gap-2"><Loader2 size={14} className="animate-spin" /> Saving...</span> : editCatId ? "Update Category" : "Save Category"}
                                 </button>
                                 <button type="button" onClick={resetCatForm} className="btn-outline-primary text-sm">Cancel</button>
                             </div>
@@ -216,7 +252,10 @@ export default function AdminQuizPage() {
                                                 <h3 className="text-sm font-bold text-slate-800">{cat.name}</h3>
                                                 <p className="text-[10px] text-slate-400">{cat._count?.questions ?? 0} questions &middot; Order: {cat.sortOrder ?? 0}</p>
                                             </div>
-                                            <button onClick={() => { if (confirm("Delete this category and all its questions?")) deleteCatMutation.mutate(cat.id); }} className="p-1.5 text-red-400 hover:text-red-600"><Trash2 size={16} /></button>
+                                            <div className="flex gap-1">
+                                                <button onClick={() => handleEditCategory(cat)} className="p-1.5 text-slate-400 hover:text-blue-600"><Edit2 size={16} /></button>
+                                                <button onClick={() => { if (confirm("Delete this category and all its questions?")) deleteCatMutation.mutate(cat.id); }} className="p-1.5 text-red-400 hover:text-red-600"><Trash2 size={16} /></button>
+                                            </div>
                                         </div>
                                         <div className="flex gap-2">
                                             <button onClick={() => { setActiveCategory(cat.id); setShowQuestionForm(true); setQuestions([emptyQuestion()]); }} className="btn-primary text-xs flex items-center gap-1 flex-1 justify-center">
