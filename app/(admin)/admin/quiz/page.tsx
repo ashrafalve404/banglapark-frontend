@@ -2,7 +2,7 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, useRef } from "react";
-import { Plus, Trash2, Loader2, X, ImageIcon, FolderOpen, ListOrdered, Eye, EyeOff } from "lucide-react";
+import { Plus, Trash2, Loader2, X, ImageIcon, FolderOpen, ListOrdered, Eye, EyeOff, AlertCircle } from "lucide-react";
 import { quizApi, uploadImage, type QuizCategoryItem, type QuizQuestion } from "@/lib/api/quiz";
 import { useLocale } from "@/lib/i18n";
 
@@ -30,6 +30,7 @@ export default function AdminQuizPage() {
     const [catImage, setCatImage] = useState<File | null>(null);
     const [catImagePreview, setCatImagePreview] = useState("");
     const [catUploading, setCatUploading] = useState(false);
+    const [catError, setCatError] = useState<string | null>(null);
 
     // Question form
     const [activeCategory, setActiveCategory] = useState<string | null>(null);
@@ -55,6 +56,10 @@ export default function AdminQuizPage() {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["admin-quiz-categories"] });
             resetCatForm();
+            setCatError(null);
+        },
+        onError: (err: any) => {
+            setCatError(err?.response?.data?.message || err?.message || "Failed to save category");
         },
     });
 
@@ -83,6 +88,7 @@ export default function AdminQuizPage() {
         setCatName("");
         setCatImage(null);
         setCatImagePreview("");
+        setCatError(null);
     };
 
     const resetQuestionForm = () => {
@@ -101,11 +107,14 @@ export default function AdminQuizPage() {
     const handleCreateCategory = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!catName.trim() || !catImage) return;
+        setCatError(null);
         setCatUploading(true);
         try {
             const url = await uploadImage(catImage);
             createCatMutation.mutate({ name: catName.trim(), imageUrl: url });
-        } catch { /* ignore */ } finally { setCatUploading(false); }
+        } catch (err: any) {
+            setCatError(err?.response?.data?.message || err?.message || "Image upload failed");
+        } finally { setCatUploading(false); }
     };
 
     const handleSubmitQuestions = (e: React.FormEvent) => {
@@ -172,6 +181,11 @@ export default function AdminQuizPage() {
                                     </div>
                                 </div>
                             </div>
+                            {catError && (
+                                <div className="text-xs text-red-600 bg-red-50 rounded-lg p-3 border border-red-200">
+                                    <AlertCircle size={14} className="inline mr-1.5" />{catError}
+                                </div>
+                            )}
                             <div className="flex gap-3">
                                 <button type="submit" disabled={catUploading || createCatMutation.isPending} className="btn-primary text-sm">
                                     {catUploading || createCatMutation.isPending ? <span className="flex items-center gap-2"><Loader2 size={14} className="animate-spin" /> Saving...</span> : "Save Category"}

@@ -3,16 +3,13 @@
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import {
-    Users, ShieldCheck, AlertCircle, Clock, Wallet, ArrowUpRight,
-    ImageIcon, Download, HelpCircle, FolderOpen
+    AlertCircle, Clock,
+    ImageIcon, Download, FolderOpen
 } from "lucide-react";
 import { useAuthStore } from "@/store/auth";
-import { walletApi } from "@/lib/api/wallet";
-import { referralApi } from "@/lib/api/categories";
 import { bannersApi, type Banner } from "@/lib/api/banners";
 import { quizApi, type QuizCategoryItem } from "@/lib/api/quiz";
 import { authApi } from "@/lib/api/auth";
-import { formatCurrency, formatDate } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
 import { useEffect } from "react";
 
@@ -36,18 +33,6 @@ export default function DashboardOverview() {
 
     // Use fresh API data when available, fall back to store
     const user = freshUser ?? storeUser;
-
-    const { data: wallet, isLoading: walletLoading } = useQuery({
-        queryKey: ["wallet-balance"],
-        queryFn: () => walletApi.balance(),
-        refetchOnWindowFocus: true,
-    });
-
-    const { data: referralStats, isLoading: refLoading } = useQuery({
-        queryKey: ["referral-stats"],
-        queryFn: () => referralApi.teamStats(),
-        refetchOnWindowFocus: true,
-    });
 
     const { data: dailyWork } = useQuery<Banner | null>({
         queryKey: ["daily-work"],
@@ -108,77 +93,6 @@ export default function DashboardOverview() {
                     </Link>
                 </div>
             ) : null}
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="card p-5 flex items-center justify-between">
-                    <div className="space-y-1">
-                        <span className="text-xs text-gray-500 font-semibold uppercase tracking-wider block">{t("dashboard.card.walletBalance")}</span>
-                        <span className="text-2xl font-bold text-green-800">
-                            {walletLoading ? "..." : formatCurrency(wallet?.balance ?? 0, locale)}
-                        </span>
-                    </div>
-                    <div className="rounded-lg bg-green-50 p-2.5 text-green-800">
-                        <Wallet size={20} />
-                    </div>
-                </div>
-
-                <div className="card p-5 flex items-center justify-between">
-                    <div className="space-y-1">
-                        <span className="text-xs text-gray-500 font-semibold uppercase tracking-wider block">{t("dashboard.card.pendingWithdrawal")}</span>
-                        <span className="text-2xl font-bold text-gray-800">
-                            {walletLoading ? "..." : formatCurrency(wallet?.pendingWithdrawal ?? 0, locale)}
-                        </span>
-                    </div>
-                    <div className="rounded-lg bg-gray-50 p-2.5 text-gray-800">
-                        <ArrowUpRight size={20} />
-                    </div>
-                </div>
-
-                <div className="card p-5 flex items-center justify-between">
-                    <div className="space-y-1">
-                        <span className="text-xs text-gray-500 font-semibold uppercase tracking-wider block">{t("dashboard.card.activeTeam")}</span>
-                        <span className="text-2xl font-bold text-green-800">
-                            {refLoading ? "..." : referralStats?.activeTeam ?? 0}{t("dashboard.card.activeTeamUnit")}
-                        </span>
-                    </div>
-                    <div className="rounded-lg bg-green-50 p-2.5 text-green-800">
-                        <Users size={20} />
-                    </div>
-                </div>
-
-                <div className="card p-5 flex items-center justify-between">
-                    <div className="space-y-1">
-                        <span className="text-xs text-gray-500 font-semibold uppercase tracking-wider block">{t("dashboard.card.activationEnd")}</span>
-                        <span className="text-sm font-semibold text-gray-800 block">
-                            {activeUntilDate ? formatDate(activeUntilDate, locale) : t("dashboard.card.activationEndNone")}
-                        </span>
-                        {!isInactive && (
-                            <span className="text-[10px] text-green-700 bg-green-50 px-2 py-0.5 rounded-full inline-block">
-                                {t("dashboard.card.daysRemaining")} {activeDays} {t("dashboard.card.daysUnit")}
-                            </span>
-                        )}
-                    </div>
-                    <div className="rounded-lg bg-green-50 p-2.5 text-green-800">
-                        <ShieldCheck size={20} />
-                    </div>
-                </div>
-            </div>
-
-            <div className="card p-6">
-                <h3 className="text-base font-bold text-gray-900 mb-4 pb-2 border-b border-gray-100">{t("dashboard.quickLinks.heading")}</h3>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    {[
-                        { href: "/dashboard/wallet", title: t("dashboard.quickLinks.wallet"), bg: "bg-green-50", text: "text-green-800" },
-                        { href: "/dashboard/withdraw", title: t("dashboard.quickLinks.withdraw"), bg: "bg-blue-50", text: "text-blue-800" },
-                        { href: "/dashboard/referrals", title: t("dashboard.quickLinks.referrals"), bg: "bg-amber-50", text: "text-amber-800" },
-                        { href: "/dashboard/orders", title: t("dashboard.quickLinks.orders"), bg: "bg-purple-50", text: "text-purple-800" },
-                    ].map((lnk) => (
-                        <Link key={lnk.href} href={lnk.href} className={`rounded-xl p-4 text-center ${lnk.bg} hover:-translate-y-0.5 transition-transform flex flex-col justify-center items-center`}>
-                            <span className={`text-sm font-bold ${lnk.text}`}>{lnk.title}</span>
-                        </Link>
-                    ))}
-                </div>
-            </div>
 
             {/* Daily Work Section */}
             {dailyWork && (

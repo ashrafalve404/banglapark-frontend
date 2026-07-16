@@ -169,6 +169,8 @@ export const quizApi = {
 export const uploadImage = async (file: File): Promise<string> => {
     const form = new FormData();
     form.append("file", file);
-    const res = await api.post("/uploads", form);
+    const res = await api.post("/uploads", form, {
+        headers: { "Content-Type": null },
+    });
     return res.data.url;
 };
