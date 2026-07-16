@@ -29,8 +29,8 @@ export function DashboardSidebar({ onClose, mobile }: DashboardSidebarProps) {
 
     const navItems = [
         { href: "/dashboard", label: t("nav.overview"), icon: LayoutDashboard, exact: true },
-        { href: "/dashboard/daily-work", label: t("nav.dailyWork"), icon: ClipboardList },
         { href: "/dashboard/profile", label: t("nav.profile"), icon: User },
+        { href: "/dashboard/daily-work", label: t("nav.dailyWork"), icon: ClipboardList },
         { href: "/dashboard/wallet", label: t("nav.wallet"), icon: Wallet },
         { href: "/dashboard/orders", label: t("nav.orders"), icon: ShoppingBag },
         { href: "/dashboard/referrals", label: t("nav.referrals"), icon: Users },
