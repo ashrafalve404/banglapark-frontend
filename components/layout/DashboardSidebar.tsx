@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import {
     LayoutDashboard, User, Wallet, ShoppingBag, Users,
     TrendingUp, ArrowDownToLine, Bell, ChevronRight, X, Home,
-    FileText, LogOut, ClipboardList
+    FileText, LogOut, ClipboardList, HelpCircle
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
@@ -31,6 +31,7 @@ export function DashboardSidebar({ onClose, mobile }: DashboardSidebarProps) {
         { href: "/dashboard", label: t("nav.overview"), icon: LayoutDashboard, exact: true },
         { href: "/dashboard/profile", label: t("nav.profile"), icon: User },
         { href: "/dashboard/daily-work", label: t("nav.dailyWork"), icon: ClipboardList },
+        { href: "/dashboard/quiz", label: t("nav.quiz"), icon: HelpCircle },
         { href: "/dashboard/wallet", label: t("nav.wallet"), icon: Wallet },
         { href: "/dashboard/orders", label: t("nav.orders"), icon: ShoppingBag },
         { href: "/dashboard/referrals", label: t("nav.referrals"), icon: Users },

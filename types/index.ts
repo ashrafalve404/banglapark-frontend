@@ -7,7 +7,7 @@ export type PaymentMethod = "CASH_ON_DELIVERY" | "BKASH";
 export type DeliveryArea = "INSIDE_DHAKA" | "OUTSIDE_DHAKA";
 export type WithdrawStatus = "PENDING" | "APPROVED" | "REJECTED";
 export type WithdrawMethod = "BKASH" | "NAGAD" | "ROCKET" | "BANK";
-export type TxType = "GENERATION_COMMISSION" | "DAILY_BENEFIT" | "PURCHASE" | "WITHDRAWAL" | "REFUND" | "ADMIN_ADJUSTMENT";
+export type TxType = "GENERATION_COMMISSION" | "DAILY_BENEFIT" | "PURCHASE" | "WITHDRAWAL" | "REFUND" | "ADMIN_ADJUSTMENT" | "QUIZ_PURCHASE";
 export type NotificationType = "ACTIVATION_REMINDER" | "COMMISSION_RECEIVED" | "DAILY_BENEFIT_RECEIVED" | "WITHDRAWAL_STATUS" | "ORDER_STATUS" | "SYSTEM";
 export type BannerSection = "SLIDER" | "OFFER" | "DAILY_WORK";
 
