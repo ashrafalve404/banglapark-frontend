@@ -2,26 +2,41 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Loader2, HelpCircle, Clock, DollarSign, CheckCircle, Award, XCircle, Wallet, Smartphone } from "lucide-react";
-import { quizApi, type Quiz, type QuizPurchase } from "@/lib/api/quiz";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Loader2, HelpCircle, Clock, DollarSign, CheckCircle, Award, Wallet, Smartphone, ArrowLeft, ShoppingCart } from "lucide-react";
+import { quizApi, type QuizCategoryItem, type QuizPurchaseInfo } from "@/lib/api/quiz";
 import { walletApi } from "@/lib/api/wallet";
 import { useLocale } from "@/lib/i18n";
 import { formatCurrency } from "@/lib/utils";
 
-export default function QuizPage() {
-    const { t } = useLocale();
-    const router = useRouter();
-    const queryClient = useQueryClient();
-    const [purchaseModal, setPurchaseModal] = useState<Quiz | null>(null);
-    const [payMethod, setPayMethod] = useState<"WALLET" | "BKASH">("WALLET");
+const PRICE_PER_QUESTION = 1;
 
-    const { data: quizzes = [], isLoading: qLoading } = useQuery<Quiz[]>({
-        queryKey: ["quizzes"],
-        queryFn: () => quizApi.findActive(),
+export default function QuizPage() {
+    const { t, locale } = useLocale();
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const queryClient = useQueryClient();
+    const categoryFilter = searchParams.get("category");
+    const [questionCount, setQuestionCount] = useState(10);
+    const [payMethod, setPayMethod] = useState<"WALLET" | "BKASH">("WALLET");
+    const [purchaseModal, setPurchaseModal] = useState<{ categoryId: string; name: string; maxQuestions: number } | null>(null);
+
+    const { data: categories = [] } = useQuery<QuizCategoryItem[]>({
+        queryKey: ["quiz-categories"],
+        queryFn: () => quizApi.getCategories(),
     });
 
-    const { data: purchases = [], isLoading: pLoading } = useQuery<QuizPurchase[]>({
+    const activeCategory = categoryFilter ? categories.find((c) => c.id === categoryFilter) : null;
+
+    const { data: countData } = useQuery({
+        queryKey: ["quiz-category-count", categoryFilter],
+        queryFn: () => (categoryFilter ? quizApi.getCategoryCount(categoryFilter) : null),
+        enabled: !!categoryFilter,
+    });
+
+    const totalQuestions = countData?.total ?? 0;
+
+    const { data: purchases = [], isLoading: pLoading } = useQuery<QuizPurchaseInfo[]>({
         queryKey: ["quiz-purchases"],
         queryFn: () => quizApi.getPurchased(),
     });
@@ -32,112 +47,159 @@ export default function QuizPage() {
     });
 
     const purchaseMutation = useMutation({
-        mutationFn: ({ id, method }: { id: string; method: string }) => quizApi.purchase(id, method),
-        onSuccess: () => {
+        mutationFn: ({ categoryId, questionCount, method }: { categoryId: string; questionCount: number; method: string }) =>
+            quizApi.purchase(categoryId, { questionCount, paymentMethod: method }),
+        onSuccess: (data: any) => {
             queryClient.invalidateQueries({ queryKey: ["quiz-purchases"] });
             queryClient.invalidateQueries({ queryKey: ["wallet"] });
             setPurchaseModal(null);
+            // Navigate to attempt
+            router.push(`/dashboard/quiz/attempt/${data.id}`);
         },
     });
 
-    const purchasedIds = new Set(purchases.map((p) => p.quizId));
-    const purchaseMap = new Map(purchases.map((p) => [p.quizId, p]));
+    const catPurchases = categoryFilter ? purchases.filter((p) => p.categoryId === categoryFilter && p.status === "PURCHASED") : [];
+    const hasActivePurchase = catPurchases.length > 0;
 
-    if (qLoading || pLoading) {
+    if (pLoading) {
         return <div className="flex justify-center py-20"><Loader2 className="animate-spin" size={32} /></div>;
     }
 
     return (
         <div className="max-w-3xl mx-auto space-y-6">
+            {/* Header */}
             <div>
-                <h1 className="text-2xl font-bold text-gray-800">{t("dashboard.quiz.title")}</h1>
+                <div className="flex items-center gap-3 mb-1">
+                    {categoryFilter && activeCategory ? (
+                        <button onClick={() => router.push("/dashboard/quiz")} className="p-1 text-gray-400 hover:text-gray-600">
+                            <ArrowLeft size={18} />
+                        </button>
+                    ) : null}
+                    <h1 className="text-2xl font-bold text-gray-800">
+                        {activeCategory ? activeCategory.name : t("dashboard.quiz.title")}
+                    </h1>
+                </div>
             </div>
 
-            {quizzes.length === 0 ? (
-                <div className="card p-12 bg-white flex flex-col items-center gap-3 text-gray-400">
-                    <HelpCircle size={48} />
-                    <p className="text-sm">{t("dashboard.quiz.noQuizzes")}</p>
-                </div>
-            ) : (
-                <div className="grid gap-4">
-                    {quizzes.map((quiz) => {
-                        const bought = purchasedIds.has(quiz.id);
-                        const purchase = purchaseMap.get(quiz.id);
-                        return (
-                            <div key={quiz.id} className="card p-5 bg-white flex items-center justify-between">
-                                <div className="flex-1">
-                                    <h3 className="text-sm font-bold text-gray-800">{quiz.title}</h3>
-                                    <div className="flex gap-4 mt-1 text-[10px] text-gray-400">
-                                        <span className="flex items-center gap-1"><DollarSign size={12} /> {formatCurrency(quiz.price)}</span>
-                                        <span className="flex items-center gap-1"><HelpCircle size={12} /> {quiz._count?.questions ?? 0} {t("dashboard.quiz.questions")}</span>
-                                        <span className="flex items-center gap-1"><Clock size={12} /> {quiz.timeLimit} {t("dashboard.quiz.minutes")}</span>
-                                    </div>
+            {/* Category grid (no filter) */}
+            {!categoryFilter ? (
+                categories.length === 0 ? (
+                    <div className="card p-12 bg-white flex flex-col items-center gap-3 text-gray-400">
+                        <HelpCircle size={48} />
+                        <p className="text-sm">{t("dashboard.quiz.noQuizzes")}</p>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                        {categories.map((cat) => (
+                            <button
+                                key={cat.id}
+                                onClick={() => router.push(`/dashboard/quiz?category=${cat.id}`)}
+                                className="group rounded-xl overflow-hidden border border-gray-200 bg-white hover:-translate-y-0.5 transition-transform text-left"
+                            >
+                                <div className="aspect-[4/3] bg-gray-100">
+                                    <img src={cat.imageUrl} alt={cat.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                                 </div>
-                                <div className="flex items-center gap-2">
-                                    {bought ? (
-                                        purchase?.status === "PURCHASED" ? (
-                                            <button
-                                                onClick={() => router.push(`/dashboard/quiz/attempt/${purchase!.id}`)}
-                                                className="btn-primary text-xs"
-                                            >
-                                                {t("dashboard.quiz.startQuiz")}
-                                            </button>
-                                        ) : (
-                                            <div className="flex items-center gap-2">
-                                                <span className={`text-xs font-semibold ${purchase?.status === "COMPLETED" ? "text-green-700" : "text-red-600"}`}>
-                                                    {purchase?.status === "COMPLETED" ? (
-                                                        <span className="flex items-center gap-1"><Award size={14} /> {purchase.score}/{purchase.totalQuestions}</span>
-                                                    ) : (
-                                                        <span className="flex items-center gap-1"><XCircle size={14} /> {t("dashboard.quiz.timedOut")}</span>
-                                                    )}
-                                                </span>
-                                                {purchase?.status === "COMPLETED" && (
-                                                    <button onClick={() => router.push(`/dashboard/quiz/attempt/${purchase!.id}`)} className="text-xs text-green-700 hover:underline font-semibold">
-                                                        {t("dashboard.quiz.retake")}
-                                                    </button>
-                                                )}
-                                            </div>
-                                        )
-                                    ) : (
-                                        <button onClick={() => setPurchaseModal(quiz)} className="btn-primary text-xs">
-                                            {t("dashboard.quiz.purchase")}
-                                        </button>
+                                <div className="p-3">
+                                    <p className="text-sm font-bold text-gray-800 truncate">{cat.name}</p>
+                                    <p className="text-[10px] text-gray-400">{cat._count?.questions ?? 0} questions available</p>
+                                    {purchases.some((p) => p.categoryId === cat.id && p.status === "PURCHASED") && (
+                                        <span className="inline-block mt-1 text-[9px] text-green-700 font-semibold bg-green-50 px-2 py-0.5 rounded-full">Purchased</span>
                                     )}
                                 </div>
-                            </div>
-                        );
-                    })}
-                </div>
-            )}
-
-            {purchases.length > 0 && (
-                <div>
-                    <h2 className="text-sm font-bold text-gray-800 mb-3">{t("dashboard.quiz.purchased")}</h2>
-                    <div className="space-y-2">
-                        {purchases.map((p) => (
-                            <div key={p.id} className="card p-3 bg-white flex items-center justify-between text-xs">
-                                <div>
-                                    <span className="font-semibold text-gray-800">{p.quiz?.title}</span>
-                                    <span className="ml-3 text-gray-400">
-                                        {p.status === "PURCHASED" ? (
-                                            <span className="text-yellow-600 font-semibold">{t("dashboard.quiz.purchased")}</span>
-                                        ) : p.status === "COMPLETED" ? (
-                                            <span className="text-green-700 font-semibold flex items-center gap-1"><CheckCircle size={12} /> {p.score}/{p.totalQuestions}</span>
-                                        ) : (
-                                            <span className="text-red-600 font-semibold">{t("dashboard.quiz.timedOut")}</span>
-                                        )}
-                                    </span>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    {p.status === "PURCHASED" ? (
-                                        <button onClick={() => router.push(`/dashboard/quiz/attempt/${p.id}`)} className="btn-primary text-[10px]">{t("dashboard.quiz.startQuiz")}</button>
-                                    ) : (
-                                        <button onClick={() => router.push(`/dashboard/quiz/attempt/${p.id}`)} className="text-[10px] text-green-700 hover:underline font-semibold">{t("dashboard.quiz.retake")}</button>
-                                    )}
-                                </div>
-                            </div>
+                            </button>
                         ))}
                     </div>
+                )
+            ) : !activeCategory ? (
+                <div className="card p-12 bg-white text-center text-sm text-gray-400">Category not found</div>
+            ) : (
+                /* Category detail page */
+                <div className="space-y-6">
+                    {/* Category hero */}
+                    <div className="card bg-white overflow-hidden">
+                        <div className="aspect-[3/1] bg-gray-100">
+                            <img src={activeCategory.imageUrl} alt={activeCategory.name} className="w-full h-full object-cover" />
+                        </div>
+                        <div className="p-5">
+                            <h2 className="text-lg font-bold text-gray-900">{activeCategory.name}</h2>
+                            <p className="text-xs text-gray-400 mt-1">{totalQuestions} questions available</p>
+                        </div>
+                    </div>
+
+                    {/* Question count selector */}
+                    <div className="card p-5 bg-white">
+                        <h3 className="text-sm font-bold text-gray-800 mb-3">Purchase Quiz Questions</h3>
+                        <div className="flex items-center gap-4 mb-4">
+                            <div className="flex-1">
+                                <label className="text-xs text-gray-500 font-semibold block mb-1">Number of Questions</label>
+                                <div className="flex items-center gap-2">
+                                    <button onClick={() => setQuestionCount(Math.max(1, questionCount - 5))} className="btn-outline-primary text-xs px-2 py-1">-5</button>
+                                    <input
+                                        type="number"
+                                        min={1}
+                                        max={totalQuestions}
+                                        value={questionCount}
+                                        onChange={(e) => setQuestionCount(Math.min(totalQuestions, Math.max(1, Number(e.target.value) || 1)))}
+                                        className="input w-24 text-center text-sm"
+                                    />
+                                    <button onClick={() => setQuestionCount(Math.min(totalQuestions, questionCount + 5))} className="btn-outline-primary text-xs px-2 py-1">+5</button>
+                                </div>
+                            </div>
+                            <div className="text-right">
+                                <label className="text-xs text-gray-500 font-semibold block mb-1">Total Price</label>
+                                <p className="text-2xl font-extrabold text-green-700">{formatCurrency(questionCount * PRICE_PER_QUESTION, locale)}</p>
+                                <p className="text-[10px] text-gray-400">{PRICE_PER_QUESTION} tk/question</p>
+                            </div>
+                        </div>
+
+                        {hasActivePurchase ? (
+                            <div className="space-y-2">
+                                <p className="text-xs text-green-700 font-semibold flex items-center gap-1"><CheckCircle size={14} /> You have an active purchase for this category</p>
+                                {catPurchases.map((p) => (
+                                    <button
+                                        key={p.id}
+                                        onClick={() => router.push(`/dashboard/quiz/attempt/${p.id}`)}
+                                        className="btn-primary text-sm w-full"
+                                    >
+                                        Continue Quiz ({p.questionCount} questions) {!!p.answers?.length && `(${p.answers.filter(a => a.isCorrect).length}/${p.questionCount})`}
+                                    </button>
+                                ))}
+                            </div>
+                        ) : (
+                            <button
+                                onClick={() => setPurchaseModal({ categoryId: categoryFilter, name: activeCategory.name, maxQuestions: totalQuestions })}
+                                disabled={totalQuestions === 0}
+                                className="btn-primary text-sm w-full flex items-center justify-center gap-2"
+                            >
+                                <ShoppingCart size={16} /> Buy Quiz Questions
+                            </button>
+                        )}
+                    </div>
+
+                    {/* Past purchases */}
+                    {purchases.filter((p) => p.categoryId === categoryFilter && p.status === "COMPLETED").length > 0 && (
+                        <div>
+                            <h3 className="text-sm font-bold text-gray-800 mb-2">Results</h3>
+                            <div className="space-y-2">
+                                {purchases.filter((p) => p.categoryId === categoryFilter && p.status === "COMPLETED").map((p) => (
+                                    <button
+                                        key={p.id}
+                                        onClick={() => router.push(`/dashboard/quiz/result/${p.id}`)}
+                                        className="card p-3 bg-white flex items-center justify-between w-full text-left"
+                                    >
+                                        <div className="text-xs">
+                                            <span className="font-semibold text-gray-800">{p.questionCount} questions</span>
+                                            <span className="ml-2 text-green-700 font-semibold">
+                                                <Award size={12} className="inline mr-0.5" />
+                                                {p.answers?.filter((a) => a.isCorrect).length ?? 0}/{p.questionCount}
+                                            </span>
+                                        </div>
+                                        <span className="text-[10px] text-green-700 hover:underline font-semibold">View Result</span>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
             )}
 
@@ -145,46 +207,39 @@ export default function QuizPage() {
             {purchaseModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
                     <div className="bg-white rounded-xl p-6 w-full max-w-sm mx-4 space-y-4">
-                        <h3 className="text-sm font-bold text-gray-800">{t("dashboard.quiz.completePurchase")}</h3>
-                        <p className="text-xs text-gray-500">{purchaseModal.title} — {formatCurrency(purchaseModal.price)}</p>
+                        <h3 className="text-sm font-bold text-gray-800">Complete Purchase</h3>
+                        <p className="text-xs text-gray-500">{purchaseModal.name}</p>
+                        <p className="text-lg font-extrabold text-green-700">{questionCount} questions = {formatCurrency(questionCount * PRICE_PER_QUESTION, locale)}</p>
 
                         <div className="space-y-2">
-                            <button
-                                onClick={() => setPayMethod("WALLET")}
-                                className={`w-full flex items-center gap-3 p-3 rounded-lg border text-sm ${payMethod === "WALLET" ? "border-green-600 bg-green-50" : "border-gray-200"}`}
-                            >
+                            <button onClick={() => setPayMethod("WALLET")} className={`w-full flex items-center gap-3 p-3 rounded-lg border text-sm ${payMethod === "WALLET" ? "border-green-600 bg-green-50" : "border-gray-200"}`}>
                                 <Wallet size={18} />
                                 <div className="text-left">
                                     <p className="font-semibold text-gray-800">{t("dashboard.quiz.payWallet")}</p>
-                                    <p className="text-[10px] text-gray-400">{wallet ? formatCurrency(Number(wallet.balance)) : "..."}</p>
+                                    <p className="text-[10px] text-gray-400">{wallet ? formatCurrency(Number(wallet.balance), locale) : "..."}</p>
                                 </div>
                                 {payMethod === "WALLET" && <CheckCircle size={16} className="ml-auto text-green-700" />}
                             </button>
-                            <button
-                                onClick={() => setPayMethod("BKASH")}
-                                className={`w-full flex items-center gap-3 p-3 rounded-lg border text-sm ${payMethod === "BKASH" ? "border-green-600 bg-green-50" : "border-gray-200"}`}
-                            >
+                            <button onClick={() => setPayMethod("BKASH")} className={`w-full flex items-center gap-3 p-3 rounded-lg border text-sm ${payMethod === "BKASH" ? "border-green-600 bg-green-50" : "border-gray-200"}`}>
                                 <Smartphone size={18} />
-                                <div className="text-left">
-                                    <p className="font-semibold text-gray-800">{t("dashboard.quiz.payBkash")}</p>
-                                </div>
+                                <div className="text-left"><p className="font-semibold text-gray-800">{t("dashboard.quiz.payBkash")}</p></div>
                                 {payMethod === "BKASH" && <CheckCircle size={16} className="ml-auto text-green-700" />}
                             </button>
                         </div>
 
-                        {payMethod === "WALLET" && wallet && Number(wallet.balance) < Number(purchaseModal.price) && (
-                            <p className="text-xs text-red-600 text-center">{t("dashboard.quiz.insufficientBalance")}</p>
+                        {payMethod === "WALLET" && wallet && Number(wallet.balance) < questionCount * PRICE_PER_QUESTION && (
+                            <p className="text-xs text-red-600 text-center">Insufficient balance</p>
                         )}
 
                         <div className="flex gap-3">
                             <button
-                                onClick={() => purchaseMutation.mutate({ id: purchaseModal.id, method: payMethod })}
-                                disabled={purchaseMutation.isPending || (payMethod === "WALLET" && Number(wallet?.balance ?? 0) < Number(purchaseModal.price))}
+                                onClick={() => purchaseMutation.mutate({ categoryId: purchaseModal.categoryId, questionCount, method: payMethod })}
+                                disabled={purchaseMutation.isPending || (payMethod === "WALLET" && Number(wallet?.balance ?? 0) < questionCount * PRICE_PER_QUESTION)}
                                 className="btn-primary flex-1 text-sm"
                             >
-                                {purchaseMutation.isPending ? <Loader2 size={14} className="animate-spin mx-auto" /> : t("dashboard.quiz.confirmPurchase")}
+                                {purchaseMutation.isPending ? <Loader2 size={14} className="animate-spin mx-auto" /> : "Buy Now"}
                             </button>
-                            <button onClick={() => setPurchaseModal(null)} className="btn-outline-primary text-sm">{t("dashboard.quiz.backToQuizzes")}</button>
+                            <button onClick={() => setPurchaseModal(null)} className="btn-outline-primary text-sm">Cancel</button>
                         </div>
                     </div>
                 </div>

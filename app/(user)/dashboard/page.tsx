@@ -3,12 +3,14 @@
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import {
-    Wallet, Users, ShieldCheck, Gift, TrendingUp,
-    AlertCircle, ArrowUpRight, Clock, ShoppingBag
+    Users, ShieldCheck, AlertCircle, Clock, Wallet, ArrowUpRight,
+    ImageIcon, Download, HelpCircle, FolderOpen
 } from "lucide-react";
 import { useAuthStore } from "@/store/auth";
 import { walletApi } from "@/lib/api/wallet";
 import { referralApi } from "@/lib/api/categories";
+import { bannersApi, type Banner } from "@/lib/api/banners";
+import { quizApi, type QuizCategoryItem } from "@/lib/api/quiz";
 import { authApi } from "@/lib/api/auth";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
@@ -45,6 +47,16 @@ export default function DashboardOverview() {
         queryKey: ["referral-stats"],
         queryFn: () => referralApi.teamStats(),
         refetchOnWindowFocus: true,
+    });
+
+    const { data: dailyWork } = useQuery<Banner | null>({
+        queryKey: ["daily-work"],
+        queryFn: () => bannersApi.findDailyWork(),
+    });
+
+    const { data: quizCategories = [] } = useQuery<QuizCategoryItem[]>({
+        queryKey: ["quiz-categories"],
+        queryFn: () => quizApi.getCategories(),
     });
 
     const { data: activation } = useQuery({
@@ -168,27 +180,67 @@ export default function DashboardOverview() {
                 </div>
             </div>
 
-            {/* How It Works - compact */}
-            <div className="card p-5">
-                <h3 className="text-sm font-bold text-gray-900 mb-4 pb-2 border-b border-gray-100">{t("home.howItWorks.heading")}</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    {[
-                        { icon: Gift, label: t("home.howItWorks.step1.label"), title: t("home.howItWorks.step1.title"), desc: t("home.howItWorks.step1.desc") },
-                        { icon: ShoppingBag, label: t("home.howItWorks.step2.label"), title: t("home.howItWorks.step2.title"), desc: t("home.howItWorks.step2.desc") },
-                        { icon: TrendingUp, label: t("home.howItWorks.step3.label"), title: t("home.howItWorks.step3.title"), desc: t("home.howItWorks.step3.desc") },
-                    ].map((item) => (
-                        <div key={item.label} className="flex items-start gap-3 rounded-lg bg-gray-50 p-3">
-                            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-green-100 text-xs font-extrabold text-green-700">
-                                {item.label}
-                            </div>
-                            <div className="min-w-0">
-                                <h4 className="text-xs font-bold text-gray-800">{item.title}</h4>
-                                <p className="text-[11px] text-gray-500 leading-snug mt-0.5">{item.desc}</p>
+            {/* Daily Work Section */}
+            {dailyWork && (
+                <div className="card p-5 bg-white">
+                    <div className="flex items-center gap-2 mb-3">
+                        <ImageIcon size={18} className="text-green-700" />
+                        <h3 className="text-sm font-bold text-gray-900">{t("nav.dailyWork")}</h3>
+                    </div>
+                    <div className="flex flex-col sm:flex-row gap-4 items-start">
+                        <div className="w-full sm:w-48 flex-shrink-0 rounded-lg overflow-hidden border border-gray-200">
+                            <img src={dailyWork.imageUrl} alt="Daily Work" className="w-full h-auto object-contain" />
+                        </div>
+                        <div className="flex-1 space-y-3">
+                            <p className="text-xs text-gray-500">{t("dashboard.dailyWork.description")}</p>
+                            <div className="flex gap-2">
+                                <button
+                                    onClick={() => {
+                                        const link = document.createElement("a");
+                                        link.href = dailyWork.imageUrl;
+                                        link.download = "daily-work.jpg";
+                                        document.body.appendChild(link);
+                                        link.click();
+                                        document.body.removeChild(link);
+                                    }}
+                                    className="btn-primary text-xs flex items-center gap-1.5"
+                                >
+                                    <Download size={14} /> {t("dashboard.dailyWork.download")}
+                                </button>
+                                <Link href="/dashboard/daily-work" className="btn-outline-primary text-xs">
+                                    {t("dashboard.dailyWork.viewDetail")}
+                                </Link>
                             </div>
                         </div>
-                    ))}
+                    </div>
                 </div>
-            </div>
+            )}
+
+            {/* Quiz Categories Section */}
+            {quizCategories.length > 0 && (
+                <div className="card p-5 bg-white">
+                    <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-2">
+                            <FolderOpen size={18} className="text-green-700" />
+                            <h3 className="text-sm font-bold text-gray-900">{t("nav.quiz")}</h3>
+                        </div>
+                        <Link href="/dashboard/quiz" className="text-xs text-green-700 font-semibold hover:underline">{t("dashboard.quiz.viewAll")}</Link>
+                    </div>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                        {quizCategories.map((cat) => (
+                            <Link key={cat.id} href={`/dashboard/quiz?category=${cat.id}`} className="group rounded-xl overflow-hidden border border-gray-200 bg-white hover:-translate-y-0.5 transition-transform">
+                                <div className="aspect-[4/3] bg-gray-100">
+                                    <img src={cat.imageUrl} alt={cat.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                                </div>
+                                <div className="p-2.5 text-center">
+                                    <p className="text-xs font-bold text-gray-800 truncate">{cat.name}</p>
+                                    <p className="text-[10px] text-gray-400">{cat._count?.questions ?? 0} questions</p>
+                                </div>
+                            </Link>
+                        ))}
+                    </div>
+                </div>
+            )}
 
         </div>
     );

@@ -1,9 +1,9 @@
 "use client";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
-import { Plus, Trash2, Loader2, ChevronDown, ChevronUp, X } from "lucide-react";
-import { quizApi, type Quiz } from "@/lib/api/quiz";
+import { useState, useRef } from "react";
+import { Plus, Trash2, Loader2, X, ImageIcon, FolderOpen, ListOrdered, Eye, EyeOff } from "lucide-react";
+import { quizApi, uploadImage, type QuizCategoryItem, type QuizQuestion } from "@/lib/api/quiz";
 import { useLocale } from "@/lib/i18n";
 
 interface QuestionForm {
@@ -21,38 +21,107 @@ const emptyQuestion = (): QuestionForm => ({
 export default function AdminQuizPage() {
     const { t } = useLocale();
     const queryClient = useQueryClient();
-    const [showForm, setShowForm] = useState(false);
-    const [title, setTitle] = useState("");
-    const [price, setPrice] = useState("");
-    const [timeLimit, setTimeLimit] = useState("2");
-    const [questions, setQuestions] = useState<QuestionForm[]>([emptyQuestion()]);
-    const [expanded, setExpanded] = useState<string | null>(null);
+    const [tab, setTab] = useState<"categories" | "quizzes">("categories");
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const { data: quizzes = [], isLoading } = useQuery<Quiz[]>({
-        queryKey: ["admin-quizzes"],
-        queryFn: () => quizApi.adminFindAll(),
+    // Category form
+    const [showCatForm, setShowCatForm] = useState(false);
+    const [catName, setCatName] = useState("");
+    const [catImage, setCatImage] = useState<File | null>(null);
+    const [catImagePreview, setCatImagePreview] = useState("");
+    const [catUploading, setCatUploading] = useState(false);
+
+    // Question form
+    const [activeCategory, setActiveCategory] = useState<string | null>(null);
+    const [questions, setQuestions] = useState<QuestionForm[]>([emptyQuestion()]);
+    const [showQuestionForm, setShowQuestionForm] = useState(false);
+
+    // Question list
+    const [viewQuestions, setViewQuestions] = useState<string | null>(null);
+
+    const { data: categories = [] } = useQuery<QuizCategoryItem[]>({
+        queryKey: ["admin-quiz-categories"],
+        queryFn: () => quizApi.getAllCategories(),
     });
 
-    const createMutation = useMutation({
-        mutationFn: (data: { title: string; price: number; timeLimit: number; questions: { question: string; options: string[]; correctIndex: number }[] }) =>
-            quizApi.adminCreate(data),
+    const { data: questionData } = useQuery({
+        queryKey: ["admin-quiz-questions", viewQuestions],
+        queryFn: () => viewQuestions ? quizApi.adminGetQuestions(viewQuestions) : null,
+        enabled: !!viewQuestions,
+    });
+
+    const createCatMutation = useMutation({
+        mutationFn: (data: { name: string; imageUrl: string }) => quizApi.adminCreateCategory(data),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["admin-quizzes"] });
-            resetForm();
+            queryClient.invalidateQueries({ queryKey: ["admin-quiz-categories"] });
+            resetCatForm();
         },
     });
 
-    const deleteMutation = useMutation({
-        mutationFn: (id: string) => quizApi.adminDelete(id),
-        onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin-quizzes"] }),
+    const deleteCatMutation = useMutation({
+        mutationFn: (id: string) => quizApi.adminDeleteCategory(id),
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin-quiz-categories"] }),
     });
 
-    const resetForm = () => {
-        setShowForm(false);
-        setTitle("");
-        setPrice("");
-        setTimeLimit("2");
+    const addQuestionsMutation = useMutation({
+        mutationFn: ({ categoryId, questions }: { categoryId: string; questions: { question: string; options: string[]; correctIndex: number }[] }) =>
+            quizApi.adminAddQuestions(categoryId, questions),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["admin-quiz-questions", viewQuestions] });
+            queryClient.invalidateQueries({ queryKey: ["admin-quiz-categories"] });
+            resetQuestionForm();
+        },
+    });
+
+    const deleteQuestionMutation = useMutation({
+        mutationFn: (id: string) => quizApi.adminDeleteQuestion(id),
+        onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin-quiz-questions", viewQuestions] }),
+    });
+
+    const resetCatForm = () => {
+        setShowCatForm(false);
+        setCatName("");
+        setCatImage(null);
+        setCatImagePreview("");
+    };
+
+    const resetQuestionForm = () => {
+        setShowQuestionForm(false);
         setQuestions([emptyQuestion()]);
+    };
+
+    const handleCatImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setCatImage(file);
+            setCatImagePreview(URL.createObjectURL(file));
+        }
+    };
+
+    const handleCreateCategory = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!catName.trim() || !catImage) return;
+        setCatUploading(true);
+        try {
+            const url = await uploadImage(catImage);
+            createCatMutation.mutate({ name: catName.trim(), imageUrl: url });
+        } catch { /* ignore */ } finally { setCatUploading(false); }
+    };
+
+    const handleSubmitQuestions = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!activeCategory) return;
+        const valid = questions.filter((q) => q.question.trim() && q.options.some((o) => o.trim()));
+        if (valid.length === 0) return;
+        addQuestionsMutation.mutate({
+            categoryId: activeCategory,
+            questions: valid.map((q, i) => ({
+                question: q.question,
+                options: q.options,
+                correctIndex: q.correctIndex,
+                sortOrder: i,
+            })),
+        });
     };
 
     const updateOption = (qIdx: number, optIdx: number, value: string) => {
@@ -62,180 +131,149 @@ export default function AdminQuizPage() {
         setQuestions(copy);
     };
 
-    const addQuestion = () => setQuestions([...questions, emptyQuestion()]);
-    const removeQuestion = (idx: number) => {
-        if (questions.length <= 1) return;
-        setQuestions(questions.filter((_, i) => i !== idx));
-    };
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!title.trim() || !price) return;
-        const validQuestions = questions.filter((q) => q.question.trim() && q.options.some((o) => o.trim()));
-        if (validQuestions.length === 0) return;
-        createMutation.mutate({
-            title,
-            price: Number(price),
-            timeLimit: Number(timeLimit),
-            questions: validQuestions.map((q, i) => ({
-                question: q.question,
-                options: q.options,
-                correctIndex: q.correctIndex,
-                sortOrder: i,
-            })),
-        });
-    };
-
     return (
         <div className="space-y-6">
-            <div className="flex items-center justify-between">
-                <div>
-                    <h1 className="text-2xl font-bold text-slate-800">{t("nav.quiz")}</h1>
-                    <p className="text-sm text-slate-500">Create and manage quizzes</p>
-                </div>
-                <button onClick={() => setShowForm(!showForm)} className="btn-primary text-sm flex items-center gap-2">
-                    <Plus size={16} /> New Quiz
+            <div>
+                <h1 className="text-2xl font-bold text-slate-800">{t("nav.quiz")}</h1>
+                <p className="text-sm text-slate-500">Create quiz categories and add questions</p>
+            </div>
+
+            {/* Tabs */}
+            <div className="flex gap-1 border-b border-slate-200">
+                <button onClick={() => setTab("categories")} className={`px-4 py-2 text-sm font-semibold border-b-2 transition-colors ${tab === "categories" ? "border-green-700 text-green-700" : "border-transparent text-slate-500 hover:text-slate-700"}`}>
+                    <FolderOpen size={14} className="inline mr-1.5" />Categories
                 </button>
             </div>
 
-            {showForm && (
-                <form onSubmit={handleSubmit} className="card p-6 bg-white space-y-4">
-                    <h2 className="text-sm font-bold text-slate-800 border-b border-slate-100 pb-2">Create New Quiz</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                            <label className="block text-xs font-semibold text-slate-600 mb-1">Title</label>
-                            <input value={title} onChange={(e) => setTitle(e.target.value)} className="input w-full" required />
-                        </div>
-                        <div>
-                            <label className="block text-xs font-semibold text-slate-600 mb-1">Price (BDT)</label>
-                            <input type="number" min="0" value={price} onChange={(e) => setPrice(e.target.value)} className="input w-full" required />
-                        </div>
-                        <div>
-                            <label className="block text-xs font-semibold text-slate-600 mb-1">Time Limit (minutes)</label>
-                            <input type="number" min="1" value={timeLimit} onChange={(e) => setTimeLimit(e.target.value)} className="input w-full" required />
-                        </div>
+            {tab === "categories" && (
+                <>
+                    <div className="flex justify-end">
+                        <button onClick={() => setShowCatForm(!showCatForm)} className="btn-primary text-sm flex items-center gap-2">
+                            <Plus size={16} /> New Category
+                        </button>
                     </div>
 
-                    <div className="space-y-3">
-                        <div className="flex items-center justify-between">
-                            <span className="text-xs font-semibold text-slate-600">Questions</span>
-                            <button type="button" onClick={addQuestion} className="text-xs text-green-700 hover:text-green-800 font-semibold">+ Add Question</button>
-                        </div>
-                        {questions.map((q, qIdx) => (
-                            <div key={qIdx} className="border border-slate-200 rounded-lg p-4 space-y-3">
-                                <div className="flex items-center justify-between">
-                                    <span className="text-xs font-semibold text-slate-500">Question {qIdx + 1}</span>
-                                    {questions.length > 1 && (
-                                        <button type="button" onClick={() => removeQuestion(qIdx)} className="text-red-500 hover:text-red-700">
-                                            <X size={14} />
-                                        </button>
-                                    )}
+                    {showCatForm && (
+                        <form onSubmit={handleCreateCategory} className="card p-6 bg-white space-y-4">
+                            <h2 className="text-sm font-bold text-slate-800 border-b border-slate-100 pb-2">Create New Category</h2>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-xs font-semibold text-slate-600 mb-1">Category Name</label>
+                                    <input value={catName} onChange={(e) => setCatName(e.target.value)} className="input w-full" required />
                                 </div>
-                                <input
-                                    value={q.question}
-                                    onChange={(e) => {
-                                        const copy = [...questions];
-                                        copy[qIdx] = { ...copy[qIdx], question: e.target.value };
-                                        setQuestions(copy);
-                                    }}
-                                    placeholder="Enter question"
-                                    className="input w-full text-sm"
-                                    required
-                                />
-                                {q.options.map((opt, optIdx) => (
-                                    <div key={optIdx} className="flex items-center gap-2">
-                                        <input
-                                            type="radio"
-                                            name={`correct-${qIdx}`}
-                                            checked={q.correctIndex === optIdx}
-                                            onChange={() => {
-                                                const copy = [...questions];
-                                                copy[qIdx] = { ...copy[qIdx], correctIndex: optIdx };
-                                                setQuestions(copy);
-                                            }}
-                                        />
-                                        <input
-                                            value={opt}
-                                            onChange={(e) => updateOption(qIdx, optIdx, e.target.value)}
-                                            placeholder={`Option ${optIdx + 1}`}
-                                            className="input flex-1 text-sm"
-                                            required
-                                        />
-                                        {q.correctIndex === optIdx && (
-                                            <span className="text-[10px] text-green-700 font-semibold">Correct</span>
+                                <div>
+                                    <label className="block text-xs font-semibold text-slate-600 mb-1">Category Image</label>
+                                    <input ref={fileInputRef} type="file" accept="image/*" onChange={handleCatImageSelect} className="hidden" />
+                                    <div className="flex gap-2 items-center">
+                                        <button type="button" onClick={() => fileInputRef.current?.click()} className="btn-outline-primary text-xs flex items-center gap-1.5">
+                                            <ImageIcon size={14} /> Choose Image
+                                        </button>
+                                        {catImagePreview && <img src={catImagePreview} className="h-10 w-10 rounded object-cover border" />}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex gap-3">
+                                <button type="submit" disabled={catUploading || createCatMutation.isPending} className="btn-primary text-sm">
+                                    {catUploading || createCatMutation.isPending ? <span className="flex items-center gap-2"><Loader2 size={14} className="animate-spin" /> Saving...</span> : "Save Category"}
+                                </button>
+                                <button type="button" onClick={resetCatForm} className="btn-outline-primary text-sm">Cancel</button>
+                            </div>
+                        </form>
+                    )}
+
+                    {categories.length === 0 ? (
+                        <div className="card p-12 bg-white text-center text-sm text-slate-400">No categories created yet.</div>
+                    ) : (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                            {categories.map((cat) => (
+                                <div key={cat.id} className="card bg-white overflow-hidden">
+                                    <div className="aspect-video bg-slate-100 relative">
+                                        <img src={cat.imageUrl} alt={cat.name} className="w-full h-full object-cover" />
+                                    </div>
+                                    <div className="p-4 space-y-2">
+                                        <div className="flex items-center justify-between">
+                                            <div>
+                                                <h3 className="text-sm font-bold text-slate-800">{cat.name}</h3>
+                                                <p className="text-[10px] text-slate-400">{cat._count?.questions ?? 0} questions</p>
+                                            </div>
+                                            <button onClick={() => { if (confirm("Delete this category and all its questions?")) deleteCatMutation.mutate(cat.id); }} className="p-1.5 text-red-400 hover:text-red-600"><Trash2 size={16} /></button>
+                                        </div>
+                                        <div className="flex gap-2">
+                                            <button onClick={() => { setActiveCategory(cat.id); setShowQuestionForm(true); setQuestions([emptyQuestion()]); }} className="btn-primary text-xs flex items-center gap-1 flex-1 justify-center">
+                                                <Plus size={12} /> Add Questions
+                                            </button>
+                                            <button onClick={() => setViewQuestions(viewQuestions === cat.id ? null : cat.id)} className="btn-outline-primary text-xs flex items-center gap-1">
+                                                {viewQuestions === cat.id ? <EyeOff size={12} /> : <Eye size={12} />} {viewQuestions === cat.id ? "Hide" : "View"}
+                                            </button>
+                                        </div>
+
+                                        {viewQuestions === cat.id && (
+                                            <div className="border-t border-slate-100 pt-2 mt-1">
+                                                {questionData?.questions.length === 0 ? (
+                                                    <p className="text-[10px] text-slate-400 text-center py-2">No questions yet.</p>
+                                                ) : (
+                                                    <div className="space-y-1 max-h-48 overflow-y-auto">
+                                                        {questionData?.questions.map((q, i) => (
+                                                            <div key={q.id} className="flex items-start justify-between gap-2 p-1.5 rounded bg-slate-50">
+                                                                <div className="min-w-0">
+                                                                    <p className="text-[10px] font-semibold text-slate-700 truncate">{i + 1}. {q.question}</p>
+                                                                    <p className="text-[9px] text-slate-400">{q.options.length} options</p>
+                                                                </div>
+                                                                <button onClick={() => { if (confirm("Delete this question?")) deleteQuestionMutation.mutate(q.id); }} className="p-0.5 text-red-300 hover:text-red-500 shrink-0"><X size={10} /></button>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </div>
                                         )}
                                     </div>
-                                ))}
-                            </div>
-                        ))}
-                    </div>
-
-                    <div className="flex gap-3">
-                        <button type="submit" disabled={createMutation.isPending} className="btn-primary text-sm">
-                            {createMutation.isPending ? <span className="flex items-center gap-2"><Loader2 size={14} className="animate-spin" /> Creating...</span> : "Save Quiz"}
-                        </button>
-                        <button type="button" onClick={resetForm} className="btn-outline-primary text-sm">Cancel</button>
-                    </div>
-                </form>
-            )}
-
-            {isLoading ? (
-                <div className="flex justify-center py-10"><Loader2 className="animate-spin" size={24} /></div>
-            ) : quizzes.length === 0 ? (
-                <div className="card p-12 bg-white text-center text-sm text-slate-400">No quizzes created yet.</div>
-            ) : (
-                <div className="space-y-3">
-                    {quizzes.map((quiz) => (
-                        <div key={quiz.id} className="card bg-white overflow-hidden">
-                            <div className="p-4 flex items-center justify-between">
-                                <div className="flex-1">
-                                    <div className="flex items-center gap-3">
-                                        <h3 className="text-sm font-bold text-slate-800">{quiz.title}</h3>
-                                        <span className={`text-[10px] px-2 py-0.5 rounded-full font-semibold ${quiz.isActive ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-500"}`}>
-                                            {quiz.isActive ? "Active" : "Inactive"}
-                                        </span>
-                                    </div>
-                                    <div className="flex gap-4 mt-1 text-[10px] text-slate-400">
-                                        <span>{quiz._count?.questions ?? 0} questions</span>
-                                        <span>৳{Number(quiz.price).toLocaleString()}</span>
-                                        <span>{quiz.timeLimit} min</span>
-                                        <span>{quiz._count?.purchases ?? 0} purchases</span>
-                                    </div>
                                 </div>
-                                <div className="flex items-center gap-2">
-                                    <button
-                                        onClick={() => setExpanded(expanded === quiz.id ? null : quiz.id)}
-                                        className="p-1.5 text-slate-400 hover:text-slate-600"
-                                    >
-                                        {expanded === quiz.id ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-                                    </button>
-                                    <button
-                                        onClick={() => { if (confirm("Delete this quiz?")) deleteMutation.mutate(quiz.id); }}
-                                        className="p-1.5 text-red-400 hover:text-red-600"
-                                    >
-                                        <Trash2 size={16} />
-                                    </button>
+                            ))}
+                        </div>
+                    )}
+
+                    {/* Add Questions Modal */}
+                    {showQuestionForm && activeCategory && (
+                        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
+                            <div className="bg-white rounded-xl p-6 w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto space-y-4">
+                                <div className="flex items-center justify-between">
+                                    <h2 className="text-sm font-bold text-slate-800">Add Questions</h2>
+                                    <button onClick={resetQuestionForm} className="text-slate-400 hover:text-slate-600"><X size={18} /></button>
                                 </div>
-                            </div>
-                            {expanded === quiz.id && quiz.questions && (
-                                <div className="border-t border-slate-100 p-4 space-y-3">
-                                    {quiz.questions.map((q, i) => (
-                                        <div key={q.id} className="text-xs text-slate-600">
-                                            <p className="font-semibold">{i + 1}. {q.question}</p>
-                                            <div className="ml-4 mt-1 space-y-0.5">
-                                                {(q.options as string[]).map((opt, oi) => (
-                                                    <p key={oi} className={q.correctIndex === oi ? "text-green-700 font-semibold" : "text-slate-500"}>
-                                                        {String.fromCharCode(97 + oi)}) {opt} {q.correctIndex === oi && "✓"}
-                                                    </p>
-                                                ))}
+                                <form onSubmit={handleSubmitQuestions} className="space-y-4">
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-xs font-semibold text-slate-600">Questions ({questions.length})</span>
+                                        <button type="button" onClick={() => setQuestions([...questions, emptyQuestion()])} className="text-xs text-green-700 hover:text-green-800 font-semibold">+ Add Question</button>
+                                    </div>
+                                    {questions.map((q, qIdx) => (
+                                        <div key={qIdx} className="border border-slate-200 rounded-lg p-4 space-y-3">
+                                            <div className="flex items-center justify-between">
+                                                <span className="text-xs font-semibold text-slate-500">Question {qIdx + 1}</span>
+                                                {questions.length > 1 && (
+                                                    <button type="button" onClick={() => setQuestions(questions.filter((_, i) => i !== qIdx))} className="text-red-500 hover:text-red-700"><X size={14} /></button>
+                                                )}
                                             </div>
+                                            <input value={q.question} onChange={(e) => { const copy = [...questions]; copy[qIdx] = { ...copy[qIdx], question: e.target.value }; setQuestions(copy); }} placeholder="Enter question" className="input w-full text-sm" required />
+                                            {q.options.map((opt, optIdx) => (
+                                                <div key={optIdx} className="flex items-center gap-2">
+                                                    <input type="radio" name={`correct-${qIdx}`} checked={q.correctIndex === optIdx} onChange={() => { const copy = [...questions]; copy[qIdx] = { ...copy[qIdx], correctIndex: optIdx }; setQuestions(copy); }} />
+                                                    <input value={opt} onChange={(e) => updateOption(qIdx, optIdx, e.target.value)} placeholder={`Option ${optIdx + 1}`} className="input flex-1 text-sm" required />
+                                                    {q.correctIndex === optIdx && <span className="text-[10px] text-green-700 font-semibold">Correct</span>}
+                                                </div>
+                                            ))}
                                         </div>
                                     ))}
-                                </div>
-                            )}
+                                    <div className="flex gap-3">
+                                        <button type="submit" disabled={addQuestionsMutation.isPending} className="btn-primary text-sm">
+                                            {addQuestionsMutation.isPending ? <span className="flex items-center gap-2"><Loader2 size={14} className="animate-spin" /> Adding...</span> : `Add ${questions.filter((q) => q.question.trim()).length} Questions`}
+                                        </button>
+                                        <button type="button" onClick={resetQuestionForm} className="btn-outline-primary text-sm">Cancel</button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
-                    ))}
-                </div>
+                    )}
+                </>
             )}
         </div>
     );

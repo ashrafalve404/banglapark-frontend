@@ -3,19 +3,38 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import Link from "next/link";
-import { Wallet, AlertCircle, RefreshCw, Gift, TrendingUp, Award, DollarSign, MapPin, PieChart } from "lucide-react";
+import { Wallet, AlertCircle, RefreshCw, Gift, TrendingUp, Award, DollarSign, MapPin, PieChart, Users, ShieldCheck } from "lucide-react";
 import { walletApi } from "@/lib/api/wallet";
+import { referralApi } from "@/lib/api/categories";
+import { authApi } from "@/lib/api/auth";
 import { useAuthStore } from "@/store/auth";
-import { formatCurrency, formatDateTime, getTxTypeLabel } from "@/lib/utils";
+import { formatCurrency, formatDateTime, formatDate, getTxTypeLabel } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
 
 export default function WalletPage() {
     const { user } = useAuthStore();
-    const { t } = useLocale();
+    const { t, locale } = useLocale();
     const [page, setPage] = useState(1);
     const [type, setType] = useState("");
 
     const isInactive = user?.status === "INACTIVE";
+
+    const { data: referralStats, isLoading: refLoading } = useQuery({
+        queryKey: ["referral-stats"],
+        queryFn: () => referralApi.teamStats(),
+        refetchOnWindowFocus: true,
+    });
+
+    const { data: activation } = useQuery({
+        queryKey: ["my-activation"],
+        queryFn: () => authApi.activation(),
+        refetchOnWindowFocus: true,
+        staleTime: 60_000,
+    });
+
+    const activeDays = activation?.daysLeft ?? 0;
+    const activeUntilDate = activation?.activeUntil ?? user?.activeUntil;
+    const isExpiringSoon = activeDays > 0 && activeDays <= 5;
 
     const { data: balanceData, isLoading: balLoading, refetch: refetchBal } = useQuery({
         queryKey: ["wallet-balance"],
@@ -159,6 +178,66 @@ export default function WalletPage() {
                     <h2 className="text-xl font-extrabold text-gray-400">
                         {balLoading ? "..." : formatCurrency(balanceData?.share ?? 0)}
                     </h2>
+                </div>
+            </div>
+
+            <div className="card p-5">
+                <h3 className="text-base font-bold text-gray-900 mb-4 pb-2 border-b border-gray-100">{t("dashboard.quickLinks.heading")}</h3>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    {[
+                        { href: "/dashboard/wallet", title: t("dashboard.quickLinks.wallet"), bg: "bg-green-50", text: "text-green-800" },
+                        { href: "/dashboard/withdraw", title: t("dashboard.quickLinks.withdraw"), bg: "bg-blue-50", text: "text-blue-800" },
+                        { href: "/dashboard/referrals", title: t("dashboard.quickLinks.referrals"), bg: "bg-amber-50", text: "text-amber-800" },
+                        { href: "/dashboard/orders", title: t("dashboard.quickLinks.orders"), bg: "bg-purple-50", text: "text-purple-800" },
+                    ].map((lnk) => (
+                        <Link key={lnk.href} href={lnk.href} className={`rounded-xl p-4 text-center ${lnk.bg} hover:-translate-y-0.5 transition-transform flex flex-col justify-center items-center`}>
+                            <span className={`text-sm font-bold ${lnk.text}`}>{lnk.title}</span>
+                        </Link>
+                    ))}
+                </div>
+            </div>
+
+            {/* Team Stats + Activation */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="card p-5 flex items-center justify-between">
+                    <div className="space-y-1">
+                        <span className="text-xs text-gray-500 font-semibold uppercase tracking-wider block">{t("dashboard.card.teamMembers")}</span>
+                        <span className="text-2xl font-extrabold text-gray-900 block">
+                            {refLoading ? "..." : referralStats?.teamSize ?? 0}
+                        </span>
+                    </div>
+                    <div className="rounded-lg bg-green-50 p-2.5 text-green-800">
+                        <Users size={20} />
+                    </div>
+                </div>
+
+                <div className="card p-5 flex items-center justify-between">
+                    <div className="space-y-1">
+                        <span className="text-xs text-gray-500 font-semibold uppercase tracking-wider block">{t("dashboard.card.activeTeamMembers")}</span>
+                        <span className="text-2xl font-extrabold text-gray-900 block">
+                            {refLoading ? "..." : referralStats?.activeTeam ?? 0}
+                        </span>
+                    </div>
+                    <div className="rounded-lg bg-green-50 p-2.5 text-green-800">
+                        <Users size={20} />
+                    </div>
+                </div>
+
+                <div className="card p-5 flex items-center justify-between">
+                    <div className="space-y-1">
+                        <span className="text-xs text-gray-500 font-semibold uppercase tracking-wider block">{t("dashboard.card.activationEnd")}</span>
+                        <span className="text-sm font-semibold text-gray-800 block">
+                            {activeUntilDate ? formatDate(activeUntilDate, locale) : t("dashboard.card.activationEndNone")}
+                        </span>
+                        {!isInactive && (
+                            <span className="text-[10px] text-green-700 bg-green-50 px-2 py-0.5 rounded-full inline-block">
+                                {t("dashboard.card.daysRemaining")} {activeDays} {t("dashboard.card.daysUnit")}
+                            </span>
+                        )}
+                    </div>
+                    <div className="rounded-lg bg-green-50 p-2.5 text-green-800">
+                        <ShieldCheck size={20} />
+                    </div>
                 </div>
             </div>
 

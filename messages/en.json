@@ -413,7 +413,8 @@
       "download": "Download Image",
       "copyLink": "Copy Link",
       "copied": "Copied!",
-      "shareHint": "Download the image and share it on any platform with your copied referral link."
+      "shareHint": "Download the image and share it on any platform with your copied referral link.",
+      "viewDetail": "View Detail"
     },
     "quiz": {
       "title": "Take a Quiz",
@@ -427,6 +428,7 @@
       "purchased": "Purchased",
       "startQuiz": "Start Quiz",
       "retake": "View Result",
+      "viewAll": "View All",
       "notPurchased": "You have not purchased any quiz yet.",
       "completePurchase": "Complete Purchase",
       "payWallet": "Pay with Wallet",

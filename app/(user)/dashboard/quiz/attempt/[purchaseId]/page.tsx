@@ -1,256 +1,226 @@
 "use client";
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Loader2, Clock, CheckCircle, XCircle, AlertTriangle, Award, ArrowRight, ChevronLeft } from "lucide-react";
-import { quizApi, type QuizAttemptData } from "@/lib/api/quiz";
+import { Loader2, Clock, CheckCircle, XCircle, Award, ArrowRight } from "lucide-react";
+import { quizApi, type QuizNextQuestion } from "@/lib/api/quiz";
 import { useLocale } from "@/lib/i18n";
+import { formatCurrency } from "@/lib/utils";
+import { useState } from "react";
 
 export default function QuizAttemptPage() {
-    const params = useParams<{ purchaseId: string }>();
+    const { purchaseId } = useParams<{ purchaseId: string }>();
     const router = useRouter();
+    const { t, locale } = useLocale();
     const queryClient = useQueryClient();
-    const { t } = useLocale();
-    const [selected, setSelected] = useState<Record<string, number>>({});
-    const [currentIdx, setCurrentIdx] = useState(0);
-    const [submitted, setSubmitted] = useState(false);
-    const [timeLeft, setTimeLeft] = useState<number | null>(null);
+    const [currentQuestion, setCurrentQuestion] = useState<QuizNextQuestion | null>(null);
+    const [selectedOption, setSelectedOption] = useState<number | null>(null);
+    const [submitting, setSubmitting] = useState(false);
+    const [finished, setFinished] = useState(false);
+    const [result, setResult] = useState<{ score: number; totalQuestions: number; netReward?: number } | null>(null);
+    const [timeLeft, setTimeLeft] = useState(60);
+    const [answeredQuestions, setAnsweredQuestions] = useState(0);
+
     const timerRef = useRef<NodeJS.Timeout | null>(null);
-    const submittingRef = useRef(false);
 
-    const { data: attempt, isLoading, error } = useQuery<QuizAttemptData>({
-        queryKey: ["quiz-attempt", params.purchaseId],
-        queryFn: () => quizApi.startAttempt(params.purchaseId),
-        enabled: !!params.purchaseId,
+    // Load result if already completed
+    const { data: existingResult } = useQuery({
+        queryKey: ["quiz-result", purchaseId],
+        queryFn: () => quizApi.getResult(purchaseId),
+        enabled: false, // only used on error
     });
 
-    const submitMutation = useMutation({
-        mutationFn: (answers: { questionId: string; selectedIndex: number }[]) =>
-            quizApi.submitAttempt(params.purchaseId, answers),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["quiz-purchases"] });
-            setSubmitted(true);
-        },
+    // Start the attempt
+    const { data: attemptData, isLoading: startLoading, error: startError } = useQuery({
+        queryKey: ["quiz-attempt", purchaseId],
+        queryFn: () => quizApi.startAttempt(purchaseId),
+        retry: false,
     });
 
-    const questions = attempt?.questions ?? [];
-    const totalQuestions = questions.length;
-    const currentQ = questions[currentIdx];
-    const isLast = currentIdx === totalQuestions - 1;
-    const allAnswered = questions.every((q) => selected[q.id] !== undefined);
-
-    const doSubmit = () => {
-        if (submittingRef.current) return;
-        submittingRef.current = true;
-        if (timerRef.current) clearInterval(timerRef.current);
-        const answers = Object.entries(selected).map(([questionId, selectedIndex]) => ({
-            questionId,
-            selectedIndex,
-        }));
-        submitMutation.mutate(answers);
-    };
-
-    // Initialize timer
+    // If already completed, load result
     useEffect(() => {
-        if (!attempt || submitted || submitMutation.isSuccess) return;
-        const timeLimitMs = attempt.quiz.timeLimit * 60 * 1000;
-        const started = new Date(attempt.startedAt).getTime();
-        const elapsed = Date.now() - started;
-        const remaining = Math.max(0, timeLimitMs - elapsed);
+        if (startError) {
+            // Attempt may be completed - try loading result
+            quizApi.getResult(purchaseId).then((data: any) => {
+                setFinished(true);
+                setResult({ score: data.score ?? 0, totalQuestions: data.questionCount ?? 0, netReward: data.netReward });
+            }).catch(() => {
+                router.push("/dashboard/quiz");
+            });
+        }
+    }, [startError]);
 
-        if (remaining <= 0) {
-            doSubmit();
+    // Load first question
+    useEffect(() => {
+        if (attemptData) {
+            loadNextQuestion();
+        }
+    }, [attemptData]);
+
+    const loadNextQuestion = useCallback(async () => {
+        try {
+            const data = await quizApi.getNextQuestion(purchaseId);
+            if (data.completed) {
+                setFinished(true);
+                setResult({ score: data.score ?? 0, totalQuestions: data.totalQuestions ?? 0 });
+                return;
+            }
+            setCurrentQuestion(data);
+            setSelectedOption(null);
+            setTimeLeft(60);
+        } catch {
+            router.push("/dashboard/quiz");
+        }
+    }, [purchaseId, router]);
+
+    // Timer
+    useEffect(() => {
+        if (finished || currentQuestion?.completed) return;
+        if (timeLeft <= 0) {
+            handleAutoAdvance();
             return;
         }
-
-        setTimeLeft(Math.floor(remaining / 1000));
-
         timerRef.current = setInterval(() => {
             setTimeLeft((prev) => {
-                if (prev === null || prev <= 1) {
+                if (prev <= 1) {
                     if (timerRef.current) clearInterval(timerRef.current);
-                    doSubmit();
                     return 0;
                 }
                 return prev - 1;
             });
         }, 1000);
-
         return () => {
             if (timerRef.current) clearInterval(timerRef.current);
         };
-    }, [attempt?.startedAt, submitted]);
+    }, [timeLeft, finished, currentQuestion?.question?.id]);
 
-    const handleSelect = (qId: string, optIdx: number) => {
-        if (submitted) return;
-        const next = { ...selected, [qId]: optIdx };
-        setSelected(next);
+    const handleAutoAdvance = async () => {
+        if (submitting || !currentQuestion?.question) return;
+        setSubmitting(true);
+        try {
+            await quizApi.submitAnswer(purchaseId, {
+                questionId: currentQuestion.question.id,
+                selectedIndex: -1, // no answer (timed out)
+            });
+            setAnsweredQuestions((prev) => prev + 1);
+            await loadNextQuestion();
+        } catch { /* ignore */ } finally { setSubmitting(false); }
+    };
 
-        // Auto-advance after a brief delay so user sees the selection
-        setTimeout(() => {
-            if (isLast) {
-                // On last question, submit automatically
-                doSubmit();
+    const handleSubmit = async () => {
+        if (submitting || selectedOption === null || !currentQuestion?.question) return;
+        setSubmitting(true);
+        try {
+            const res = await quizApi.submitAnswer(purchaseId, {
+                questionId: currentQuestion.question.id,
+                selectedIndex: selectedOption,
+            });
+            setAnsweredQuestions((prev) => prev + 1);
+
+            if (res.isLast) {
+                setFinished(true);
+                setResult({ score: res.score ?? 0, totalQuestions: res.totalQuestions ?? 0, netReward: (res as any).netReward });
             } else {
-                setCurrentIdx((prev) => prev + 1);
+                await loadNextQuestion();
             }
-        }, 300);
+        } catch { /* ignore */ } finally { setSubmitting(false); }
     };
 
-    const goTo = (idx: number) => {
-        if (idx >= 0 && idx < totalQuestions) setCurrentIdx(idx);
-    };
-
-    const formatTime = (seconds: number) => {
-        const m = Math.floor(seconds / 60);
-        const s = seconds % 60;
-        return `${m}:${s.toString().padStart(2, "0")}`;
-    };
-
-    if (isLoading) {
-        return <div className="flex justify-center py-20"><Loader2 className="animate-spin" size={32} /></div>;
+    if (startLoading) {
+        return <div className="flex justify-center items-center min-h-[60vh]"><Loader2 className="animate-spin" size={32} /></div>;
     }
 
-    if (error || !attempt) {
+    if (finished && result) {
+        const percentage = result.totalQuestions > 0 ? Math.round((result.score / result.totalQuestions) * 100) : 0;
         return (
-            <div className="max-w-2xl mx-auto text-center py-20">
-                <AlertTriangle size={48} className="mx-auto text-red-400 mb-3" />
-                <p className="text-sm text-gray-500">Failed to load quiz</p>
-                <button onClick={() => router.push("/dashboard/quiz")} className="btn-outline-primary text-sm mt-4">{t("dashboard.quiz.backToQuizzes")}</button>
-            </div>
-        );
-    }
-
-    // Show result view
-    if (submitted || submitMutation.isSuccess || attempt.purchase.status !== "PURCHASED") {
-        const purchase = attempt.purchase;
-        const isTimeout = purchase.status === "TIMEOUT" || (submitted && timeLeft === 0);
-        const score = purchase.score ?? submitMutation.data?.score ?? 0;
-        const total = purchase.totalQuestions ?? submitMutation.data?.totalQuestions ?? totalQuestions;
-
-        return (
-            <div className="max-w-lg mx-auto space-y-6">
-                <div className="card p-8 bg-white text-center space-y-4">
-                    {isTimeout ? (
-                        <XCircle size={48} className="mx-auto text-red-500" />
-                    ) : (
-                        <Award size={48} className="mx-auto text-green-600" />
+            <div className="max-w-md mx-auto py-10">
+                <div className="card bg-white p-8 text-center space-y-4">
+                    <div className="flex justify-center">
+                        <div className={`rounded-full p-4 ${percentage >= 60 ? "bg-green-100" : "bg-red-100"}`}>
+                            <Award size={48} className={percentage >= 60 ? "text-green-700" : "text-red-600"} />
+                        </div>
+                    </div>
+                    <h2 className="text-xl font-bold text-gray-800">Quiz Complete!</h2>
+                    <div className="text-5xl font-extrabold text-green-700">{result.score}<span className="text-2xl text-gray-400">/{result.totalQuestions}</span></div>
+                    <p className="text-sm text-gray-500">{percentage}% correct</p>
+                    <div className="flex gap-2 justify-center">
+                        {result.score > 0 && <span className="flex items-center gap-1 text-xs text-green-700 font-semibold"><CheckCircle size={14} /> {result.score} correct</span>}
+                        {result.totalQuestions - result.score > 0 && <span className="flex items-center gap-1 text-xs text-red-600 font-semibold"><XCircle size={14} /> {result.totalQuestions - result.score} wrong</span>}
+                    </div>
+                    {result.netReward !== undefined && result.netReward !== 0 && (
+                        <div className={`rounded-lg p-3 text-sm font-bold ${result.netReward > 0 ? "bg-green-50 text-green-800" : "bg-red-50 text-red-800"}`}>
+                            {result.netReward > 0 ? "+" : ""}{result.netReward} tk {result.netReward > 0 ? "earned" : "deducted"}
+                        </div>
                     )}
-                    <h2 className="text-xl font-bold text-gray-800">
-                        {isTimeout ? t("dashboard.quiz.timedOut") : t("dashboard.quiz.result")}
-                    </h2>
-                    <div className="text-4xl font-bold text-green-700">{score} / {total}</div>
-                    <p className="text-sm text-gray-500">
-                        {score >= total / 2 ? t("dashboard.quiz.correct") : t("dashboard.quiz.wrong")}
-                    </p>
-                    <button onClick={() => router.push("/dashboard/quiz")} className="btn-primary text-sm">
-                        {t("dashboard.quiz.backToQuizzes")}
-                    </button>
+                    <button onClick={() => router.push("/dashboard/quiz")} className="btn-primary text-sm mt-4">Back to Quiz</button>
                 </div>
             </div>
         );
     }
+
+    if (!currentQuestion?.question) {
+        return <div className="flex justify-center py-10"><Loader2 className="animate-spin" size={24} /></div>;
+    }
+
+    const q = currentQuestion.question;
 
     return (
-        <div className="max-w-2xl mx-auto space-y-4">
-            {/* Timer + Progress bar */}
-            <div className="sticky top-0 z-10 bg-white rounded-lg border border-gray-200 p-3 shadow-sm">
-                <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2 text-sm font-semibold text-gray-700">
-                        <Clock size={18} className={timeLeft !== null && timeLeft < 30 ? "text-red-500" : "text-green-600"} />
-                        <span>{timeLeft !== null ? formatTime(timeLeft) : "--:--"}</span>
-                    </div>
-                    <span className="text-xs text-gray-400">Q{currentIdx + 1}/{totalQuestions}</span>
+        <div className="max-w-2xl mx-auto space-y-4 py-6">
+            {/* Progress bar */}
+            <div className="space-y-2">
+                <div className="flex items-center justify-between text-xs text-gray-500">
+                    <span>Question {answeredQuestions + 1} of {currentQuestion.totalQuestions}</span>
+                    <span className="flex items-center gap-1">
+                        <Clock size={12} />
+                        <span className={timeLeft <= 10 ? "text-red-600 font-bold" : ""}>
+                            {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, "0")}
+                        </span>
+                    </span>
                 </div>
-                {/* Progress bar */}
-                <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                <div className="w-full bg-gray-200 rounded-full h-1.5">
                     <div
-                        className="h-full bg-green-600 rounded-full transition-all duration-300"
-                        style={{ width: `${((currentIdx + 1) / totalQuestions) * 100}%` }}
+                        className="bg-green-700 h-1.5 rounded-full transition-all duration-300"
+                        style={{ width: `${((answeredQuestions) / (currentQuestion.totalQuestions ?? 1)) * 100}%` }}
                     />
                 </div>
-                {/* Question dots */}
-                <div className="flex gap-1 mt-2">
-                    {Array.from({ length: totalQuestions }).map((_, i) => (
-                        <button
+                {/* Progress dots */}
+                <div className="flex gap-1 flex-wrap">
+                    {Array.from({ length: currentQuestion.totalQuestions ?? 0 }).map((_, i) => (
+                        <div
                             key={i}
-                            onClick={() => goTo(i)}
-                            className={`h-2 flex-1 rounded-full transition-colors ${
-                                selected[questions[i]?.id] !== undefined
-                                    ? "bg-green-600"
-                                    : i === currentIdx
-                                        ? "bg-green-300"
-                                        : "bg-gray-200"
-                            }`}
+                            className={`w-2.5 h-2.5 rounded-full ${i < answeredQuestions ? "bg-green-700" : i === answeredQuestions ? "bg-green-700 ring-2 ring-green-300" : "bg-gray-300"}`}
                         />
                     ))}
                 </div>
             </div>
 
-            {/* Current question */}
-            {currentQ && (
-                <div className="card p-6 bg-white space-y-4">
-                    <p className="text-base font-semibold text-gray-800">
-                        {currentIdx + 1}. {currentQ.question}
-                    </p>
-                    <div className="space-y-2">
-                        {currentQ.options.map((opt, oi) => {
-                            const isSelected = selected[currentQ.id] === oi;
-                            return (
-                                <button
-                                    key={oi}
-                                    onClick={() => handleSelect(currentQ.id, oi)}
-                                    className={`w-full flex items-center gap-3 p-4 rounded-lg border text-sm text-left transition-all ${
-                                        isSelected
-                                            ? "border-green-600 bg-green-50 ring-1 ring-green-600"
-                                            : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
-                                    }`}
-                                >
-                                    <span className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
-                                        isSelected ? "border-green-600 bg-green-600" : "border-gray-300"
-                                    }`}>
-                                        {isSelected && <CheckCircle size={14} className="text-white" />}
-                                    </span>
-                                    <span className="text-gray-700">{opt}</span>
-                                </button>
-                            );
-                        })}
-                    </div>
-                </div>
-            )}
+            {/* Question card */}
+            <div className="card bg-white p-6 space-y-5">
+                <h2 className="text-base font-bold text-gray-900">{q.question}</h2>
 
-            {/* Navigation */}
-            <div className="flex items-center justify-between">
+                <div className="space-y-2">
+                    {q.options.map((opt, idx) => (
+                        <button
+                            key={idx}
+                            onClick={() => setSelectedOption(selectedOption === idx ? null : idx)}
+                            className={`w-full text-left p-3.5 rounded-lg border text-sm transition-colors ${selectedOption === idx ? "border-green-600 bg-green-50 text-green-800 font-semibold" : "border-gray-200 text-gray-700 hover:border-gray-300"}`}
+                        >
+                            <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-100 text-xs font-bold text-gray-500 mr-3">
+                                {String.fromCharCode(65 + idx)}
+                            </span>
+                            {opt}
+                        </button>
+                    ))}
+                </div>
+
                 <button
-                    onClick={() => goTo(currentIdx - 1)}
-                    disabled={currentIdx === 0}
-                    className="btn-outline-primary text-sm flex items-center gap-1 disabled:opacity-30"
+                    onClick={handleSubmit}
+                    disabled={submitting || selectedOption === null}
+                    className="btn-primary w-full text-sm flex items-center justify-center gap-2"
                 >
-                    <ChevronLeft size={16} /> Previous
+                    {submitting ? <Loader2 size={14} className="animate-spin" /> : <><ArrowRight size={16} /> {answeredQuestions + 1 >= (currentQuestion.totalQuestions ?? 0) ? "Finish" : "Next"}</>}
                 </button>
-                {!isLast ? (
-                    <button
-                        onClick={() => goTo(currentIdx + 1)}
-                        disabled={currentIdx === totalQuestions - 1}
-                        className="btn-outline-primary text-sm flex items-center gap-1 disabled:opacity-30"
-                    >
-                        Next <ArrowRight size={16} />
-                    </button>
-                ) : (
-                    <button
-                        onClick={doSubmit}
-                        disabled={!allAnswered || submitMutation.isPending}
-                        className="btn-primary text-sm flex items-center gap-2"
-                    >
-                        {submitMutation.isPending ? (
-                            <Loader2 size={16} className="animate-spin" />
-                        ) : (
-                            <CheckCircle size={16} />
-                        )}
-                        {submitMutation.isPending ? t("dashboard.quiz.submitting") : t("dashboard.quiz.submit")}
-                    </button>
-                )}
             </div>
         </div>
     );
