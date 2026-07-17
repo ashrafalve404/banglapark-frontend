@@ -36,6 +36,7 @@ export interface QuizPurchaseInfo {
     id: string;
     userId: string;
     categoryId: string;
+    levelId?: string | null;
     questionCount: number;
     totalPrice: number;
     status: "PURCHASED" | "COMPLETED";
@@ -45,6 +46,7 @@ export interface QuizPurchaseInfo {
     startedAt?: string;
     completedAt?: string;
     category?: { id: string; name: string; imageUrl: string };
+    level?: { id: string; name: string } | null;
     _count?: { answers: number };
     answers?: QuizAnswerInfo[];
 }
@@ -168,7 +170,7 @@ export const quizApi = {
         return res.data;
     },
 
-    purchase: async (categoryId: string, data: { questionCount: number; paymentMethod?: string }): Promise<QuizPurchaseInfo> => {
+    purchase: async (categoryId: string, data: { questionCount: number; paymentMethod?: string; levelId?: string }): Promise<QuizPurchaseInfo> => {
         const res = await api.post(`/quiz/purchase/${categoryId}`, data);
         return res.data;
     },

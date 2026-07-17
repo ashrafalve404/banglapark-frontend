@@ -3,8 +3,8 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Loader2, HelpCircle, Clock, DollarSign, CheckCircle, Award, Wallet, Smartphone, ArrowLeft, ShoppingCart } from "lucide-react";
-import { quizApi, type QuizCategoryItem, type QuizPurchaseInfo } from "@/lib/api/quiz";
+import { Loader2, HelpCircle, Clock, DollarSign, CheckCircle, Award, Wallet, Smartphone, ArrowLeft, ShoppingCart, Layers } from "lucide-react";
+import { quizApi, type QuizCategoryItem, type QuizPurchaseInfo, type QuizLevelItem } from "@/lib/api/quiz";
 import { walletApi } from "@/lib/api/wallet";
 import { useLocale } from "@/lib/i18n";
 import { formatCurrency } from "@/lib/utils";
@@ -19,7 +19,8 @@ export default function QuizPage() {
     const categoryFilter = searchParams.get("category");
     const [questionCount, setQuestionCount] = useState(10);
     const [payMethod, setPayMethod] = useState<"WALLET" | "BKASH">("WALLET");
-    const [purchaseModal, setPurchaseModal] = useState<{ categoryId: string; name: string; maxQuestions: number } | null>(null);
+    const [selectedLevelId, setSelectedLevelId] = useState<string | null>(null);
+    const [purchaseModal, setPurchaseModal] = useState<{ categoryId: string; name: string; maxQuestions: number; levelId?: string | null; levelName?: string } | null>(null);
 
     const { data: categories = [] } = useQuery<QuizCategoryItem[]>({
         queryKey: ["quiz-categories"],
@@ -47,19 +48,21 @@ export default function QuizPage() {
     });
 
     const purchaseMutation = useMutation({
-        mutationFn: ({ categoryId, questionCount, method }: { categoryId: string; questionCount: number; method: string }) =>
-            quizApi.purchase(categoryId, { questionCount, paymentMethod: method }),
+        mutationFn: ({ categoryId, questionCount, method, levelId }: { categoryId: string; questionCount: number; method: string; levelId?: string }) =>
+            quizApi.purchase(categoryId, { questionCount, paymentMethod: method, levelId }),
         onSuccess: (data: any) => {
             queryClient.invalidateQueries({ queryKey: ["quiz-purchases"] });
             queryClient.invalidateQueries({ queryKey: ["wallet"] });
             setPurchaseModal(null);
-            // Navigate to attempt
+            setSelectedLevelId(null);
             router.push(`/dashboard/quiz/attempt/${data.id}`);
         },
     });
 
     const catPurchases = categoryFilter ? purchases.filter((p) => p.categoryId === categoryFilter && p.status === "PURCHASED") : [];
     const hasActivePurchase = catPurchases.length > 0;
+    const selectedLevelObj = selectedLevelId ? activeCategory?.levels?.find(l => l.id === selectedLevelId) : null;
+    const maxQuestionsForLevel = selectedLevelObj ? (selectedLevelObj._count?.questions ?? 0) : totalQuestions;
 
     if (pLoading) {
         return <div className="flex justify-center py-20"><Loader2 className="animate-spin" size={32} /></div>;
@@ -126,9 +129,47 @@ export default function QuizPage() {
                         </div>
                     </div>
 
-                    {/* Question count selector */}
+                    {/* Level cards */}
+                    {activeCategory.levels && activeCategory.levels.length > 0 && (
+                        <div>
+                            <h3 className="text-sm font-bold text-gray-800 mb-3 flex items-center gap-1.5"><Layers size={16} /> Levels</h3>
+                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                {activeCategory.levels.map((level) => (
+                                    <button
+                                        key={level.id}
+                                        onClick={() => {
+                                            setSelectedLevelId(selectedLevelId === level.id ? null : level.id);
+                                        }}
+                                        className={`card p-4 bg-white text-left border-2 transition-all ${selectedLevelId === level.id ? "border-green-600 bg-green-50" : "border-transparent hover:border-gray-200"}`}
+                                    >
+                                        <p className="text-sm font-bold text-gray-800">{level.name}</p>
+                                        <p className="text-[10px] text-gray-400 mt-0.5">{level._count?.questions ?? 0} questions</p>
+                                    </button>
+                                ))}
+                                {selectedLevelId && (
+                                    <button
+                                        onClick={() => setSelectedLevelId(null)}
+                                        className="card p-4 bg-white text-left border-2 border-green-600 bg-green-50"
+                                    >
+                                        <p className="text-sm font-bold text-gray-800">All Questions</p>
+                                        <p className="text-[10px] text-gray-400 mt-0.5">{totalQuestions} questions</p>
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Purchase section */}
                     <div className="card p-5 bg-white">
                         <h3 className="text-sm font-bold text-gray-800 mb-3">Purchase Quiz Questions</h3>
+
+                        {selectedLevelId && (
+                            <div className="mb-3 flex items-center gap-2 text-xs text-green-700 bg-green-50 rounded-lg px-3 py-2">
+                                <CheckCircle size={14} />
+                                Selected level: {activeCategory.levels?.find(l => l.id === selectedLevelId)?.name ?? "All Questions"}
+                            </div>
+                        )}
+
                         <div className="flex items-center gap-4 mb-4">
                             <div className="flex-1">
                                 <label className="text-xs text-gray-500 font-semibold block mb-1">Number of Questions</label>
@@ -137,12 +178,12 @@ export default function QuizPage() {
                                     <input
                                         type="number"
                                         min={1}
-                                        max={totalQuestions}
+                                        max={maxQuestionsForLevel}
                                         value={questionCount}
-                                        onChange={(e) => setQuestionCount(Math.min(totalQuestions, Math.max(1, Number(e.target.value) || 1)))}
+                                        onChange={(e) => setQuestionCount(Math.min(maxQuestionsForLevel, Math.max(1, Number(e.target.value) || 1)))}
                                         className="input w-24 text-center text-sm"
                                     />
-                                    <button onClick={() => setQuestionCount(Math.min(totalQuestions, questionCount + 5))} className="btn-outline-primary text-xs px-2 py-1">+5</button>
+                                    <button onClick={() => setQuestionCount(Math.min(maxQuestionsForLevel, questionCount + 5))} className="btn-outline-primary text-xs px-2 py-1">+5</button>
                                 </div>
                             </div>
                             <div className="text-right">
@@ -167,7 +208,10 @@ export default function QuizPage() {
                             </div>
                         ) : (
                             <button
-                                onClick={() => setPurchaseModal({ categoryId: categoryFilter, name: activeCategory.name, maxQuestions: totalQuestions })}
+                                onClick={() => {
+                                    const levelName = selectedLevelId ? activeCategory.levels?.find(l => l.id === selectedLevelId)?.name : undefined;
+                                    setPurchaseModal({ categoryId: categoryFilter, name: activeCategory.name, maxQuestions: maxQuestionsForLevel, levelId: selectedLevelId, levelName });
+                                }}
                                 disabled={totalQuestions === 0}
                                 className="btn-primary text-sm w-full flex items-center justify-center gap-2"
                             >
@@ -189,6 +233,7 @@ export default function QuizPage() {
                                     >
                                         <div className="text-xs">
                                             <span className="font-semibold text-gray-800">{p.questionCount} questions</span>
+                                            {p.level && <span className="ml-1.5 text-blue-600">({p.level.name})</span>}
                                             <span className="ml-2 text-green-700 font-semibold">
                                                 <Award size={12} className="inline mr-0.5" />
                                                 {p.answers?.filter((a) => a.isCorrect).length ?? 0}/{p.questionCount}
@@ -209,6 +254,9 @@ export default function QuizPage() {
                     <div className="bg-white rounded-xl p-6 w-full max-w-sm mx-4 space-y-4">
                         <h3 className="text-sm font-bold text-gray-800">Complete Purchase</h3>
                         <p className="text-xs text-gray-500">{purchaseModal.name}</p>
+                        {purchaseModal.levelName && (
+                            <p className="text-xs text-blue-600 font-semibold">Level: {purchaseModal.levelName}</p>
+                        )}
                         <p className="text-lg font-extrabold text-green-700">{questionCount} questions = {formatCurrency(questionCount * PRICE_PER_QUESTION, locale)}</p>
 
                         <div className="space-y-2">
@@ -233,7 +281,7 @@ export default function QuizPage() {
 
                         <div className="flex gap-3">
                             <button
-                                onClick={() => purchaseMutation.mutate({ categoryId: purchaseModal.categoryId, questionCount, method: payMethod })}
+                                onClick={() => purchaseMutation.mutate({ categoryId: purchaseModal.categoryId, questionCount, method: payMethod, levelId: purchaseModal.levelId ?? undefined })}
                                 disabled={purchaseMutation.isPending || (payMethod === "WALLET" && Number(wallet?.balance ?? 0) < questionCount * PRICE_PER_QUESTION)}
                                 className="btn-primary flex-1 text-sm"
                             >
