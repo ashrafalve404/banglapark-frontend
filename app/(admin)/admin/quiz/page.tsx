@@ -2,8 +2,8 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, useRef } from "react";
-import { Plus, Trash2, Loader2, X, ImageIcon, FolderOpen, ListOrdered, Eye, EyeOff, AlertCircle, Edit2 } from "lucide-react";
-import { quizApi, uploadImage, type QuizCategoryItem, type QuizQuestion } from "@/lib/api/quiz";
+import { Plus, Trash2, Loader2, X, ImageIcon, FolderOpen, ListOrdered, Eye, EyeOff, AlertCircle, Edit2, Layers, Upload } from "lucide-react";
+import { quizApi, uploadImage, importCsv, type QuizCategoryItem, type QuizLevelItem, type QuizQuestion } from "@/lib/api/quiz";
 import { useLocale } from "@/lib/i18n";
 
 interface QuestionForm {
@@ -41,6 +41,22 @@ export default function AdminQuizPage() {
 
     // Question list
     const [viewQuestions, setViewQuestions] = useState<string | null>(null);
+
+    // Level management
+    const [manageLevelCatId, setManageLevelCatId] = useState<string | null>(null);
+    const [levels, setLevels] = useState<QuizLevelItem[]>([]);
+    const [newLevelName, setNewLevelName] = useState("");
+    const [editingLevelId, setEditingLevelId] = useState<string | null>(null);
+    const [editingLevelName, setEditingLevelName] = useState("");
+    const [levelLoading, setLevelLoading] = useState(false);
+    const [levelError, setLevelError] = useState<string | null>(null);
+
+    // CSV import
+    const [csvImportCatId, setCsvImportCatId] = useState<string | null>(null);
+    const [csvFile, setCsvFile] = useState<File | null>(null);
+    const [csvUploading, setCsvUploading] = useState(false);
+    const [csvResult, setCsvResult] = useState<{ imported: number; errors: { row: number; message: string }[]; total: number } | null>(null);
+    const csvFileRef = useRef<HTMLInputElement>(null);
 
     const { data: categories = [] } = useQuery<QuizCategoryItem[]>({
         queryKey: ["admin-quiz-categories"],
@@ -84,8 +100,8 @@ export default function AdminQuizPage() {
     });
 
     const addQuestionsMutation = useMutation({
-        mutationFn: ({ categoryId, questions }: { categoryId: string; questions: { question: string; options: string[]; correctIndex: number }[] }) =>
-            quizApi.adminAddQuestions(categoryId, questions),
+        mutationFn: ({ categoryId, questions, levelId }: { categoryId: string; questions: { question: string; options: string[]; correctIndex: number }[]; levelId?: string }) =>
+            quizApi.adminAddQuestions(categoryId, questions, levelId),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["admin-quiz-questions", viewQuestions] });
             queryClient.invalidateQueries({ queryKey: ["admin-quiz-categories"] });
@@ -111,6 +127,69 @@ export default function AdminQuizPage() {
     const resetQuestionForm = () => {
         setShowQuestionForm(false);
         setQuestions([emptyQuestion()]);
+        setSelectedLevelId(null);
+    };
+
+    // ── Level management ─────────────────────────────────────────────────────
+
+    const openLevelManager = async (catId: string) => {
+        setManageLevelCatId(catId);
+        setLevelError(null);
+        setLevelLoading(true);
+        try {
+            const data = await quizApi.getLevels(catId);
+            setLevels(data);
+        } catch { setLevelError("Failed to load levels"); }
+        finally { setLevelLoading(false); }
+    };
+
+    const addLevel = async () => {
+        if (!manageLevelCatId || !newLevelName.trim()) return;
+        setLevelError(null);
+        try {
+            const level = await quizApi.createLevel(manageLevelCatId, { name: newLevelName.trim() });
+            setLevels([...levels, level]);
+            setNewLevelName("");
+        } catch (err: any) {
+            setLevelError(err?.response?.data?.message || "Failed to add level");
+        }
+    };
+
+    const startEditLevel = (level: QuizLevelItem) => {
+        setEditingLevelId(level.id);
+        setEditingLevelName(level.name);
+    };
+
+    const saveEditLevel = async () => {
+        if (!editingLevelId || !editingLevelName.trim()) return;
+        setLevelError(null);
+        try {
+            const updated = await quizApi.updateLevel(editingLevelId, { name: editingLevelName.trim() });
+            setLevels(levels.map((l) => l.id === updated.id ? updated : l));
+            setEditingLevelId(null);
+            setEditingLevelName("");
+        } catch (err: any) {
+            setLevelError(err?.response?.data?.message || "Failed to update level");
+        }
+    };
+
+    const removeLevel = async (levelId: string) => {
+        if (!confirm("Delete this level? Questions will remain in the category.")) return;
+        setLevelError(null);
+        try {
+            await quizApi.deleteLevel(levelId);
+            setLevels(levels.filter((l) => l.id !== levelId));
+        } catch (err: any) {
+            setLevelError(err?.response?.data?.message || "Failed to delete level");
+        }
+    };
+
+    const closeLevelManager = () => {
+        setManageLevelCatId(null);
+        setLevels([]);
+        setNewLevelName("");
+        setEditingLevelId(null);
+        setLevelError(null);
     };
 
     const handleCatImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -154,6 +233,8 @@ export default function AdminQuizPage() {
         } finally { setCatUploading(false); }
     };
 
+    const [selectedLevelId, setSelectedLevelId] = useState<string | null>(null);
+
     const handleSubmitQuestions = (e: React.FormEvent) => {
         e.preventDefault();
         if (!activeCategory) return;
@@ -167,6 +248,7 @@ export default function AdminQuizPage() {
                 correctIndex: q.correctIndex,
                 sortOrder: i,
             })),
+            levelId: selectedLevelId ?? undefined,
         });
     };
 
@@ -258,8 +340,14 @@ export default function AdminQuizPage() {
                                             </div>
                                         </div>
                                         <div className="flex gap-2">
-                                            <button onClick={() => { setActiveCategory(cat.id); setShowQuestionForm(true); setQuestions([emptyQuestion()]); }} className="btn-primary text-xs flex items-center gap-1 flex-1 justify-center">
+                                            <button onClick={() => { setActiveCategory(cat.id); setShowQuestionForm(true); setQuestions([emptyQuestion()]); setSelectedLevelId(null); }} className="btn-primary text-xs flex items-center gap-1 flex-1 justify-center">
                                                 <Plus size={12} /> Add Questions
+                                            </button>
+                                            <button onClick={() => { setCsvImportCatId(cat.id); setCsvFile(null); setCsvResult(null); }} className="btn-outline-primary text-xs flex items-center gap-1">
+                                                <Upload size={12} /> CSV
+                                            </button>
+                                            <button onClick={() => openLevelManager(cat.id)} className="btn-outline-primary text-xs flex items-center gap-1">
+                                                <Layers size={12} /> Levels
                                             </button>
                                             <button onClick={() => setViewQuestions(viewQuestions === cat.id ? null : cat.id)} className="btn-outline-primary text-xs flex items-center gap-1">
                                                 {viewQuestions === cat.id ? <EyeOff size={12} /> : <Eye size={12} />} {viewQuestions === cat.id ? "Hide" : "View"}
@@ -274,10 +362,10 @@ export default function AdminQuizPage() {
                                                     <div className="space-y-1 max-h-48 overflow-y-auto">
                                                         {questionData?.questions.map((q, i) => (
                                                             <div key={q.id} className="flex items-start justify-between gap-2 p-1.5 rounded bg-slate-50">
-                                                                <div className="min-w-0">
-                                                                    <p className="text-[10px] font-semibold text-slate-700 truncate">{i + 1}. {q.question}</p>
-                                                                    <p className="text-[9px] text-slate-400">{q.options.length} options</p>
-                                                                </div>
+                                            <div className="min-w-0">
+                                                                        <p className="text-[10px] font-semibold text-slate-700 truncate">{i + 1}. {q.question}</p>
+                                                                        <p className="text-[9px] text-slate-400">{q.options.length} options{q.level && <span className="ml-1.5 text-blue-500">&middot; {q.level.name}</span>}</p>
+                                                                    </div>
                                                                 <button onClick={() => { if (confirm("Delete this question?")) deleteQuestionMutation.mutate(q.id); }} className="p-0.5 text-red-300 hover:text-red-500 shrink-0"><X size={10} /></button>
                                                             </div>
                                                         ))}
@@ -291,6 +379,127 @@ export default function AdminQuizPage() {
                         </div>
                     )}
 
+                    {/* Level Manager Modal */}
+                    {manageLevelCatId && (
+                        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
+                            <div className="bg-white rounded-xl p-6 w-full max-w-md mx-4 space-y-4">
+                                <div className="flex items-center justify-between">
+                                    <h2 className="text-sm font-bold text-slate-800">Manage Levels</h2>
+                                    <button onClick={closeLevelManager} className="text-slate-400 hover:text-slate-600"><X size={18} /></button>
+                                </div>
+
+                                {levelError && (
+                                    <div className="text-xs text-red-600 bg-red-50 rounded-lg p-3 border border-red-200">
+                                        <AlertCircle size={14} className="inline mr-1.5" />{levelError}
+                                    </div>
+                                )}
+
+                                <div className="flex gap-2">
+                                    <input value={newLevelName} onChange={(e) => setNewLevelName(e.target.value)} placeholder="Level name (e.g. Easy)" className="input flex-1 text-sm" />
+                                    <button onClick={addLevel} disabled={!newLevelName.trim()} className="btn-primary text-sm"><Plus size={14} /> Add</button>
+                                </div>
+
+                                {levelLoading ? (
+                                    <div className="py-8 text-center text-slate-400"><Loader2 size={20} className="animate-spin inline" /> Loading...</div>
+                                ) : levels.length === 0 ? (
+                                    <div className="py-8 text-center text-slate-400 text-sm">No levels yet. Add one above.</div>
+                                ) : (
+                                    <div className="space-y-2 max-h-64 overflow-y-auto">
+                                        {levels.map((level) => (
+                                            <div key={level.id} className="flex items-center justify-between gap-2 p-3 rounded-lg border border-slate-100">
+                                                {editingLevelId === level.id ? (
+                                                    <div className="flex-1 flex gap-2">
+                                                        <input value={editingLevelName} onChange={(e) => setEditingLevelName(e.target.value)} className="input flex-1 text-sm py-1" autoFocus />
+                                                        <button onClick={saveEditLevel} className="btn-primary text-xs py-1">Save</button>
+                                                        <button onClick={() => setEditingLevelId(null)} className="btn-outline-primary text-xs py-1">Cancel</button>
+                                                    </div>
+                                                ) : (
+                                                    <>
+                                                        <div>
+                                                            <span className="text-sm font-semibold text-slate-700">{level.name}</span>
+                                                            <span className="text-[10px] text-slate-400 ml-2">{level._count?.questions ?? 0} questions</span>
+                                                        </div>
+                                                        <div className="flex gap-1">
+                                                            <button onClick={() => startEditLevel(level)} className="p-1 text-slate-400 hover:text-blue-600"><Edit2 size={14} /></button>
+                                                            <button onClick={() => removeLevel(level.id)} className="p-1 text-red-400 hover:text-red-600"><Trash2 size={14} /></button>
+                                                        </div>
+                                                    </>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* CSV Import Modal */}
+                    {csvImportCatId && (
+                        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
+                            <div className="bg-white rounded-xl p-6 w-full max-w-lg mx-4 space-y-4">
+                                <div className="flex items-center justify-between">
+                                    <h2 className="text-sm font-bold text-slate-800">Import Questions from CSV</h2>
+                                    <button onClick={() => { setCsvImportCatId(null); setCsvFile(null); setCsvResult(null); }} className="text-slate-400 hover:text-slate-600"><X size={18} /></button>
+                                </div>
+
+                                <p className="text-xs text-slate-500">
+                                    CSV columns: <code className="bg-slate-100 px-1 rounded">question, option1, option2, option3, option4, correctIndex, level</code>
+                                    <br />correctIndex: 0-3. level: optional, must match existing level name.
+                                </p>
+
+                                {!csvResult && (
+                                    <div className="space-y-3">
+                                        <input ref={csvFileRef} type="file" accept=".csv" onChange={(e) => setCsvFile(e.target.files?.[0] ?? null)} className="block w-full text-sm text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100" />
+                                        <button
+                                            onClick={async () => {
+                                                if (!csvFile) return;
+                                                setCsvUploading(true);
+                                                setCsvResult(null);
+                                                try {
+                                                    const result = await importCsv(csvImportCatId, csvFile);
+                                                    setCsvResult(result);
+                                                    queryClient.invalidateQueries({ queryKey: ["admin-quiz-categories"] });
+                                                    queryClient.invalidateQueries({ queryKey: ["admin-quiz-questions", csvImportCatId] });
+                                                } catch (err: any) {
+                                                    setCsvResult({ imported: 0, errors: [{ row: 0, message: err?.response?.data?.message || err?.message || "Upload failed" }], total: 0 });
+                                                } finally { setCsvUploading(false); }
+                                            }}
+                                            disabled={!csvFile || csvUploading}
+                                            className="btn-primary text-sm"
+                                        >
+                                            {csvUploading ? <span className="flex items-center gap-2"><Loader2 size={14} className="animate-spin" /> Uploading...</span> : "Upload & Import"}
+                                        </button>
+                                    </div>
+                                )}
+
+                                {csvResult && (
+                                    <div className="space-y-3">
+                                        <div className="flex gap-4 text-sm">
+                                            <div className="bg-green-50 text-green-700 rounded-lg p-3 flex-1 text-center">
+                                                <p className="text-lg font-bold">{csvResult.imported}</p>
+                                                <p className="text-xs">Imported</p>
+                                            </div>
+                                            <div className="bg-red-50 text-red-600 rounded-lg p-3 flex-1 text-center">
+                                                <p className="text-lg font-bold">{csvResult.errors.length}</p>
+                                                <p className="text-xs">Errors</p>
+                                            </div>
+                                        </div>
+                                        {csvResult.errors.length > 0 && (
+                                            <div className="max-h-40 overflow-y-auto space-y-1">
+                                                {csvResult.errors.map((e, i) => (
+                                                    <div key={i} className="text-xs text-red-600 bg-red-50 rounded p-2">
+                                                        Row {e.row}: {e.message}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+                                        <button onClick={() => { setCsvFile(null); setCsvResult(null); }} className="btn-outline-primary text-sm">Import Another</button>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
                     {/* Add Questions Modal */}
                     {showQuestionForm && activeCategory && (
                         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
@@ -300,6 +509,18 @@ export default function AdminQuizPage() {
                                     <button onClick={resetQuestionForm} className="text-slate-400 hover:text-slate-600"><X size={18} /></button>
                                 </div>
                                 <form onSubmit={handleSubmitQuestions} className="space-y-4">
+                                    {/* Level selector */}
+                                    {activeCategory && categories.find(c => c.id === activeCategory)?.levels && categories.find(c => c.id === activeCategory)!.levels!.length > 0 && (
+                                        <div>
+                                            <label className="block text-xs font-semibold text-slate-600 mb-1">Assign to Level (optional)</label>
+                                            <select value={selectedLevelId ?? ""} onChange={(e) => setSelectedLevelId(e.target.value || null)} className="input w-full text-sm">
+                                                <option value="">No level (general)</option>
+                                                {categories.find(c => c.id === activeCategory)!.levels!.map((l) => (
+                                                    <option key={l.id} value={l.id}>{l.name} ({l._count?.questions ?? 0} questions)</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    )}
                                     <div className="flex items-center justify-between">
                                         <span className="text-xs font-semibold text-slate-600">Questions ({questions.length})</span>
                                         <button type="button" onClick={() => setQuestions([...questions, emptyQuestion()])} className="text-xs text-green-700 hover:text-green-800 font-semibold">+ Add Question</button>

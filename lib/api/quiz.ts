@@ -6,9 +6,19 @@ export interface QuizCategoryItem {
     imageUrl: string;
     isActive?: boolean;
     sortOrder?: number;
+    levels?: QuizLevelItem[];
     _count?: { questions: number };
     createdAt?: string;
     updatedAt?: string;
+}
+
+export interface QuizLevelItem {
+    id: string;
+    categoryId: string;
+    name: string;
+    sortOrder: number;
+    _count?: { questions: number };
+    createdAt?: string;
 }
 
 export interface QuizQuestion {
@@ -18,6 +28,7 @@ export interface QuizQuestion {
     options: string[];
     correctIndex?: number;
     sortOrder?: number;
+    level?: { id: string; name: string } | null;
     createdAt?: string;
 }
 
@@ -113,9 +124,31 @@ export const quizApi = {
         return res.data;
     },
 
+    // Levels
+    getLevels: async (categoryId: string): Promise<QuizLevelItem[]> => {
+        const res = await api.get(`/quiz-levels/${categoryId}`);
+        return res.data;
+    },
+
+    createLevel: async (categoryId: string, data: { name: string; sortOrder?: number }): Promise<QuizLevelItem> => {
+        const res = await api.post(`/quiz-levels/${categoryId}`, data);
+        return res.data;
+    },
+
+    updateLevel: async (id: string, data: { name?: string; sortOrder?: number }): Promise<QuizLevelItem> => {
+        const res = await api.patch(`/quiz-levels/${id}`, data);
+        return res.data;
+    },
+
+    deleteLevel: async (id: string): Promise<void> => {
+        const res = await api.delete(`/quiz-levels/${id}`);
+        return res.data;
+    },
+
     // Admin: Questions
-    adminAddQuestions: async (categoryId: string, questions: { question: string; options: string[]; correctIndex: number }[]): Promise<any> => {
-        const res = await api.post(`/quiz/admin/questions/${categoryId}`, questions);
+    adminAddQuestions: async (categoryId: string, questions: { question: string; options: string[]; correctIndex: number }[], levelId?: string): Promise<any> => {
+        const params = levelId ? { levelId } : undefined;
+        const res = await api.post(`/quiz/admin/questions/${categoryId}`, questions, { params });
         return res.data;
     },
 
@@ -165,6 +198,15 @@ export const quizApi = {
         const res = await api.get(`/quiz/attempt/${purchaseId}/result`);
         return res.data;
     },
+};
+
+export const importCsv = async (categoryId: string, file: File): Promise<{ imported: number; errors: { row: number; message: string }[]; total: number }> => {
+    const form = new FormData();
+    form.append("file", file);
+    const res = await api.post(`/quiz/admin/import-csv/${categoryId}`, form, {
+        headers: { "Content-Type": null },
+    });
+    return res.data;
 };
 
 export const uploadImage = async (file: File): Promise<string> => {
