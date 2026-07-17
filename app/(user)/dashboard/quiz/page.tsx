@@ -3,7 +3,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Loader2, HelpCircle, Clock, DollarSign, CheckCircle, Award, Wallet, Smartphone, ArrowLeft, ShoppingCart } from "lucide-react";
+import { Loader2, HelpCircle, Clock, DollarSign, CheckCircle, Award, Wallet, ArrowLeft, ShoppingCart } from "lucide-react";
 import { quizApi, type QuizCategoryItem, type QuizPurchaseInfo, type QuizLevelItem } from "@/lib/api/quiz";
 import { walletApi } from "@/lib/api/wallet";
 import { useLocale } from "@/lib/i18n";
@@ -259,19 +259,14 @@ export default function QuizPage() {
                         <p className="text-lg font-extrabold text-green-700">{questionCount} questions = {formatCurrency(questionCount * PRICE_PER_QUESTION, locale)}</p>
 
                         <div className="space-y-2">
-                            <button onClick={() => setPayMethod("WALLET")} className={`w-full flex items-center gap-3 p-3 rounded-lg border text-sm ${payMethod === "WALLET" ? "border-green-600 bg-green-50" : "border-gray-200"}`}>
+                            <div className="w-full flex items-center gap-3 p-3 rounded-lg border border-green-600 bg-green-50 text-sm">
                                 <Wallet size={18} />
                                 <div className="text-left">
                                     <p className="font-semibold text-gray-800">{t("dashboard.quiz.payWallet")}</p>
                                     <p className="text-[10px] text-gray-400">{wallet ? formatCurrency(Number(wallet.balance), locale) : "..."}</p>
                                 </div>
-                                {payMethod === "WALLET" && <CheckCircle size={16} className="ml-auto text-green-700" />}
-                            </button>
-                            <button onClick={() => setPayMethod("BKASH")} className={`w-full flex items-center gap-3 p-3 rounded-lg border text-sm ${payMethod === "BKASH" ? "border-green-600 bg-green-50" : "border-gray-200"}`}>
-                                <Smartphone size={18} />
-                                <div className="text-left"><p className="font-semibold text-gray-800">{t("dashboard.quiz.payBkash")}</p></div>
-                                {payMethod === "BKASH" && <CheckCircle size={16} className="ml-auto text-green-700" />}
-                            </button>
+                                <CheckCircle size={16} className="ml-auto text-green-700" />
+                            </div>
                         </div>
 
                         {payMethod === "WALLET" && wallet && Number(wallet.balance) < questionCount * PRICE_PER_QUESTION && (
