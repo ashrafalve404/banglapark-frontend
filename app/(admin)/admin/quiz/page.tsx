@@ -2,8 +2,9 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, useRef } from "react";
-import { Plus, Trash2, Loader2, X, ImageIcon, FolderOpen, ListOrdered, Eye, EyeOff, AlertCircle, Edit2, Layers, Upload } from "lucide-react";
-import { quizApi, uploadImage, importCsv, type QuizCategoryItem, type QuizLevelItem, type QuizQuestion } from "@/lib/api/quiz";
+import { useRouter } from "next/navigation";
+import { Plus, Trash2, Loader2, X, ImageIcon, FolderOpen, Eye, AlertCircle, Edit2, Layers, Upload } from "lucide-react";
+import { quizApi, uploadImage, importCsv, type QuizCategoryItem, type QuizLevelItem } from "@/lib/api/quiz";
 import { useLocale } from "@/lib/i18n";
 
 interface QuestionForm {
@@ -20,6 +21,7 @@ const emptyQuestion = (): QuestionForm => ({
 
 export default function AdminQuizPage() {
     const { t } = useLocale();
+    const router = useRouter();
     const queryClient = useQueryClient();
     const [tab, setTab] = useState<"categories" | "quizzes">("categories");
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -38,9 +40,6 @@ export default function AdminQuizPage() {
     const [activeCategory, setActiveCategory] = useState<string | null>(null);
     const [questions, setQuestions] = useState<QuestionForm[]>([emptyQuestion()]);
     const [showQuestionForm, setShowQuestionForm] = useState(false);
-
-    // Question list
-    const [viewQuestions, setViewQuestions] = useState<string | null>(null);
 
     // Level management
     const [manageLevelCatId, setManageLevelCatId] = useState<string | null>(null);
@@ -61,12 +60,6 @@ export default function AdminQuizPage() {
     const { data: categories = [] } = useQuery<QuizCategoryItem[]>({
         queryKey: ["admin-quiz-categories"],
         queryFn: () => quizApi.getAllCategories(),
-    });
-
-    const { data: questionData } = useQuery({
-        queryKey: ["admin-quiz-questions", viewQuestions],
-        queryFn: () => viewQuestions ? quizApi.adminGetQuestions(viewQuestions) : null,
-        enabled: !!viewQuestions,
     });
 
     const createCatMutation = useMutation({
@@ -103,15 +96,10 @@ export default function AdminQuizPage() {
         mutationFn: ({ categoryId, questions, levelId }: { categoryId: string; questions: { question: string; options: string[]; correctIndex: number }[]; levelId?: string }) =>
             quizApi.adminAddQuestions(categoryId, questions, levelId),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["admin-quiz-questions", viewQuestions] });
+            queryClient.invalidateQueries({ queryKey: ["admin-quiz-questions", activeCategory] });
             queryClient.invalidateQueries({ queryKey: ["admin-quiz-categories"] });
             resetQuestionForm();
         },
-    });
-
-    const deleteQuestionMutation = useMutation({
-        mutationFn: (id: string) => quizApi.adminDeleteQuestion(id),
-        onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin-quiz-questions", viewQuestions] }),
     });
 
     const resetCatForm = () => {
@@ -353,30 +341,12 @@ export default function AdminQuizPage() {
                                             <button onClick={() => openLevelManager(cat.id)} className="btn-outline-primary text-xs flex items-center gap-1">
                                                 <Layers size={12} /> Levels
                                             </button>
-                                            <button onClick={() => setViewQuestions(viewQuestions === cat.id ? null : cat.id)} className="btn-outline-primary text-xs flex items-center gap-1">
-                                                {viewQuestions === cat.id ? <EyeOff size={12} /> : <Eye size={12} />} {viewQuestions === cat.id ? "Hide" : "View"}
+                                            <button onClick={() => router.push(`/admin/quiz/questions/${cat.id}`)} className="btn-outline-primary text-xs flex items-center gap-1">
+                                                <Eye size={12} /> View All
                                             </button>
                                         </div>
 
-                                        {viewQuestions === cat.id && (
-                                            <div className="border-t border-slate-100 pt-2 mt-1">
-                                                {questionData?.questions.length === 0 ? (
-                                                    <p className="text-[10px] text-slate-400 text-center py-2">No questions yet.</p>
-                                                ) : (
-                                                    <div className="space-y-1 max-h-48 overflow-y-auto">
-                                                        {questionData?.questions.map((q, i) => (
-                                                            <div key={q.id} className="flex items-start justify-between gap-2 p-1.5 rounded bg-slate-50">
-                                            <div className="min-w-0">
-                                                                        <p className="text-[10px] font-semibold text-slate-700 truncate">{i + 1}. {q.question}</p>
-                                                                        <p className="text-[9px] text-slate-400">{q.options.length} options{q.level && <span className="ml-1.5 text-blue-500">&middot; {q.level.name}</span>}</p>
-                                                                    </div>
-                                                                <button onClick={() => { if (confirm("Delete this question?")) deleteQuestionMutation.mutate(q.id); }} className="p-0.5 text-red-300 hover:text-red-500 shrink-0"><X size={10} /></button>
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                )}
-                                            </div>
-                                        )}
+
                                     </div>
                                 </div>
                             ))}
