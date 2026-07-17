@@ -3,7 +3,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Loader2, HelpCircle, Clock, DollarSign, CheckCircle, Award, Wallet, Smartphone, ArrowLeft, ShoppingCart, Layers } from "lucide-react";
+import { Loader2, HelpCircle, Clock, DollarSign, CheckCircle, Award, Wallet, Smartphone, ArrowLeft, ShoppingCart } from "lucide-react";
 import { quizApi, type QuizCategoryItem, type QuizPurchaseInfo, type QuizLevelItem } from "@/lib/api/quiz";
 import { walletApi } from "@/lib/api/wallet";
 import { useLocale } from "@/lib/i18n";
@@ -132,7 +132,6 @@ export default function QuizPage() {
                     {/* Level cards */}
                     {activeCategory.levels && activeCategory.levels.length > 0 && (
                         <div>
-                            <h3 className="text-sm font-bold text-gray-800 mb-3 flex items-center gap-1.5"><Layers size={16} /> Levels</h3>
                             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                                 {activeCategory.levels.map((level) => (
                                     <button
