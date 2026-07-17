@@ -139,6 +139,7 @@ export default function AdminQuizPage() {
         try {
             const data = await quizApi.getLevels(catId);
             setLevels(data);
+            queryClient.invalidateQueries({ queryKey: ["admin-quiz-categories"] });
         } catch { setLevelError("Failed to load levels"); }
         finally { setLevelLoading(false); }
     };
@@ -150,6 +151,7 @@ export default function AdminQuizPage() {
             const level = await quizApi.createLevel(manageLevelCatId, { name: newLevelName.trim() });
             setLevels([...levels, level]);
             setNewLevelName("");
+            queryClient.invalidateQueries({ queryKey: ["admin-quiz-categories"] });
         } catch (err: any) {
             setLevelError(err?.response?.data?.message || "Failed to add level");
         }
@@ -167,6 +169,7 @@ export default function AdminQuizPage() {
             const updated = await quizApi.updateLevel(editingLevelId, { name: editingLevelName.trim() });
             setLevels(levels.map((l) => l.id === updated.id ? updated : l));
             setEditingLevelId(null);
+            queryClient.invalidateQueries({ queryKey: ["admin-quiz-categories"] });
             setEditingLevelName("");
         } catch (err: any) {
             setLevelError(err?.response?.data?.message || "Failed to update level");
@@ -179,6 +182,7 @@ export default function AdminQuizPage() {
         try {
             await quizApi.deleteLevel(levelId);
             setLevels(levels.filter((l) => l.id !== levelId));
+            queryClient.invalidateQueries({ queryKey: ["admin-quiz-categories"] });
         } catch (err: any) {
             setLevelError(err?.response?.data?.message || "Failed to delete level");
         }
