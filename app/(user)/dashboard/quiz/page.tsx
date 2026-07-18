@@ -21,6 +21,7 @@ export default function QuizPage() {
     const [payMethod, setPayMethod] = useState<"WALLET" | "BKASH">("WALLET");
     const [selectedLevelId, setSelectedLevelId] = useState<string | null>(null);
     const [purchaseModal, setPurchaseModal] = useState<{ categoryId: string; name: string; maxQuestions: number; levelId?: string | null; levelName?: string } | null>(null);
+    const [purchaseError, setPurchaseError] = useState<string | null>(null);
 
     const { data: categories = [] } = useQuery<QuizCategoryItem[]>({
         queryKey: ["quiz-categories"],
@@ -55,7 +56,11 @@ export default function QuizPage() {
             queryClient.invalidateQueries({ queryKey: ["wallet"] });
             setPurchaseModal(null);
             setSelectedLevelId(null);
+            setPurchaseError(null);
             router.push(`/dashboard/quiz/attempt/${data.id}`);
+        },
+        onError: (err: any) => {
+            setPurchaseError(err?.response?.data?.message || err?.message || "Purchase failed");
         },
     });
 
@@ -269,19 +274,25 @@ export default function QuizPage() {
                             </div>
                         </div>
 
-                        {payMethod === "WALLET" && wallet && Number(wallet.balance) < questionCount * PRICE_PER_QUESTION && (
+                        {wallet && Number(wallet.balance) < questionCount * PRICE_PER_QUESTION && (
                             <p className="text-xs text-red-600 text-center">Insufficient balance</p>
                         )}
 
+                        {purchaseError && (
+                            <p className="text-xs text-red-600 text-center bg-red-50 rounded-lg p-2">{purchaseError}</p>
+                        )}
                         <div className="flex gap-3">
                             <button
-                                onClick={() => purchaseMutation.mutate({ categoryId: purchaseModal.categoryId, questionCount, method: payMethod, levelId: purchaseModal.levelId ?? undefined })}
-                                disabled={purchaseMutation.isPending || (payMethod === "WALLET" && Number(wallet?.balance ?? 0) < questionCount * PRICE_PER_QUESTION)}
+                                onClick={() => {
+                                    setPurchaseError(null);
+                                    purchaseMutation.mutate({ categoryId: purchaseModal.categoryId, questionCount, method: payMethod, levelId: purchaseModal.levelId ?? undefined });
+                                }}
+                                disabled={purchaseMutation.isPending}
                                 className="btn-primary flex-1 text-sm"
                             >
                                 {purchaseMutation.isPending ? <Loader2 size={14} className="animate-spin mx-auto" /> : "Buy Now"}
                             </button>
-                            <button onClick={() => setPurchaseModal(null)} className="btn-outline-primary text-sm">Cancel</button>
+                            <button onClick={() => { setPurchaseModal(null); setPurchaseError(null); }} className="btn-outline-primary text-sm">Cancel</button>
                         </div>
                     </div>
                 </div>
