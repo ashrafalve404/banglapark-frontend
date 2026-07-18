@@ -3,7 +3,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Loader2, HelpCircle, Clock, DollarSign, CheckCircle, Award, Wallet, ArrowLeft, ShoppingCart } from "lucide-react";
+import { Loader2, HelpCircle, Clock, DollarSign, CheckCircle, Wallet, ArrowLeft, ShoppingCart } from "lucide-react";
 import { quizApi, type QuizCategoryItem, type QuizPurchaseInfo, type QuizLevelItem } from "@/lib/api/quiz";
 import { walletApi } from "@/lib/api/wallet";
 import { useLocale } from "@/lib/i18n";
@@ -230,31 +230,7 @@ export default function QuizPage() {
                         )}
                     </div>
 
-                    {/* Past purchases */}
-                    {purchases.filter((p) => p.categoryId === categoryFilter && p.status === "COMPLETED").length > 0 && (
-                        <div>
-                            <h3 className="text-sm font-bold text-gray-800 mb-2">Results</h3>
-                            <div className="space-y-2">
-                                {purchases.filter((p) => p.categoryId === categoryFilter && p.status === "COMPLETED").map((p) => (
-                                    <button
-                                        key={p.id}
-                                        onClick={() => router.push(`/dashboard/quiz/result/${p.id}`)}
-                                        className="card p-3 bg-white flex items-center justify-between w-full text-left"
-                                    >
-                                        <div className="text-xs">
-                                            <span className="font-semibold text-gray-800">{p.questionCount} questions</span>
-                                            {p.level && <span className="ml-1.5 text-blue-600">({p.level.name})</span>}
-                                            <span className="ml-2 text-green-700 font-semibold">
-                                                <Award size={12} className="inline mr-0.5" />
-                                                {p.answers?.filter((a) => a.isCorrect).length ?? 0}/{p.questionCount}
-                                            </span>
-                                        </div>
-                                        <span className="text-[10px] text-green-700 hover:underline font-semibold">View Result</span>
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    )}
+
                 </div>
             )}
 
