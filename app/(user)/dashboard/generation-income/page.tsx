@@ -8,7 +8,7 @@ import { formatCurrency, formatDateTime } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
 
 export default function GenerationIncomePage() {
-    const { t } = useLocale();
+    const { t, locale } = useLocale();
     const [page, setPage] = useState(1);
 
     const { data, isLoading } = useQuery({
@@ -52,7 +52,7 @@ export default function GenerationIncomePage() {
                             <tbody className="divide-y divide-gray-100 bg-white">
                                 {commissions.map((comm) => (
                                     <tr key={comm.id} className="hover:bg-gray-50/50">
-                                        <td className="p-4 text-xs text-gray-600">{formatDateTime(comm.createdAt)}</td>
+                                        <td className="p-4 text-xs text-gray-600">{formatDateTime(comm.createdAt, locale)}</td>
                                         <td className="p-4 text-sm font-semibold text-gray-800">
                                             {comm.fromUser?.name || t("generationIncome.history.memberUnknown")}
                                         </td>
@@ -60,7 +60,7 @@ export default function GenerationIncomePage() {
                                             {t("generationIncome.history.level")} {comm.level}
                                         </td>
                                         <td className="p-4 text-xs font-bold text-green-700 text-right">
-                                            +{formatCurrency(comm.amount)}
+                                            +{formatCurrency(comm.amount, locale)}
                                         </td>
                                     </tr>
                                 ))}

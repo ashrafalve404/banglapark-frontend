@@ -8,7 +8,7 @@ import { formatDateTime } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
 
 export default function UserNotificationsPage() {
-    const { t } = useLocale();
+    const { t, locale } = useLocale();
     const [page, setPage] = useState(1);
     const [actionLoading, setActionLoading] = useState(false);
 
@@ -83,7 +83,7 @@ export default function UserNotificationsPage() {
                                 <h3 className={`text-sm ${notif.isRead ? "font-semibold text-gray-800" : "font-bold text-gray-900"}`}>
                                     {notif.title}
                                 </h3>
-                                <span className="text-[10px] text-gray-400 whitespace-nowrap">{formatDateTime(notif.createdAt)}</span>
+                                <span className="text-[10px] text-gray-400 whitespace-nowrap">{formatDateTime(notif.createdAt, locale)}</span>
                             </div>
                             <p className="text-xs text-gray-500 leading-relaxed">{notif.body}</p>
                         </div>

@@ -5,13 +5,13 @@ export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
 }
 
-export function formatCurrency(amount: number | string, locale = "bn-BD"): string {
+export function formatCurrency(amount: number | string, locale = "en"): string {
     const localeMap: Record<string, string> = { bn: "bn-BD", en: "en-IN" };
     const l = localeMap[locale] || locale;
     return `৳${Number(amount).toLocaleString(l)}`;
 }
 
-export function formatDate(dateStr: string, locale = "bn-BD"): string {
+export function formatDate(dateStr: string, locale = "en"): string {
     const localeMap: Record<string, string> = { bn: "bn-BD", en: "en-IN" };
     const l = localeMap[locale] || locale;
     return new Date(dateStr).toLocaleDateString(l, {
@@ -21,7 +21,7 @@ export function formatDate(dateStr: string, locale = "bn-BD"): string {
     });
 }
 
-export function formatDateTime(dateStr: string, locale = "bn-BD"): string {
+export function formatDateTime(dateStr: string, locale = "en"): string {
     const localeMap: Record<string, string> = { bn: "bn-BD", en: "en-IN" };
     const l = localeMap[locale] || locale;
     return new Date(dateStr).toLocaleString(l, {

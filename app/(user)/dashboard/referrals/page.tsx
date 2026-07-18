@@ -10,7 +10,7 @@ import { useLocale } from "@/lib/i18n";
 
 export default function ReferralsPage() {
     const { user } = useAuthStore();
-    const { t } = useLocale();
+    const { t, locale } = useLocale();
     const [copied, setCopied] = useState(false);
     const [page, setPage] = useState(1);
     const [search, setSearch] = useState("");
@@ -131,7 +131,7 @@ export default function ReferralsPage() {
                                             <div>{member.phone}</div>
                                             <div className="text-[10px] text-gray-405">{member.email}</div>
                                         </td>
-                                        <td className="p-4 text-xs text-gray-550">{formatDate(member.createdAt)}</td>
+                                        <td className="p-4 text-xs text-gray-550">{formatDate(member.createdAt, locale)}</td>
                                         <td className="p-4 text-center">
                                             <span className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${member.status === "ACTIVE" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-550"
                                                 }`}>

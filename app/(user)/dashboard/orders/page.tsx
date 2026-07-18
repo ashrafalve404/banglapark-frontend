@@ -76,7 +76,7 @@ export default function UserOrdersPage() {
                                             <p className="text-xs font-bold text-gray-800 truncate">{item.product?.name || t("orders.productFallback")}</p>
                                             <p className="text-xs text-gray-400">৳{Number(item.price).toLocaleString()} x {item.quantity}</p>
                                         </div>
-                                        <span className="text-xs font-semibold text-gray-700">{formatCurrency(Number(item.price) * item.quantity)}</span>
+                                        <span className="text-xs font-semibold text-gray-700">{formatCurrency(Number(item.price) * item.quantity, locale)}</span>
                                     </div>
                                 ))}
                             </div>
@@ -101,7 +101,7 @@ export default function UserOrdersPage() {
                                 </div>
                                 <div className="text-right">
                                     <span className="text-xs text-gray-400 block">{t("orders.totalLabel")}</span>
-                                    <span className="text-sm font-bold text-green-800">{formatCurrency(order.total)}</span>
+                                    <span className="text-sm font-bold text-green-800">{formatCurrency(order.total, locale)}</span>
                                 </div>
                             </div>
                         </div>

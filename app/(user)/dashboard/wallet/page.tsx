@@ -8,7 +8,7 @@ import { walletApi } from "@/lib/api/wallet";
 import { referralApi } from "@/lib/api/categories";
 import { authApi } from "@/lib/api/auth";
 import { useAuthStore } from "@/store/auth";
-import { formatCurrency, formatDateTime, formatDate, getTxTypeLabel } from "@/lib/utils";
+import { formatCurrency, formatDateTime, formatDate } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
 
 export default function WalletPage() {
@@ -87,7 +87,7 @@ export default function WalletPage() {
                         <Wallet size={18} className="text-green-300" />
                     </div>
                     <h2 className="text-2xl font-extrabold text-white">
-                        {balLoading ? "..." : formatCurrency(balanceData?.balance ?? 0)}
+                        {balLoading ? "..." : formatCurrency(balanceData?.balance ?? 0, locale)}
                     </h2>
                 </div>
 
@@ -97,7 +97,7 @@ export default function WalletPage() {
                         <Gift size={18} className="text-purple-300" />
                     </div>
                     <h2 className="text-2xl font-extrabold text-white">
-                        {balLoading ? "..." : formatCurrency(balanceData?.dailyReward ?? 0)}
+                        {balLoading ? "..." : formatCurrency(balanceData?.dailyReward ?? 0, locale)}
                     </h2>
                 </div>
 
@@ -107,7 +107,7 @@ export default function WalletPage() {
                         <Award size={18} className="text-indigo-300" />
                     </div>
                     <h2 className="text-2xl font-extrabold text-white">
-                        {balLoading ? "..." : formatCurrency(balanceData?.tierBonus ?? 0)}
+                        {balLoading ? "..." : formatCurrency(balanceData?.tierBonus ?? 0, locale)}
                     </h2>
                 </div>
 
@@ -117,7 +117,7 @@ export default function WalletPage() {
                         <TrendingUp size={18} className="text-blue-300" />
                     </div>
                     <h2 className="text-2xl font-extrabold text-white">
-                        {balLoading ? "..." : formatCurrency(balanceData?.generationIncome ?? 0)}
+                        {balLoading ? "..." : formatCurrency(balanceData?.generationIncome ?? 0, locale)}
                     </h2>
                 </div>
 
@@ -127,7 +127,7 @@ export default function WalletPage() {
                         <TrendingUp size={18} className="text-amber-300" />
                     </div>
                     <h2 className="text-2xl font-extrabold text-white">
-                        {balLoading ? "..." : formatCurrency(balanceData?.quizEarning ?? 0)}
+                        {balLoading ? "..." : formatCurrency(balanceData?.quizEarning ?? 0, locale)}
                     </h2>
                 </div>
 
@@ -137,7 +137,7 @@ export default function WalletPage() {
                         <AlertCircle size={18} className="text-gray-400" />
                     </div>
                     <h2 className="text-2xl font-extrabold text-gray-800">
-                        {balLoading ? "..." : formatCurrency(balanceData?.pendingWithdrawal ?? 0)}
+                        {balLoading ? "..." : formatCurrency(balanceData?.pendingWithdrawal ?? 0, locale)}
                     </h2>
                 </div>
 
@@ -147,7 +147,7 @@ export default function WalletPage() {
                         <Wallet size={18} className="text-green-700" />
                     </div>
                     <h2 className="text-2xl font-extrabold text-green-800">
-                        {balLoading ? "..." : formatCurrency(balanceData?.availableBalance ?? 0)}
+                        {balLoading ? "..." : formatCurrency(balanceData?.availableBalance ?? 0, locale)}
                     </h2>
                 </div>
             </div>
@@ -159,7 +159,7 @@ export default function WalletPage() {
                         <Award size={16} className="text-gray-300" />
                     </div>
                     <h2 className="text-xl font-extrabold text-gray-400">
-                        {balLoading ? "..." : formatCurrency(balanceData?.reward ?? 0)}
+                        {balLoading ? "..." : formatCurrency(balanceData?.reward ?? 0, locale)}
                     </h2>
                 </div>
                 <div className="card p-4 border border-dashed border-gray-200 bg-gray-50/50">
@@ -168,7 +168,7 @@ export default function WalletPage() {
                         <DollarSign size={16} className="text-gray-300" />
                     </div>
                     <h2 className="text-xl font-extrabold text-gray-400">
-                        {balLoading ? "..." : formatCurrency(balanceData?.salary ?? 0)}
+                        {balLoading ? "..." : formatCurrency(balanceData?.salary ?? 0, locale)}
                     </h2>
                 </div>
                 <div className="card p-4 border border-dashed border-gray-200 bg-gray-50/50">
@@ -177,7 +177,7 @@ export default function WalletPage() {
                         <MapPin size={16} className="text-gray-300" />
                     </div>
                     <h2 className="text-xl font-extrabold text-gray-400">
-                        {balLoading ? "..." : formatCurrency(balanceData?.travelling ?? 0)}
+                        {balLoading ? "..." : formatCurrency(balanceData?.travelling ?? 0, locale)}
                     </h2>
                 </div>
                 <div className="card p-4 border border-dashed border-gray-200 bg-gray-50/50">
@@ -186,7 +186,7 @@ export default function WalletPage() {
                         <PieChart size={16} className="text-gray-300" />
                     </div>
                     <h2 className="text-xl font-extrabold text-gray-400">
-                        {balLoading ? "..." : formatCurrency(balanceData?.share ?? 0)}
+                        {balLoading ? "..." : formatCurrency(balanceData?.share ?? 0, locale)}
                     </h2>
                 </div>
             </div>
@@ -286,17 +286,17 @@ export default function WalletPage() {
                                     const isDebit = ["PURCHASE", "WITHDRAWAL"].includes(tx.type) || (tx.type === "ADMIN_ADJUSTMENT" && tx.amount < 0);
                                     return (
                                         <tr key={tx.id} className="hover:bg-gray-50/50">
-                                            <td className="p-4 text-xs text-gray-600">{formatDateTime(tx.createdAt)}</td>
+                                            <td className="p-4 text-xs text-gray-600">{formatDateTime(tx.createdAt, locale)}</td>
                                             <td className="p-4 text-xs">
                                                 <span className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${isDebit ? "bg-green-50 text-green-700" : "bg-green-50 text-green-700"}`}>
-                                                    {getTxTypeLabel(tx.type)}
+                                                    {t("wallet.ledger.transactionType." + tx.type)}
                                                 </span>
                                             </td>
                                             <td className="p-4 text-xs text-gray-500">{tx.description}</td>
                                             <td className={`p-4 text-xs font-bold text-right ${isDebit ? "text-green-650" : "text-green-700"}`}>
-                                                {isDebit ? "-" : "+"}{formatCurrency(Math.abs(tx.amount))}
+                                                {isDebit ? "-" : "+"}{formatCurrency(Math.abs(tx.amount), locale)}
                                             </td>
-                                            <td className="p-4 text-xs font-semibold text-gray-700 text-right">{formatCurrency(tx.balanceAfter)}</td>
+                                            <td className="p-4 text-xs font-semibold text-gray-700 text-right">{formatCurrency(tx.balanceAfter, locale)}</td>
                                         </tr>
                                     );
                                 })}

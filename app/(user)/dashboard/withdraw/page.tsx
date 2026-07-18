@@ -23,7 +23,7 @@ const withdrawSchema = z.object({
 type WithdrawSchemaInput = z.infer<typeof withdrawSchema>;
 
 export default function WithdrawPage() {
-    const { t } = useLocale();
+    const { t, locale } = useLocale();
     const [msg, setMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
@@ -185,7 +185,7 @@ export default function WithdrawPage() {
                     <div className="card p-6 bg-gradient-to-br from-green-900 to-green-800 text-white flex flex-col justify-between">
                         <span className="text-xs text-green-150 font-bold block mb-4 uppercase tracking-wider">{t("withdraw.sidebar.availableBalance")}</span>
                         <div>
-                            <h2 className="text-3xl font-extrabold">{walletLoading ? "..." : formatCurrency(availableBalance)}</h2>
+                            <h2 className="text-3xl font-extrabold">{walletLoading ? "..." : formatCurrency(availableBalance, locale)}</h2>
                             <span className="text-xs text-green-200 mt-1 block">{t("withdraw.sidebar.minLimit")}</span>
                         </div>
                     </div>
@@ -225,7 +225,7 @@ export default function WithdrawPage() {
                             <tbody className="divide-y divide-gray-100 bg-white">
                                 {requests.map((req) => (
                                     <tr key={req.id} className="hover:bg-gray-50/50">
-                                        <td className="p-4 text-xs text-gray-650">{formatDateTime(req.createdAt)}</td>
+                                        <td className="p-4 text-xs text-gray-650">{formatDateTime(req.createdAt, locale)}</td>
                                         <td className="p-4 text-xs font-semibold text-gray-700">{getWithdrawMethodLabel(req.method)}</td>
                                         <td className="p-4 text-xs text-gray-550 min-w-[200px]">
                                             <div><strong>{t("withdraw.history.accountNo")}</strong> {req.accountDetails?.accountNo}</div>
@@ -236,7 +236,7 @@ export default function WithdrawPage() {
                                             )}
                                             {req.reason && <div className="text-[10px] text-red-500 font-semibold mt-1">{t("withdraw.history.comment")} {req.reason}</div>}
                                         </td>
-                                        <td className="p-4 text-xs font-bold text-gray-900 text-right">{formatCurrency(req.amount)}</td>
+                                        <td className="p-4 text-xs font-bold text-gray-900 text-right">{formatCurrency(req.amount, locale)}</td>
                                         <td className="p-4 text-center">
                                             <span className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${req.status === "APPROVED"
                                                 ? "bg-green-100 text-green-800"
