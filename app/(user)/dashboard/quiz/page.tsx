@@ -51,13 +51,13 @@ export default function QuizPage() {
     const purchaseMutation = useMutation({
         mutationFn: ({ categoryId, questionCount, method, levelId }: { categoryId: string; questionCount: number; method: string; levelId?: string }) =>
             quizApi.purchase(categoryId, { questionCount, paymentMethod: method, levelId }),
-        onSuccess: (data: any) => {
+        onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["quiz-purchases"] });
             queryClient.invalidateQueries({ queryKey: ["wallet"] });
             setPurchaseModal(null);
             setSelectedLevelId(null);
             setPurchaseError(null);
-            router.push(`/dashboard/quiz/attempt/${data.id}`);
+            // Do NOT auto-start — user must click Start Quiz
         },
         onError: (err: any) => {
             setPurchaseError(err?.response?.data?.message || err?.message || "Purchase failed");
@@ -200,15 +200,21 @@ export default function QuizPage() {
                         {hasActivePurchase ? (
                             <div className="space-y-2">
                                 <p className="text-xs text-green-700 font-semibold flex items-center gap-1"><CheckCircle size={14} /> You have an active purchase for this category</p>
-                                {catPurchases.map((p) => (
-                                    <button
-                                        key={p.id}
-                                        onClick={() => router.push(`/dashboard/quiz/attempt/${p.id}`)}
-                                        className="btn-primary text-sm w-full"
-                                    >
-                                        Continue Quiz ({p.questionCount} questions) {!!p.answers?.length && `(${p.answers.filter(a => a.isCorrect).length}/${p.questionCount})`}
-                                    </button>
-                                ))}
+                                {catPurchases.map((p) => {
+                                    const isStarted = (p.answers?.length ?? 0) > 0;
+                                    return (
+                                        <button
+                                            key={p.id}
+                                            onClick={() => router.push(`/dashboard/quiz/attempt/${p.id}`)}
+                                            className="btn-primary text-sm w-full"
+                                        >
+                                            {isStarted
+                                                ? `Continue Quiz — ${p.answers!.length}/${p.questionCount} answered`
+                                                : `▶ Start Quiz (${p.questionCount} questions)`
+                                            }
+                                        </button>
+                                    );
+                                })}
                             </div>
                         ) : (
                             <button
