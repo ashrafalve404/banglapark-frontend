@@ -195,37 +195,16 @@ export default function QuizPage() {
                             </div>
                         </div>
 
-                        {hasActivePurchase ? (
-                            <div className="space-y-2">
-                                <p className="text-xs text-green-700 font-semibold flex items-center gap-1"><CheckCircle size={14} /> You have an active purchase for this category</p>
-                                {catPurchases.map((p) => {
-                                    const isStarted = (p.answers?.length ?? 0) > 0;
-                                    return (
-                                        <button
-                                            key={p.id}
-                                            onClick={() => router.push(`/dashboard/quiz/attempt/${p.id}`)}
-                                            className="btn-primary text-sm w-full"
-                                        >
-                                            {isStarted
-                                                ? `Continue Quiz — ${p.answers!.length}/${p.questionCount} answered`
-                                                : `▶ Start Quiz (${p.questionCount} questions)`
-                                            }
-                                        </button>
-                                    );
-                                })}
-                            </div>
-                        ) : (
-                            <button
-                                onClick={() => {
-                                    const levelName = selectedLevelId ? activeCategory.levels?.find(l => l.id === selectedLevelId)?.name : undefined;
-                                    setPurchaseModal({ categoryId: categoryFilter, name: activeCategory.name, maxQuestions: maxQuestionsForLevel, levelId: selectedLevelId, levelName });
-                                }}
-                                disabled={totalQuestions === 0}
-                                className="btn-primary text-sm w-full flex items-center justify-center gap-2"
-                            >
-                                <ShoppingCart size={16} /> Buy Quiz Questions
-                            </button>
-                        )}
+                        <button
+                            onClick={() => {
+                                const levelName = selectedLevelId ? activeCategory.levels?.find(l => l.id === selectedLevelId)?.name : undefined;
+                                setPurchaseModal({ categoryId: categoryFilter, name: activeCategory.name, maxQuestions: maxQuestionsForLevel, levelId: selectedLevelId, levelName });
+                            }}
+                            disabled={totalQuestions === 0}
+                            className="btn-primary text-sm w-full flex items-center justify-center gap-2"
+                        >
+                            <ShoppingCart size={16} /> Buy Quiz Questions
+                        </button>
                     </div>
 
 
