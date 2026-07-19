@@ -60,7 +60,6 @@ export default function DailyWorkPage() {
     }
 
     const activePurchases = purchases.filter((p) => p.status === "PURCHASED");
-    const completedPurchases = purchases.filter((p) => p.status === "COMPLETED");
 
     return (
         <div className="max-w-2xl mx-auto space-y-6">
@@ -82,21 +81,6 @@ export default function DailyWorkPage() {
                                 <div className="p-3">
                                     <p className="text-sm font-bold text-gray-800 truncate">{p.category?.name}</p>
                                     <p className="text-[10px] text-gray-400 mt-0.5">{p.answers?.length ?? 0}/{p.questionCount} answered</p>
-                                </div>
-                            </Link>
-                        ))}
-                        {completedPurchases.slice(0, 3).map((p) => (
-                            <Link
-                                key={p.id}
-                                href={`/dashboard/quiz`}
-                                className="group rounded-xl overflow-hidden border border-gray-200 bg-white hover:-translate-y-0.5 transition-transform opacity-75"
-                            >
-                                <div className="aspect-[4/3] bg-gray-100">
-                                    <img src={p.category?.imageUrl || ""} alt={p.category?.name || ""} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                                </div>
-                                <div className="p-3">
-                                    <p className="text-sm font-bold text-gray-800 truncate">{p.category?.name}</p>
-                                    <p className="text-[10px] text-green-600 mt-0.5">Completed</p>
                                 </div>
                             </Link>
                         ))}
