@@ -125,9 +125,7 @@ export default function QuizPage() {
                 <div className="space-y-6">
                     {/* Category hero */}
                     <div className="card bg-white overflow-hidden">
-                        <div className="aspect-[3/1] bg-gray-100">
-                            <img src={activeCategory.imageUrl} alt={activeCategory.name} className="w-full h-full object-cover" />
-                        </div>
+                        <img src={activeCategory.imageUrl} alt={activeCategory.name} className="w-full h-auto object-contain" />
                         <div className="p-5">
                             <h2 className="text-lg font-bold text-gray-900">{activeCategory.name}</h2>
                             <p className="text-xs text-gray-400 mt-1">{totalQuestions} questions available</p>
