@@ -22,6 +22,7 @@ export default function QuizPage() {
     const [selectedLevelId, setSelectedLevelId] = useState<string | null>(null);
     const [purchaseModal, setPurchaseModal] = useState<{ categoryId: string; name: string; maxQuestions: number; levelId?: string | null; levelName?: string } | null>(null);
     const [purchaseError, setPurchaseError] = useState<string | null>(null);
+    const [purchaseMsg, setPurchaseMsg] = useState<string | null>(null);
 
     const { data: categories = [] } = useQuery<QuizCategoryItem[]>({
         queryKey: ["quiz-categories"],
@@ -57,7 +58,8 @@ export default function QuizPage() {
             setPurchaseModal(null);
             setSelectedLevelId(null);
             setPurchaseError(null);
-            // Do NOT auto-start — user must click Start Quiz
+            setPurchaseMsg(t("dashboard.quiz.purchaseSuccess"));
+            setTimeout(() => setPurchaseMsg(null), 4000);
         },
         onError: (err: any) => {
             setPurchaseError(err?.response?.data?.message || err?.message || "Purchase failed");
@@ -75,6 +77,11 @@ export default function QuizPage() {
 
     return (
         <div className="max-w-3xl mx-auto space-y-6">
+            {purchaseMsg && (
+                <div className="rounded-lg bg-green-50 border border-green-200 text-green-800 text-sm font-semibold px-4 py-3 text-center">
+                    {purchaseMsg}
+                </div>
+            )}
             {/* Header */}
             <div>
                 <div className="flex items-center gap-3 mb-1">
