@@ -133,6 +133,9 @@ export default function QuizAttemptPage() {
 
     if (finished && result) {
         const percentage = result.totalQuestions > 0 ? Math.round((result.score / result.totalQuestions) * 100) : 0;
+        const wrongCount = result.totalQuestions - result.score;
+        const correctReward = result.score * 2;
+        const wrongDeduction = wrongCount * 1;
         return (
             <div className="max-w-md mx-auto py-10">
                 <div className="card bg-white p-8 text-center space-y-4">
@@ -141,16 +144,23 @@ export default function QuizAttemptPage() {
                             <Award size={48} className={percentage >= 60 ? "text-green-700" : "text-red-600"} />
                         </div>
                     </div>
-                    <h2 className="text-xl font-bold text-gray-800">Quiz Complete!</h2>
+                    <div className="text-sm text-gray-500">Thanks for completing the quiz!</div>
                     <div className="text-5xl font-extrabold text-green-700">{result.score}<span className="text-2xl text-gray-400">/{result.totalQuestions}</span></div>
-                    <p className="text-sm text-gray-500">{percentage}% correct</p>
-                    <div className="flex gap-2 justify-center">
-                        {result.score > 0 && <span className="flex items-center gap-1 text-xs text-green-700 font-semibold"><CheckCircle size={14} /> {result.score} correct</span>}
-                        {result.totalQuestions - result.score > 0 && <span className="flex items-center gap-1 text-xs text-red-600 font-semibold"><XCircle size={14} /> {result.totalQuestions - result.score} wrong</span>}
+                    <div className="space-y-2 text-sm">
+                        {result.score > 0 && (
+                            <p className="text-green-700 font-semibold">
+                                You have answered {result.score} questions correctly so you earned {correctReward} tk.
+                            </p>
+                        )}
+                        {wrongCount > 0 && (
+                            <p className="text-red-600 font-semibold">
+                                You have answered {wrongCount} questions wrong so {wrongDeduction} tk deducted.
+                            </p>
+                        )}
                     </div>
-                    {result.netReward !== undefined && result.netReward !== 0 && (
-                        <div className={`rounded-lg p-3 text-sm font-bold ${result.netReward > 0 ? "bg-green-50 text-green-800" : "bg-red-50 text-red-800"}`}>
-                            {result.netReward > 0 ? "+" : ""}{result.netReward} tk {result.netReward > 0 ? "earned" : "deducted"}
+                    {result.netReward !== undefined && (
+                        <div className={`rounded-lg p-3 text-sm font-bold ${result.netReward > 0 ? "bg-green-50 text-green-800" : result.netReward < 0 ? "bg-red-50 text-red-800" : "bg-gray-50 text-gray-600"}`}>
+                            {result.netReward > 0 ? "+" : ""}{result.netReward} tk {result.netReward > 0 ? "earned" : result.netReward < 0 ? "deducted" : "no change"}
                         </div>
                     )}
                     <button onClick={() => router.push("/dashboard/quiz")} className="btn-primary text-sm mt-4">Back to Quiz</button>
