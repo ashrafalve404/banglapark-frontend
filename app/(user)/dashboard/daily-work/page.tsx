@@ -67,21 +67,21 @@ export default function DailyWorkPage() {
             {!pLoading && purchases.length > 0 && (
                 <div className="space-y-3">
                     <h2 className="text-sm font-bold text-gray-800">{t("dashboard.quiz.title")}</h2>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    <div className="space-y-3">
                         {activePurchases.map((p) => (
                             <Link
                                 key={p.id}
                                 href={`/dashboard/quiz/attempt/${p.id}`}
-                                className="group rounded-xl overflow-hidden border border-green-200 bg-white hover:-translate-y-0.5 transition-transform"
+                                className="flex items-center gap-4 rounded-xl overflow-hidden border border-green-200 bg-white hover:-translate-y-0.5 transition-transform p-3"
                             >
-                                <div className="aspect-[4/3] bg-gray-100 relative">
-                                    <img src={p.category?.imageUrl || ""} alt={p.category?.name || ""} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                                    <span className="absolute top-2 right-2 text-[9px] font-semibold text-green-700 bg-green-50 px-2 py-0.5 rounded-full">Active</span>
+                                <div className="w-20 h-20 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+                                    <img src={p.category?.imageUrl || ""} alt={p.category?.name || ""} className="w-full h-full object-cover" />
                                 </div>
-                                <div className="p-3">
-                                    <p className="text-sm font-bold text-gray-800 truncate">{p.category?.name}</p>
-                                    <p className="text-[10px] text-gray-400 mt-0.5">{p.answers?.length ?? 0}/{p.questionCount} answered</p>
+                                <div className="flex-1 min-w-0">
+                                    <p className="font-bold text-gray-800 truncate">{p.category?.name}</p>
+                                    <p className="text-xs text-gray-400 mt-0.5">{p.answers?.length ?? 0}/{p.questionCount} answered</p>
                                 </div>
+                                <span className="text-[10px] font-semibold text-green-700 bg-green-50 px-2.5 py-1 rounded-full flex-shrink-0">Active</span>
                             </Link>
                         ))}
                     </div>
