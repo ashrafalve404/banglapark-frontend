@@ -34,7 +34,6 @@ export function DashboardSidebar({ onClose, mobile }: DashboardSidebarProps) {
         { href: "/dashboard/wallet", label: t("nav.wallet"), icon: Wallet },
         { href: "/dashboard/orders", label: t("nav.orders"), icon: ShoppingBag },
         { href: "/dashboard/referrals", label: t("nav.referrals"), icon: Users },
-        { href: "/dashboard/generation-income", label: t("nav.generationIncome"), icon: TrendingUp },
         { href: "/dashboard/withdraw", label: t("nav.withdraw"), icon: ArrowDownToLine },
         { href: "/dashboard/statement", label: t("nav.statement"), icon: FileText },
         { href: "/dashboard/notifications", label: t("nav.notifications"), icon: Bell },

@@ -2,14 +2,22 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { Download, Copy, Check, Loader2, ImageIcon } from "lucide-react";
+import Link from "next/link";
+import { Download, Copy, Check, Loader2, ImageIcon, HelpCircle, CheckCircle, Clock } from "lucide-react";
 import { bannersApi, type Banner } from "@/lib/api/banners";
+import { quizApi, type QuizPurchaseInfo } from "@/lib/api/quiz";
 import { useLocale } from "@/lib/i18n";
+import { formatCurrency } from "@/lib/utils";
 
 export default function DailyWorkPage() {
-    const { t } = useLocale();
+    const { t, locale } = useLocale();
     const [copied, setCopied] = useState(false);
     const [userLink, setUserLink] = useState("");
+
+    const { data: purchases = [], isLoading: pLoading } = useQuery<QuizPurchaseInfo[]>({
+        queryKey: ["quiz-purchases"],
+        queryFn: () => quizApi.getPurchased(),
+    });
 
     const { data: dailyWork, isLoading } = useQuery<Banner | null>({
         queryKey: ["daily-work"],
@@ -51,8 +59,51 @@ export default function DailyWorkPage() {
         );
     }
 
+    const activePurchases = purchases.filter((p) => p.status === "PURCHASED");
+    const completedPurchases = purchases.filter((p) => p.status === "COMPLETED");
+
     return (
         <div className="max-w-2xl mx-auto space-y-6">
+            {/* Quiz Purchases */}
+            {!pLoading && purchases.length > 0 && (
+                <div className="space-y-3">
+                    <h2 className="text-sm font-bold text-gray-800">{t("dashboard.quiz.title")}</h2>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                        {activePurchases.map((p) => (
+                            <Link
+                                key={p.id}
+                                href={`/dashboard/quiz/attempt/${p.id}`}
+                                className="group rounded-xl overflow-hidden border border-green-200 bg-white hover:-translate-y-0.5 transition-transform"
+                            >
+                                <div className="aspect-[4/3] bg-gray-100 relative">
+                                    <img src={p.category?.imageUrl || ""} alt={p.category?.name || ""} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                                    <span className="absolute top-2 right-2 text-[9px] font-semibold text-green-700 bg-green-50 px-2 py-0.5 rounded-full">Active</span>
+                                </div>
+                                <div className="p-3">
+                                    <p className="text-sm font-bold text-gray-800 truncate">{p.category?.name}</p>
+                                    <p className="text-[10px] text-gray-400 mt-0.5">{p.answers?.length ?? 0}/{p.questionCount} answered</p>
+                                </div>
+                            </Link>
+                        ))}
+                        {completedPurchases.slice(0, 3).map((p) => (
+                            <Link
+                                key={p.id}
+                                href={`/dashboard/quiz`}
+                                className="group rounded-xl overflow-hidden border border-gray-200 bg-white hover:-translate-y-0.5 transition-transform opacity-75"
+                            >
+                                <div className="aspect-[4/3] bg-gray-100">
+                                    <img src={p.category?.imageUrl || ""} alt={p.category?.name || ""} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                                </div>
+                                <div className="p-3">
+                                    <p className="text-sm font-bold text-gray-800 truncate">{p.category?.name}</p>
+                                    <p className="text-[10px] text-green-600 mt-0.5">Completed</p>
+                                </div>
+                            </Link>
+                        ))}
+                    </div>
+                </div>
+            )}
+
             <div>
                 <h1 className="text-2xl font-bold text-gray-800">{t("nav.dailyWork")}</h1>
                 <p className="text-sm text-gray-500">{t("dashboard.dailyWork.description")}</p>
