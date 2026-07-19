@@ -25,7 +25,9 @@ export function Footer() {
     const followHeader = isEn ? "FOLLOW US" : "আমাদের ফলো করুন";
 
     return (
-        <><footer className="mt-auto bg-[#111c2a] border-t border-slate-800 text-slate-350">
+        <>
+
+        <footer className="mt-auto bg-[#111c2a] border-t border-slate-800 text-slate-350">
             <div className="page-container py-12 lg:py-16">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 items-start">
 
@@ -140,7 +142,7 @@ export function Footer() {
         </footer>
 
         {/* Bottom Bar: Announcement-style Copyright */}
-        <div className="w-full bg-red-800 py-3 px-4 pb-16 md:pb-3">
+        <div className="w-full bg-red-700 py-3 px-4 pb-16 md:pb-3">
             <p className="text-xs sm:text-sm text-white font-bold text-center tracking-wide">
                 &copy; 2026 Bangla Park Limited. All rights reserved.
             </p>

@@ -65,7 +65,7 @@ export function Header() {
 
     return (
         <header
-            className="fixed left-0 right-0 z-50 bg-red-800 border-b border-red-900 shadow-sm top-0"
+            className="fixed left-0 right-0 z-50 bg-red-700 border-b border-red-800 shadow-sm top-0"
         >
             <div className="page-container">
                 <div className="flex h-16 items-center justify-between">
@@ -91,8 +91,8 @@ export function Header() {
 
                     {/* Desktop Nav */}
                     <nav className="header-desktop-nav hidden md:flex items-center gap-6">
-                        <Link href="/" className="text-sm font-medium text-white/85 hover:text-white transition-colors">{t("nav.home")}</Link>
-                        <Link href="/shop" className="text-sm font-medium text-white/85 hover:text-white transition-colors">{t("nav.shop")}</Link>
+                        <Link href="/" className="text-sm font-medium text-white/95 hover:text-white transition-colors">{t("nav.home")}</Link>
+                        <Link href="/shop" className="text-sm font-medium text-white/95 hover:text-white transition-colors">{t("nav.shop")}</Link>
                         {categories.length > 0 && (
                         <div className="relative group">
                             <button className="text-sm font-medium text-white/85 hover:text-white transition-colors flex items-center gap-1">
@@ -173,9 +173,7 @@ export function Header() {
                 {/* Mobile Nav - Side Drawer */}
                 {menuOpen && (
                     <div className="fixed inset-0 z-[100] md:hidden">
-                        {/* Backdrop */}
                         <div className="absolute inset-0 bg-black/50 fade-in" onClick={() => setMenuOpen(false)} />
-                        {/* Drawer */}
                         <div className="absolute right-0 top-0 bottom-0 w-[280px] max-w-[80vw] bg-white shadow-2xl overflow-y-auto slide-from-right">
                             <div className="flex items-center justify-between px-4 py-4 border-b border-gray-100">
                                 <span className="text-sm font-bold text-gray-800">Menu</span>
@@ -183,9 +181,7 @@ export function Header() {
                                     <X size={20} />
                                 </button>
                             </div>
-                            <div className="px-4 py-3 border-b border-gray-100">
-                                <LocaleSwitcher />
-                            </div>
+
                             <div className="px-4 py-3 border-b border-gray-100">
                                 <form onSubmit={handleSearch}>
                                     <div className="relative">
@@ -200,38 +196,43 @@ export function Header() {
                                     </div>
                                 </form>
                             </div>
+
                             <div className="py-2">
-                                <Link href="/" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50">
-                                    <span>{t("nav.home")}</span>
+                                <Link href="/" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-none">
+                                    {t("nav.home")}
                                 </Link>
-                                <Link href="/shop" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50">
-                                    <span>{t("nav.shop")}</span>
+                                <Link href="/shop" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-none">
+                                    {t("nav.shop")}
                                 </Link>
                                 {categories.length > 0 && (
-                                    <div className="px-4 py-2">
-                                        <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">{t("nav.category")}</p>
-                                        <div className="space-y-1">
-                                            {categories.map((cat) => (
-                                                <Link key={cat.id} href={`/shop?categoryId=${cat.id}`} onClick={() => setMenuOpen(false)} className="block px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-lg">
-                                                    {cat.name}
-                                                </Link>
-                                            ))}
-                                        </div>
+                                    <div className="border-t border-gray-50 mt-1 pt-1">
+                                        <p className="px-4 py-1.5 text-[10px] font-bold text-gray-400 uppercase tracking-wider">{t("nav.category")}</p>
+                                        {categories.map((cat) => (
+                                            <Link key={cat.id} href={`/shop?categoryId=${cat.id}`} onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-none">
+                                                {cat.name}
+                                            </Link>
+                                        ))}
                                     </div>
                                 )}
                             </div>
-                            <div className="border-t border-gray-100 py-2">
+
+                            <div className="border-t border-gray-100 mt-1 pt-1">
                                 {isAuthenticated ? (
                                     <>
-                                        <Link href="/dashboard" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50">{t("nav.mobileDashboard")}</Link>
-                                        <Link href="/dashboard/orders" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50">{t("nav.orders")}</Link>
+                                        <p className="px-4 py-1.5 text-[10px] font-bold text-gray-400 uppercase tracking-wider">{t("nav.account")}</p>
+                                        <Link href="/dashboard" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-none">{t("nav.mobileDashboard")}</Link>
+                                        <Link href="/dashboard/orders" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-none">{t("nav.orders")}</Link>
                                     </>
                                 ) : (
                                     <>
-                                        <Link href="/login" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50">{t("nav.login")}</Link>
-                                        <Link href="/register" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-green-800 hover:bg-green-50 font-semibold">{t("nav.register")}</Link>
+                                        <Link href="/login" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-none">{t("nav.login")}</Link>
+                                        <Link href="/register" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-green-700 hover:bg-green-50 rounded-none">{t("nav.register")}</Link>
                                     </>
                                 )}
+                            </div>
+
+                            <div className="border-t border-gray-100 px-4 py-3">
+                                <LocaleSwitcher />
                             </div>
                         </div>
                     </div>

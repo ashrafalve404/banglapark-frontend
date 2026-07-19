@@ -99,7 +99,7 @@ function ShopPageContent() {
                             <button
                                 onClick={() => setSelectedCategory("all")}
                                 className={`text-left rounded-lg px-3 py-2 text-sm font-medium transition-colors ${selectedCategory === "all"
-                                        ? "bg-red-800 text-white"
+                                        ? "bg-red-700 text-white"
                                         : "text-gray-600 hover:bg-gray-50"
                                     }`}
                             >
@@ -110,7 +110,7 @@ function ShopPageContent() {
                                     key={cat.id}
                                     onClick={() => setSelectedCategory(cat.id)}
                                     className={`text-left rounded-lg px-3 py-2 text-sm font-medium transition-colors ${selectedCategory === cat.id
-                                            ? "bg-red-800 text-white"
+                                            ? "bg-red-700 text-white"
                                             : "text-gray-600 hover:bg-gray-50"
                                         }`}
                                 >
@@ -180,7 +180,7 @@ function ShopPageContent() {
                                                     )}
                                                     <button
                                                         onClick={(e) => handleAddToCart(product, e, sizePopups[product.id] || undefined)}
-                                                        className="w-full rounded-lg bg-red-800 py-2 text-sm font-bold text-white hover:bg-red-700 transition-colors flex items-center justify-center gap-1"
+                                                        className="w-full rounded-lg bg-red-700 py-2 text-sm font-bold text-white hover:bg-red-600 transition-colors flex items-center justify-center gap-1"
                                                     >
                                                         {addedId === product.id ? (
                                                             <span>{t("shop.product.added", undefined, "Added!")}</span>

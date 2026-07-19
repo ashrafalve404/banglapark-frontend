@@ -245,7 +245,7 @@ export default function HomePage() {
                                                             handleAddToCart(product, e);
                                                         }
                                                     }}
-                                                    className="w-full rounded-lg bg-red-800 py-2 text-sm font-bold text-white hover:bg-red-700 transition-colors flex items-center justify-center gap-1"
+                                                    className="w-full rounded-lg bg-red-700 py-2 text-sm font-bold text-white hover:bg-red-600 transition-colors flex items-center justify-center gap-1"
                                                 >
                                                     {addedId === product.id ? (
                                                         <span>{t("shop.product.added", undefined, "Added!")}</span>
@@ -272,6 +272,66 @@ export default function HomePage() {
             </section>
 
 
+            {/* Success Stories */}
+            <section className="relative overflow-hidden bg-white py-16 lg:py-20">
+                <div className="absolute inset-0 pointer-events-none">
+                    <svg className="absolute -top-24 -right-24 w-96 h-96 text-red-700/5" viewBox="0 0 200 200" fill="currentColor">
+                        <path d="M44.7,-76.4C58.8,-69.2,71.8,-59.1,79.6,-45.8C87.4,-32.5,90,-16.2,88.5,-0.7C86.9,14.9,81.2,29.7,72.1,42.5C63,55.3,50.5,66.1,36.8,73.9C23.1,81.7,8.2,86.5,-4.7,83.1C-17.6,79.7,-29.4,68.2,-40.9,57.2C-52.4,46.3,-63.6,35.9,-70.8,22.5C-78,9.1,-81.2,-7.3,-75.8,-20.6C-70.5,-33.9,-56.6,-44.2,-42.3,-51.4C-28,-58.6,-13.3,-62.7,1.1,-64.5C15.6,-66.3,30.6,-83.6,44.7,-76.4Z" transform="translate(100 100)" />
+                    </svg>
+                    <svg className="absolute -bottom-20 -left-20 w-80 h-80 text-red-700/5" viewBox="0 0 200 200" fill="currentColor">
+                        <path d="M39.9,-66.2C53.5,-60.3,67.3,-53.4,74.9,-42.1C82.5,-30.8,84,-15,81.3,-0.6C78.6,13.9,71.8,27.1,62.5,38.1C53.2,49.1,41.5,57.9,28.5,63.7C15.5,69.5,1.2,72.3,-11.5,68.5C-24.2,64.7,-35.3,54.3,-45.3,42.8C-55.3,31.3,-64.2,18.7,-67.8,4.4C-71.4,-9.9,-69.7,-25.9,-62,-38.5C-54.3,-51.1,-40.6,-60.3,-26.5,-66.2C-12.4,-72.1,2.2,-74.7,16.6,-71.1C31,-67.6,26.4,-72,39.9,-66.2Z" transform="translate(100 100)" />
+                    </svg>
+                </div>
+                <div className="page-container relative z-10">
+                    <div className="text-center mb-12">
+                        <h2 className="text-2xl lg:text-3xl font-extrabold text-gray-900">{locale === "en" ? "Our Success Stories" : "আমাদের সাফল্যের গল্প"}</h2>
+                        <p className="text-sm text-gray-500 mt-3 max-w-xl mx-auto">
+                            {locale === "en"
+                                ? "Real people, real results — hear from those who grew with Bangla Park."
+                                : "বাস্তব মানুষ, বাস্তব ফলাফল — যারা ব্যাংলা পার্কের সাথে বেড়ে উঠেছেন তাদের কাছ থেকে শুনুন।"}
+                        </p>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {[
+                            {
+                                name: locale === "en" ? "Md. Rahman" : "মোঃ রহমান",
+                                role: locale === "en" ? "Team Leader, Dhaka" : "টিম লিডার, ঢাকা",
+                                quote: locale === "en"
+                                    ? "Joining Bangla Park changed my life. Within 6 months I built a strong team and now earn a steady monthly income."
+                                    : "ব্যাংলা পার্কে যোগ দেওয়া আমার জীবন বদলে দিয়েছে। ৬ মাসের মধ্যে আমি একটি শক্তিশালী টিম গড়েছি এবং এখন স্থির মাসিক আয় করছি।",
+                            },
+                            {
+                                name: locale === "en" ? "Fatima Begum" : "ফাতিমা বেগম",
+                                role: locale === "en" ? "Affiliate, Chattogram" : "অ্যাফিলিয়েট, চট্টগ্রাম",
+                                quote: locale === "en"
+                                    ? "The daily benefits and commission system is amazing. I've never seen such a supportive community."
+                                    : "দৈনিক বেনিফিট এবং কমিশন সিস্টেম অসাধারণ। আমি এত সমর্থনশীল কমিউনিটি কখনো দেখিনি।",
+                            },
+                            {
+                                name: locale === "en" ? "Shahidul Islam" : "শহিদুল ইসলাম",
+                                role: locale === "en" ? "Senior Affiliate, Sylhet" : "সিনিয়র অ্যাফিলিয়েট, সিলেট",
+                                quote: locale === "en"
+                                    ? "From a small start to a full-time income — Bangla Park made it possible with their easy system."
+                                    : "ছোট শুরু থেকে পূর্ণকালীন আয় — ব্যাংলা পার্ক তাদের সহজ সিস্টেমের মাধ্যমে এটি সম্ভব করেছে।",
+                            },
+                        ].map((story, i) => (
+                            <div key={i} className="group relative bg-white rounded-xl p-6 border border-gray-200 shadow-sm hover:shadow-md hover:border-red-200 transition-all duration-300">
+                                <div className="absolute -top-3 -right-3 w-9 h-9 bg-red-700 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-md">
+                                    0{i + 1}
+                                </div>
+                                <svg className="w-7 h-7 text-red-700/30 mb-3" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+                                </svg>
+                                <p className="text-sm text-gray-600 leading-relaxed mb-4 italic">"{story.quote}"</p>
+                                <div className="border-t border-gray-100 pt-3">
+                                    <p className="text-sm font-bold text-gray-900">{story.name}</p>
+                                    <p className="text-xs text-gray-400">{story.role}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
         </div>
     );
 }
