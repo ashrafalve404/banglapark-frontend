@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowRight, ShoppingCart, Loader2, Grid, Shirt, Smartphone, Package, Home, Book, Gem, Watch, Laptop, CheckCircle, X } from "lucide-react";
 import { BannerCarousel } from "@/components/home/BannerCarousel";
 import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
+
 import { productsApi } from "@/lib/api/products";
 import { categoriesApi } from "@/lib/api/categories";
 import { bannersApi } from "@/lib/api/banners";

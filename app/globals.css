@@ -29,7 +29,6 @@
   html {
     font-family: var(--font-inter), system-ui, sans-serif;
     scroll-behavior: smooth;
-    overflow-x: hidden;
   }
 
   body {
@@ -37,7 +36,6 @@
     color: hsl(222 20% 12%);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    overflow-x: hidden;
   }
 
   h1,

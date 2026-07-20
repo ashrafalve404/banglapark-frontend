@@ -14,7 +14,7 @@ import { LocaleSwitcher } from "@/components/shared/LocaleSwitcher";
 export function Header() {
     const { user, isAuthenticated, clearAuth } = useAuthStore();
     const cartCount = useCartStore((s) => s.count());
-    const { t } = useLocale();
+    const { t, locale } = useLocale();
     const [menuOpen, setMenuOpen] = useState(false);
     const [profileOpen, setProfileOpen] = useState(false);
     const [mounted, setMounted] = useState(false);
@@ -65,14 +65,14 @@ export function Header() {
 
     return (
         <header
-            className="sticky left-0 right-0 z-50 bg-red-700 border-b border-red-800 shadow-sm top-0"
+            className="fixed top-0 left-0 right-0 z-50 bg-red-700 border-b border-red-800 shadow-sm"
         >
             <div className="page-container">
                 <div className="flex h-16 items-center justify-between">
                     {/* Logo */}
                     <Link href="/" className="flex items-center">
                         <img src="/logo.png?v=2" alt="Bangla Park Limited" className="h-11 w-auto" />
-                        <span className="ml-1.5 sm:ml-2 text-lg sm:text-xl font-extrabold text-white tracking-tight">Bangla Park</span>
+                        <span className="ml-1.5 sm:ml-2 text-lg sm:text-xl font-extrabold text-white tracking-tight">{locale === "bn" ? "বাংলা পার্ক" : "Bangla Park"}</span>
                     </Link>
 
                     {/* Search Bar - Desktop */}
