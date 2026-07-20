@@ -78,7 +78,7 @@ export function BannerCarousel() {
                 >
                     <img
                         src={banner.imageUrl}
-                        alt={banner.title || ""}
+                        alt=""
                         className="w-full h-full object-cover"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />

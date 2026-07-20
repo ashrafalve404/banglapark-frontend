@@ -36,8 +36,9 @@ yarn-error.log*
 # vercel
 .vercel
 
-# Master prompt (developer reference only)
+# Master prompt & verification checklist (developer reference only)
 02-frontend-master-prompt.md
+Bangla_Park_Logic_Verification_Checklist_Enterprise.md
 
 # typescript
 *.tsbuildinfo
