@@ -68,7 +68,7 @@ export function BannerCarousel() {
     if (banners.length === 0) return null;
 
     return (
-        <section className="relative aspect-[21/9] sm:aspect-[5/2] overflow-hidden bg-gray-900 mx-2 sm:mx-6 lg:mx-auto lg:max-w-7xl mt-2 mb-2 sm:mt-4 sm:mb-4 rounded-md shadow-lg">
+        <section className="relative aspect-[21/9] sm:aspect-[5/2] overflow-hidden bg-gray-900 sm:mx-6 lg:mx-auto lg:max-w-7xl mt-2 mb-2 sm:mt-4 sm:mb-4 rounded-sm shadow-lg">
             {banners.map((banner, index) => (
                 <div
                     key={banner.id}

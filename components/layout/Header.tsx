@@ -11,6 +11,7 @@ import { authApi } from "@/lib/api/auth";
 import { categoriesApi } from "@/lib/api/categories";
 import { useLocale } from "@/lib/i18n";
 import { LocaleSwitcher } from "@/components/shared/LocaleSwitcher";
+import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
 export function Header() {
     const { user, isAuthenticated, clearAuth } = useAuthStore();
     const cartCount = useCartStore((s) => s.count());
@@ -65,8 +66,9 @@ export function Header() {
 
     return (
         <header
-            className="fixed left-0 right-0 z-50 bg-red-700 border-b border-red-800 shadow-sm top-0"
+            className="sticky left-0 right-0 z-50 bg-red-700 border-b border-red-800 shadow-sm top-0"
         >
+            <AnnouncementBar />
             <div className="page-container">
                 <div className="flex h-16 items-center justify-between">
                     {/* Logo */}

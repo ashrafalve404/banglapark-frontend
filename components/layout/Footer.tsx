@@ -37,9 +37,10 @@ export function Footer() {
                             <img src="/logo.png?v=2" alt="Bangla Park Limited" className="h-16 sm:h-20 lg:h-28 w-auto" />
                         </Link>
                         <p className="text-2xl font-extrabold text-white tracking-wide">Bangla Park Limited</p>
-                        <p className="text-sm text-slate-400 leading-relaxed font-medium">
+                        <p className="text-sm text-slate-400 leading-relaxed">
                             {t("nav.footerTagline")}
                         </p>
+                        <img src="/images/plystore.png" alt="Play Store" className="h-10 sm:h-12 w-auto mt-2" />
                     </div>
 
                     {/* Middle Column: Page & Follow Us */}
@@ -50,7 +51,7 @@ export function Footer() {
                                 <svg className="w-5 h-5 fill-white" viewBox="0 0 24 24"><path d="M4 6H2v14a2 2 0 0 0 2 2h14v-2H4V6zm16-4H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z"/></svg>
                                 <span>{pageHeader}</span>
                             </h4>
-                            <ul className="space-y-2.5 text-sm font-bold text-slate-300">
+                            <ul className="space-y-2.5 text-sm text-slate-300">
                                 <li>
                                     <Link href="/shop" className="hover:text-white transition-colors">{isEn ? "Shop" : "শপ"}</Link>
                                 </li>
@@ -110,26 +111,26 @@ export function Footer() {
                                 <svg className="w-5 h-5 fill-white" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
                             <span>{officeHeader}</span>
                         </h4>
-                        <ul className="space-y-4 text-sm font-bold text-slate-300">
+                        <ul className="space-y-4 text-sm text-slate-300">
                             <li className="flex items-start gap-2.5 leading-normal">
                                 <MapPin size={16} className="text-slate-400 flex-shrink-0 mt-0.5" />
                                 <span>
                                     <b className="text-white block mb-0.5">{addressLabel}:</b>
-                                    <span className="font-bold">{addressValue}</span>
+                                    <span>{addressValue}</span>
                                 </span>
                             </li>
                             <li className="flex items-center gap-2.5">
                                 <Phone size={16} className="text-slate-400 flex-shrink-0" />
                                 <span>
                                     <b className="text-white mr-1">{hotlineLabel}:</b>
-                                    <span className="font-bold">+8801823674796</span>
+                                    <span>+8801823674796</span>
                                 </span>
                             </li>
                             <li className="flex items-center gap-2.5">
                                 <Mail size={16} className="text-slate-400 flex-shrink-0" />
                                 <span className="break-all">
                                     <b className="text-white mr-1">{emailLabel}:</b>
-                                    <span className="font-bold">banglaparkltd@gmail.com</span>
+                                    <span>banglaparkltd@gmail.com</span>
                                 </span>
                             </li>
                         </ul>
