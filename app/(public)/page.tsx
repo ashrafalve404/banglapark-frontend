@@ -71,7 +71,7 @@ function CartToast({ message, visible, onClose }: { message: string; visible: bo
     if (!visible) return null;
     return (
         <div className="fixed top-4 right-4 z-50 toast-enter">
-            <div className="flex items-center gap-3 bg-white rounded-lg shadow-xl border border-green-100 px-4 py-3 min-w-[280px]">
+            <div className="flex items-center gap-3 bg-white rounded-sm shadow-xl border border-green-100 px-4 py-3 min-w-[280px]">
                 <div className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
                     <CheckCircle size={16} className="text-green-700" />
                 </div>
@@ -207,10 +207,10 @@ export default function HomePage() {
                             {t("home.hero.subtitle")}
                         </p>
                         <div className="flex flex-wrap gap-3 justify-center">
-                            <Link href="/shop" className="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-green-900 hover:bg-green-50 transition-all shadow-lg hover:shadow-xl">
+                            <Link href="/shop" className="inline-flex items-center gap-2 rounded-sm bg-white px-6 py-3 text-sm font-semibold text-green-900 hover:bg-green-50 transition-all shadow-lg hover:shadow-xl">
                                 {t("home.hero.cta.shop")} <ArrowRight size={16} />
                             </Link>
-                            <Link href="/register" className="inline-flex items-center gap-2 rounded-lg border-2 border-white/40 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10 transition-all backdrop-blur-sm">
+                            <Link href="/register" className="inline-flex items-center gap-2 rounded-sm border-2 border-white/40 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10 transition-all backdrop-blur-sm">
                                 {t("home.hero.cta.register")}
                             </Link>
                         </div>
@@ -361,7 +361,7 @@ export default function HomePage() {
                                             <div className="mt-2.5">
                                                 <button
                                                     onClick={(e) => handleAddToCart(product, e)}
-                                                    className="w-full rounded-lg bg-gradient-to-r from-red-700 to-red-600 py-2 text-xs sm:text-sm font-bold text-white hover:from-red-600 hover:to-red-500 transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-1.5 cursor-pointer"
+                                                    className="w-full rounded-sm bg-gradient-to-r from-red-700 to-red-600 py-2 text-xs sm:text-sm font-bold text-white hover:from-red-600 hover:to-red-500 transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-1.5 cursor-pointer"
                                                 >
                                                     {addedId === product.id ? (
                                                         <span className="flex items-center gap-1"><CheckCircle size={13} /> Added!</span>
@@ -390,15 +390,7 @@ export default function HomePage() {
             </section>
 
             {/* Success Stories */}
-            <section className="relative overflow-hidden bg-gradient-to-b from-white to-gray-50/50 py-16 lg:py-24">
-                <div className="absolute inset-0 pointer-events-none">
-                    <svg className="absolute -top-24 -right-24 w-96 h-96 text-red-700/5" viewBox="0 0 200 200" fill="currentColor">
-                        <path d="M44.7,-76.4C58.8,-69.2,71.8,-59.1,79.6,-45.8C87.4,-32.5,90,-16.2,88.5,-0.7C86.9,14.9,81.2,29.7,72.1,42.5C63,55.3,50.5,66.1,36.8,73.9C23.1,81.7,8.2,86.5,-4.7,83.1C-17.6,79.7,-29.4,68.2,-40.9,57.2C-52.4,46.3,-63.6,35.9,-70.8,22.5C-78,9.1,-81.2,-7.3,-75.8,-20.6C-70.5,-33.9,-56.6,-44.2,-42.3,-51.4C-28,-58.6,-13.3,-62.7,1.1,-64.5C15.6,-66.3,30.6,-83.6,44.7,-76.4Z" transform="translate(100 100)" />
-                    </svg>
-                    <svg className="absolute -bottom-20 -left-20 w-80 h-80 text-red-700/5" viewBox="0 0 200 200" fill="currentColor">
-                        <path d="M39.9,-66.2C53.5,-60.3,67.3,-53.4,74.9,-42.1C82.5,-30.8,84,-15,81.3,-0.6C78.6,13.9,71.8,27.1,62.5,38.1C53.2,49.1,41.5,57.9,28.5,63.7C15.5,69.5,1.2,72.3,-11.5,68.5C-24.2,64.7,-35.3,54.3,-45.3,42.8C-55.3,31.3,-64.2,18.7,-67.8,4.4C-71.4,-9.9,-69.7,-25.9,-62,-38.5C-54.3,-51.1,-40.6,-60.3,-26.5,-66.2C-12.4,-72.1,2.2,-74.7,16.6,-71.1C31,-67.6,26.4,-72,39.9,-66.2Z" transform="translate(100 100)" />
-                    </svg>
-                </div>
+            <section className="relative overflow-hidden bg-[#f7f7f7] py-16 lg:py-24">
                 <div className="w-full px-2 sm:px-4 lg:px-6 relative z-10">
                     <RevealSection>
                         <div className="text-center mb-12 lg:mb-16">

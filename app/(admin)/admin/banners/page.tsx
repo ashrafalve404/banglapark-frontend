@@ -126,7 +126,7 @@ export default function AdminBannersPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                         <label className="block text-xs font-semibold text-slate-600 mb-1">Banner Image *</label>
-                        <p className="text-[10px] text-gray-400 mb-2">{section === "OFFER" ? "Recommended size: 800 × 450 px (16:9)." : "Recommended size: 1200 × 480 px (widescreen). Image crops responsively — keep key content centered."}</p>
+                        <p className="text-[10px] text-gray-400 mb-2">{section === "OFFER" ? "Recommended size: 800 × 450 px (16:9)." : "Recommended size: 1920 × 480 px. Fits all screen sizes — keep key content centered."}</p>
                         {imageUrl ? (
                             <div className="relative w-full h-40 rounded-lg border border-slate-200 overflow-hidden bg-slate-50">
                                 <img src={imageUrl} alt="Banner preview" className="w-full h-full object-cover" />

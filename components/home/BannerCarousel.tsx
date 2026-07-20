@@ -8,11 +8,10 @@ import { useQuery } from "@tanstack/react-query";
 const AUTO_PLAY_INTERVAL = 5000;
 
 const FALLBACK_BANNERS = [
-    { id: "fb1", imageUrl: "/images/b1.jpg", linkUrl: "/shop", title: "Affiliate Marketplace", badge: "New" },
-    { id: "fb2", imageUrl: "/images/b2.jpg", linkUrl: "/shop", title: "Top Products", badge: "Hot" },
-    { id: "fb3", imageUrl: "/images/b3.jpg", linkUrl: "/register", title: "Start Earning Today", badge: "Join" },
-    { id: "fb4", imageUrl: "/images/b4.jpg", linkUrl: "/shop", title: "Exclusive Deals", badge: "Sale" },
-    { id: "fb5", imageUrl: "/images/b5.jpg", linkUrl: "/register", title: "Build Your Team", badge: "Earn" },
+    { id: "fb1", imageUrl: "/images/banner01.png", linkUrl: "/shop" },
+    { id: "fb2", imageUrl: "/images/banner02.png", linkUrl: "/shop" },
+    { id: "fb3", imageUrl: "/images/banner03.png", linkUrl: "/shop" },
+    { id: "fb4", imageUrl: "/images/banner04.png", linkUrl: "/shop" },
 ];
 
 export function BannerCarousel() {

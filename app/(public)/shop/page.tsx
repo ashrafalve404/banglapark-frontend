@@ -98,7 +98,7 @@ function ShopPageContent() {
                         <div className="flex flex-wrap gap-2 lg:flex-col">
                             <button
                                 onClick={() => setSelectedCategory("all")}
-                                className={`text-left rounded-lg px-3 py-2 text-sm font-medium transition-colors ${selectedCategory === "all"
+                                className={`text-left rounded-sm px-3 py-2 text-sm font-medium transition-colors ${selectedCategory === "all"
                                         ? "bg-red-700 text-white"
                                         : "text-gray-600 hover:bg-gray-50"
                                     }`}
@@ -109,7 +109,7 @@ function ShopPageContent() {
                                 <button
                                     key={cat.id}
                                     onClick={() => setSelectedCategory(cat.id)}
-                                    className={`text-left rounded-lg px-3 py-2 text-sm font-medium transition-colors ${selectedCategory === cat.id
+                                    className={`text-left rounded-sm px-3 py-2 text-sm font-medium transition-colors ${selectedCategory === cat.id
                                             ? "bg-red-700 text-white"
                                             : "text-gray-600 hover:bg-gray-50"
                                         }`}
@@ -170,7 +170,7 @@ function ShopPageContent() {
                                                             value={sizePopups[product.id] || ""}
                                                             onChange={(e) => setSizePopups({ ...sizePopups, [product.id]: e.target.value })}
                                                             onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
-                                                            className="w-full rounded-lg border border-gray-200 bg-white px-2 py-1 text-xs font-medium text-gray-600"
+                                                            className="w-full rounded-sm border border-gray-200 bg-white px-2 py-1 text-xs font-medium text-gray-600"
                                                         >
                                                             <option value="">{t("shop.product.selectSize", undefined, "Select size")}</option>
                                                             {product.sizes.map((s: string) => (
@@ -180,7 +180,7 @@ function ShopPageContent() {
                                                     )}
                                                     <button
                                                         onClick={(e) => handleAddToCart(product, e, sizePopups[product.id] || undefined)}
-                                                        className="w-full rounded-lg bg-red-700 py-2 text-sm font-bold text-white hover:bg-red-600 transition-colors flex items-center justify-center gap-1"
+                                                        className="w-full rounded-sm bg-red-700 py-2 text-sm font-bold text-white hover:bg-red-600 transition-colors flex items-center justify-center gap-1"
                                                     >
                                                         {addedId === product.id ? (
                                                             <span>{t("shop.product.added", undefined, "Added!")}</span>

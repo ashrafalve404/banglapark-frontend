@@ -83,9 +83,9 @@ export function Header() {
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 placeholder={t("shop.search.placeholder")}
-                                className="w-full rounded-lg border border-gray-200 bg-white pl-10 pr-4 py-2 text-sm outline-none text-gray-800 placeholder:text-gray-400 transition-colors focus:border-white focus:ring-2 focus:ring-white/20"
+                                className="w-full rounded-sm border border-white/40 bg-white/10 pl-10 pr-4 py-2 text-sm outline-none text-white placeholder:text-white/60 transition-colors focus:border-white focus:ring-2 focus:ring-white/20 focus:bg-white/15"
                             />
-                            <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                            <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/50" />
                         </div>
                     </form>
 
@@ -130,7 +130,7 @@ export function Header() {
 
                         {mounted && isAuthenticated && user ? (
                             <div ref={profileRef} className="relative">
-                                <button onClick={() => setProfileOpen(!profileOpen)} className="flex items-center gap-2 rounded-lg border border-white/30 px-3 py-1.5 text-sm font-medium text-white/90 hover:bg-white/10 transition-colors">
+                                <button onClick={() => setProfileOpen(!profileOpen)} className="flex items-center gap-2 rounded-sm border border-white/30 px-3 py-1.5 text-sm font-medium text-white/90 hover:bg-white/10 transition-colors">
                                     <User size={16} />
                                     <span className="hidden sm:block max-w-[120px] lg:max-w-[200px] truncate">{user.name}</span>
                                 </button>
@@ -158,8 +158,8 @@ export function Header() {
                             </div>
                         ) : (
                             <div className="hidden md:flex items-center gap-2">
-                                <Link href="/login" className="inline-flex items-center justify-center rounded-lg border border-white/40 px-3 py-1.5 text-sm font-semibold text-white transition-all hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2 focus:ring-offset-red-800">{t("nav.login")}</Link>
-                                <Link href="/register" className="inline-flex items-center justify-center rounded-lg bg-white px-3 py-1.5 text-sm font-semibold text-red-800 transition-all hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2 focus:ring-offset-red-800">{t("nav.register")}</Link>
+                                <Link href="/login" className="inline-flex items-center justify-center rounded-sm border border-white/40 px-3 py-1.5 text-sm font-semibold text-white transition-all hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2 focus:ring-offset-red-800">{t("nav.login")}</Link>
+                                <Link href="/register" className="inline-flex items-center justify-center rounded-sm bg-white px-3 py-1.5 text-sm font-semibold text-red-800 transition-all hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2 focus:ring-offset-red-800">{t("nav.register")}</Link>
                             </div>
                         )}
 
