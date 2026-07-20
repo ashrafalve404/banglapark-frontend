@@ -107,9 +107,8 @@ export function BannerCarousel() {
                             <button
                                 key={index}
                                 onClick={() => goTo(index)}
-                                className={`rounded-full transition-all duration-300 ${
-                                    index === current ? "bg-white w-8 h-2.5 shadow-lg" : "bg-white/40 hover:bg-white/70 w-2.5 h-2.5"
-                                }`}
+                                className={`rounded-full transition-all duration-300 ${index === current ? "bg-white w-8 h-2.5 shadow-lg" : "bg-white/40 hover:bg-white/70 w-2.5 h-2.5"
+                                    }`}
                                 aria-label={`Go to slide ${index + 1}`}
                             />
                         ))}

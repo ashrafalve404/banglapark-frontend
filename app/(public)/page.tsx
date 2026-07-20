@@ -222,7 +222,7 @@ export default function HomePage() {
             {/* Offer Section */}
             {offers.length > 0 && (
                 <section className="py-6 sm:py-8 bg-white">
-                    <div className="w-full px-2 sm:px-4 lg:px-6">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <RevealSection>
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                                 {offers.map((offer) => (
@@ -250,7 +250,7 @@ export default function HomePage() {
             {/* Categories */}
             {categories.length > 0 && (
                 <section className="py-8 sm:py-12 bg-gray-50/80">
-                    <div className="w-full px-2 sm:px-4 lg:px-6">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <RevealSection>
                             <div className="flex items-center justify-between mb-8">
                                 <div>
@@ -295,7 +295,7 @@ export default function HomePage() {
 
             {/* All Products */}
             <section className="py-8 sm:py-12 bg-white">
-                <div className="w-full px-2 sm:px-4 lg:px-6">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <RevealSection>
                         <div className="flex items-center justify-between mb-8">
                             <h2 className="section-title">{t("home.allProducts.heading", undefined, "All Products")}</h2>
@@ -392,7 +392,7 @@ export default function HomePage() {
 
             {/* Success Stories */}
             <section className="relative overflow-hidden bg-[#f7f7f7] py-16 lg:py-24">
-                <div className="w-full px-2 sm:px-4 lg:px-6 relative z-10">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     <RevealSection>
                         <div className="text-center mb-12 lg:mb-16">
                             <h2 className="section-title">{locale === "en" ? "Our Success Stories" : "আমাদের সাফল্যের গল্প"}</h2>
