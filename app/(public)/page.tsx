@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ArrowRight, ShoppingCart, Loader2, Grid, Shirt, Smartphone, Package, Home, Book, Gem, Watch, Laptop, CheckCircle, X } from "lucide-react";
 import { BannerCarousel } from "@/components/home/BannerCarousel";
+import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
 import { productsApi } from "@/lib/api/products";
 import { categoriesApi } from "@/lib/api/categories";
 import { bannersApi } from "@/lib/api/banners";
@@ -161,8 +162,10 @@ export default function HomePage() {
 
             <BannerCarousel />
 
+            <AnnouncementBar />
+
             {/* Hero */}
-            <section className="relative overflow-hidden bg-gradient-to-br from-green-900 via-green-800 to-green-700 text-white sm:mx-6 lg:mx-auto lg:max-w-7xl rounded-sm">
+            <section className="relative overflow-hidden bg-gradient-to-br from-green-900 via-green-800 to-green-700 text-white w-full">
                 <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width=%2760%27%20height=%2760%27%20viewBox=%270%200%2060%2060%27%20xmlns=%27http://www.w3.org/2000/svg%27%3E%3Cg%20fill=%27none%27%20fill-rule=%27evenodd%27%3E%3Cg%20fill=%27%23ffffff%27%2520fill-opacity=%270.03%27%3E%3Cpath%20d=%27M36%2034v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6%2034v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6%204V0H4v4H0v2h4v4h2V6h4V4H6z%27/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-50" />
 
                 <div className="absolute -top-32 -right-20 h-[28rem] w-[28rem] opacity-25 blur-3xl" style={{ borderRadius: "42% 58% 35% 65% / 55% 40% 60% 45%", background: "linear-gradient(135deg, #166534, #14532d)" }} />
@@ -177,7 +180,7 @@ export default function HomePage() {
                     <path d="M0 100C360 20 720 80 1440 30V100H0Z" fill="currentColor" />
                 </svg>
 
-                <div className="page-container relative py-16 lg:py-20">
+                <div className="w-full px-2 sm:px-4 lg:px-6 relative py-16 lg:py-20">
                     <div className="max-w-4xl mx-auto text-center">
                         <h1 className="mb-4 text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold leading-tight">
                             {locale === "en" ? (
@@ -218,7 +221,7 @@ export default function HomePage() {
             {/* Offer Section */}
             {offers.length > 0 && (
                 <section className="py-6 sm:py-8 bg-white">
-                    <div className="page-container">
+                    <div className="w-full px-2 sm:px-4 lg:px-6">
                         <RevealSection>
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                                 {offers.map((offer) => (
@@ -246,7 +249,7 @@ export default function HomePage() {
             {/* Categories */}
             {categories.length > 0 && (
                 <section className="py-8 sm:py-12 bg-gray-50/80">
-                    <div className="page-container">
+                    <div className="w-full px-2 sm:px-4 lg:px-6">
                         <RevealSection>
                             <div className="flex items-center justify-between mb-8">
                                 <div>
@@ -291,7 +294,7 @@ export default function HomePage() {
 
             {/* All Products */}
             <section className="py-8 sm:py-12 bg-white">
-                <div className="page-container">
+                <div className="w-full px-2 sm:px-4 lg:px-6">
                     <RevealSection>
                         <div className="flex items-center justify-between mb-8">
                             <h2 className="section-title">{t("home.allProducts.heading", undefined, "All Products")}</h2>
@@ -396,7 +399,7 @@ export default function HomePage() {
                         <path d="M39.9,-66.2C53.5,-60.3,67.3,-53.4,74.9,-42.1C82.5,-30.8,84,-15,81.3,-0.6C78.6,13.9,71.8,27.1,62.5,38.1C53.2,49.1,41.5,57.9,28.5,63.7C15.5,69.5,1.2,72.3,-11.5,68.5C-24.2,64.7,-35.3,54.3,-45.3,42.8C-55.3,31.3,-64.2,18.7,-67.8,4.4C-71.4,-9.9,-69.7,-25.9,-62,-38.5C-54.3,-51.1,-40.6,-60.3,-26.5,-66.2C-12.4,-72.1,2.2,-74.7,16.6,-71.1C31,-67.6,26.4,-72,39.9,-66.2Z" transform="translate(100 100)" />
                     </svg>
                 </div>
-                <div className="page-container relative z-10">
+                <div className="w-full px-2 sm:px-4 lg:px-6 relative z-10">
                     <RevealSection>
                         <div className="text-center mb-12 lg:mb-16">
                             <h2 className="section-title">{locale === "en" ? "Our Success Stories" : "আমাদের সাফল্যের গল্প"}</h2>
@@ -433,7 +436,7 @@ export default function HomePage() {
                                 },
                             ].map((story, i) => (
                                 <div key={i} className="group relative bg-white rounded-xl p-6 sm:p-7 border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                                    <div className="absolute -top-3 -right-3 w-10 h-10 bg-gradient-to-br from-red-700 to-red-500 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-lg">
+                                    <div className="absolute -top-2 -right-2 w-9 h-9 bg-gradient-to-br from-red-700 to-red-500 rounded-full flex items-center justify-center text-white text-[11px] font-bold shadow-lg">
                                         0{i + 1}
                                     </div>
                                     <svg className="w-8 h-8 text-red-700/20 mb-4" viewBox="0 0 24 24" fill="currentColor">
@@ -446,7 +449,7 @@ export default function HomePage() {
                                         </div>
                                         <div>
                                             <p className="text-sm font-bold text-gray-900">{story.name}</p>
-                                            <p className="text-xs text-gray-400">{story.role}</p>
+                                            <p className="text-xs text-green-700">{story.role}</p>
                                         </div>
                                     </div>
                                 </div>
