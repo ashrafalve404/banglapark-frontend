@@ -331,17 +331,17 @@ export default function AdminQuizPage() {
                                                 <button onClick={() => { if (confirm("Delete this category and all its questions?")) deleteCatMutation.mutate(cat.id); }} className="p-1.5 text-red-400 hover:text-red-600"><Trash2 size={16} /></button>
                                             </div>
                                         </div>
-                                        <div className="flex gap-2">
-                                            <button onClick={() => { setActiveCategory(cat.id); setShowQuestionForm(true); setQuestions([emptyQuestion()]); setSelectedLevelId(null); }} className="btn-primary text-xs flex items-center gap-1 flex-1 justify-center">
+                                        <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap lg:flex-nowrap">
+                                            <button onClick={() => { setActiveCategory(cat.id); setShowQuestionForm(true); setQuestions([emptyQuestion()]); setSelectedLevelId(null); }} className="btn-primary text-xs flex items-center gap-1 sm:flex-1 justify-center py-2 px-1">
                                                 <Plus size={12} /> Add Questions
                                             </button>
-                                            <button onClick={() => { setCsvImportCatId(cat.id); setCsvFile(null); setCsvResult(null); }} className="btn-outline-primary text-xs flex items-center gap-1">
+                                            <button onClick={() => { setCsvImportCatId(cat.id); setCsvFile(null); setCsvResult(null); }} className="btn-outline-primary text-xs flex items-center gap-1 justify-center py-2 px-1">
                                                 <Upload size={12} /> CSV
                                             </button>
-                                            <button onClick={() => openLevelManager(cat.id)} className="btn-outline-primary text-xs flex items-center gap-1">
+                                            <button onClick={() => openLevelManager(cat.id)} className="btn-outline-primary text-xs flex items-center gap-1 justify-center py-2 px-1">
                                                 <Layers size={12} /> Levels
                                             </button>
-                                            <button onClick={() => router.push(`/admin/quiz/questions/${cat.id}`)} className="btn-outline-primary text-xs flex items-center gap-1">
+                                            <button onClick={() => router.push(`/admin/quiz/questions/${cat.id}`)} className="btn-outline-primary text-xs flex items-center gap-1 justify-center py-2 px-1">
                                                 <Eye size={12} /> View All
                                             </button>
                                         </div>

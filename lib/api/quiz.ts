@@ -154,8 +154,8 @@ export const quizApi = {
         return res.data;
     },
 
-    adminGetQuestions: async (categoryId: string, page?: number): Promise<{ questions: QuizQuestion[]; total: number; page: number; totalPages: number }> => {
-        const res = await api.get(`/quiz/admin/questions/${categoryId}`, { params: { page, limit: 50 } });
+    adminGetQuestions: async (categoryId: string, page?: number, limit?: number): Promise<{ questions: QuizQuestion[]; total: number; page: number; totalPages: number }> => {
+        const res = await api.get(`/quiz/admin/questions/${categoryId}`, { params: { page, limit: limit ?? 9999 } });
         return res.data;
     },
 
