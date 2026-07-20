@@ -1,19 +1,18 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { bannersApi } from "@/lib/api/banners";
 import { useQuery } from "@tanstack/react-query";
 
-const AUTO_PLAY_INTERVAL = 4000;
+const AUTO_PLAY_INTERVAL = 5000;
 
 const FALLBACK_BANNERS = [
-    { id: "fb1", imageUrl: "/images/b1.jpg", linkUrl: "/shop" },
-    { id: "fb2", imageUrl: "/images/b2.jpg", linkUrl: "/shop" },
-    { id: "fb3", imageUrl: "/images/b3.jpg", linkUrl: "/register" },
-    { id: "fb4", imageUrl: "/images/b4.jpg", linkUrl: "/shop" },
-    { id: "fb5", imageUrl: "/images/b5.jpg", linkUrl: "/register" },
+    { id: "fb1", imageUrl: "/images/b1.jpg", linkUrl: "/shop", title: "Affiliate Marketplace", badge: "New" },
+    { id: "fb2", imageUrl: "/images/b2.jpg", linkUrl: "/shop", title: "Top Products", badge: "Hot" },
+    { id: "fb3", imageUrl: "/images/b3.jpg", linkUrl: "/register", title: "Start Earning Today", badge: "Join" },
+    { id: "fb4", imageUrl: "/images/b4.jpg", linkUrl: "/shop", title: "Exclusive Deals", badge: "Sale" },
+    { id: "fb5", imageUrl: "/images/b5.jpg", linkUrl: "/register", title: "Build Your Team", badge: "Earn" },
 ];
 
 export function BannerCarousel() {
@@ -69,7 +68,7 @@ export function BannerCarousel() {
     if (banners.length === 0) return null;
 
     return (
-        <section className="relative aspect-[5/2] overflow-hidden bg-gray-900 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-4 mb-4">
+        <section className="relative aspect-[21/9] sm:aspect-[5/2] overflow-hidden bg-gray-900 mx-2 sm:mx-6 lg:mx-auto lg:max-w-7xl mt-2 mb-2 sm:mt-4 sm:mb-4 rounded-md shadow-lg">
             {banners.map((banner, index) => (
                 <div
                     key={banner.id}
@@ -78,25 +77,12 @@ export function BannerCarousel() {
                         transform: `translateX(${(index - current) * 100}%)`,
                     }}
                 >
-                    {banner.linkUrl ? (
-                        <button
-                            onClick={() => handleBannerClick(banner.linkUrl)}
-                            className="w-full h-full cursor-pointer"
-                            type="button"
-                        >
-                            <img
-                                src={banner.imageUrl}
-                                alt=""
-                                className="w-full h-full object-cover"
-                            />
-                        </button>
-                    ) : (
-                        <img
-                            src={banner.imageUrl}
-                            alt=""
-                            className="w-full h-full object-cover"
-                        />
-                    )}
+                    <img
+                        src={banner.imageUrl}
+                        alt={banner.title || ""}
+                        className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                 </div>
             ))}
 
@@ -104,26 +90,26 @@ export function BannerCarousel() {
                 <>
                     <button
                         onClick={prev}
-                        className="hidden sm:flex absolute left-4 top-1/2 -translate-y-1/2 items-center justify-center w-10 h-10 rounded-full bg-white/20 hover:bg-white/40 text-white backdrop-blur-sm transition-all z-10"
+                        className="hidden sm:flex absolute left-4 top-1/2 -translate-y-1/2 items-center justify-center w-11 h-11 rounded-full bg-white/15 hover:bg-white/30 text-white backdrop-blur-md transition-all z-10 border border-white/20 hover:border-white/40"
                         aria-label="Previous banner"
                     >
-                        ‹
+                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" /></svg>
                     </button>
                     <button
                         onClick={next}
-                        className="hidden sm:flex absolute right-4 top-1/2 -translate-y-1/2 items-center justify-center w-10 h-10 rounded-full bg-white/20 hover:bg-white/40 text-white backdrop-blur-sm transition-all z-10"
+                        className="hidden sm:flex absolute right-4 top-1/2 -translate-y-1/2 items-center justify-center w-11 h-11 rounded-full bg-white/15 hover:bg-white/30 text-white backdrop-blur-md transition-all z-10 border border-white/20 hover:border-white/40"
                         aria-label="Next banner"
                     >
-                        ›
+                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" /></svg>
                     </button>
 
-                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 z-10">
+                    <div className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 z-10">
                         {banners.map((_, index) => (
                             <button
                                 key={index}
                                 onClick={() => goTo(index)}
-                                className={`rounded-full transition-all ${
-                                    index === current ? "bg-white w-6 h-2.5" : "bg-white/50 hover:bg-white/80 w-2.5 h-2.5"
+                                className={`rounded-full transition-all duration-300 ${
+                                    index === current ? "bg-white w-8 h-2.5 shadow-lg" : "bg-white/40 hover:bg-white/70 w-2.5 h-2.5"
                                 }`}
                                 aria-label={`Go to slide ${index + 1}`}
                             />
