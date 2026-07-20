@@ -223,28 +223,9 @@ export default function HomePage() {
                                             )}
                                         </div>
                                         {product.stock > 0 && (
-                                            <div className="mt-2 space-y-1.5">
-                                                {product.sizes?.length > 0 && (
-                                                    <select
-                                                        value={sizePopups[product.id] || ""}
-                                                        onChange={(e) => setSizePopups({ ...sizePopups, [product.id]: e.target.value })}
-                                                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
-                                                        className="w-full rounded-lg border border-gray-200 bg-white px-2 py-1 text-xs font-medium text-gray-600"
-                                                    >
-                                                        <option value="">{t("shop.product.selectSize", undefined, "Select size")}</option>
-                                                        {product.sizes.map((s: string) => (
-                                                            <option key={s} value={s}>{s}</option>
-                                                        ))}
-                                                    </select>
-                                                )}
+                                            <div className="mt-2">
                                                 <button
-                                                    onClick={(e) => {
-                                                        if (product.sizes?.length > 0) {
-                                                            handleAddToCartWithSize(product, e, sizePopups[product.id] || undefined);
-                                                        } else {
-                                                            handleAddToCart(product, e);
-                                                        }
-                                                    }}
+                                                    onClick={(e) => handleAddToCart(product, e)}
                                                     className="w-full rounded-lg bg-red-700 py-2 text-sm font-bold text-white hover:bg-red-600 transition-colors flex items-center justify-center gap-1"
                                                 >
                                                     {addedId === product.id ? (
@@ -315,7 +296,7 @@ export default function HomePage() {
                                     : "ছোট শুরু থেকে পূর্ণকালীন আয় — ব্যাংলা পার্ক তাদের সহজ সিস্টেমের মাধ্যমে এটি সম্ভব করেছে।",
                             },
                         ].map((story, i) => (
-                            <div key={i} className="group relative bg-white rounded-xl p-6 border border-gray-200 shadow-sm hover:shadow-md hover:border-red-200 transition-all duration-300">
+                            <div key={i} className="group relative bg-white rounded-md p-6 border border-gray-200 shadow-sm hover:shadow-md hover:border-red-200 transition-all duration-300">
                                 <div className="absolute -top-3 -right-3 w-9 h-9 bg-red-700 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-md">
                                     0{i + 1}
                                 </div>

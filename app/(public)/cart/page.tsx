@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { Trash2, ShoppingBag, ArrowRight } from "lucide-react";
 import { useCartStore } from "@/store/cart";
 import { formatCurrency } from "@/lib/utils";
@@ -9,7 +10,8 @@ import { useLocale } from "@/lib/i18n";
 
 export default function CartPage() {
     const { t, locale } = useLocale();
-    const { items, updateQty, removeItem, total, clear } = useCartStore();
+    const { items, addItem, updateQty, removeItem, total, clear } = useCartStore();
+    const [sizeOpen, setSizeOpen] = useState<string | null>(null);
     const router = useRouter();
 
     const cartTotal = total();
@@ -49,9 +51,35 @@ export default function CartPage() {
                                 <Link href={`/product/${item.product.slug}`} className="text-sm font-semibold text-gray-900 hover:text-green-800 line-clamp-2">
                                     {item.product.name}
                                 </Link>
-                                {item.size && (
+                                {item.size ? (
                                     <span className="text-xs text-gray-500 font-medium">{t("cart.product.sizeLabel", undefined, "Size")}: {item.size}</span>
-                                )}
+                                ) : item.product.sizes?.length > 0 ? (
+                                    <div className="relative mt-1">
+                                        <button
+                                            onClick={() => setSizeOpen(sizeOpen === item.product.id ? null : item.product.id)}
+                                            className="text-xs text-green-700 font-semibold bg-green-50 px-2 py-0.5 rounded hover:bg-green-100 transition-colors"
+                                        >
+                                            {t("cart.product.selectSize", undefined, "Select size")} ▼
+                                        </button>
+                                        {sizeOpen === item.product.id && (
+                                            <div className="absolute top-full left-0 mt-1 w-32 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                                                {item.product.sizes.map((s) => (
+                                                    <button
+                                                        key={s}
+                                                        onClick={() => {
+                                                            addItem(item.product, item.quantity, s);
+                                                            removeItem(item.product.id);
+                                                            setSizeOpen(null);
+                                                        }}
+                                                        className="block w-full text-left px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-50 first:rounded-t-lg last:rounded-b-lg"
+                                                    >
+                                                        {s}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                ) : null}
                                 <div className="mt-1 flex items-center gap-4">
                                     <span className="text-sm font-bold text-green-800">{formatCurrency(item.product.price, locale)}</span>
                                 </div>
