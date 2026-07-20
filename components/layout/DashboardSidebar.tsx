@@ -30,13 +30,13 @@ export function DashboardSidebar({ onClose, mobile }: DashboardSidebarProps) {
     const navItems = [
         { href: "/dashboard", label: t("nav.overview"), icon: LayoutDashboard, exact: true },
         { href: "/dashboard/profile", label: t("nav.profile"), icon: User },
-        { href: "/dashboard/position", label: t("nav.position"), icon: Award },
         { href: "/dashboard/daily-work", label: t("nav.dailyWork"), icon: ImageIcon },
         { href: "/dashboard/wallet", label: t("nav.wallet"), icon: Wallet },
         { href: "/dashboard/orders", label: t("nav.orders"), icon: ShoppingBag },
         { href: "/dashboard/referrals", label: t("nav.referrals"), icon: Users },
         { href: "/dashboard/withdraw", label: t("nav.withdraw"), icon: ArrowDownToLine },
         { href: "/dashboard/statement", label: t("nav.statement"), icon: FileText },
+        { href: "/dashboard/position", label: t("nav.position"), icon: Award },
         { href: "/dashboard/notifications", label: t("nav.notifications"), icon: Bell },
     ];
 
