@@ -226,7 +226,7 @@ export default function HomePage() {
                         <RevealSection>
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                                 {offers.map((offer) => (
-                                    <Link key={offer.id} href={offer.linkUrl || "/shop"} className="group relative rounded-xl overflow-hidden aspect-[16/9] bg-gray-100 block shadow-sm hover:shadow-xl transition-all duration-300">
+                                    <Link key={offer.id} href={offer.linkUrl || "/shop"} className="group relative rounded overflow-hidden aspect-[16/9] bg-gray-100 block shadow-sm hover:shadow-xl transition-all duration-300">
                                         <img src={offer.imageUrl} alt={offer.title || "Offer"} className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500" />
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
                                         {(offer.badge || offer.title) && (
@@ -428,7 +428,7 @@ export default function HomePage() {
                                         : "ছোট শুরু থেকে পূর্ণকালীন আয় — ব্যাংলা পার্ক তাদের সহজ সিস্টেমের মাধ্যমে এটি সম্ভব করেছে।",
                                 },
                             ].map((story, i) => (
-                                <div key={i} className="group relative bg-white rounded-xl p-6 sm:p-7 border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                                <div key={i} className="group relative bg-white rounded p-6 sm:p-7 border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                                     <div className="absolute -top-2 -right-2 w-9 h-9 bg-gradient-to-br from-red-700 to-red-500 rounded-full flex items-center justify-center text-white text-[11px] font-bold shadow-lg">
                                         0{i + 1}
                                     </div>
