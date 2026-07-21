@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import {
     LayoutDashboard, Users, Package, Tag, ShoppingBag,
     Wallet, ArrowDownToLine, Settings, BarChart2, X, ChevronRight, Home, Image, TrendingDown,
-    ClipboardList, HelpCircle
+    ClipboardList, HelpCircle, Award
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
@@ -26,6 +26,7 @@ export function AdminSidebar({ onClose, mobile }: AdminSidebarProps) {
         { href: "/admin/daily-work", label: t("nav.dailyWork"), icon: ClipboardList },
         { href: "/admin/quiz", label: t("nav.quiz"), icon: HelpCircle },
         { href: "/admin/users", label: t("nav.users"), icon: Users },
+        { href: "/admin/position", label: t("nav.position"), icon: Award },
         { href: "/admin/products", label: t("nav.products"), icon: Package },
         { href: "/admin/categories", label: t("nav.categories"), icon: Tag },
         { href: "/admin/orders", label: t("nav.orders"), icon: ShoppingBag },
