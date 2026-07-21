@@ -7,6 +7,7 @@ import { DashboardSidebar } from "@/components/layout/DashboardSidebar";
 import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
 import { useAuthStore } from "@/store/auth";
 import { useLocale } from "@/lib/i18n";
+import { NotificationDropdown } from "@/components/layout/NotificationDropdown";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     const { isAuthenticated, user } = useAuthStore();
@@ -64,12 +65,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                         <Menu size={20} />
                     </button>
                     <div className="flex-1" />
-                    <div className="flex items-center gap-2">
-                        <span className="text-sm text-gray-500">{t("dashboard.header.welcome")},</span>
-                        <span className="text-sm font-semibold text-gray-800">{user.name}</span>
-                        <span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${user.status === "ACTIVE" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-500"}`}>
-                            {user.status === "ACTIVE" ? t("dashboard.header.active") : t("dashboard.header.inactive")}
-                        </span>
+                    <div className="flex items-center gap-4">
+                        <NotificationDropdown />
+                        <div className="flex items-center gap-2">
+                            <span className="text-sm text-gray-500">{t("dashboard.header.welcome")},</span>
+                            <span className="text-sm font-semibold text-gray-800">{user.name}</span>
+                            <span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${user.status === "ACTIVE" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-500"}`}>
+                                {user.status === "ACTIVE" ? t("dashboard.header.active") : t("dashboard.header.inactive")}
+                            </span>
+                        </div>
                     </div>
                 </header>
 

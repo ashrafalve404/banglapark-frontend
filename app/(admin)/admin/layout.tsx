@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Menu, Loader2 } from "lucide-react";
 import { AdminSidebar } from "@/components/layout/AdminSidebar";
 import { useAuthStore } from "@/store/auth";
+import { NotificationDropdown } from "@/components/layout/NotificationDropdown";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     const { isAuthenticated, user } = useAuthStore();
@@ -57,6 +58,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                         <Menu size={20} />
                     </button>
                     <div className="flex-1" />
+                    <NotificationDropdown isAdmin />
                     <span className="text-sm font-semibold text-slate-700">{user.name}</span>
                     <span className="text-xs px-2 py-0.5 rounded-full bg-green-100 text-green-800 font-semibold">{user.role}</span>
                 </header>
