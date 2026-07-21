@@ -2,11 +2,38 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { Search, ShieldAlert, Loader2, Trash2, Smartphone, Minus } from "lucide-react";
+import { Search, ShieldAlert, Loader2, Trash2, Smartphone, Minus, Copy, Check } from "lucide-react";
 import { ordersApi } from "@/lib/api/orders";
 import { formatCurrency, formatDateTime, getOrderStatusLabel } from "@/lib/utils";
 import type { Order, OrderItem, OrderStatus } from "@/types";
 import { useLocale } from "@/lib/i18n";
+
+function CopyButton({ text }: { text: string }) {
+    const [copied, setCopied] = useState(false);
+    const handleCopy = async (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        try {
+            await navigator.clipboard.writeText(text);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 1500);
+        } catch (err) { }
+    };
+    return (
+        <button
+            onClick={handleCopy}
+            className="inline-flex items-center justify-center p-1 rounded hover:bg-slate-100 text-slate-400 hover:text-green-700 transition-colors cursor-pointer"
+            type="button"
+            title="Copy"
+        >
+            {copied ? (
+                <Check size={11} className="text-green-600 animate-pulse" />
+            ) : (
+                <Copy size={11} />
+            )}
+        </button>
+    );
+}
 
 const ORDER_STATUS_TRANSITIONS: Record<string, string[]> = {
     PENDING: ["CONFIRMED", "CANCELLED"],
@@ -149,10 +176,25 @@ export default function AdminOrdersPage() {
                                     const allowedTrans = ORDER_STATUS_TRANSITIONS[order.status] || [];
                                     return (
                                         <tr key={order.id} className="hover:bg-slate-50/50">
-                                            <td className="p-4 font-mono text-[10px] text-slate-400 font-bold max-w-[80px] lg:max-w-[200px] truncate">{order.id}</td>
                                             <td className="p-4">
-                                                <div className="text-xs font-semibold text-slate-800">{order.user?.name}</div>
-                                                <div className="text-[10px] text-gray-500">{order.user?.phone}</div>
+                                                <div className="flex items-center gap-1">
+                                                    <span className="font-mono text-[10px] text-slate-500 font-bold bg-slate-50 px-1.5 py-0.5 rounded border border-slate-100" title={order.id}>
+                                                        {order.id.slice(0, 8)}...
+                                                    </span>
+                                                    <CopyButton text={order.id} />
+                                                </div>
+                                            </td>
+                                            <td className="p-4">
+                                                <div className="flex flex-col gap-0.5">
+                                                    <div className="text-xs font-bold text-slate-800">{order.user?.name}</div>
+                                                    {order.user?.email && <div className="text-[9px] text-gray-400 truncate max-w-[150px]">{order.user.email}</div>}
+                                                    {order.user?.phone && (
+                                                        <div className="flex items-center gap-1 mt-0.5">
+                                                            <span className="text-[10.5px] font-semibold text-slate-600">{order.user.phone}</span>
+                                                            <CopyButton text={order.user.phone} />
+                                                        </div>
+                                                    )}
+                                                </div>
                                             </td>
                                             <td className="p-4">
                                                 <div className="space-y-2">
@@ -166,15 +208,20 @@ export default function AdminOrdersPage() {
                                                                 )}
                                                             </div>
                                                             <div className="min-w-0 flex-1">
-                                                                <div className="font-medium truncate max-w-[160px]">{item.product?.name || t("admin.orders.table.productFallback")}</div>
+                                                                <div className="font-medium truncate max-w-[160px] text-slate-800" title={item.product?.name}>{item.product?.name || t("admin.orders.table.productFallback")}</div>
                                                                 <div className="flex items-center gap-1.5 mt-0.5">
-                                                                    <span className="text-[9px] font-mono text-gray-400">#{item.product?.id?.slice(0, 8) || item.id?.slice(0, 8)}</span>
+                                                                    {item.product?.id && (
+                                                                        <div className="flex items-center gap-0.5 bg-slate-50 px-1 border border-slate-100 rounded">
+                                                                            <span className="text-[8px] font-mono text-gray-400">ID: {item.product.id.slice(0, 8)}</span>
+                                                                            <CopyButton text={item.product.id} />
+                                                                        </div>
+                                                                    )}
                                                                     {item.size && (
                                                                         <span className="text-[9px] font-semibold text-green-700 bg-green-50 border border-green-200 rounded px-1 py-px">{item.size}</span>
                                                                     )}
                                                                 </div>
                                                             </div>
-                                                            <span className="text-gray-400 shrink-0">x{item.quantity}</span>
+                                                            <span className="text-gray-500 shrink-0 font-medium">x{item.quantity}</span>
                                                             {item.quantity > 1 && (
                                                                 <button
                                                                     onClick={() => reduceQtyMutation.mutate({ orderId: order.id, itemId: item.id, quantity: item.quantity - 1 })}
@@ -191,24 +238,27 @@ export default function AdminOrdersPage() {
                                             <td className="p-4 text-xs font-bold text-slate-800 text-right">{formatCurrency(order.total, locale)}</td>
                                             <td className="p-4 text-center">
                                                 {order.paymentMethod === "BKASH" ? (
-                                                    <span className="inline-flex items-center gap-1 text-[10px] font-bold text-pink-700 bg-pink-50 rounded-full px-2 py-0.5 border border-pink-200">
-                                                        <Smartphone size={10} />
+                                                    <span className="inline-flex items-center gap-1 text-[9px] font-bold text-pink-700 bg-pink-50 rounded px-1.5 py-0.5 border border-pink-200">
+                                                        <Smartphone size={9} />
                                                         bKash
                                                     </span>
                                                 ) : (
-                                                    <span className="text-[10px] text-gray-400 font-semibold">COD</span>
+                                                    <span className="inline-flex items-center text-[9px] font-bold text-gray-600 bg-gray-50 rounded px-1.5 py-0.5 border border-gray-200">COD</span>
                                                 )}
                                             </td>
-                                            <td className="p-4 text-center">
+                                            <td className="p-4">
                                                 {order.transactionId ? (
-                                                    <div className="flex flex-col items-center gap-0.5">
-                                                        <span className="text-[10px] font-mono font-bold text-gray-700 bg-gray-50 rounded px-1.5 py-0.5 border border-gray-200">{order.transactionId}</span>
+                                                    <div className="flex flex-col items-center gap-1">
+                                                        <div className="flex items-center gap-0.5 bg-gray-50 rounded px-1.5 py-0.5 border border-gray-200">
+                                                            <span className="text-[10px] font-mono font-bold text-gray-700">{order.transactionId}</span>
+                                                            <CopyButton text={order.transactionId} />
+                                                        </div>
                                                         {order.userBkashNumber && (
-                                                            <span className="text-[9px] text-gray-400">{order.userBkashNumber}</span>
+                                                            <span className="text-[9px] text-gray-400">From: {order.userBkashNumber}</span>
                                                         )}
                                                     </div>
                                                 ) : (
-                                                    <span className="text-[10px] text-gray-300">—</span>
+                                                    <div className="text-center"><span className="text-[10px] text-gray-300">—</span></div>
                                                 )}
                                             </td>
                                             <td className="p-4 text-center">
@@ -224,8 +274,13 @@ export default function AdminOrdersPage() {
                                                 {order.deliveryCharge != null ? formatCurrency(order.deliveryCharge, locale) : "—"}
                                             </td>
                                             <td className="p-4 text-xs text-slate-650 min-w-[200px]">
-                                                <div>
-                                                    {order.shippingAddress?.address}, {order.shippingAddress?.city}
+                                                <div className="flex items-start justify-between gap-1">
+                                                    <span className="text-[11px] leading-relaxed">
+                                                        {order.shippingAddress?.address}, {order.shippingAddress?.city}
+                                                    </span>
+                                                    {(order.shippingAddress?.address || order.shippingAddress?.city) && (
+                                                        <CopyButton text={`${order.shippingAddress?.address || ""}, ${order.shippingAddress?.city || ""}`} />
+                                                    )}
                                                 </div>
                                             </td>
                                             <td className="p-4 text-center">
@@ -254,10 +309,10 @@ export default function AdminOrdersPage() {
                                                                     disabled={isMutating}
                                                                     onClick={() => updateStatusMutation.mutate({ id: order.id, nextStatus: next })}
                                                                     className={`text-[10px] py-1 px-2.5 rounded font-bold border flex items-center justify-center gap-1 ${isMutating
-                                                                            ? "opacity-50 cursor-not-allowed bg-slate-100 text-slate-400 border-slate-200"
-                                                                            : next === "CANCELLED"
-                                                                                ? "bg-green-50 text-green-650 border-green-200 hover:bg-green-100 cursor-pointer"
-                                                                                : "bg-green-50 text-green-700 border-green-200 hover:bg-green-100 cursor-pointer"
+                                                                        ? "opacity-50 cursor-not-allowed bg-slate-100 text-slate-400 border-slate-200"
+                                                                        : next === "CANCELLED"
+                                                                            ? "bg-green-50 text-green-650 border-green-200 hover:bg-green-100 cursor-pointer"
+                                                                            : "bg-green-50 text-green-700 border-green-200 hover:bg-green-100 cursor-pointer"
                                                                         }`}
                                                                 >
                                                                     {isMutating && <Loader2 className="animate-spin" size={10} />}
