@@ -44,6 +44,9 @@ export default function AdminProductsPage() {
     const [sizeInput, setSizeInput] = useState("");
     const fileInputRef = useRef<HTMLInputElement>(null);
 
+    // Selected product IDs for bulk operations
+    const [selectedIds, setSelectedIds] = useState<string[]>([]);
+
     // Load products list
     const { data: prodData, isLoading: prodLoading } = useQuery({
         queryKey: ["admin-products", page, search],
@@ -91,13 +94,65 @@ export default function AdminProductsPage() {
         onSuccess: () => {
             setMsg({ type: "success", text: t("admin.products.deleteSuccess") });
             queryClient.invalidateQueries({ queryKey: ["admin-products"] });
+            setSelectedIds((prev) => prev.filter((id) => id !== editingId));
         },
         onError: (err: any) => {
             setMsg({ type: "error", text: t("admin.products.deleteError") });
         },
     });
 
-    // Form handlers
+    const deleteManyMutation = useMutation({
+        mutationFn: (ids: string[]) => productsApi.deleteMany(ids),
+        onSuccess: () => {
+            setMsg({
+                type: "success",
+                text: locale === "bn" ? "সিলেক্ট করা প্রোডাক্টগুলো সফলভাবে ডিলিট করা হয়েছে" : "Selected products deleted successfully",
+            });
+            setSelectedIds([]);
+            queryClient.invalidateQueries({ queryKey: ["admin-products"] });
+        },
+        onError: (err: any) => {
+            setMsg({
+                type: "error",
+                text: err.response?.data?.message || (locale === "bn" ? "ডিলিট করতে সমস্যা হয়েছে" : "Failed to delete selected products"),
+            });
+        },
+    });
+
+    // Selection handlers
+    const handleToggleSelectAll = () => {
+        if (products.length === 0) return;
+        const allSelectedInPage = products.every((p) => selectedIds.includes(p.id));
+        if (allSelectedInPage) {
+            // Uncheck all in dynamic page only
+            const pageIds = products.map((p) => p.id);
+            setSelectedIds((prev) => prev.filter((id) => !pageIds.includes(id)));
+        } else {
+            // Check all in dynamic page
+            const newSelections = products.map((p) => p.id);
+            setSelectedIds((prev) => {
+                const combined = [...prev, ...newSelections];
+                return Array.from(new Set(combined));
+            });
+        }
+    };
+
+    const handleToggleSelectOne = (id: string) => {
+        setSelectedIds((prev) =>
+            prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+        );
+    };
+
+    const handleBulkDelete = () => {
+        const count = selectedIds.length;
+        if (count === 0) return;
+        const confirmText = locale === "bn"
+            ? `আপনি কি নিশ্চিত যে এই ${count}টি প্রোডাক্ট ডিলিট করতে চান?`
+            : `Are you sure you want to delete these ${count} selected products?`;
+        if (confirm(confirmText)) {
+            deleteManyMutation.mutate(selectedIds);
+        }
+    };
     const handleEditInit = (prod: any) => {
         setEditingId(prod.id);
         setForm({
@@ -380,8 +435,8 @@ export default function AdminProductsPage() {
             ) : (
                 /* Read list directory */
                 <div className="card overflow-hidden bg-white">
-                    {/* Search bar */}
-                    <div className="p-4 border-b border-slate-100">
+                    {/* Search bar & Bulk actions */}
+                    <div className="p-4 border-b border-slate-100 flex flex-wrap gap-4 items-center justify-between">
                         <input
                             type="text"
                             placeholder="Search by name or ID..."
@@ -389,6 +444,29 @@ export default function AdminProductsPage() {
                             onChange={(e) => { setSearch(e.target.value); setPage(1); }}
                             className="input w-full sm:w-80 text-sm"
                         />
+                        {selectedIds.length > 0 && (
+                            <div className="flex items-center gap-3 bg-red-50 border border-red-200 px-3 py-1.5 rounded-lg animate-fade-in">
+                                <span className="text-xs font-bold text-red-750">
+                                    {locale === "bn" ? `${selectedIds.length}টি সিলেক্টেড` : `${selectedIds.length} selected`}
+                                </span>
+                                <button
+                                    onClick={handleBulkDelete}
+                                    type="button"
+                                    className="flex items-center gap-1.5 py-1 px-2.5 rounded bg-red-650 text-white font-bold hover:bg-red-700 text-xs shadow-sm transition-colors"
+                                    disabled={deleteManyMutation.isPending}
+                                >
+                                    {deleteManyMutation.isPending ? <Loader2 size={12} className="animate-spin" /> : <Trash2 size={12} />}
+                                    {locale === "bn" ? "ডিলিট করুন" : "Delete Selected"}
+                                </button>
+                                <button
+                                    onClick={() => setSelectedIds([])}
+                                    type="button"
+                                    className="text-xs text-slate-500 hover:text-slate-700 underline underline-offset-2"
+                                >
+                                    {locale === "bn" ? "বাতিল" : "Cancel"}
+                                </button>
+                            </div>
+                        )}
                     </div>
                     {prodLoading ? (
                         <div className="py-20 flex justify-center">
@@ -401,6 +479,14 @@ export default function AdminProductsPage() {
                             <table className="w-full text-left border-collapse">
                                 <thead>
                                     <tr className="bg-slate-50 border-b border-slate-150">
+                                        <th className="p-4 w-10 text-center">
+                                            <input
+                                                type="checkbox"
+                                                className="h-4 w-4 rounded border-slate-300 text-green-600 cursor-pointer accent-green-600"
+                                                checked={products.length > 0 && products.every((p) => selectedIds.includes(p.id))}
+                                                onChange={handleToggleSelectAll}
+                                            />
+                                        </th>
                                         <th className="p-4 text-xs font-bold text-slate-600">ID</th>
                                         <th className="p-4 text-xs font-bold text-slate-600">{t("admin.products.list.colProduct")}</th>
                                         <th className="p-4 text-xs font-bold text-slate-600">{t("admin.products.list.colCategory")}</th>
@@ -411,7 +497,15 @@ export default function AdminProductsPage() {
                                 </thead>
                                 <tbody className="divide-y divide-slate-100">
                                     {products.map((item) => (
-                                        <tr key={item.id} className="hover:bg-slate-50/50">
+                                        <tr key={item.id} className={`hover:bg-slate-50/50 transition-colors ${selectedIds.includes(item.id) ? "bg-red-50/40" : ""}`}>
+                                            <td className="p-4 text-center">
+                                                <input
+                                                    type="checkbox"
+                                                    className="h-4 w-4 rounded border-slate-300 text-green-600 cursor-pointer accent-green-600"
+                                                    checked={selectedIds.includes(item.id)}
+                                                    onChange={() => handleToggleSelectOne(item.id)}
+                                                />
+                                            </td>
                                             <td className="p-4">
                                                 <span className="font-mono text-[10px] text-gray-400 font-medium" title={item.id}>{item.id.slice(0, 8)}...</span>
                                             </td>
@@ -446,8 +540,8 @@ export default function AdminProductsPage() {
                                                     </button>
                                                 </div>
                                             </td>
-                                    </tr>
-                                ))}
+                                        </tr>
+                                    ))}
                                 </tbody>
                             </table>
                         </div>

@@ -32,6 +32,10 @@ export const productsApi = {
         await api.delete(`/products/${id}`);
     },
 
+    deleteMany: async (ids: string[]): Promise<void> => {
+        await api.post("/products/bulk-delete", { ids });
+    },
+
     recordClick: async (id: string): Promise<void> => {
         await api.post(`/products/${id}/click`);
     },
