@@ -164,6 +164,16 @@ export const quizApi = {
         return res.data;
     },
 
+    adminBulkDeleteQuestions: async (ids: string[]): Promise<{ count: number }> => {
+        const res = await api.post(`/quiz/admin/questions/bulk-delete`, { ids });
+        return res.data;
+    },
+
+    adminDeleteAllQuestions: async (categoryId: string): Promise<{ count: number }> => {
+        const res = await api.delete(`/quiz/admin/questions/category/${categoryId}/all`);
+        return res.data;
+    },
+
     // User: Purchase
     getCategoryCount: async (categoryId: string): Promise<{ total: number }> => {
         const res = await api.get(`/quiz/category/${categoryId}/count`);
