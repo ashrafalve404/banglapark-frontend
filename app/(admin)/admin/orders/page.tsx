@@ -2,7 +2,7 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { Search, ShieldAlert, Loader2, ArrowRight, Trash2, Smartphone, Minus } from "lucide-react";
+import { Search, ShieldAlert, Loader2, Trash2, Smartphone, Minus } from "lucide-react";
 import { ordersApi } from "@/lib/api/orders";
 import { formatCurrency, formatDateTime, getOrderStatusLabel } from "@/lib/utils";
 import type { Order, OrderItem, OrderStatus } from "@/types";
@@ -133,6 +133,7 @@ export default function AdminOrdersPage() {
                                 <tr className="bg-slate-50 border-b border-slate-150">
                                     <th className="p-4 text-xs font-bold text-slate-600">{t("admin.orders.table.colOrderId")}</th>
                                     <th className="p-4 text-xs font-bold text-slate-600">{t("admin.orders.table.colCustomer")}</th>
+                                    <th className="p-4 text-xs font-bold text-slate-600 min-w-[200px]">Products</th>
                                     <th className="p-4 text-xs font-bold text-slate-600 text-right">{t("admin.orders.table.colPrice")}</th>
                                     <th className="p-4 text-xs font-bold text-slate-600">{t("admin.orders.table.colPayment")}</th>
                                     <th className="p-4 text-xs font-bold text-slate-600">{t("admin.orders.table.colTrxID")}</th>
@@ -152,6 +153,40 @@ export default function AdminOrdersPage() {
                                             <td className="p-4">
                                                 <div className="text-xs font-semibold text-slate-800">{order.user?.name}</div>
                                                 <div className="text-[10px] text-gray-500">{order.user?.phone}</div>
+                                            </td>
+                                            <td className="p-4">
+                                                <div className="space-y-2">
+                                                    {order.items.map((item) => (
+                                                        <div key={item.id} className="flex items-center gap-2 text-xs text-slate-700">
+                                                            <div className="w-9 h-9 rounded border border-slate-200 overflow-hidden bg-slate-50 flex-shrink-0">
+                                                                {item.product?.images?.[0] ? (
+                                                                    <img src={item.product.images[0]} alt="" className="w-full h-full object-cover" />
+                                                                ) : (
+                                                                    <div className="w-full h-full flex items-center justify-center text-[8px] text-gray-300">N/A</div>
+                                                                )}
+                                                            </div>
+                                                            <div className="min-w-0 flex-1">
+                                                                <div className="font-medium truncate max-w-[160px]">{item.product?.name || t("admin.orders.table.productFallback")}</div>
+                                                                <div className="flex items-center gap-1.5 mt-0.5">
+                                                                    <span className="text-[9px] font-mono text-gray-400">#{item.product?.id?.slice(0, 8) || item.id?.slice(0, 8)}</span>
+                                                                    {item.size && (
+                                                                        <span className="text-[9px] font-semibold text-green-700 bg-green-50 border border-green-200 rounded px-1 py-px">{item.size}</span>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                            <span className="text-gray-400 shrink-0">x{item.quantity}</span>
+                                                            {item.quantity > 1 && (
+                                                                <button
+                                                                    onClick={() => reduceQtyMutation.mutate({ orderId: order.id, itemId: item.id, quantity: item.quantity - 1 })}
+                                                                    disabled={reducingItem === item.id}
+                                                                    className="shrink-0 flex items-center justify-center w-4 h-4 rounded-full bg-green-100 text-green-600 hover:bg-green-200 disabled:opacity-50 cursor-pointer"
+                                                                >
+                                                                    {reducingItem === item.id ? <Loader2 size={8} className="animate-spin" /> : <Minus size={8} />}
+                                                                </button>
+                                                            )}
+                                                        </div>
+                                                    ))}
+                                                </div>
                                             </td>
                                             <td className="p-4 text-xs font-bold text-slate-800 text-right">{formatCurrency(order.total, locale)}</td>
                                             <td className="p-4 text-center">
@@ -189,24 +224,8 @@ export default function AdminOrdersPage() {
                                                 {order.deliveryCharge != null ? formatCurrency(order.deliveryCharge, locale) : "—"}
                                             </td>
                                             <td className="p-4 text-xs text-slate-650 min-w-[200px]">
-                                                <div className="font-bold border-b border-dashed border-slate-150 pb-1 mb-1.5">
+                                                <div>
                                                     {order.shippingAddress?.address}, {order.shippingAddress?.city}
-                                                </div>
-                                                <div className="space-y-0.5">
-                                                    {order.items.map((item) => (
-                                                        <div key={item.id} className="text-[10px] text-gray-500 flex justify-between items-center gap-1">
-                                                            <span className="truncate">- {item.product?.name || t("admin.orders.table.productFallback")} (x{item.quantity})</span>
-                                                            {item.quantity > 1 && (
-                                                                <button
-                                                                    onClick={() => reduceQtyMutation.mutate({ orderId: order.id, itemId: item.id, quantity: item.quantity - 1 })}
-                                                                    disabled={reducingItem === item.id}
-                                                                    className="flex-shrink-0 flex items-center justify-center w-4 h-4 rounded-full bg-green-100 text-green-600 hover:bg-green-200 disabled:opacity-50 cursor-pointer"
-                                                                >
-                                                                    {reducingItem === item.id ? <Loader2 size={8} className="animate-spin" /> : <Minus size={8} />}
-                                                                </button>
-                                                            )}
-                                                        </div>
-                                                    ))}
                                                 </div>
                                             </td>
                                             <td className="p-4 text-center">

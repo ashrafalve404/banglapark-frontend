@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import {
     AlertCircle, Clock,
-    ImageIcon, Download, FolderOpen
+    Download, HelpCircle, Briefcase
 } from "lucide-react";
 import { useAuthStore } from "@/store/auth";
 import { bannersApi, type Banner } from "@/lib/api/banners";
@@ -99,7 +99,7 @@ export default function DashboardOverview() {
                 <div className="card p-5 bg-white">
                     <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-2">
-                            <FolderOpen size={18} className="text-green-700" />
+                            <HelpCircle size={18} className="text-green-700" />
                             <h3 className="text-sm font-bold text-gray-900">{t("nav.quiz")}</h3>
                         </div>
                         <Link href="/dashboard/quiz" className="text-xs text-green-700 font-semibold hover:underline">{t("dashboard.quiz.viewAll")}</Link>
@@ -124,7 +124,7 @@ export default function DashboardOverview() {
             {dailyWork && (
                 <div className="card p-5 bg-white">
                     <div className="flex items-center gap-2 mb-3">
-                        <ImageIcon size={18} className="text-green-700" />
+                        <Briefcase size={18} className="text-green-700" />
                         <h3 className="text-sm font-bold text-gray-900">{t("nav.dailyWork")}</h3>
                     </div>
                     <div className="flex flex-col sm:flex-row gap-4 items-start">

@@ -35,6 +35,7 @@ export default function AdminProductsPage() {
     const { t, locale } = useLocale();
     const queryClient = useQueryClient();
     const [page, setPage] = useState(1);
+    const [search, setSearch] = useState("");
     const [view, setView] = useState<"list" | "form">("list");
     const [editingId, setEditingId] = useState<string | null>(null);
     const [form, setForm] = useState<ProductFormState>(initialForm);
@@ -45,8 +46,8 @@ export default function AdminProductsPage() {
 
     // Load products list
     const { data: prodData, isLoading: prodLoading } = useQuery({
-        queryKey: ["admin-products", page],
-        queryFn: () => productsApi.list({ page, limit: 12 }),
+        queryKey: ["admin-products", page, search],
+        queryFn: () => productsApi.list({ page, limit: 12, search: search || undefined }),
     });
 
     // Load categories list for dropdowns
@@ -379,6 +380,16 @@ export default function AdminProductsPage() {
             ) : (
                 /* Read list directory */
                 <div className="card overflow-hidden bg-white">
+                    {/* Search bar */}
+                    <div className="p-4 border-b border-slate-100">
+                        <input
+                            type="text"
+                            placeholder="Search by name or ID..."
+                            value={search}
+                            onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+                            className="input w-full sm:w-80 text-sm"
+                        />
+                    </div>
                     {prodLoading ? (
                         <div className="py-20 flex justify-center">
                             <Loader2 className="animate-spin text-slate-800" size={32} />
@@ -390,6 +401,7 @@ export default function AdminProductsPage() {
                             <table className="w-full text-left border-collapse">
                                 <thead>
                                     <tr className="bg-slate-50 border-b border-slate-150">
+                                        <th className="p-4 text-xs font-bold text-slate-600">ID</th>
                                         <th className="p-4 text-xs font-bold text-slate-600">{t("admin.products.list.colProduct")}</th>
                                         <th className="p-4 text-xs font-bold text-slate-600">{t("admin.products.list.colCategory")}</th>
                                         <th className="p-4 text-xs font-bold text-slate-600 text-right">{t("admin.products.list.colPrice")}</th>
@@ -400,6 +412,9 @@ export default function AdminProductsPage() {
                                 <tbody className="divide-y divide-slate-100">
                                     {products.map((item) => (
                                         <tr key={item.id} className="hover:bg-slate-50/50">
+                                            <td className="p-4">
+                                                <span className="font-mono text-[10px] text-gray-400 font-medium" title={item.id}>{item.id.slice(0, 8)}...</span>
+                                            </td>
                                             <td className="p-4 min-w-[240px]">
                                                 <div className="flex gap-3 items-center">
                                                     <div className="w-12 h-12 rounded bg-slate-50 border border-slate-100 overflow-hidden flex-shrink-0">
