@@ -25,7 +25,7 @@ export const ordersApi = {
         return res.data;
     },
 
-    adminAll: async (params?: { page?: number; limit?: number; status?: OrderStatus }): Promise<{ orders: Order[]; total: number }> => {
+    adminAll: async (params?: { page?: number; limit?: number; status?: OrderStatus; search?: string }): Promise<{ orders: Order[]; total: number }> => {
         const res = await api.get("/orders/admin/all", { params });
         return res.data;
     },

@@ -112,7 +112,6 @@ export default function DashboardOverview() {
                                 </div>
                                 <div className="p-2.5 text-center">
                                     <p className="text-xs font-bold text-gray-800 truncate">{cat.name}</p>
-                                    <p className="text-[10px] text-gray-400">{cat._count?.questions ?? 0} questions</p>
                                 </div>
                             </Link>
                         ))}

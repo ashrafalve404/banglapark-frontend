@@ -48,11 +48,12 @@ export default function AdminOrdersPage() {
     const { t, locale } = useLocale();
     const queryClient = useQueryClient();
     const [page, setPage] = useState(1);
+    const [search, setSearch] = useState("");
     const [status, setStatus] = useState("");
 
     const { data, isLoading } = useQuery({
-        queryKey: ["admin-orders", page, status],
-        queryFn: () => ordersApi.adminAll({ page, limit: 12, status: status ? status as OrderStatus : undefined }),
+        queryKey: ["admin-orders", page, status, search],
+        queryFn: () => ordersApi.adminAll({ page, limit: 12, status: status ? status as OrderStatus : undefined, search: search || undefined }),
     });
 
     const orders = data?.orders ?? [];
@@ -127,11 +128,20 @@ export default function AdminOrdersPage() {
                 <p className="text-sm text-slate-500">{t("admin.orders.subheading")}</p>
             </div>
 
-            {/* Status filtering widgets */}
-            <div className="card p-5 bg-white flex flex-col sm:flex-row items-center justify-between gap-4">
-                <h3 className="text-sm font-bold text-slate-700">{t("admin.orders.filter.heading")}</h3>
+            {/* Filters: search + status */}
+            <div className="card p-4 bg-white flex flex-col sm:flex-row items-center gap-3">
+                <div className="relative flex-1 w-full">
+                    <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <input
+                        type="text"
+                        placeholder="Search by Order ID, name, phone or email..."
+                        value={search}
+                        onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+                        className="input pl-8 w-full text-sm"
+                    />
+                </div>
                 <select
-                    className="input sm:w-48 cursor-pointer text-xs"
+                    className="input sm:w-48 cursor-pointer text-xs flex-shrink-0"
                     value={status}
                     onChange={(e) => { setStatus(e.target.value); setPage(1); }}
                 >
