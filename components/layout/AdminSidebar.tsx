@@ -27,6 +27,7 @@ export function AdminSidebar({ onClose, mobile }: AdminSidebarProps) {
         { href: "/admin/quiz", label: t("nav.quiz"), icon: HelpCircle },
         { href: "/admin/users", label: t("nav.users"), icon: Users },
         { href: "/admin/position", label: t("nav.position"), icon: Award },
+        { href: "/admin/travel", label: t("nav.travel"), icon: Plane },
         { href: "/admin/products", label: t("nav.products"), icon: Package },
         { href: "/admin/categories", label: t("nav.categories"), icon: Tag },
         { href: "/admin/orders", label: t("nav.orders"), icon: ShoppingBag },
@@ -34,7 +35,6 @@ export function AdminSidebar({ onClose, mobile }: AdminSidebarProps) {
         { href: "/admin/commission-rules", label: t("nav.commissionRules"), icon: Settings },
         { href: "/admin/profit-loss", label: t("nav.profitLoss"), icon: TrendingDown },
         { href: "/admin/reports", label: t("nav.reports"), icon: BarChart2 },
-        { href: "/admin/travel", label: t("nav.travel"), icon: Plane },
     ];
 
     return (

@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import {
     AlertCircle, Clock, Briefcase, HelpCircle, User, Wallet,
-    ShoppingBag, Users, Award, ArrowDownToLine, Plane, ChevronRight
+    ShoppingBag, Users, Award, ArrowDownToLine, Plane
 } from "lucide-react";
 import { useAuthStore } from "@/store/auth";
 import { authApi } from "@/lib/api/auth";
@@ -41,72 +41,64 @@ export default function DashboardOverview() {
     const isExpiringSoon = activeDays > 0 && activeDays <= 5;
     const isInactive = user?.status === "INACTIVE";
 
-    // Quick App Grid Buttons (2 per row on all screen sizes with distinct background colors)
+    // 2-column grid buttons ordered: Quiz, Daily Work, Wallet, Orders, Referrals, Monthly Salary, Travel, Withdraw, Profile
+    // Solid background colors, dark icons (#111c2a), rounded-md matching site cardviews
     const quickAppItems = [
         {
-            href: "/dashboard/profile",
-            label: t("nav.profile"),
-            icon: User,
-            cardBg: "bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-blue-100",
-            iconBg: "bg-white/20 text-white",
+            href: "/dashboard/quiz",
+            label: t("nav.quiz"),
+            icon: HelpCircle,
+            cardBg: "bg-purple-100 text-purple-900 border-purple-200 hover:bg-purple-200",
         },
         {
             href: "/dashboard/daily-work",
             label: t("nav.dailyWork"),
             icon: Briefcase,
-            cardBg: "bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-emerald-100",
-            iconBg: "bg-white/20 text-white",
-        },
-        {
-            href: "/dashboard/quiz",
-            label: t("nav.quiz"),
-            icon: HelpCircle,
-            cardBg: "bg-gradient-to-br from-purple-500 to-indigo-600 text-white shadow-purple-100",
-            iconBg: "bg-white/20 text-white",
+            cardBg: "bg-emerald-100 text-emerald-900 border-emerald-200 hover:bg-emerald-200",
         },
         {
             href: "/dashboard/wallet",
             label: t("nav.wallet"),
             icon: Wallet,
-            cardBg: "bg-gradient-to-br from-green-600 to-emerald-700 text-white shadow-green-100",
-            iconBg: "bg-white/20 text-white",
+            cardBg: "bg-green-100 text-green-900 border-green-200 hover:bg-green-200",
         },
         {
             href: "/dashboard/orders",
             label: t("nav.orders"),
             icon: ShoppingBag,
-            cardBg: "bg-gradient-to-br from-orange-500 to-amber-600 text-white shadow-orange-100",
-            iconBg: "bg-white/20 text-white",
+            cardBg: "bg-amber-100 text-amber-900 border-amber-200 hover:bg-amber-200",
         },
         {
             href: "/dashboard/referrals",
             label: t("nav.referrals"),
             icon: Users,
-            cardBg: "bg-gradient-to-br from-cyan-600 to-blue-600 text-white shadow-cyan-100",
-            iconBg: "bg-white/20 text-white",
+            cardBg: "bg-cyan-100 text-cyan-900 border-cyan-200 hover:bg-cyan-200",
         },
         {
             href: "/dashboard/position",
             label: t("nav.position"), // Displays "Monthly Salary" / "মাসিক সেলারি"
             icon: Award,
-            cardBg: "bg-gradient-to-br from-amber-500 to-yellow-600 text-white shadow-amber-100",
-            iconBg: "bg-white/20 text-white",
+            cardBg: "bg-yellow-100 text-yellow-900 border-yellow-200 hover:bg-yellow-200",
             badge: "Hot",
         },
         {
             href: "/dashboard/travel",
             label: t("nav.travel"),
             icon: Plane,
-            cardBg: "bg-gradient-to-br from-indigo-600 to-violet-700 text-white shadow-indigo-100",
-            iconBg: "bg-white/20 text-white",
+            cardBg: "bg-indigo-100 text-indigo-900 border-indigo-200 hover:bg-indigo-200",
             badge: "New",
         },
         {
             href: "/dashboard/withdraw",
             label: t("nav.withdraw"),
             icon: ArrowDownToLine,
-            cardBg: "bg-gradient-to-br from-rose-500 to-pink-600 text-white shadow-rose-100",
-            iconBg: "bg-white/20 text-white",
+            cardBg: "bg-rose-100 text-rose-900 border-rose-200 hover:bg-rose-200",
+        },
+        {
+            href: "/dashboard/profile",
+            label: t("nav.profile"),
+            icon: User,
+            cardBg: "bg-blue-100 text-blue-900 border-blue-200 hover:bg-blue-200",
         },
     ];
 
@@ -116,9 +108,9 @@ export default function DashboardOverview() {
 
             {/* Account Status Alert */}
             {isInactive ? (
-                <div className="rounded-2xl border border-red-200 bg-red-50 p-5 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
+                <div className="rounded-md border border-red-200 bg-red-50 p-5 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
                     <div className="flex items-center gap-3.5">
-                        <div className="rounded-xl bg-red-100 p-2.5 text-red-600 shrink-0">
+                        <div className="rounded-md bg-red-100 p-2.5 text-red-600 shrink-0">
                             <AlertCircle size={22} />
                         </div>
                         <div>
@@ -126,14 +118,14 @@ export default function DashboardOverview() {
                             <p className="text-xs text-red-600 mt-0.5">Purchase products from shop to activate your account and start earning.</p>
                         </div>
                     </div>
-                    <Link href="/shop" className="btn-primary bg-red-600 hover:bg-red-700 whitespace-nowrap text-xs font-bold py-2.5 px-5 rounded-xl">
+                    <Link href="/shop" className="btn-primary bg-red-600 hover:bg-red-700 whitespace-nowrap text-xs font-bold py-2.5 px-5 rounded-md">
                         {t("dashboard.alert.inactive.cta")}
                     </Link>
                 </div>
             ) : isExpiringSoon ? (
-                <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
+                <div className="rounded-md border border-amber-200 bg-amber-50 p-5 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
                     <div className="flex items-center gap-3.5">
-                        <div className="rounded-xl bg-amber-100 p-2.5 text-amber-600 shrink-0">
+                        <div className="rounded-md bg-amber-100 p-2.5 text-amber-600 shrink-0">
                             <Clock size={22} className="animate-pulse" />
                         </div>
                         <div>
@@ -141,30 +133,30 @@ export default function DashboardOverview() {
                             <p className="text-xs text-amber-700 mt-0.5">{t("dashboard.alert.expiring.desc", { days: activeDays })}</p>
                         </div>
                     </div>
-                    <Link href="/shop" className="btn-primary bg-amber-600 hover:bg-amber-700 whitespace-nowrap text-xs font-bold py-2.5 px-5 rounded-xl">
+                    <Link href="/shop" className="btn-primary bg-amber-600 hover:bg-amber-700 whitespace-nowrap text-xs font-bold py-2.5 px-5 rounded-md">
                         {t("dashboard.alert.expiring.cta")}
                     </Link>
                 </div>
             ) : null}
 
-            {/* Mobile App-Style Square Action Grid — Exactly 2 Columns on Mobile & PC */}
+            {/* Mobile App-Style Square Action Grid — Exactly 2 Columns with standard site rounded-md corners & dark footer-style icons */}
             <div>
                 <div className="grid grid-cols-2 gap-4">
                     {quickAppItems.map((item) => (
                         <Link
                             key={item.href}
                             href={item.href}
-                            className={`relative group ${item.cardBg} rounded-2xl p-5 md:p-6 flex flex-col items-center justify-center text-center transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-1 active:scale-95`}
+                            className={`relative group ${item.cardBg} border rounded-md p-5 flex flex-col items-center justify-center text-center transition-all duration-200 shadow-xs hover:shadow-sm active:scale-95`}
                         >
                             {item.badge && (
-                                <span className="absolute top-3 right-3 bg-white text-gray-900 text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full shadow-xs">
+                                <span className="absolute top-2.5 right-2.5 bg-red-600 text-white text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full shadow-xs">
                                     {item.badge}
                                 </span>
                             )}
-                            <div className={`p-3.5 rounded-2xl ${item.iconBg} backdrop-blur-sm mb-3 group-hover:scale-110 transition-transform duration-200`}>
-                                <item.icon size={26} className="fill-current" />
+                            <div className="p-3 rounded-md bg-[#111c2a] text-white shadow-xs mb-3 group-hover:scale-105 transition-transform duration-200">
+                                <item.icon size={24} />
                             </div>
-                            <span className="text-sm md:text-base font-bold tracking-wide">
+                            <span className="text-sm font-bold tracking-tight">
                                 {item.label}
                             </span>
                         </Link>
@@ -174,4 +166,3 @@ export default function DashboardOverview() {
         </div>
     );
 }
-

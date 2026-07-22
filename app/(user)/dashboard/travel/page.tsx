@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { travelApi } from "@/lib/api/travel";
 import {
     Plane, MapPin, Users, CheckCircle2, XCircle,
-    Lock, Star, Trophy, TrendingUp, Loader2, Calendar
+    Lock, Star, Trophy, Loader2, Calendar, Globe, Compass
 } from "lucide-react";
 
 const MONTHS = [
@@ -16,35 +16,29 @@ const TIER_META = [
     {
         tierNumber: 1,
         label: "Bronze Traveler",
-        icon: "✈️",
+        IconComponent: Compass,
         minMembers: 500,
         gradient: "from-amber-500 to-orange-500",
         softBg: "bg-amber-50",
         border: "border-amber-200",
-        badgeBg: "bg-amber-100 text-amber-800",
-        progressColor: "bg-amber-500",
     },
     {
         tierNumber: 2,
         label: "Silver Traveler",
-        icon: "🌏",
+        IconComponent: Globe,
         minMembers: 5000,
         gradient: "from-slate-500 to-gray-600",
         softBg: "bg-slate-50",
         border: "border-slate-200",
-        badgeBg: "bg-slate-100 text-slate-700",
-        progressColor: "bg-slate-500",
     },
     {
         tierNumber: 3,
         label: "Gold Traveler",
-        icon: "🕌",
+        IconComponent: Plane,
         minMembers: 20000,
         gradient: "from-yellow-500 to-amber-600",
         softBg: "bg-yellow-50",
         border: "border-yellow-200",
-        badgeBg: "bg-yellow-100 text-yellow-800",
-        progressColor: "bg-yellow-500",
     },
 ];
 
@@ -95,8 +89,8 @@ export default function UserTravelPage() {
         <div className="space-y-6">
             {/* Page header */}
             <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-xl bg-gradient-to-br from-indigo-600 to-blue-600 shadow-lg shadow-indigo-200">
-                    <Plane size={22} className="text-white" />
+                <div className="p-2 rounded-md bg-[#111c2a] text-white shadow-xs">
+                    <Plane size={22} />
                 </div>
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900">Travel Rewards</h1>
@@ -105,7 +99,7 @@ export default function UserTravelPage() {
             </div>
 
             {/* Month badge */}
-            <div className="flex items-center gap-2 bg-indigo-50 border border-indigo-100 px-4 py-2.5 rounded-xl w-fit">
+            <div className="flex items-center gap-2 bg-indigo-50 border border-indigo-100 px-3.5 py-2 rounded-md w-fit">
                 <Calendar size={15} className="text-indigo-600" />
                 <span className="text-sm font-semibold text-indigo-700">
                     {MONTHS[month - 1]} {year} — Current Month
@@ -113,7 +107,7 @@ export default function UserTravelPage() {
             </div>
 
             {/* Status Hero Card */}
-            <div className={`rounded-2xl p-6 text-white shadow-xl relative overflow-hidden ${isEligible
+            <div className={`rounded-md p-6 text-white shadow-md relative overflow-hidden ${isEligible
                     ? "bg-gradient-to-br from-emerald-600 via-green-600 to-teal-700"
                     : "bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900"
                 }`}>
@@ -126,8 +120,14 @@ export default function UserTravelPage() {
                     <div className="flex items-start justify-between mb-4">
                         <div>
                             <p className="text-sm font-medium opacity-80 mb-1">This Month's Status</p>
-                            <h2 className="text-3xl font-extrabold">
-                                {isEligible ? "🎉 Eligible!" : "Not Eligible Yet"}
+                            <h2 className="text-3xl font-extrabold flex items-center gap-2">
+                                {isEligible ? (
+                                    <>
+                                        <Trophy size={28} className="text-yellow-300" /> Eligible!
+                                    </>
+                                ) : (
+                                    "Not Eligible Yet"
+                                )}
                             </h2>
                             {unlockedTier && (
                                 <p className="text-sm mt-1 opacity-90">
@@ -142,7 +142,7 @@ export default function UserTravelPage() {
 
                     {/* Stats row */}
                     <div className="grid grid-cols-2 gap-4 mt-4">
-                        <div className="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
+                        <div className="bg-white/10 rounded-md p-4 backdrop-blur-sm">
                             <div className="flex items-center gap-2 mb-1">
                                 <Users size={15} className="opacity-80" />
                                 <span className="text-xs opacity-70 font-medium">New Active Referrals</span>
@@ -150,7 +150,7 @@ export default function UserTravelPage() {
                             <p className="text-2xl font-extrabold">{count.toLocaleString()}</p>
                             <p className="text-xs opacity-60 mt-0.5">Direct referrals activated this month</p>
                         </div>
-                        <div className="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
+                        <div className="bg-white/10 rounded-md p-4 backdrop-blur-sm">
                             <div className="flex items-center gap-2 mb-1">
                                 <MapPin size={15} className="opacity-80" />
                                 <span className="text-xs opacity-70 font-medium">Destinations Unlocked</span>
@@ -187,7 +187,7 @@ export default function UserTravelPage() {
 
             {/* Unlocked destinations */}
             {isEligible && unlockedTier && unlockedTier.destinations.length > 0 && (
-                <div className="card p-5 border border-green-200 bg-green-50/50">
+                <div className="card p-5 border border-green-200 bg-green-50/50 rounded-md">
                     <div className="flex items-center gap-2 mb-4">
                         <Trophy size={18} className="text-green-700" />
                         <h3 className="font-bold text-green-800 text-base">Your Unlocked Destinations</h3>
@@ -196,7 +196,7 @@ export default function UserTravelPage() {
                         {unlockedTier.destinations.map((dest, i) => (
                             <div
                                 key={i}
-                                className="flex items-center gap-2 bg-white border border-green-200 rounded-xl px-3 py-3 shadow-sm"
+                                className="flex items-center gap-2 bg-white border border-green-200 rounded-md px-3 py-3 shadow-xs"
                             >
                                 <MapPin size={15} className="text-green-600 shrink-0" />
                                 <span className="text-sm font-semibold text-green-800">{dest}</span>
@@ -215,17 +215,20 @@ export default function UserTravelPage() {
                         const achieved = tierData?.achieved ?? false;
                         const dests = tierData?.destinations ?? [];
                         const noDestSet = dests.length === 0;
+                        const TierIcon = meta.IconComponent;
 
                         return (
                             <div
                                 key={meta.tierNumber}
-                                className={`rounded-2xl border ${meta.border} overflow-hidden shadow-sm transition-all ${achieved ? "ring-2 ring-green-400 ring-offset-1" : ""}`}
+                                className={`rounded-md border ${meta.border} overflow-hidden shadow-xs transition-all ${achieved ? "ring-2 ring-green-400 ring-offset-1" : ""}`}
                             >
                                 {/* Header */}
                                 <div className={`bg-gradient-to-r ${meta.gradient} p-4 text-white relative`}>
                                     <div className="flex items-start justify-between">
                                         <div>
-                                            <span className="text-2xl">{meta.icon}</span>
+                                            <div className="p-2 rounded-md bg-white/20 w-fit mb-1">
+                                                <TierIcon size={20} className="text-white" />
+                                            </div>
                                             <p className="text-sm font-bold mt-1">{meta.label}</p>
                                             <div className="flex items-center gap-1 mt-0.5">
                                                 <Users size={12} className="opacity-80" />
@@ -282,32 +285,6 @@ export default function UserTravelPage() {
                         );
                     })}
                 </div>
-            </div>
-
-            {/* How it works */}
-            <div className="card p-5 border border-blue-100 bg-blue-50/40">
-                <div className="flex items-center gap-2 mb-3">
-                    <TrendingUp size={16} className="text-blue-600" />
-                    <h3 className="font-bold text-blue-800 text-sm">How Travel Eligibility Works</h3>
-                </div>
-                <ul className="space-y-2 text-sm text-blue-700">
-                    <li className="flex items-start gap-2">
-                        <span className="mt-0.5 shrink-0 w-4 h-4 rounded-full bg-blue-200 text-blue-700 flex items-center justify-center text-[10px] font-bold">1</span>
-                        Eligibility is calculated every month based on your <strong>direct referrals</strong> who activated their account for the first time this month.
-                    </li>
-                    <li className="flex items-start gap-2">
-                        <span className="mt-0.5 shrink-0 w-4 h-4 rounded-full bg-blue-200 text-blue-700 flex items-center justify-center text-[10px] font-bold">2</span>
-                        Achieve <strong>500</strong> new active referrals to unlock Tier 1 destinations.
-                    </li>
-                    <li className="flex items-start gap-2">
-                        <span className="mt-0.5 shrink-0 w-4 h-4 rounded-full bg-blue-200 text-blue-700 flex items-center justify-center text-[10px] font-bold">3</span>
-                        Achieve <strong>5,000</strong> for international Tier 2 rewards, and <strong>20,000</strong> for the prestigious Umrah/Hajj package (Tier 3).
-                    </li>
-                    <li className="flex items-start gap-2">
-                        <span className="mt-0.5 shrink-0 w-4 h-4 rounded-full bg-blue-200 text-blue-700 flex items-center justify-center text-[10px] font-bold">4</span>
-                        Destinations are set by admin each month. Check back regularly!
-                    </li>
-                </ul>
             </div>
         </div>
     );

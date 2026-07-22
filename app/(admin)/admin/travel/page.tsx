@@ -130,7 +130,7 @@ export default function AdminTravelPage() {
             {/* Header */}
             <div className="mb-8">
                 <div className="flex items-center gap-3 mb-2">
-                    <div className="p-2.5 rounded-xl bg-indigo-600 shadow-lg shadow-indigo-200">
+                    <div className="p-2.5 rounded-md bg-indigo-600 shadow-sm">
                         <Plane size={22} className="text-white" />
                     </div>
                     <div>
@@ -144,7 +144,7 @@ export default function AdminTravelPage() {
 
             {/* Success Toast */}
             {successMsg && (
-                <div className="mb-6 flex items-center gap-2 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl text-sm font-medium animate-pulse">
+                <div className="mb-6 flex items-center gap-2 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-md text-sm font-medium animate-pulse">
                     <CheckCircle2 size={16} />
                     {successMsg}
                 </div>
@@ -154,24 +154,24 @@ export default function AdminTravelPage() {
             <div className="mb-8 flex items-center justify-center gap-4">
                 <button
                     onClick={prevMonth}
-                    className="p-2 rounded-full bg-white border border-slate-200 shadow-sm hover:bg-slate-50 transition-colors"
+                    className="p-2 rounded-full bg-white border border-slate-200 shadow-xs hover:bg-slate-50 transition-colors"
                 >
                     <ChevronLeft size={18} className="text-slate-600" />
                 </button>
-                <div className="bg-white border border-slate-200 rounded-2xl px-8 py-3 shadow-sm text-center min-w-[180px]">
+                <div className="bg-white border border-slate-200 rounded-md px-8 py-3 shadow-xs text-center min-w-[180px]">
                     <p className="text-lg font-bold text-slate-800">{MONTHS[month - 1]}</p>
                     <p className="text-sm text-slate-500">{year}</p>
                 </div>
                 <button
                     onClick={nextMonth}
-                    className="p-2 rounded-full bg-white border border-slate-200 shadow-sm hover:bg-slate-50 transition-colors"
+                    className="p-2 rounded-full bg-white border border-slate-200 shadow-xs hover:bg-slate-50 transition-colors"
                 >
                     <ChevronRight size={18} className="text-slate-600" />
                 </button>
             </div>
 
             {/* Info Box */}
-            <div className="mb-6 flex gap-2 items-start bg-blue-50 border border-blue-100 rounded-xl px-4 py-3 text-sm text-blue-700">
+            <div className="mb-6 flex gap-2 items-start bg-blue-50 border border-blue-100 rounded-md px-4 py-3 text-sm text-blue-700">
                 <Info size={15} className="mt-0.5 shrink-0" />
                 <span>
                     Eligibility is based on <strong>direct referrals</strong> who activated their account for the first time this month.
@@ -195,7 +195,7 @@ export default function AdminTravelPage() {
                         return (
                             <div
                                 key={config.tierNumber}
-                                className={`bg-white rounded-2xl border ${config.borderColor} shadow-sm overflow-hidden`}
+                                className={`bg-white rounded-md border ${config.borderColor} shadow-xs overflow-hidden`}
                             >
                                 {/* Card header */}
                                 <div className={`${config.headerBg} px-5 py-4 border-b ${config.borderColor}`}>
