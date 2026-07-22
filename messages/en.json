@@ -321,8 +321,8 @@
       "active": "Active",
       "inactive": "Inactive"
     },
-    "heading": "Dashboard Overview",
-    "subheading": "Your account information at a glance",
+    "heading": "Overview",
+    "subheading": "",
     "alert": {
       "inactive": {
         "title": "Activate Your Account",
@@ -708,6 +708,9 @@
     "heading": "System Notifications",
     "subheading": "Recent updates and activities on your account",
     "markAllRead": "Mark All as Read",
+    "clearAll": "Clear All Notifications",
+    "clear": "Clear",
+    "confirmClearAll": "Are you sure you want to clear all notifications?",
     "empty": "No notifications.",
     "prev": "Previous",
     "next": "Next",

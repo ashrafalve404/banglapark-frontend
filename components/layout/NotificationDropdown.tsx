@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Bell, Check, Loader2 } from "lucide-react";
+import { Bell, Check, Loader2, Trash2, X } from "lucide-react";
 import { notificationsApi } from "@/lib/api/notifications";
 import Link from "next/link";
 import { useLocale } from "@/lib/i18n";
@@ -69,6 +69,22 @@ export function NotificationDropdown({ isAdmin = false }: NotificationDropdownPr
         },
     });
 
+    const clearAllMutation = useMutation({
+        mutationFn: () => notificationsApi.clearAll(),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["notifications-dropdown"] });
+            queryClient.invalidateQueries({ queryKey: ["notifications"] });
+        },
+    });
+
+    const deleteMutation = useMutation({
+        mutationFn: (id: string) => notificationsApi.delete(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["notifications-dropdown"] });
+            queryClient.invalidateQueries({ queryKey: ["notifications"] });
+        },
+    });
+
     return (
         <div className="relative" ref={dropdownRef}>
             <button
@@ -92,45 +108,69 @@ export function NotificationDropdown({ isAdmin = false }: NotificationDropdownPr
                         <span className="text-sm font-semibold text-slate-800">
                             {locale === "bn" ? "নোটিফিকেশন" : "Notifications"}
                         </span>
-                        {unreadCount > 0 && (
-                            <button
-                                onClick={() => markAllReadMutation.mutate()}
-                                className="text-xs text-green-700 hover:text-green-800 font-medium inline-flex items-center gap-1"
-                                disabled={markAllReadMutation.isPending}
-                            >
-                                {markAllReadMutation.isPending ? (
-                                    <Loader2 className="h-3 w-3 animate-spin" />
-                                ) : (
-                                    <>
-                                        <Check className="h-3 w-3" />
-                                        {locale === "bn" ? "সব পঠিত চিহ্নিত করুন" : "Mark all read"}
-                                    </>
-                                )}
-                            </button>
-                        )}
+                        <div className="flex items-center gap-2">
+                            {unreadCount > 0 && (
+                                <button
+                                    onClick={() => markAllReadMutation.mutate()}
+                                    className="text-xs text-green-700 hover:text-green-800 font-medium inline-flex items-center gap-1"
+                                    disabled={markAllReadMutation.isPending}
+                                    title={locale === "bn" ? "সব পঠিত চিহ্নিত করুন" : "Mark all read"}
+                                >
+                                    {markAllReadMutation.isPending ? (
+                                        <Loader2 className="h-3 w-3 animate-spin" />
+                                    ) : (
+                                        <>
+                                            <Check className="h-3 w-3" />
+                                            {locale === "bn" ? "সব পঠিত" : "Mark read"}
+                                        </>
+                                    )}
+                                </button>
+                            )}
+                            {notifications.length > 0 && (
+                                <button
+                                    onClick={() => {
+                                        if (confirm(locale === "bn" ? "আপনি কি নিশ্চিত যে সব নোটিফিকেশন মুছে ফেলতে চান?" : "Clear all notifications?")) {
+                                            clearAllMutation.mutate();
+                                        }
+                                    }}
+                                    className="text-xs text-red-600 hover:text-red-700 font-medium inline-flex items-center gap-1"
+                                    disabled={clearAllMutation.isPending}
+                                    title={locale === "bn" ? "সব নোটিফিকেশন মুছুন" : "Clear All"}
+                                >
+                                    {clearAllMutation.isPending ? (
+                                        <Loader2 className="h-3 w-3 animate-spin" />
+                                    ) : (
+                                        <>
+                                            <Trash2 className="h-3 w-3" />
+                                            {locale === "bn" ? "মুছুন" : "Clear"}
+                                        </>
+                                    )}
+                                </button>
+                            )}
+                        </div>
                     </div>
 
                     {/* Notification list */}
                     <div className="max-h-80 overflow-y-auto divide-y divide-slate-100">
                         {notifications.length === 0 ? (
                             <div className="py-8 text-center text-slate-400 text-xs">
-                                {locale === "bn" ? "কোনো নোটিফিকেশন নেই" : "No new notifications"}
+                                {locale === "bn" ? "কোনো নোটিফিকেশন নেই" : "No notifications"}
                             </div>
                         ) : (
                             notifications.map((notif) => (
                                 <div
                                     key={notif.id}
+                                    className={`p-3 pr-4 transition-colors cursor-pointer text-left hover:bg-slate-50/50 flex gap-2.5 items-start relative group ${notif.isRead ? "bg-white" : "bg-green-50/20 border-l-2 border-l-green-700"
+                                        }`}
                                     onClick={() => {
                                         if (!notif.isRead) {
                                             markReadMutation.mutate(notif.id);
                                         }
                                     }}
-                                    className={`p-3 pr-4 transition-colors cursor-pointer text-left hover:bg-slate-50/50 flex gap-2.5 items-start ${notif.isRead ? "bg-white" : "bg-green-50/20 border-l-2 border-l-green-700"
-                                        }`}
                                 >
                                     <div className="min-w-0 flex-1">
                                         <div className="flex justify-between items-baseline gap-2 mb-0.5">
-                                            <p className={`text-xs truncate ${notif.isRead ? "text-slate-700 font-medium" : "text-slate-900 font-bold"}`}>
+                                            <p className={`text-xs truncate pr-4 ${notif.isRead ? "text-slate-700 font-medium" : "text-slate-900 font-bold"}`}>
                                                 {notif.title}
                                             </p>
                                             <span className="text-[9px] text-slate-400 whitespace-nowrap">
@@ -141,9 +181,16 @@ export function NotificationDropdown({ isAdmin = false }: NotificationDropdownPr
                                             {notif.body}
                                         </p>
                                     </div>
-                                    {!notif.isRead && (
-                                        <span className="h-2 w-2 rounded-full bg-green-700 self-center shrink-0" />
-                                    )}
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            deleteMutation.mutate(notif.id);
+                                        }}
+                                        className="text-slate-300 hover:text-red-600 p-0.5 rounded transition-colors self-center shrink-0"
+                                        title={locale === "bn" ? "মুছুন" : "Delete"}
+                                    >
+                                        <X className="h-3.5 w-3.5" />
+                                    </button>
                                 </div>
                             ))
                         )}
