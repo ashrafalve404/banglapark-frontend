@@ -35,10 +35,10 @@ export function DashboardSidebar({ onClose, mobile }: DashboardSidebarProps) {
         { href: "/dashboard/orders", label: t("nav.orders"), icon: ShoppingBag },
         { href: "/dashboard/referrals", label: t("nav.referrals"), icon: Users },
         { href: "/dashboard/position", label: t("nav.position"), icon: Award },
+        { href: "/dashboard/travel", label: t("nav.travel"), icon: Plane },
         { href: "/dashboard/withdraw", label: t("nav.withdraw"), icon: ArrowDownToLine },
         { href: "/dashboard/statement", label: t("nav.statement"), icon: FileText },
         { href: "/dashboard/notifications", label: t("nav.notifications"), icon: Bell },
-        { href: "/dashboard/travel", label: t("nav.travel"), icon: Plane },
     ];
 
     return (

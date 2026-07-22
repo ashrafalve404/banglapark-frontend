@@ -7,12 +7,13 @@ import {
     Plane, Plus, Trash2, Save, ChevronLeft, ChevronRight,
     MapPin, Users, CheckCircle2, XCircle, Loader2, Info
 } from "lucide-react";
+import { useLocale } from "@/lib/i18n";
 
 const TIER_CONFIG = [
     {
         tierNumber: 1,
         minMembers: 500,
-        label: "Tier 1 — Bronze",
+        labelKey: "travel.bronzeTraveler",
         badgeColor: "bg-amber-100 text-amber-800 border-amber-200",
         iconBg: "bg-amber-50",
         iconColor: "text-amber-600",
@@ -22,7 +23,7 @@ const TIER_CONFIG = [
     {
         tierNumber: 2,
         minMembers: 5000,
-        label: "Tier 2 — Silver",
+        labelKey: "travel.silverTraveler",
         badgeColor: "bg-slate-100 text-slate-700 border-slate-200",
         iconBg: "bg-slate-50",
         iconColor: "text-slate-500",
@@ -32,7 +33,7 @@ const TIER_CONFIG = [
     {
         tierNumber: 3,
         minMembers: 20000,
-        label: "Tier 3 — Gold",
+        labelKey: "travel.goldTraveler",
         badgeColor: "bg-yellow-100 text-yellow-800 border-yellow-200",
         iconBg: "bg-yellow-50",
         iconColor: "text-yellow-600",
@@ -41,12 +42,18 @@ const TIER_CONFIG = [
     },
 ];
 
-const MONTHS = [
+const MONTHS_EN = [
     "January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December",
 ];
 
+const MONTHS_BN = [
+    "জানুয়ারি", "ফেব্রুয়ারি", "মার্চ", "এপ্রিল", "মে", "জুন",
+    "জুলাই", "আগস্ট", "সেপ্টেম্বর", "অক্টোবর", "নভেম্বর", "ডিসেম্বর",
+];
+
 export default function AdminTravelPage() {
+    const { t, locale } = useLocale();
     const now = new Date();
     const [month, setMonth] = useState(now.getMonth() + 1);
     const [year, setYear] = useState(now.getFullYear());
@@ -56,6 +63,7 @@ export default function AdminTravelPage() {
     const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
     const queryClient = useQueryClient();
+    const monthName = locale === "bn" ? MONTHS_BN[month - 1] : MONTHS_EN[month - 1];
 
     const { data: tiers = [], isLoading } = useQuery({
         queryKey: ["admin-travel-tiers", month, year],
@@ -126,17 +134,17 @@ export default function AdminTravelPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/20 p-4 md:p-8">
+        <div className="min-h-screen bg-slate-50/50 p-4 md:p-8">
             {/* Header */}
             <div className="mb-8">
                 <div className="flex items-center gap-3 mb-2">
-                    <div className="p-2.5 rounded-md bg-indigo-600 shadow-sm">
+                    <div className="p-2.5 rounded-md bg-indigo-600 shadow-xs">
                         <Plane size={22} className="text-white" />
                     </div>
                     <div>
-                        <h1 className="text-2xl font-bold text-slate-800">Travel Management</h1>
+                        <h1 className="text-2xl font-bold text-slate-800">{t("travel.adminTitle")}</h1>
                         <p className="text-sm text-slate-500 mt-0.5">
-                            Set monthly travel reward destinations for each eligibility tier
+                            {t("travel.adminSubtitle")}
                         </p>
                     </div>
                 </div>
@@ -159,7 +167,7 @@ export default function AdminTravelPage() {
                     <ChevronLeft size={18} className="text-slate-600" />
                 </button>
                 <div className="bg-white border border-slate-200 rounded-md px-8 py-3 shadow-xs text-center min-w-[180px]">
-                    <p className="text-lg font-bold text-slate-800">{MONTHS[month - 1]}</p>
+                    <p className="text-lg font-bold text-slate-800">{monthName}</p>
                     <p className="text-sm text-slate-500">{year}</p>
                 </div>
                 <button
@@ -174,8 +182,7 @@ export default function AdminTravelPage() {
             <div className="mb-6 flex gap-2 items-start bg-blue-50 border border-blue-100 rounded-md px-4 py-3 text-sm text-blue-700">
                 <Info size={15} className="mt-0.5 shrink-0" />
                 <span>
-                    Eligibility is based on <strong>direct referrals</strong> who activated their account for the first time this month.
-                    Set destinations below for each tier. Users who qualify will see their rewards in their dashboard.
+                    {t("travel.infoText")}
                 </span>
             </div>
 
@@ -190,7 +197,6 @@ export default function AdminTravelPage() {
                         const tierData = tiers.find((t) => t.tierNumber === config.tierNumber);
                         const currentDests = tierData?.destinations ?? [];
                         const isEditing = editingTier === config.tierNumber;
-                        const editDests = destinationInputs[config.tierNumber] ?? currentDests;
 
                         return (
                             <div
@@ -201,28 +207,28 @@ export default function AdminTravelPage() {
                                 <div className={`${config.headerBg} px-5 py-4 border-b ${config.borderColor}`}>
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center gap-3">
-                                            <div className={`p-2 rounded-lg ${config.iconBg}`}>
+                                            <div className={`p-2 rounded-md ${config.iconBg}`}>
                                                 <Plane size={18} className={config.iconColor} />
                                             </div>
                                             <div>
                                                 <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
-                                                    {config.label}
+                                                    {t(config.labelKey)}
                                                 </p>
-                                                <div className="flex items-center gap-1.5 mt-0.5">
+                                                <div className="flex items-center gap-1 mt-0.5">
                                                     <Users size={13} className="text-slate-400" />
                                                     <span className="text-sm font-bold text-slate-700">
-                                                        {config.minMembers.toLocaleString()}+ members/month
+                                                        {t("travel.newMembersCount", { count: config.minMembers.toLocaleString() })}
                                                     </span>
                                                 </div>
                                             </div>
                                         </div>
                                         {currentDests.length > 0 ? (
                                             <span className="flex items-center gap-1 text-xs font-medium text-green-600 bg-green-50 border border-green-200 px-2 py-0.5 rounded-full">
-                                                <CheckCircle2 size={11} /> Active
+                                                <CheckCircle2 size={11} /> {t("travel.active")}
                                             </span>
                                         ) : (
                                             <span className="flex items-center gap-1 text-xs font-medium text-slate-400 bg-slate-50 border border-slate-200 px-2 py-0.5 rounded-full">
-                                                <XCircle size={11} /> Empty
+                                                <XCircle size={11} /> {t("travel.empty")}
                                             </span>
                                         )}
                                     </div>
@@ -234,7 +240,7 @@ export default function AdminTravelPage() {
                                         <>
                                             {currentDests.length === 0 ? (
                                                 <p className="text-sm text-slate-400 italic mb-4">
-                                                    No destinations set for this month.
+                                                    {t("travel.noDestinationsAdmin")}
                                                 </p>
                                             ) : (
                                                 <ul className="space-y-2 mb-4">
@@ -252,15 +258,15 @@ export default function AdminTravelPage() {
                                             <div className="flex gap-2">
                                                 <button
                                                     onClick={() => startEdit(config.tierNumber, currentDests)}
-                                                    className="flex-1 flex items-center justify-center gap-1.5 text-sm font-medium bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2 rounded-lg transition-colors"
+                                                    className="flex-1 flex items-center justify-center gap-1.5 text-sm font-medium bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2 rounded-md transition-colors"
                                                 >
-                                                    <Plus size={14} /> Edit Destinations
+                                                    <Plus size={14} /> {t("travel.editDestinations")}
                                                 </button>
                                                 {currentDests.length > 0 && (
                                                     <button
                                                         onClick={() => clearMutation.mutate({ tierNumber: config.tierNumber })}
                                                         disabled={clearMutation.isPending}
-                                                        className="p-2 rounded-lg text-red-500 hover:bg-red-50 border border-red-100 transition-colors"
+                                                        className="p-2 rounded-md text-red-500 hover:bg-red-50 border border-red-100 transition-colors"
                                                     >
                                                         {clearMutation.isPending ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
                                                     </button>
@@ -271,10 +277,10 @@ export default function AdminTravelPage() {
                                         <>
                                             {/* Destination pills editor */}
                                             <div className="space-y-2 mb-3">
-                                                {editDests.map((d, i) => (
+                                                {(destinationInputs[config.tierNumber] ?? currentDests).map((d, i) => (
                                                     <div
                                                         key={i}
-                                                        className="flex items-center justify-between bg-slate-50 border border-slate-200 rounded-lg px-3 py-1.5"
+                                                        className="flex items-center justify-between bg-slate-50 border border-slate-200 rounded-md px-3 py-1.5"
                                                     >
                                                         <span className="text-sm text-slate-700 flex items-center gap-1.5">
                                                             <MapPin size={12} className={config.iconColor} /> {d}
@@ -300,12 +306,12 @@ export default function AdminTravelPage() {
                                                         }))
                                                     }
                                                     onKeyDown={(e) => e.key === "Enter" && addDest(config.tierNumber)}
-                                                    placeholder="Enter destination name..."
-                                                    className="flex-1 text-sm border border-slate-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent"
+                                                    placeholder={t("travel.enterDestination")}
+                                                    className="flex-1 text-sm border border-slate-200 rounded-md px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent"
                                                 />
                                                 <button
                                                     onClick={() => addDest(config.tierNumber)}
-                                                    className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-medium"
+                                                    className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-md text-sm font-medium"
                                                 >
                                                     <Plus size={14} />
                                                 </button>
@@ -314,16 +320,16 @@ export default function AdminTravelPage() {
                                                 <button
                                                     onClick={() => saveEdit(config.tierNumber)}
                                                     disabled={upsertMutation.isPending}
-                                                    className="flex-1 flex items-center justify-center gap-1.5 text-sm font-semibold bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg transition-colors"
+                                                    className="flex-1 flex items-center justify-center gap-1.5 text-sm font-semibold bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-md transition-colors"
                                                 >
                                                     {upsertMutation.isPending ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
-                                                    Save
+                                                    {t("travel.save")}
                                                 </button>
                                                 <button
                                                     onClick={() => setEditingTier(null)}
-                                                    className="px-3 py-2 border border-slate-200 text-slate-600 hover:bg-slate-50 rounded-lg text-sm font-medium"
+                                                    className="px-3 py-2 border border-slate-200 text-slate-600 hover:bg-slate-50 rounded-md text-sm font-medium"
                                                 >
-                                                    Cancel
+                                                    {t("travel.cancel")}
                                                 </button>
                                             </div>
                                         </>
