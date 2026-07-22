@@ -483,7 +483,7 @@ export default function HomePage() {
 
                         <p className="text-base sm:text-xl font-bold tracking-widest text-slate-700 uppercase mb-8 flex items-center justify-center gap-2">
                             <Users className="w-5 h-5 text-red-700" />
-                            <span>{locale === "en" ? "Distributors & Partners" : "ডিস্ট্রিবিউটর ও পার্টনার"}</span>
+                            <span>{locale === "en" ? "Digital marketing partner" : "ডিজিটাল মার্কেটিং পার্টনার"}</span>
                         </p>
 
                         {/* Tagline Card */}

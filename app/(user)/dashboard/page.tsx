@@ -42,7 +42,7 @@ export default function DashboardOverview() {
     const isInactive = user?.status === "INACTIVE";
 
     // 2-column mobile / responsive PC grid buttons ordered: Quiz, Daily Work, Travel, Wallet, Orders, Referrals, Monthly Salary, Withdraw, Profile
-    // Quiz, Daily Work & Travel use custom badge images without icon box background.
+    // Mobile / PC grid buttons with 1:1 aspect ratio matching image graphics
     const quickAppItems: Array<{
         href: string;
         label: string;
@@ -71,16 +71,47 @@ export default function DashboardOverview() {
             badge: "New",
         },
         {
-            href: "/dashboard/wallet",
-            label: t("nav.wallet"),
-            icon: Wallet,
-            cardBg: "bg-green-200 text-green-950 border-green-300 hover:bg-green-300",
+            href: "/shop",
+            label: t("nav.buyProduct"),
+            image: "/images/buy product.png",
+            cardBg: "bg-orange-200 text-orange-950 border-orange-300 hover:bg-orange-300",
+        },
+        {
+            href: "#",
+            label: t("nav.productSell"),
+            image: "/images/productsell.png",
+            cardBg: "bg-cyan-200 text-cyan-950 border-cyan-300 hover:bg-cyan-300",
+        },
+        {
+            href: "#",
+            label: t("nav.myOffers"),
+            image: "/images/myoffer.png",
+            cardBg: "bg-pink-200 text-pink-950 border-pink-300 hover:bg-pink-300",
         },
         {
             href: "/dashboard/orders",
             label: t("nav.orders"),
-            icon: ShoppingBag,
+            image: "/images/orderimg.png",
             cardBg: "bg-amber-200 text-amber-950 border-amber-300 hover:bg-amber-300",
+        },
+        {
+            href: "/dashboard/position",
+            label: t("nav.position"), // Displays "Monthly Salary" / "মাসিক সেলারি"
+            image: "/images/salrymonthly.png",
+            cardBg: "bg-yellow-200 text-yellow-950 border-yellow-300 hover:bg-yellow-300",
+            badge: "Hot",
+        },
+        {
+            href: "/dashboard/profile",
+            label: t("nav.profile"),
+            image: "/images/profile.png",
+            cardBg: "bg-blue-200 text-blue-950 border-blue-300 hover:bg-blue-300",
+        },
+        {
+            href: "/dashboard/wallet",
+            label: t("nav.wallet"),
+            icon: Wallet,
+            cardBg: "bg-green-200 text-green-950 border-green-300 hover:bg-green-300",
         },
         {
             href: "/dashboard/referrals",
@@ -89,23 +120,10 @@ export default function DashboardOverview() {
             cardBg: "bg-teal-200 text-teal-950 border-teal-300 hover:bg-teal-300",
         },
         {
-            href: "/dashboard/position",
-            label: t("nav.position"), // Displays "Monthly Salary" / "মাসিক সেলারি"
-            icon: Award,
-            cardBg: "bg-yellow-200 text-yellow-950 border-yellow-300 hover:bg-yellow-300",
-            badge: "Hot",
-        },
-        {
             href: "/dashboard/withdraw",
             label: t("nav.withdraw"),
             icon: ArrowDownToLine,
             cardBg: "bg-rose-200 text-rose-950 border-rose-300 hover:bg-rose-300",
-        },
-        {
-            href: "/dashboard/profile",
-            label: t("nav.profile"),
-            icon: User,
-            cardBg: "bg-blue-200 text-blue-950 border-blue-300 hover:bg-blue-300",
         },
     ];
 
@@ -151,8 +169,11 @@ export default function DashboardOverview() {
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 sm:gap-5">
                     {quickAppItems.map((item) => (
                         <Link
-                            key={item.href}
+                            key={item.label}
                             href={item.href}
+                            onClick={(e) => {
+                                if (item.href === "#") e.preventDefault();
+                            }}
                             className="group flex flex-col items-center text-center focus:outline-none"
                         >
                             {/* Card Box — 1:1 Aspect Square */}
