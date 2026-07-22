@@ -197,41 +197,51 @@ export function Header() {
                                 </form>
                             </div>
 
-                            <div className="py-2">
-                                <Link href="/" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-none">
+                            <div className="divide-y divide-slate-100">
+                                <Link href="/" onClick={() => setMenuOpen(false)} className="flex items-center px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors border-b border-slate-100">
                                     {t("nav.home")}
                                 </Link>
-                                <Link href="/shop" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-none">
+                                <Link href="/shop" onClick={() => setMenuOpen(false)} className="flex items-center px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors border-b border-slate-100">
                                     {t("nav.shop")}
                                 </Link>
-                                {categories.length > 0 && (
-                                    <div className="border-t border-gray-50 mt-1 pt-1">
-                                        <p className="px-4 py-1.5 text-[10px] font-bold text-gray-400 uppercase tracking-wider">{t("nav.category")}</p>
-                                        {categories.map((cat) => (
-                                            <Link key={cat.id} href={`/shop?categoryId=${cat.id}`} onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-4 py-2 text-sm text-gray-600 hover:bg-gray-50 rounded-none">
-                                                {cat.name}
-                                            </Link>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-
-                            <div className="border-t border-gray-100 mt-1 pt-1">
+                                {categories.length > 0 && categories.map((cat) => (
+                                    <Link key={cat.id} href={`/shop?categoryId=${cat.id}`} onClick={() => setMenuOpen(false)} className="flex items-center px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors border-b border-slate-100">
+                                        {cat.name}
+                                    </Link>
+                                ))}
                                 {isAuthenticated ? (
                                     <>
-                                        <p className="px-4 py-1.5 text-[10px] font-bold text-gray-400 uppercase tracking-wider">{t("nav.account")}</p>
-                                        <Link href="/dashboard" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-none">{t("nav.mobileDashboard")}</Link>
-                                        <Link href="/dashboard/orders" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-none">{t("nav.orders")}</Link>
+                                        <Link href="/dashboard" onClick={() => setMenuOpen(false)} className="flex items-center px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors border-b border-slate-100">
+                                            {t("nav.mobileDashboard")}
+                                        </Link>
+                                        <Link href="/dashboard/orders" onClick={() => setMenuOpen(false)} className="flex items-center px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors border-b border-slate-100">
+                                            {t("nav.orders")}
+                                        </Link>
+                                        <Link href="/dashboard/notifications" onClick={() => setMenuOpen(false)} className="flex items-center px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors border-b border-slate-100">
+                                            {t("nav.notifications")}
+                                        </Link>
+                                        {(user?.role === "ADMIN" || user?.role === "SUPER_ADMIN") && (
+                                            <Link href="/admin" onClick={() => setMenuOpen(false)} className="flex items-center px-4 py-3 text-sm font-medium text-red-700 hover:bg-red-50 transition-colors border-b border-slate-100">
+                                                {t("nav.adminPanel")}
+                                            </Link>
+                                        )}
+                                        <button onClick={() => { handleLogout(); setMenuOpen(false); }} className="w-full flex items-center px-4 py-3 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors text-left border-b border-slate-100">
+                                            {t("nav.logout")}
+                                        </button>
                                     </>
                                 ) : (
                                     <>
-                                        <Link href="/login" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-none">{t("nav.login")}</Link>
-                                        <Link href="/register" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-green-700 hover:bg-green-50 rounded-none">{t("nav.register")}</Link>
+                                        <Link href="/login" onClick={() => setMenuOpen(false)} className="flex items-center px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors border-b border-slate-100">
+                                            {t("nav.login")}
+                                        </Link>
+                                        <Link href="/register" onClick={() => setMenuOpen(false)} className="flex items-center px-4 py-3 text-sm font-medium text-red-700 hover:bg-red-50 transition-colors border-b border-slate-100">
+                                            {t("nav.register")}
+                                        </Link>
                                     </>
                                 )}
                             </div>
 
-                            <div className="border-t border-gray-100 px-4 py-3">
+                            <div className="px-4 py-3 bg-slate-50/50">
                                 <LocaleSwitcher />
                             </div>
                         </div>
