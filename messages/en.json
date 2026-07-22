@@ -97,7 +97,9 @@
     "noDestinationsAdmin": "No destinations set for this month.",
     "enterDestination": "Enter destination name...",
     "save": "Save",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "monthlyAchievers": "Monthly Travel Achievers",
+    "noAchievers": "No one is eligible currently."
   },
   "home": {
     "badge": "Bangladesh's Trusted E-commerce Platform",

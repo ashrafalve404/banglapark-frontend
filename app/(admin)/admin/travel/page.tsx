@@ -115,9 +115,17 @@ export default function AdminTravelPage() {
     };
 
     const saveEdit = (tierNumber: number) => {
+        let dests = destinationInputs[tierNumber] ?? [];
+        const pendingInput = (newDest[tierNumber] ?? "").trim();
+        if (pendingInput) {
+            dests = [...dests, pendingInput];
+            setDestinationInputs((prev) => ({ ...prev, [tierNumber]: dests }));
+            setNewDest((prev) => ({ ...prev, [tierNumber]: "" }));
+        }
+
         upsertMutation.mutate({
             tierNumber,
-            destinations: destinationInputs[tierNumber] ?? [],
+            destinations: dests,
             month,
             year,
         });

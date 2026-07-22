@@ -39,6 +39,19 @@ export const travelApi = {
         return res.data;
     },
 
+    getAchievers: async (month: number, year: number): Promise<Array<{
+        id: string;
+        name: string;
+        phone: string;
+        email: string;
+        memberId?: number;
+        monthlyNewActiveCount: number;
+        tierNumber: number;
+    }>> => {
+        const res = await api.get("/travel/achievers", { params: { month, year } });
+        return res.data;
+    },
+
     // ── Admin ─────────────────────────────────────────────────────────────────
     adminGetTiers: async (month: number, year: number): Promise<TravelTier[]> => {
         const res = await api.get("/travel/admin/tiers", { params: { month, year } });

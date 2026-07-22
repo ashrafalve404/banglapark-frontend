@@ -62,6 +62,12 @@ export default function UserTravelPage() {
         refetchOnWindowFocus: true,
     });
 
+    const { data: achievers = [], isLoading: achieversLoading } = useQuery({
+        queryKey: ["travel-achievers", month, year],
+        queryFn: () => travelApi.getAchievers(month, year),
+        staleTime: 60_000,
+    });
+
     if (isLoading) {
         return (
             <div className="flex items-center justify-center min-h-[60vh]">
@@ -293,6 +299,44 @@ export default function UserTravelPage() {
                         );
                     })}
                 </div>
+            </div>
+
+            {/* Monthly Achievers List */}
+            <div className="card p-5 rounded-md border border-gray-200">
+                <div className="flex items-center gap-2 mb-4">
+                    <Trophy size={18} className="text-amber-600" />
+                    <h3 className="font-bold text-gray-800 text-base">{t("travel.monthlyAchievers")}</h3>
+                </div>
+
+                {achieversLoading ? (
+                    <div className="py-8 text-center text-gray-400">
+                        <Loader2 size={24} className="animate-spin mx-auto text-indigo-500" />
+                    </div>
+                ) : achievers.length === 0 ? (
+                    <div className="py-8 text-center bg-gray-50 border border-dashed border-gray-200 rounded-md">
+                        <p className="text-sm text-gray-500 font-medium">{t("travel.noAchievers")}</p>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                        {achievers.map((achiever) => {
+                            const meta = TIER_META.find((t) => t.tierNumber === achiever.tierNumber);
+                            const IconComp = meta?.IconComponent ?? Trophy;
+                            return (
+                                <div key={achiever.id} className="flex items-center gap-3 p-3 bg-slate-50 border border-slate-200 rounded-md">
+                                    <div className="p-2 rounded-md bg-amber-500 text-white shrink-0">
+                                        <IconComp size={18} />
+                                    </div>
+                                    <div className="overflow-hidden">
+                                        <p className="text-sm font-bold text-gray-900 truncate">{achiever.name}</p>
+                                        <p className="text-xs text-gray-500">
+                                            {t(meta?.labelKey ?? "")} • {achiever.monthlyNewActiveCount.toLocaleString()} {t("travel.members")}
+                                        </p>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                )}
             </div>
         </div>
     );
