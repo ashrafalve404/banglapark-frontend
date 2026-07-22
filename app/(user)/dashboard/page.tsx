@@ -146,7 +146,7 @@ export default function DashboardOverview() {
                 </div>
             ) : null}
 
-            {/* Action Grid — Responsive grid (2 cols mobile, 3-4 cols PC) with full uncropped images & labels under the card */}
+            {/* Action Grid — 1:1 Aspect Square Buttons matching image dimensions with full cover & labels under the card */}
             <div className="max-w-4xl">
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 sm:gap-5">
                     {quickAppItems.map((item) => (
@@ -155,9 +155,9 @@ export default function DashboardOverview() {
                             href={item.href}
                             className="group flex flex-col items-center text-center focus:outline-none"
                         >
-                            {/* Card Box */}
+                            {/* Card Box — 1:1 Aspect Square */}
                             <div
-                                className={`relative w-full h-32 sm:h-36 ${item.cardBg} border rounded-md p-2.5 flex items-center justify-center transition-all duration-200 shadow-xs group-hover:shadow-md active:scale-95 overflow-hidden`}
+                                className={`relative w-full aspect-square ${item.cardBg} border rounded-md p-0 flex items-center justify-center transition-all duration-200 shadow-xs group-hover:shadow-md active:scale-95 overflow-hidden`}
                             >
                                 {item.badge && (
                                     <span className="absolute top-2 right-2 bg-red-600 text-white text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full shadow-md z-10">
@@ -169,7 +169,7 @@ export default function DashboardOverview() {
                                     <img
                                         src={item.image}
                                         alt={item.label}
-                                        className="w-full h-full object-contain p-1 group-hover:scale-105 transition-transform duration-200"
+                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
                                     />
                                 ) : item.icon ? (
                                     <div className="p-3.5 rounded-md bg-[#111c2a] text-white shadow-xs group-hover:scale-105 transition-transform duration-200">
