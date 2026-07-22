@@ -146,36 +146,48 @@ export default function DashboardOverview() {
                 </div>
             ) : null}
 
-            {/* Mobile App-Style Square Action Grid — Responsive grid (2 cols mobile, 3-4 cols PC) to maintain ideal card width */}
+            {/* Mobile App-Style Action Grid — Responsive grid (2 cols mobile, 3-4 cols PC) with full cover images and aligned text labels */}
             <div className="max-w-4xl">
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3.5 sm:gap-4">
                     {quickAppItems.map((item) => (
                         <Link
                             key={item.href}
                             href={item.href}
-                            className={`relative group ${item.cardBg} border rounded-md p-4 sm:p-5 flex flex-col items-center justify-center text-center transition-all duration-200 shadow-xs hover:shadow-sm active:scale-95 min-h-[120px]`}
+                            className={`relative group ${item.cardBg} border rounded-md overflow-hidden flex flex-col justify-between items-center text-center transition-all duration-200 shadow-xs hover:shadow-md active:scale-95 h-36 sm:h-40 p-3`}
                         >
                             {item.badge && (
-                                <span className="absolute top-2 right-2 bg-red-600 text-white text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full shadow-xs z-10">
+                                <span className="absolute top-2 right-2 bg-red-600 text-white text-[9px] font-extrabold uppercase px-2.5 py-0.5 rounded-full shadow-md z-20">
                                     {item.badge}
                                 </span>
                             )}
+
                             {item.image ? (
-                                <div className="w-14 h-14 sm:w-16 sm:h-16 mb-2 flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
-                                    <img
-                                        src={item.image}
-                                        alt={item.label}
-                                        className="w-full h-full object-contain drop-shadow-xs"
-                                    />
-                                </div>
+                                <>
+                                    {/* Full cover image filling cardview */}
+                                    <div className="absolute inset-0 w-full h-full z-0 overflow-hidden bg-white">
+                                        <img
+                                            src={item.image}
+                                            alt={item.label}
+                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                        />
+                                        {/* Bottom gradient overlay to make text label stand out cleanly */}
+                                        <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-slate-950/85 via-slate-950/40 to-transparent z-10" />
+                                    </div>
+                                </>
                             ) : item.icon ? (
-                                <div className="p-3 rounded-md bg-[#111c2a] text-white shadow-xs mb-3 group-hover:scale-105 transition-transform duration-200">
-                                    <item.icon size={24} />
+                                <div className="flex-1 flex items-center justify-center my-auto z-10">
+                                    <div className="p-3 rounded-md bg-[#111c2a] text-white shadow-xs group-hover:scale-105 transition-transform duration-200">
+                                        <item.icon size={26} />
+                                    </div>
                                 </div>
                             ) : null}
-                            <span className="text-sm font-bold tracking-tight">
-                                {item.label}
-                            </span>
+
+                            {/* Text label slot — Aligned at the exact same bottom position across all cards */}
+                            <div className={`w-full z-20 mt-auto pt-1 pb-0.5 text-center ${item.image ? 'text-white drop-shadow-md font-extrabold' : 'text-gray-950 font-bold'}`}>
+                                <span className="text-sm tracking-tight block truncate">
+                                    {item.label}
+                                </span>
+                            </div>
                         </Link>
                     ))}
                 </div>
