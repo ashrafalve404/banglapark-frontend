@@ -41,20 +41,34 @@ export default function DashboardOverview() {
     const isExpiringSoon = activeDays > 0 && activeDays <= 5;
     const isInactive = user?.status === "INACTIVE";
 
-    // 2-column grid buttons ordered: Quiz, Daily Work, Wallet, Orders, Referrals, Monthly Salary, Travel, Withdraw, Profile
-    // Solid background colors, dark icons (#111c2a), rounded-md matching site cardviews
-    const quickAppItems = [
+    // 2-column mobile / responsive PC grid buttons ordered: Quiz, Daily Work, Travel, Wallet, Orders, Referrals, Monthly Salary, Withdraw, Profile
+    // Quiz, Daily Work & Travel use custom badge images without icon box background.
+    const quickAppItems: Array<{
+        href: string;
+        label: string;
+        icon?: any;
+        image?: string;
+        cardBg: string;
+        badge?: string;
+    }> = [
         {
             href: "/dashboard/quiz",
             label: t("nav.quiz"),
-            icon: HelpCircle,
+            image: "/images/quiz.png",
             cardBg: "bg-purple-200 text-purple-950 border-purple-300 hover:bg-purple-300",
         },
         {
             href: "/dashboard/daily-work",
             label: t("nav.dailyWork"),
-            icon: Briefcase,
+            image: "/images/dailywork.png",
             cardBg: "bg-emerald-200 text-emerald-950 border-emerald-300 hover:bg-emerald-300",
+        },
+        {
+            href: "/dashboard/travel",
+            label: t("nav.travel"),
+            image: "/images/trveling.png",
+            cardBg: "bg-indigo-200 text-indigo-950 border-indigo-300 hover:bg-indigo-300",
+            badge: "New",
         },
         {
             href: "/dashboard/wallet",
@@ -80,13 +94,6 @@ export default function DashboardOverview() {
             icon: Award,
             cardBg: "bg-yellow-200 text-yellow-950 border-yellow-300 hover:bg-yellow-300",
             badge: "Hot",
-        },
-        {
-            href: "/dashboard/travel",
-            label: t("nav.travel"),
-            icon: Plane,
-            cardBg: "bg-indigo-200 text-indigo-950 border-indigo-300 hover:bg-indigo-300",
-            badge: "New",
         },
         {
             href: "/dashboard/withdraw",
@@ -139,23 +146,33 @@ export default function DashboardOverview() {
                 </div>
             ) : null}
 
-            {/* Mobile App-Style Square Action Grid — Exactly 2 Columns with standard site rounded-md corners & dark footer-style icons */}
-            <div>
-                <div className="grid grid-cols-2 gap-4">
+            {/* Mobile App-Style Square Action Grid — Responsive grid (2 cols mobile, 3-4 cols PC) to maintain ideal card width */}
+            <div className="max-w-4xl">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3.5 sm:gap-4">
                     {quickAppItems.map((item) => (
                         <Link
                             key={item.href}
                             href={item.href}
-                            className={`relative group ${item.cardBg} border rounded-md p-5 flex flex-col items-center justify-center text-center transition-all duration-200 shadow-xs hover:shadow-sm active:scale-95`}
+                            className={`relative group ${item.cardBg} border rounded-md p-4 sm:p-5 flex flex-col items-center justify-center text-center transition-all duration-200 shadow-xs hover:shadow-sm active:scale-95 min-h-[120px]`}
                         >
                             {item.badge && (
-                                <span className="absolute top-2.5 right-2.5 bg-red-600 text-white text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full shadow-xs">
+                                <span className="absolute top-2 right-2 bg-red-600 text-white text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full shadow-xs z-10">
                                     {item.badge}
                                 </span>
                             )}
-                            <div className="p-3 rounded-md bg-[#111c2a] text-white shadow-xs mb-3 group-hover:scale-105 transition-transform duration-200">
-                                <item.icon size={24} />
-                            </div>
+                            {item.image ? (
+                                <div className="w-14 h-14 sm:w-16 sm:h-16 mb-2 flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
+                                    <img
+                                        src={item.image}
+                                        alt={item.label}
+                                        className="w-full h-full object-contain drop-shadow-xs"
+                                    />
+                                </div>
+                            ) : item.icon ? (
+                                <div className="p-3 rounded-md bg-[#111c2a] text-white shadow-xs mb-3 group-hover:scale-105 transition-transform duration-200">
+                                    <item.icon size={24} />
+                                </div>
+                            ) : null}
                             <span className="text-sm font-bold tracking-tight">
                                 {item.label}
                             </span>

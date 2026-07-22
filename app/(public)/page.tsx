@@ -490,8 +490,8 @@ export default function HomePage() {
                         <div className="relative max-w-3xl mx-auto rounded bg-white p-6 sm:p-8 border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300">
                             <p className="text-sm sm:text-base lg:text-lg font-extrabold text-slate-800 leading-relaxed tracking-wide">
                                 {locale === "en"
-                                    ? "“LET'S STRIVE TOGETHER TO SPREAD THE GOODNESS OF HEALTH, WEALTH AND HAPPINESS WITH BANGLA PARK LIMITED”"
-                                    : "“আসুন একসাথে চেষ্টা করি বাংলা পার্ক লিমিটেডের সাথে স্বাস্থ্য, সম্পদ এবং সুখের কল্যাণ ছড়িয়ে দিতে”"}
+                                    ? "“LET'S STRIVE TOGETHER WITH BANGLA PARK LIMITED — YOUR TRUSTED DIGITAL, AFFILIATE & CPA MARKETING PARTNER FOR SUCCESS”"
+                                    : "“আসুন একসাথে চেষ্টা করি বাংলা পার্ক লিমিটেডের সাথে ডিজিটাল মার্কেটিং, অ্যাফিলিয়েট ও সিপিএ মার্কেটিংয়ের বিশ্বস্ত পার্টনার হয়ে সাফল্য অর্জন করতে”"}
                             </p>
                         </div>
                     </RevealSection>
