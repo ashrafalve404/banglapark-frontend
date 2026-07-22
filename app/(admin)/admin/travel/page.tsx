@@ -5,7 +5,7 @@ import { useState } from "react";
 import { travelApi } from "@/lib/api/travel";
 import {
     Plane, Plus, Trash2, Save, ChevronLeft, ChevronRight,
-    MapPin, Users, CheckCircle2, XCircle, Loader2, Info
+    MapPin, Users, CheckCircle2, XCircle, Loader2, Info, Trophy
 } from "lucide-react";
 import { useLocale } from "@/lib/i18n";
 
@@ -68,6 +68,11 @@ export default function AdminTravelPage() {
     const { data: tiers = [], isLoading } = useQuery({
         queryKey: ["admin-travel-tiers", month, year],
         queryFn: () => travelApi.adminGetTiers(month, year),
+    });
+
+    const { data: achievers = [], isLoading: achieversLoading } = useQuery({
+        queryKey: ["admin-travel-achievers", month, year],
+        queryFn: () => travelApi.getAchievers(month, year),
     });
 
     const upsertMutation = useMutation({
@@ -348,6 +353,43 @@ export default function AdminTravelPage() {
                     })}
                 </div>
             )}
+
+            {/* Monthly Achievers List */}
+            <div className="mt-8 bg-white rounded-md border border-slate-200 p-6 shadow-xs">
+                <div className="flex items-center gap-2 mb-4">
+                    <Trophy size={20} className="text-amber-500" />
+                    <h3 className="font-bold text-slate-800 text-lg">{t("travel.monthlyAchievers")}</h3>
+                </div>
+
+                {achieversLoading ? (
+                    <div className="py-8 text-center text-slate-400">
+                        <Loader2 size={24} className="animate-spin mx-auto text-indigo-500" />
+                    </div>
+                ) : achievers.length === 0 ? (
+                    <div className="py-8 text-center bg-slate-50 border border-dashed border-slate-200 rounded-md">
+                        <p className="text-sm text-slate-500 font-medium">{t("travel.noAchievers")}</p>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                        {achievers.map((achiever) => {
+                            const config = TIER_CONFIG.find((t) => t.tierNumber === achiever.tierNumber);
+                            return (
+                                <div key={achiever.id} className="flex items-center gap-3 p-4 bg-slate-50 border border-slate-200 rounded-md">
+                                    <div className="p-2.5 rounded-md bg-amber-500 text-white shrink-0">
+                                        <Trophy size={20} />
+                                    </div>
+                                    <div className="overflow-hidden">
+                                        <p className="text-sm font-bold text-slate-900 truncate">{achiever.name}</p>
+                                        <p className="text-xs text-slate-500">
+                                            {t(config?.labelKey ?? "")} • {achiever.monthlyNewActiveCount.toLocaleString()} {t("travel.members")}
+                                        </p>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                )}
+            </div>
         </div>
     );
 }
