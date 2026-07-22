@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import {
     LayoutDashboard, Users, Package, Tag, ShoppingBag,
     Wallet, ArrowDownToLine, Settings, BarChart2, X, ChevronRight, Home, Image, TrendingDown,
-    ClipboardList, HelpCircle, Award
+    ClipboardList, HelpCircle, Award, Plane
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
@@ -34,6 +34,7 @@ export function AdminSidebar({ onClose, mobile }: AdminSidebarProps) {
         { href: "/admin/commission-rules", label: t("nav.commissionRules"), icon: Settings },
         { href: "/admin/profit-loss", label: t("nav.profitLoss"), icon: TrendingDown },
         { href: "/admin/reports", label: t("nav.reports"), icon: BarChart2 },
+        { href: "/admin/travel", label: t("nav.travel"), icon: Plane },
     ];
 
     return (

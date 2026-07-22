@@ -42,7 +42,7 @@
     "dailyBenefit": "Daily Benefit",
     "generationIncome": "Generation Income",
     "withdraw": "Withdraw",
-    "position": "Position",
+    "position": "Monthly Salary",
     "statement": "Statement",
     "adminOverview": "Overview",
     "adminLabel": "Admin",
@@ -61,7 +61,8 @@
     "withdrawals": "Withdrawals",
     "commissionRules": "Commission Rules",
     "profitLoss": "Profit & Loss",
-    "reports": "Reports"
+    "reports": "Reports",
+    "travel": "Travel"
   },
   "home": {
     "badge": "Bangladesh's Trusted E-commerce Platform",

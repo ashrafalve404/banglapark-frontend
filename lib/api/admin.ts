@@ -90,6 +90,13 @@ export const adminApi = {
     },
 };
 
+export const publicApi = {
+    stats: async (): Promise<{ totalUsers: number }> => {
+        const res = await api.get("/public/stats");
+        return res.data;
+    },
+};
+
 export const reportsApi = {
     sales: async (params?: { from?: string; to?: string; page?: number; limit?: number }) => {
         const res = await api.get("/reports/sales", { params });

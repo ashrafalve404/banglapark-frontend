@@ -42,7 +42,7 @@
     "dailyBenefit": "দৈনিক বেনিফিট",
     "generationIncome": "জেনারেশন ইনকাম",
     "withdraw": "উত্তোলন",
-    "position": "পদবী",
+    "position": "মাসিক সেলারি",
     "statement": "স্টেটমেন্ট",
     "adminOverview": "ওভারভিউ",
     "adminLabel": "Admin",
@@ -61,7 +61,8 @@
     "withdrawals": "উত্তোলন",
     "commissionRules": "কমিশন রুলস",
     "profitLoss": "লাভ ও ক্ষতি",
-    "reports": "রিপোর্ট"
+    "reports": "রিপোর্ট",
+    "travel": "ট্রাভেল"
   },
   "home": {
     "badge": "বাংলাদেশের বিশ্বস্ত ই-কমার্স প্ল্যাটফর্ম",

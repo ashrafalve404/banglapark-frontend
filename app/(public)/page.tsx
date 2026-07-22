@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, ShoppingCart, Loader2, Grid, Shirt, Smartphone, Package, Home, Book, Gem, Watch, Laptop, CheckCircle, X } from "lucide-react";
+import { ArrowRight, ShoppingCart, Loader2, Grid, Shirt, Smartphone, Package, Home, Book, Gem, Watch, Laptop, CheckCircle, X, Users, Sparkles, TrendingUp, ShieldCheck } from "lucide-react";
 import { BannerCarousel } from "@/components/home/BannerCarousel";
 import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
 
 import { productsApi } from "@/lib/api/products";
 import { categoriesApi } from "@/lib/api/categories";
 import { bannersApi } from "@/lib/api/banners";
+import { publicApi } from "@/lib/api/admin";
 import { useCartStore } from "@/store/cart";
 import { useQuery } from "@tanstack/react-query";
 import { useLocale } from "@/lib/i18n";
@@ -140,6 +141,15 @@ export default function HomePage() {
         queryFn: () => bannersApi.findOffers(),
     });
 
+    const FALLBACK_USER_COUNT = 2010971;
+    const { data: publicStats } = useQuery({
+        queryKey: ["public-stats"],
+        queryFn: () => publicApi.stats(),
+        retry: 0,
+        staleTime: 300_000,
+    });
+    const totalDistributors = publicStats?.totalUsers ?? FALLBACK_USER_COUNT;
+
     const handleLoadMore = async () => {
         setLoadingMore(true);
         const nextPage = productPage + 1;
@@ -242,9 +252,9 @@ export default function HomePage() {
                                     </Link>
                                 ))}
                             </div>
-                        </RevealSection>
-                    </div>
-                </section>
+                    </RevealSection>
+                </div>
+            </section>
             )}
 
             {/* Categories */}
@@ -290,7 +300,7 @@ export default function HomePage() {
                             </Link>
                         </div>
                     </div>
-                </section>
+            </section>
             )}
 
             {/* All Products */}
@@ -447,6 +457,42 @@ export default function HomePage() {
                                     </div>
                                 </div>
                             ))}
+                        </div>
+                    </RevealSection>
+                </div>
+            </section>
+
+            {/* Distributors Counter & Impact Section */}
+            <section className="relative overflow-hidden bg-gradient-to-b from-slate-50 via-white to-emerald-50/40 py-16 lg:py-24 border-t border-slate-200/60">
+                {/* Decorative background ambient glows */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-red-100/40 via-emerald-100/30 to-amber-100/30 rounded-full blur-3xl pointer-events-none" />
+                <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:24px_24px] opacity-35 pointer-events-none" />
+
+                <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+                    <RevealSection>
+                        <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-800 tracking-wider uppercase mb-4">
+                            {locale === "en" ? "We are now" : "আমরা এখন"}
+                        </h2>
+
+                        {/* Number Counter */}
+                        <div className="my-2 flex items-center justify-center gap-2">
+                            <span className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight bg-gradient-to-r from-red-700 via-red-600 to-emerald-700 bg-clip-text text-transparent drop-shadow-sm">
+                                {totalDistributors.toLocaleString("en-IN")}
+                            </span>
+                        </div>
+
+                        <p className="text-base sm:text-xl font-bold tracking-widest text-slate-700 uppercase mb-8 flex items-center justify-center gap-2">
+                            <Users className="w-5 h-5 text-red-700" />
+                            <span>{locale === "en" ? "Distributors & Partners" : "ডিস্ট্রিবিউটর ও পার্টনার"}</span>
+                        </p>
+
+                        {/* Tagline Card */}
+                        <div className="relative max-w-3xl mx-auto rounded bg-white p-6 sm:p-8 border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300">
+                            <p className="text-sm sm:text-base lg:text-lg font-extrabold text-slate-800 leading-relaxed tracking-wide">
+                                {locale === "en"
+                                    ? "“LET'S STRIVE TOGETHER TO SPREAD THE GOODNESS OF HEALTH, WEALTH AND HAPPINESS WITH BANGLA PARK LIMITED”"
+                                    : "“আসুন একসাথে চেষ্টা করি বাংলা পার্ক লিমিটেডের সাথে স্বাস্থ্য, সম্পদ এবং সুখের কল্যাণ ছড়িয়ে দিতে”"}
+                            </p>
                         </div>
                     </RevealSection>
                 </div>

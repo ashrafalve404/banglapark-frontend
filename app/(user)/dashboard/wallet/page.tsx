@@ -3,7 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import Link from "next/link";
-import { Wallet, AlertCircle, RefreshCw, Gift, TrendingUp, Award, DollarSign, MapPin, PieChart, Users, ShieldCheck } from "lucide-react";
+import { Wallet, AlertCircle, RefreshCw, Gift, TrendingUp, Award, DollarSign, MapPin, PieChart, Users, ShieldCheck, Plane } from "lucide-react";
 import { walletApi } from "@/lib/api/wallet";
 import { referralApi } from "@/lib/api/categories";
 import { commissionsApi } from "@/lib/api/commissions";
@@ -182,15 +182,15 @@ export default function WalletPage() {
                         {balLoading ? "..." : formatCurrency(balanceData?.salary ?? 0, locale)}
                     </h2>
                 </div>
-                <div className="card p-4 border border-dashed border-gray-200 bg-gray-50/50">
+                <Link href="/dashboard/travel" className="card p-4 border border-indigo-100 bg-indigo-50/40 hover:bg-indigo-50 transition-all group">
                     <div className="flex items-center justify-between mb-2">
-                        <span className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider">{t("wallet.balance.travelling")}</span>
-                        <MapPin size={16} className="text-gray-300" />
+                        <span className="text-[10px] text-indigo-600 font-bold uppercase tracking-wider">{t("wallet.balance.travelling")}</span>
+                        <Plane size={16} className="text-indigo-600 group-hover:scale-110 transition-transform" />
                     </div>
-                    <h2 className="text-xl font-extrabold text-gray-400">
-                        {balLoading ? "..." : formatCurrency(balanceData?.travelling ?? 0, locale)}
-                    </h2>
-                </div>
+                    <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-indigo-900 group-hover:underline">Check Eligibility & Destination →</span>
+                    </div>
+                </Link>
                 <div className="card p-4 border border-dashed border-gray-200 bg-gray-50/50">
                     <div className="flex items-center justify-between mb-2">
                         <span className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider">{t("wallet.balance.share")}</span>
