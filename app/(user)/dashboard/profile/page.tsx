@@ -131,9 +131,9 @@ export default function ProfilePage() {
 
             const updateRes = await api.patch("/users/profile", { profileImage: imageUrl });
             setUser({ ...user, profileImage: imageUrl, ...updateRes.data });
-            setProfileMsg({ type: "success", text: "প্রোফাইল ছবি সফলভাবে আপডেট হয়েছে!" });
+            setProfileMsg({ type: "success", text: t("profile.msg.imageSuccess") });
         } catch (err: any) {
-            setProfileMsg({ type: "error", text: err.response?.data?.message || "ছবি আপলোড করতে সমস্যা হয়েছে" });
+            setProfileMsg({ type: "error", text: err.response?.data?.message || t("profile.msg.imageError") });
         } finally {
             setImageUploading(false);
         }
@@ -245,7 +245,7 @@ export default function ProfilePage() {
                             className="mt-2 text-xs font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-1.5"
                         >
                             <Camera size={14} />
-                            {imageUploading ? "আপলোড হচ্ছে..." : "প্রোফাইল ছবি পরিবর্তন করুন"}
+                            {imageUploading ? t("profile.profileImage.uploading") : t("profile.profileImage.change")}
                         </button>
                     </div>
 

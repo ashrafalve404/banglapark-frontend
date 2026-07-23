@@ -516,7 +516,13 @@
       "updateSuccess": "Profile updated successfully.",
       "updateError": "Could not update profile.",
       "passwordSuccess": "Password changed successfully.",
-      "passwordError": "Could not change password."
+      "passwordError": "Could not change password.",
+      "imageSuccess": "Profile picture updated successfully!",
+      "imageError": "Could not upload profile picture."
+    },
+    "profileImage": {
+      "uploading": "Uploading...",
+      "change": "Change profile picture"
     },
     "heading": "Profile Settings",
     "subheading": "Update your personal information and password",
