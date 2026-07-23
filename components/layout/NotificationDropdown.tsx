@@ -102,7 +102,13 @@ export function NotificationDropdown({ isAdmin = false }: NotificationDropdownPr
             </button>
 
             {isOpen && (
-                <div className="absolute right-0 mt-2.5 w-80 rounded-xl border border-slate-100 bg-white shadow-2xl z-50 overflow-hidden divide-y divide-slate-50 transition-all duration-200">
+                <>
+                    {/* Mobile backdrop overlay */}
+                    <div
+                        className="fixed inset-0 bg-slate-900/20 sm:hidden z-40"
+                        onClick={() => setIsOpen(false)}
+                    />
+                    <div className="fixed top-14 left-3 right-3 sm:absolute sm:top-auto sm:left-auto sm:right-0 sm:mt-2.5 w-auto sm:w-80 rounded-xl border border-slate-200 bg-white shadow-2xl z-50 overflow-hidden divide-y divide-slate-50 transition-all duration-200">
                     {/* Header */}
                     <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-slate-50 to-white">
                         <span className="text-sm font-semibold text-slate-800">
@@ -209,6 +215,7 @@ export function NotificationDropdown({ isAdmin = false }: NotificationDropdownPr
                         </div>
                     )}
                 </div>
+                </>
             )}
         </div>
     );
