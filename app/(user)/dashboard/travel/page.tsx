@@ -121,7 +121,7 @@ export default function UserTravelPage() {
                     : "bg-gradient-to-br from-slate-700 via-slate-800 to-slate-900"
                 }`}>
                 {/* Background decoration */}
-                <div className="absolute top-0 right-0 w-48 h-48 opacity-10">
+                <div className="absolute top-0 right-0 w-48 h-48 opacity-5 pointer-events-none">
                     <Plane size={192} className="text-white -rotate-12 translate-x-8 -translate-y-8" />
                 </div>
 
@@ -270,9 +270,9 @@ export default function UserTravelPage() {
                                             {dests.map((d, i) => (
                                                 <li
                                                     key={i}
-                                                    className={`flex items-center gap-2 text-sm font-medium ${achieved ? "text-slate-700" : "text-slate-400"}`}
+                                                    className={`flex items-center gap-2 text-sm ${achieved ? "text-slate-900 font-bold" : "text-slate-700 font-semibold"}`}
                                                 >
-                                                    <MapPin size={13} className={achieved ? "text-green-600" : "text-slate-300"} />
+                                                    <MapPin size={14} className={achieved ? "text-green-600" : "text-slate-600"} />
                                                     {d}
                                                 </li>
                                             ))}

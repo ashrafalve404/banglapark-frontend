@@ -470,10 +470,8 @@ export default function HomePage() {
             </section>
 
             {/* Distributors Counter & Impact Section */}
-            <section className="relative overflow-hidden bg-gradient-to-b from-slate-50 via-white to-emerald-50/40 py-16 lg:py-24 border-t border-slate-200/60">
-                {/* Decorative background ambient glows */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-tr from-red-100/40 via-emerald-100/30 to-amber-100/30 rounded-full blur-3xl pointer-events-none" />
-                <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:24px_24px] opacity-35 pointer-events-none" />
+            <section className="relative overflow-hidden bg-white py-16 lg:py-24 border-t border-slate-200/60">
+                <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:24px_24px] opacity-25 pointer-events-none" />
 
                 <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
                     <RevealSection>
@@ -488,7 +486,7 @@ export default function HomePage() {
                             </span>
                         </div>
 
-                        <p className="text-base sm:text-xl font-bold tracking-widest text-slate-700 uppercase mb-8 flex items-center justify-center gap-2">
+                        <p className={`text-base sm:text-xl font-bold text-slate-700 mb-8 flex items-center justify-center gap-2 ${locale === "en" ? "tracking-widest uppercase" : "tracking-normal"}`}>
                             <Users className="w-5 h-5 text-red-700" />
                             <span>{locale === "en" ? "Digital marketing partner" : "ডিজিটাল মার্কেটিং পার্টনার"}</span>
                         </p>
@@ -496,7 +494,7 @@ export default function HomePage() {
                         {/* New Member List */}
                         {newMembers.length > 0 && (
                             <div className="mb-10">
-                                <p className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-5 text-center">
+                                <p className={`text-sm font-bold text-slate-500 mb-5 text-center ${locale === "en" ? "tracking-widest uppercase" : "tracking-normal"}`}>
                                     {locale === "en" ? "New Member List" : "নতুন সদস্য তালিকা"}
                                 </p>
                                 <div className="overflow-x-auto pb-4 scrollbar-none">

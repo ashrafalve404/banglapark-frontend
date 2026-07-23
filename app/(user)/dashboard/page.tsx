@@ -2,10 +2,8 @@
 
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
-import {
-    AlertCircle, Clock, Briefcase, HelpCircle, User, Wallet,
-    ShoppingBag, Users, Award, ArrowDownToLine, Plane
-} from "lucide-react";
+import { AlertCircle, Clock } from "lucide-react";
+import { FaWallet, FaUsers, FaMoneyBills, FaBuilding, FaTrophy } from "react-icons/fa6";
 import { useAuthStore } from "@/store/auth";
 import { authApi } from "@/lib/api/auth";
 import { useLocale } from "@/lib/i18n";
@@ -110,31 +108,31 @@ export default function DashboardOverview() {
         {
             href: "/dashboard/wallet",
             label: t("nav.wallet"),
-            icon: Wallet,
+            icon: FaWallet,
             cardBg: "bg-green-200 text-green-950 border-green-300 hover:bg-green-300",
         },
         {
             href: "/dashboard/referrals",
             label: t("nav.referrals"),
-            icon: Users,
+            icon: FaUsers,
             cardBg: "bg-teal-200 text-teal-950 border-teal-300 hover:bg-teal-300",
         },
         {
             href: "/dashboard/withdraw",
             label: t("nav.withdraw"),
-            icon: ArrowDownToLine,
+            icon: FaMoneyBills,
             cardBg: "bg-rose-200 text-rose-950 border-rose-300 hover:bg-rose-300",
         },
         {
             href: "#",
             label: t("nav.shareholder"),
-            icon: Briefcase,
+            icon: FaBuilding,
             cardBg: "bg-violet-200 text-violet-950 border-violet-300 hover:bg-violet-300",
         },
         {
             href: "#",
             label: t("nav.reward"),
-            icon: Award,
+            icon: FaTrophy,
             cardBg: "bg-fuchsia-200 text-fuchsia-950 border-fuchsia-300 hover:bg-fuchsia-300",
         },
     ];
