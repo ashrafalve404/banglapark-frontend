@@ -95,6 +95,10 @@ export const publicApi = {
         const res = await api.get("/public/stats");
         return res.data;
     },
+    newMembers: async (): Promise<{ id: string; name: string; profileImage: string | null; createdAt: string }[]> => {
+        const res = await api.get("/public/new-members");
+        return res.data;
+    },
 };
 
 export const reportsApi = {

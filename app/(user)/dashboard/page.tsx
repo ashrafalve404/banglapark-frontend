@@ -125,6 +125,18 @@ export default function DashboardOverview() {
             icon: ArrowDownToLine,
             cardBg: "bg-rose-200 text-rose-950 border-rose-300 hover:bg-rose-300",
         },
+        {
+            href: "#",
+            label: t("nav.shareholder"),
+            icon: Briefcase,
+            cardBg: "bg-violet-200 text-violet-950 border-violet-300 hover:bg-violet-300",
+        },
+        {
+            href: "#",
+            label: t("nav.reward"),
+            icon: Award,
+            cardBg: "bg-fuchsia-200 text-fuchsia-950 border-fuchsia-300 hover:bg-fuchsia-300",
+        },
     ];
 
     return (

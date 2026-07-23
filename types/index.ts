@@ -17,6 +17,7 @@ export interface User {
     name: string;
     email: string;
     phone: string;
+    profileImage?: string;
     role: Role;
     status: UserStatus;
     referralCode: string;

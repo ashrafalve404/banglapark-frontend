@@ -3,8 +3,8 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useState, useEffect } from "react";
-import { Download, IdCard } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Download, IdCard, Camera, Loader2, User as UserIcon } from "lucide-react";
 import jsPDF from "jspdf";
 import { useAuthStore } from "@/store/auth";
 import { api } from "@/lib/api/client";
@@ -35,11 +35,14 @@ export default function ProfilePage() {
     const [passwordMsg, setPasswordMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
     const [profileLoading, setProfileLoading] = useState(false);
     const [passwordLoading, setPasswordLoading] = useState(false);
+    const [imageUploading, setImageUploading] = useState(false);
     const [usedReferralCode, setUsedReferralCode] = useState<string | null>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         api.get("/users/profile").then((res: any) => {
             setUsedReferralCode(res.data.usedReferralCode);
+            if (res.data) setUser({ ...user, ...res.data });
         }).catch(() => {});
     }, []);
 
@@ -112,12 +115,36 @@ export default function ProfilePage() {
         }
     }, [user, setValue]);
 
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        setImageUploading(true);
+        setProfileMsg(null);
+        try {
+            const formData = new FormData();
+            formData.append("file", file);
+            const uploadRes = await api.post("/uploads", formData, {
+                headers: { "Content-Type": "multipart/form-data" },
+            });
+            const imageUrl = uploadRes.data.url;
+
+            const updateRes = await api.patch("/users/profile", { profileImage: imageUrl });
+            setUser({ ...user, profileImage: imageUrl, ...updateRes.data });
+            setProfileMsg({ type: "success", text: "প্রোফাইল ছবি সফলভাবে আপডেট হয়েছে!" });
+        } catch (err: any) {
+            setProfileMsg({ type: "error", text: err.response?.data?.message || "ছবি আপলোড করতে সমস্যা হয়েছে" });
+        } finally {
+            setImageUploading(false);
+        }
+    };
+
     const onUpdateProfile = async (data: ProfileInput) => {
         setProfileLoading(true);
         setProfileMsg(null);
         try {
             const res = await api.patch("/users/profile", data);
-            setUser(res.data);
+            setUser({ ...user, ...res.data });
             setProfileMsg({ type: "success", text: t("profile.msg.updateSuccess") });
         } catch (err: any) {
             setProfileMsg({ type: "error", text: err.response?.data?.message || t("profile.msg.updateError") });
@@ -143,6 +170,10 @@ export default function ProfilePage() {
         }
     };
 
+    const initials = user?.name
+        ? user.name.split(" ").filter(Boolean).map(n => n[0].toUpperCase()).slice(0, 2).join("")
+        : "BP";
+
     return (
         <div className="space-y-6">
             <div>
@@ -153,9 +184,15 @@ export default function ProfilePage() {
             {/* Member ID Card */}
             {user?.memberId && (
                 <div className="card p-6 bg-gradient-to-br from-green-900 to-green-800 text-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                    <div className="flex items-start gap-4">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/20">
-                            <IdCard size={24} />
+                    <div className="flex items-center gap-4">
+                        <div className="relative group shrink-0">
+                            <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-white/40 bg-white/20 flex items-center justify-center text-xl font-bold text-white shadow-inner">
+                                {user.profileImage ? (
+                                    <img src={user.profileImage} alt={user.name} className="w-full h-full object-cover" />
+                                ) : (
+                                    <span>{initials}</span>
+                                )}
+                            </div>
                         </div>
                         <div>
                             <p className="text-xs text-green-200 font-medium uppercase tracking-wider">Member ID</p>
@@ -173,10 +210,45 @@ export default function ProfilePage() {
                 <div className="card p-6">
                     <h2 className="text-base font-bold text-gray-900 mb-4 border-b border-gray-100 pb-2">{t("profile.personalInfo.heading")}</h2>
                     {profileMsg && (
-                        <div className={`mb-4 rounded-lg p-3 text-xs font-semibold ${profileMsg.type === "success" ? "bg-green-50 text-green-700" : "bg-green-50 text-green-600"}`}>
+                        <div className={`mb-4 rounded-lg p-3 text-xs font-semibold ${profileMsg.type === "success" ? "bg-green-50 text-green-700" : "bg-red-50 text-red-600"}`}>
                             {profileMsg.text}
                         </div>
                     )}
+
+                    {/* Profile Picture Upload Avatar Box */}
+                    <div className="flex flex-col items-center mb-6 pb-4 border-b border-gray-100">
+                        <div className="relative group cursor-pointer" onClick={() => fileInputRef.current?.click()}>
+                            <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-emerald-500/20 bg-gradient-to-br from-emerald-100 to-emerald-200 flex items-center justify-center shadow-md">
+                                {imageUploading ? (
+                                    <Loader2 className="w-8 h-8 text-emerald-600 animate-spin" />
+                                ) : user?.profileImage ? (
+                                    <img src={user.profileImage} alt={user.name} className="w-full h-full object-cover" />
+                                ) : (
+                                    <span className="text-2xl font-black text-emerald-800">{initials}</span>
+                                )}
+                            </div>
+                            <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                <Camera className="w-6 h-6 text-white" />
+                            </div>
+                        </div>
+                        <input
+                            ref={fileInputRef}
+                            type="file"
+                            accept="image/jpeg,image/png,image/webp,image/gif"
+                            className="hidden"
+                            onChange={handleImageUpload}
+                        />
+                        <button
+                            type="button"
+                            onClick={() => fileInputRef.current?.click()}
+                            disabled={imageUploading}
+                            className="mt-2 text-xs font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-1.5"
+                        >
+                            <Camera size={14} />
+                            {imageUploading ? "আপলোড হচ্ছে..." : "প্রোফাইল ছবি পরিবর্তন করুন"}
+                        </button>
+                    </div>
+
                     <form onSubmit={handleProfileSubmit(onUpdateProfile)} className="space-y-4">
                         <div>
                             <label className="label mb-1 block">{t("profile.personalInfo.nameLabel")}</label>
@@ -199,7 +271,7 @@ export default function ProfilePage() {
                 <div className="card p-6">
                     <h2 className="text-base font-bold text-gray-900 mb-4 border-b border-gray-100 pb-2">{t("profile.password.heading")}</h2>
                     {passwordMsg && (
-                        <div className={`mb-4 rounded-lg p-3 text-xs font-semibold ${passwordMsg.type === "success" ? "bg-green-50 text-green-700" : "bg-green-50 text-green-600"}`}>
+                        <div className={`mb-4 rounded-lg p-3 text-xs font-semibold ${passwordMsg.type === "success" ? "bg-green-50 text-green-700" : "bg-red-50 text-red-600"}`}>
                             {passwordMsg.text}
                         </div>
                     )}

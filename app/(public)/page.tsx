@@ -150,6 +150,13 @@ export default function HomePage() {
     });
     const totalDistributors = publicStats?.totalUsers ?? FALLBACK_USER_COUNT;
 
+    const { data: newMembers = [] } = useQuery({
+        queryKey: ["public-new-members"],
+        queryFn: () => publicApi.newMembers(),
+        retry: 0,
+        staleTime: 120_000,
+    });
+
     const handleLoadMore = async () => {
         setLoadingMore(true);
         const nextPage = productPage + 1;
@@ -447,8 +454,8 @@ export default function HomePage() {
                                     </svg>
                                     <p className="text-sm text-gray-600 leading-relaxed mb-5 italic">"{story.quote}"</p>
                                     <div className="border-t border-gray-100 pt-4 flex items-center gap-3">
-                                        <div className="w-9 h-9 rounded-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center text-xs font-bold text-gray-600">
-                                            {story.name.split(" ").map(n => n[0]).join("").slice(0, 2)}
+                                        <div className="w-14 h-14 rounded-full bg-gradient-to-br from-emerald-200 to-slate-300 flex items-center justify-center text-sm font-bold text-slate-700 shrink-0 border-2 border-emerald-300 shadow-sm">
+                                            {story.name.split(" ").map((n: string) => n[0]).join("").slice(0, 2)}
                                         </div>
                                         <div>
                                             <p className="text-sm font-bold text-gray-900">{story.name}</p>
@@ -485,6 +492,40 @@ export default function HomePage() {
                             <Users className="w-5 h-5 text-red-700" />
                             <span>{locale === "en" ? "Digital marketing partner" : "ডিজিটাল মার্কেটিং পার্টনার"}</span>
                         </p>
+
+                        {/* New Member List */}
+                        {newMembers.length > 0 && (
+                            <div className="mb-10">
+                                <p className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-4 flex items-center justify-center gap-2">
+                                    <Sparkles className="w-4 h-4 text-emerald-600" />
+                                    {locale === "en" ? "New Member List" : "নতুন সদস্য তালিকা"}
+                                </p>
+                                <div className="overflow-x-auto pb-2 scrollbar-none">
+                                    <div className="flex gap-4 min-w-max mx-auto justify-center flex-wrap sm:flex-nowrap px-2 animate-none">
+                                        {newMembers.map((member) => {
+                                            const initials = member.name
+                                                .split(" ")
+                                                .filter(Boolean)
+                                                .map((w: string) => w[0].toUpperCase())
+                                                .slice(0, 2)
+                                                .join("");
+                                            return (
+                                                <div key={member.id} className="flex flex-col items-center gap-2 min-w-[72px]">
+                                                    <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-emerald-400 shadow-md bg-gradient-to-br from-emerald-100 to-emerald-200 flex items-center justify-center shrink-0">
+                                                        {member.profileImage ? (
+                                                            <img src={member.profileImage} alt={member.name} className="w-full h-full object-cover" />
+                                                        ) : (
+                                                            <span className="text-sm font-bold text-emerald-800">{initials}</span>
+                                                        )}
+                                                    </div>
+                                                    <span className="text-xs font-semibold text-slate-700 text-center leading-tight max-w-[70px] truncate">{member.name}</span>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
 
                         {/* Tagline Card */}
                         <div className="relative max-w-3xl mx-auto rounded bg-white p-6 sm:p-8 border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300">
