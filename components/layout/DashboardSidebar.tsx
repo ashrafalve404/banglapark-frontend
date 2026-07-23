@@ -3,10 +3,11 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
-    LayoutDashboard, User, Wallet, ShoppingBag, Users,
-    TrendingUp, ArrowDownToLine, Bell, ChevronRight, X, Home,
-    FileText, LogOut, Briefcase, Award, Plane
-} from "lucide-react";
+    FaGauge, FaUser, FaBriefcase, FaWallet, FaBagShopping,
+    FaUsers, FaArrowTrendUp, FaBell,
+    FaChevronRight, FaXmark, FaHouse, FaFileLines,
+    FaRightFromBracket, FaAward, FaPlane, FaMoneyBills
+} from "react-icons/fa6";
 import { cn } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
 import { LocaleSwitcher } from "@/components/shared/LocaleSwitcher";
@@ -28,17 +29,17 @@ export function DashboardSidebar({ onClose, mobile }: DashboardSidebarProps) {
     };
 
     const navItems = [
-        { href: "/dashboard", label: t("nav.overview"), icon: LayoutDashboard, exact: true },
-        { href: "/dashboard/profile", label: t("nav.profile"), icon: User },
-        { href: "/dashboard/daily-work", label: t("nav.dailyWork"), icon: Briefcase },
-        { href: "/dashboard/wallet", label: t("nav.wallet"), icon: Wallet },
-        { href: "/dashboard/orders", label: t("nav.orders"), icon: ShoppingBag },
-        { href: "/dashboard/referrals", label: t("nav.referrals"), icon: Users },
-        { href: "/dashboard/position", label: t("nav.position"), icon: Award },
-        { href: "/dashboard/travel", label: t("nav.travel"), icon: Plane },
-        { href: "/dashboard/withdraw", label: t("nav.withdraw"), icon: ArrowDownToLine },
-        { href: "/dashboard/statement", label: t("nav.statement"), icon: FileText },
-        { href: "/dashboard/notifications", label: t("nav.notifications"), icon: Bell },
+        { href: "/dashboard", label: t("nav.overview"), icon: FaGauge, exact: true },
+        { href: "/dashboard/profile", label: t("nav.profile"), icon: FaUser },
+        { href: "/dashboard/daily-work", label: t("nav.dailyWork"), icon: FaBriefcase },
+        { href: "/dashboard/wallet", label: t("nav.wallet"), icon: FaWallet },
+        { href: "/dashboard/orders", label: t("nav.orders"), icon: FaBagShopping },
+        { href: "/dashboard/referrals", label: t("nav.referrals"), icon: FaUsers },
+        { href: "/dashboard/position", label: t("nav.position"), icon: FaAward },
+        { href: "/dashboard/travel", label: t("nav.travel"), icon: FaPlane },
+        { href: "/dashboard/withdraw", label: t("nav.withdraw"), icon: FaMoneyBills },
+        { href: "/dashboard/statement", label: t("nav.statement"), icon: FaFileLines },
+        { href: "/dashboard/notifications", label: t("nav.notifications"), icon: FaBell },
     ];
 
     return (
@@ -47,7 +48,7 @@ export function DashboardSidebar({ onClose, mobile }: DashboardSidebarProps) {
                 <div className="flex h-16 items-center justify-between px-4 border-b border-gray-100">
                     <span className="font-bold text-green-800">{t("nav.banglaPark")}</span>
                     <button onClick={onClose} className="p-2 text-gray-500 hover:text-gray-700">
-                        <X size={20} />
+                        <FaXmark size={20} />
                     </button>
                 </div>
             )}
@@ -57,12 +58,13 @@ export function DashboardSidebar({ onClose, mobile }: DashboardSidebarProps) {
                     onClick={onClose}
                     className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-green-700 hover:bg-green-50 transition-all mb-1 border border-green-100"
                 >
-                    <Home size={17} />
+                    <FaHouse size={17} />
                     {t("nav.backToSite")}
                 </Link>
                 <div className="border-t border-gray-100 my-1" />
                 {navItems.map((item) => {
                     const active = item.exact ? pathname === item.href : pathname.startsWith(item.href);
+                    const Icon = item.icon;
                     return (
                         <Link
                             key={item.href}
@@ -75,9 +77,9 @@ export function DashboardSidebar({ onClose, mobile }: DashboardSidebarProps) {
                                     : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                             )}
                         >
-                            <item.icon size={17} className={active ? "text-green-700" : "text-gray-400"} />
+                            <Icon size={17} className={active ? "text-green-700" : "text-gray-400"} />
                             {item.label}
-                            {active && <ChevronRight size={14} className="ml-auto text-green-600" />}
+                            {active && <FaChevronRight size={14} className="ml-auto text-green-600" />}
                         </Link>
                     );
                 })}
@@ -87,7 +89,7 @@ export function DashboardSidebar({ onClose, mobile }: DashboardSidebarProps) {
                     onClick={() => { handleLogout(); onClose?.(); }}
                     className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 transition-all"
                 >
-                    <LogOut size={17} />
+                    <FaRightFromBracket size={17} />
                     {t("nav.logout")}
                 </button>
                 <div className="flex items-center justify-between">

@@ -2,18 +2,21 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, ShoppingBag, ShoppingCart, User, LayoutDashboard } from "lucide-react";
+import { 
+    FaHouse, FaStore, FaBasketShopping, 
+    FaGauge, FaCircleUser 
+} from "react-icons/fa6";
 import { useLocale } from "@/lib/i18n";
 import { useCartStore } from "@/store/cart";
 import { useAuthStore } from "@/store/auth";
 import { useEffect, useState } from "react";
 
 const NAV_ITEMS = [
-    { href: "/", icon: Home, labelKey: "nav.home" },
-    { href: "/shop", icon: ShoppingBag, labelKey: "nav.shop" },
-    { href: "/cart", icon: ShoppingCart, labelKey: "nav.cart", showBadge: true },
-    { href: "/dashboard", icon: LayoutDashboard, labelKey: "nav.dashboard", auth: true },
-    { href: "/login", icon: User, labelKey: "nav.login", guest: true },
+    { href: "/", icon: FaHouse, labelKey: "nav.home" },
+    { href: "/shop", icon: FaStore, labelKey: "nav.shop" },
+    { href: "/cart", icon: FaBasketShopping, labelKey: "nav.cart", showBadge: true },
+    { href: "/dashboard", icon: FaGauge, labelKey: "nav.dashboard", auth: true },
+    { href: "/login", icon: FaCircleUser, labelKey: "nav.login", guest: true },
 ];
 
 export function MobileBottomNav() {
@@ -43,12 +46,12 @@ export function MobileBottomNav() {
                         <Link
                             key={item.href}
                             href={item.href}
-                            className={`flex flex-col items-center justify-center py-2 px-3 min-w-[56px] relative ${
+                            className={`flex flex-col items-center justify-center py-2 px-3 min-w-14 relative ${
                                 isActive ? "text-green-800" : "text-gray-400"
                             }`}
                         >
                             <div className="relative">
-                                <Icon size={22} strokeWidth={isActive ? 2.5 : 1.8} />
+                                <Icon size={22} />
                                 {item.showBadge && mounted && cartCount > 0 && (
                                     <span className="absolute -top-1.5 -right-2 flex h-4 w-4 items-center justify-center rounded-full bg-green-800 text-[10px] font-bold text-white">
                                         {cartCount > 9 ? "9+" : cartCount}
