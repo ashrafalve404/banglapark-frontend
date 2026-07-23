@@ -3,10 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-    LayoutDashboard, Users, Package, Tag, ShoppingBag,
-    Wallet, ArrowDownToLine, Settings, BarChart2, X, ChevronRight, Home, Image, TrendingDown,
-    ClipboardList, HelpCircle, Award, Plane
-} from "lucide-react";
+    FaGauge, FaImage, FaClipboardList, FaCircleQuestion, FaUserGroup,
+    FaAward, FaPlane, FaBoxOpen, FaTags, FaBagShopping,
+    FaArrowsDownToLine, FaGear, FaChartLine, FaHouse, FaChevronRight, FaXmark,
+    FaChartBar
+} from "react-icons/fa6";
 import { cn } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
 import { LocaleSwitcher } from "@/components/shared/LocaleSwitcher";
@@ -21,20 +22,20 @@ export function AdminSidebar({ onClose, mobile }: AdminSidebarProps) {
     const { t } = useLocale();
 
     const navItems = [
-        { href: "/admin", label: t("nav.overview"), icon: LayoutDashboard, exact: true },
-        { href: "/admin/banners", label: t("nav.banners"), icon: Image },
-        { href: "/admin/daily-work", label: t("nav.dailyWork"), icon: ClipboardList },
-        { href: "/admin/quiz", label: t("nav.quiz"), icon: HelpCircle },
-        { href: "/admin/users", label: t("nav.users"), icon: Users },
-        { href: "/admin/position", label: t("nav.position"), icon: Award },
-        { href: "/admin/travel", label: t("nav.travel"), icon: Plane },
-        { href: "/admin/products", label: t("nav.products"), icon: Package },
-        { href: "/admin/categories", label: t("nav.categories"), icon: Tag },
-        { href: "/admin/orders", label: t("nav.orders"), icon: ShoppingBag },
-        { href: "/admin/withdrawals", label: t("nav.withdrawals"), icon: ArrowDownToLine },
-        { href: "/admin/commission-rules", label: t("nav.commissionRules"), icon: Settings },
-        { href: "/admin/profit-loss", label: t("nav.profitLoss"), icon: TrendingDown },
-        { href: "/admin/reports", label: t("nav.reports"), icon: BarChart2 },
+        { href: "/admin", label: t("nav.overview"), icon: FaGauge, exact: true },
+        { href: "/admin/banners", label: t("nav.banners"), icon: FaImage },
+        { href: "/admin/daily-work", label: t("nav.dailyWork"), icon: FaClipboardList },
+        { href: "/admin/quiz", label: t("nav.quiz"), icon: FaCircleQuestion },
+        { href: "/admin/users", label: t("nav.users"), icon: FaUserGroup },
+        { href: "/admin/position", label: t("nav.position"), icon: FaAward },
+        { href: "/admin/travel", label: t("nav.travel"), icon: FaPlane },
+        { href: "/admin/products", label: t("nav.products"), icon: FaBoxOpen },
+        { href: "/admin/categories", label: t("nav.categories"), icon: FaTags },
+        { href: "/admin/orders", label: t("nav.orders"), icon: FaBagShopping },
+        { href: "/admin/withdrawals", label: t("nav.withdrawals"), icon: FaArrowsDownToLine },
+        { href: "/admin/commission-rules", label: t("nav.commissionRules"), icon: FaGear },
+        { href: "/admin/profit-loss", label: t("nav.profitLoss"), icon: FaChartLine },
+        { href: "/admin/reports", label: t("nav.reports"), icon: FaChartBar },
     ];
 
     return (
@@ -43,7 +44,7 @@ export function AdminSidebar({ onClose, mobile }: AdminSidebarProps) {
                 <div className="flex h-16 items-center justify-between px-4 border-b border-slate-700">
                     <span className="font-bold text-white">{t("nav.adminPanel")}</span>
                     <button onClick={onClose} className="p-2 text-slate-400 hover:text-white">
-                        <X size={20} />
+                        <FaXmark size={20} />
                     </button>
                 </div>
             )}
@@ -59,7 +60,7 @@ export function AdminSidebar({ onClose, mobile }: AdminSidebarProps) {
                     onClick={onClose}
                     className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-green-400 hover:bg-slate-800 transition-all mb-1 border border-slate-700"
                 >
-                    <Home size={17} />
+                    <FaHouse size={17} />
                     {t("nav.backToSite")}
                 </Link>
                 <div className="border-t border-slate-700 my-1" />
@@ -79,7 +80,7 @@ export function AdminSidebar({ onClose, mobile }: AdminSidebarProps) {
                         >
                             <item.icon size={17} />
                             {item.label}
-                            {active && <ChevronRight size={14} className="ml-auto" />}
+                            {active && <FaChevronRight size={14} className="ml-auto" />}
                         </Link>
                     );
                 })}
