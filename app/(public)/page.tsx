@@ -496,12 +496,11 @@ export default function HomePage() {
                         {/* New Member List */}
                         {newMembers.length > 0 && (
                             <div className="mb-10">
-                                <p className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-4 flex items-center justify-center gap-2">
-                                    <Sparkles className="w-4 h-4 text-emerald-600" />
+                                <p className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-5 text-center">
                                     {locale === "en" ? "New Member List" : "নতুন সদস্য তালিকা"}
                                 </p>
-                                <div className="overflow-x-auto pb-2 scrollbar-none">
-                                    <div className="flex gap-4 min-w-max mx-auto justify-center flex-wrap sm:flex-nowrap px-2 animate-none">
+                                <div className="overflow-x-auto pb-4 scrollbar-none">
+                                    <div className="flex gap-6 sm:gap-8 min-w-max mx-auto justify-center px-4">
                                         {newMembers.map((member) => {
                                             const initials = member.name
                                                 .split(" ")
@@ -510,7 +509,7 @@ export default function HomePage() {
                                                 .slice(0, 2)
                                                 .join("");
                                             return (
-                                                <div key={member.id} className="flex flex-col items-center gap-2 min-w-[72px]">
+                                                <div key={member.id} className="flex flex-col items-center gap-2 min-w-[90px] sm:min-w-[110px] max-w-[130px]">
                                                     <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-emerald-400 shadow-md bg-gradient-to-br from-emerald-100 to-emerald-200 flex items-center justify-center shrink-0">
                                                         {member.profileImage ? (
                                                             <img src={member.profileImage} alt={member.name} className="w-full h-full object-cover" />
@@ -518,7 +517,7 @@ export default function HomePage() {
                                                             <span className="text-sm font-bold text-emerald-800">{initials}</span>
                                                         )}
                                                     </div>
-                                                    <span className="text-xs font-semibold text-slate-700 text-center leading-tight max-w-[70px] truncate">{member.name}</span>
+                                                    <span className="text-xs font-bold text-slate-800 text-center leading-snug whitespace-normal break-words w-full">{member.name}</span>
                                                 </div>
                                             );
                                         })}
