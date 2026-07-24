@@ -5,6 +5,10 @@ import { TrendingUp, DollarSign, Wallet, ArrowUpRight, BarChart3, Info, Truck } 
 import { adminApi } from "@/lib/api/admin";
 import { formatCurrency } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
+import {
+    ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip,
+    Cell, PieChart, Pie, Legend
+} from "recharts";
 
 export default function AdminProfitLossPage() {
     const { t, locale } = useLocale();
@@ -14,6 +18,24 @@ export default function AdminProfitLossPage() {
     });
 
     const profitColor = !stats ? "text-slate-800" : stats.netProfit >= 0 ? "text-green-700" : "text-red-700";
+
+    // Prepare chart data
+    const barChartData = stats ? [
+        { name: t("admin.overview.profitLoss.salesRevenue"), amount: stats.totalSales, fill: "#059669" },
+        { name: t("admin.overview.profitLoss.minusCostOfSold"), amount: stats.totalSoldCost, fill: "#ea580c" },
+        { name: t("admin.overview.profitLoss.minusDelivery"), amount: stats.totalDeliveryCharges, fill: "#ca8a04" },
+        { name: t("admin.overview.profitLoss.minusCommission"), amount: stats.totalCommissionsPaid, fill: "#4f46e5" },
+        { name: t("admin.overview.profitLoss.minusWithdrawals"), amount: stats.totalWithdrawalsApproved, fill: "#e11d48" },
+        { name: t("admin.overview.profitLoss.netProfit"), amount: Math.max(0, stats.netProfit), fill: stats.netProfit >= 0 ? "#10b981" : "#ef4444" },
+    ] : [];
+
+    const pieChartData = stats ? [
+        { name: t("admin.overview.profitLoss.minusCostOfSold"), value: stats.totalSoldCost, color: "#ea580c" },
+        { name: t("admin.overview.profitLoss.minusDelivery"), value: stats.totalDeliveryCharges, color: "#ca8a04" },
+        { name: t("admin.overview.profitLoss.minusCommission"), value: stats.totalCommissionsPaid, color: "#4f46e5" },
+        { name: t("admin.overview.profitLoss.minusWithdrawals"), value: stats.totalWithdrawalsApproved, color: "#e11d48" },
+        { name: t("admin.overview.profitLoss.netProfit"), value: Math.max(0, stats.netProfit), color: "#10b981" },
+    ].filter(d => d.value > 0) : [];
 
     return (
         <div className="space-y-6">
@@ -133,6 +155,71 @@ export default function AdminProfitLossPage() {
                             </div>
                             <div className="rounded-lg bg-rose-50 p-2 text-rose-700">
                                 <Wallet size={16} />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* ── Interactive Financial Analytics Charts (Placed at the bottom) ── */}
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        {/* Bar Chart: Revenue & Cost Comparison */}
+                        <div className="lg:col-span-2 card p-6 bg-white border border-slate-200">
+                            <h3 className="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                <BarChart3 size={18} className="text-indigo-600" />
+                                Financial Comparison Breakdown
+                            </h3>
+                            <div className="h-72 w-full">
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <BarChart data={barChartData} margin={{ top: 10, right: 10, left: -20, bottom: 25 }}>
+                                        <XAxis dataKey="name" tick={{ fontSize: 10, fill: "#64748b" }} interval={0} angle={-15} textAnchor="end" />
+                                        <YAxis tick={{ fontSize: 10, fill: "#64748b" }} />
+                                        <Tooltip
+                                            formatter={(value: any) => [formatCurrency(Number(value), locale), "Amount"]}
+                                            contentStyle={{ backgroundColor: "#0f172a", borderRadius: "8px", color: "#fff", fontSize: "12px" }}
+                                        />
+                                        <Bar dataKey="amount" radius={[6, 6, 0, 0]}>
+                                            {barChartData.map((entry, index) => (
+                                                <Cell key={`cell-${index}`} fill={entry.fill} />
+                                            ))}
+                                        </Bar>
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            </div>
+                        </div>
+
+                        {/* Donut Chart: Revenue Distribution */}
+                        <div className="card p-6 bg-white border border-slate-200 flex flex-col items-center">
+                            <h3 className="text-sm font-bold text-slate-800 mb-4 w-full text-left">
+                                Revenue Allocation Breakdown
+                            </h3>
+                            <div className="h-72 w-full flex items-center justify-center">
+                                {pieChartData.length > 0 ? (
+                                    <ResponsiveContainer width="100%" height="100%">
+                                        <PieChart>
+                                            <Pie
+                                                data={pieChartData}
+                                                cx="50%"
+                                                cy="45%"
+                                                innerRadius={55}
+                                                outerRadius={85}
+                                                paddingAngle={4}
+                                                dataKey="value"
+                                            >
+                                                {pieChartData.map((entry, index) => (
+                                                    <Cell key={`pie-cell-${index}`} fill={entry.color} />
+                                                ))}
+                                            </Pie>
+                                            <Tooltip
+                                                formatter={(value: any) => [formatCurrency(Number(value), locale), "Amount"]}
+                                                contentStyle={{ backgroundColor: "#0f172a", borderRadius: "8px", color: "#fff", fontSize: "12px" }}
+                                            />
+                                            <Legend
+                                                wrapperStyle={{ fontSize: "11px", paddingTop: "10px" }}
+                                            />
+                                        </PieChart>
+                                    </ResponsiveContainer>
+                                ) : (
+                                    <p className="text-xs text-slate-400">No revenue data yet</p>
+                                )}
                             </div>
                         </div>
                     </div>
