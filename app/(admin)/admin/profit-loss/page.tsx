@@ -7,7 +7,7 @@ import { formatCurrency } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
 import {
     ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip,
-    Cell, PieChart, Pie, Legend
+    Cell, PieChart, Pie, Legend, LabelList
 } from "recharts";
 
 export default function AdminProfitLossPage() {
@@ -162,24 +162,34 @@ export default function AdminProfitLossPage() {
                     {/* ── Interactive Financial Analytics Charts (Placed at the bottom) ── */}
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         {/* Bar Chart: Revenue & Cost Comparison */}
-                        <div className="lg:col-span-2 card p-6 bg-white border border-slate-200">
-                            <h3 className="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2">
-                                <BarChart3 size={18} className="text-indigo-600" />
+                        <div className="lg:col-span-2 card p-6 bg-slate-900 border border-slate-800 text-white shadow-xl">
+                            <h3 className="text-sm font-bold text-white mb-4 flex items-center gap-2">
+                                <BarChart3 size={18} className="text-emerald-400" />
                                 Financial Comparison Breakdown
                             </h3>
                             <div className="h-72 w-full">
                                 <ResponsiveContainer width="100%" height="100%">
-                                    <BarChart data={barChartData} margin={{ top: 10, right: 10, left: -20, bottom: 25 }}>
-                                        <XAxis dataKey="name" tick={{ fontSize: 10, fill: "#64748b" }} interval={0} angle={-15} textAnchor="end" />
-                                        <YAxis tick={{ fontSize: 10, fill: "#64748b" }} />
+                                    <BarChart data={barChartData} margin={{ top: 20, right: 10, left: -10, bottom: 25 }}>
+                                        <XAxis dataKey="name" tick={{ fontSize: 10, fill: "#cbd5e1", fontWeight: 600 }} interval={0} angle={-15} textAnchor="end" />
+                                        <YAxis tick={{ fontSize: 10, fill: "#cbd5e1", fontWeight: 600 }} />
                                         <Tooltip
                                             formatter={(value: any) => [formatCurrency(Number(value), locale), "Amount"]}
-                                            contentStyle={{ backgroundColor: "#0f172a", borderRadius: "8px", color: "#fff", fontSize: "12px" }}
+                                            contentStyle={{ backgroundColor: "#020617", borderRadius: "8px", borderColor: "#334155", color: "#ffffff", fontSize: "12px" }}
+                                            itemStyle={{ color: "#38bdf8", fontWeight: 700 }}
+                                            labelStyle={{ color: "#94a3b8", fontWeight: 600 }}
                                         />
                                         <Bar dataKey="amount" radius={[6, 6, 0, 0]}>
                                             {barChartData.map((entry, index) => (
                                                 <Cell key={`cell-${index}`} fill={entry.fill} />
                                             ))}
+                                            <LabelList
+                                                dataKey="amount"
+                                                position="top"
+                                                fill="#f8fafc"
+                                                fontSize={10}
+                                                fontWeight={700}
+                                                formatter={(val: any) => formatCurrency(Number(val), locale)}
+                                            />
                                         </Bar>
                                     </BarChart>
                                 </ResponsiveContainer>
@@ -187,8 +197,8 @@ export default function AdminProfitLossPage() {
                         </div>
 
                         {/* Donut Chart: Revenue Distribution */}
-                        <div className="card p-6 bg-white border border-slate-200 flex flex-col items-center">
-                            <h3 className="text-sm font-bold text-slate-800 mb-4 w-full text-left">
+                        <div className="card p-6 bg-slate-900 border border-slate-800 text-white shadow-xl flex flex-col items-center">
+                            <h3 className="text-sm font-bold text-white mb-4 w-full text-left">
                                 Revenue Allocation Breakdown
                             </h3>
                             <div className="h-72 w-full flex items-center justify-center">
@@ -210,10 +220,12 @@ export default function AdminProfitLossPage() {
                                             </Pie>
                                             <Tooltip
                                                 formatter={(value: any) => [formatCurrency(Number(value), locale), "Amount"]}
-                                                contentStyle={{ backgroundColor: "#0f172a", borderRadius: "8px", color: "#fff", fontSize: "12px" }}
+                                                contentStyle={{ backgroundColor: "#020617", borderRadius: "8px", borderColor: "#334155", color: "#ffffff", fontSize: "12px" }}
+                                                itemStyle={{ color: "#38bdf8", fontWeight: 700 }}
+                                                labelStyle={{ color: "#94a3b8", fontWeight: 600 }}
                                             />
                                             <Legend
-                                                wrapperStyle={{ fontSize: "11px", paddingTop: "10px" }}
+                                                wrapperStyle={{ fontSize: "11px", paddingTop: "10px", color: "#cbd5e1" }}
                                             />
                                         </PieChart>
                                     </ResponsiveContainer>
