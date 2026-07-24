@@ -183,22 +183,12 @@ export default function HomePage() {
             <AnnouncementBar />
 
             {/* Hero */}
-            <section className="relative overflow-hidden bg-red-700 text-white w-full">
-                <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width=%2760%27%20height=%2760%27%20viewBox=%270%200%2060%2060%27%20xmlns=%27http://www.w3.org/2000/svg%27%3E%3Cg%20fill=%27none%27%20fill-rule=%27evenodd%27%3E%3Cg%20fill=%27%23ffffff%27%2520fill-opacity=%270.03%27%3E%3Cpath%20d=%27M36%2034v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6%2034v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6%204V0H4v4H0v2h4v4h2V6h4V4H6z%27/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-50" />
-
-                <div className="absolute -top-32 -right-20 h-[28rem] w-[28rem] opacity-20 blur-3xl" style={{ borderRadius: "42% 58% 35% 65% / 55% 40% 60% 45%", background: "linear-gradient(135deg, #b91c1c, #991b1b)" }} />
-                <div className="absolute -bottom-40 -left-28 h-[35rem] w-[35rem] opacity-15 blur-3xl" style={{ borderRadius: "55% 45% 65% 35% / 40% 60% 40% 60%", background: "linear-gradient(225deg, #7f1d1d, #991b1b)" }} />
-
-                <svg className="absolute top-0 right-0 h-full w-64 text-red-900/30" viewBox="0 0 100 100" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M100 0C60 20 40 60 60 100H100V0Z" fill="currentColor" />
-                </svg>
-                <svg className="absolute bottom-0 left-0 h-32 w-full text-red-900/20" viewBox="0 0 1440 100" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M0 100C360 20 720 80 1440 30V100H0Z" fill="currentColor" />
-                </svg>
+            <section className="relative overflow-hidden bg-gradient-to-b from-slate-50 via-white to-slate-100/80 text-slate-900 w-full border-b border-slate-200/70">
+                <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:24px_24px] opacity-40 pointer-events-none" />
 
                 <div className="w-full px-2 sm:px-4 lg:px-6 relative py-16 lg:py-20">
                     <div className="max-w-4xl mx-auto text-center">
-                        <h1 className="mb-4 text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold leading-tight drop-shadow-md">
+                        <h1 className="mb-4 text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-extrabold text-slate-900 leading-tight tracking-tight">
                             {locale === "en" ? (
                                 <>
                                     <span className="md:whitespace-nowrap">
@@ -206,7 +196,7 @@ export default function HomePage() {
                                         <br className="block md:hidden" /> Affiliate Marketplace,
                                     </span>
                                     <br />
-                                    <span className="md:whitespace-nowrap">Start Earning</span>
+                                    <span className="md:whitespace-nowrap text-red-700">Start Earning</span>
                                 </>
                             ) : (
                                 <>
@@ -215,18 +205,18 @@ export default function HomePage() {
                                         <br className="block md:hidden" /> পণ্য কিনুন,
                                     </span>
                                     <br />
-                                    <span className="md:whitespace-nowrap">আয় শুরু করুন</span>
+                                    <span className="md:whitespace-nowrap text-red-700">আয় শুরু করুন</span>
                                 </>
                             )}
                         </h1>
-                        <p className="mb-6 text-sm sm:text-base lg:text-lg text-red-100/90 leading-relaxed max-w-3xl mx-auto">
+                        <p className="mb-6 text-sm sm:text-base lg:text-lg text-slate-600 leading-relaxed max-w-3xl mx-auto font-medium">
                             {t("home.hero.subtitle")}
                         </p>
                         <div className="flex flex-wrap gap-3 justify-center">
-                            <Link href="/shop" className="inline-flex items-center gap-2 rounded-sm bg-white px-6 py-3 text-sm font-bold text-red-950 hover:bg-red-50 transition-all shadow-lg hover:shadow-xl">
+                            <Link href="/shop" className="inline-flex items-center gap-2 rounded-md bg-red-700 px-6 py-3 text-sm font-bold text-white hover:bg-red-800 transition-all shadow-md hover:shadow-lg">
                                 {t("home.hero.cta.shop")} <ArrowRight size={16} />
                             </Link>
-                            <Link href="/register" className="inline-flex items-center gap-2 rounded-sm border-2 border-white/40 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10 transition-all backdrop-blur-sm">
+                            <Link href="/register" className="inline-flex items-center gap-2 rounded-md border-2 border-slate-300 px-6 py-3 text-sm font-bold text-slate-700 hover:bg-slate-100 transition-all">
                                 {t("home.hero.cta.register")}
                             </Link>
                         </div>
