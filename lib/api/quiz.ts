@@ -93,6 +93,38 @@ export interface QuizSubmitResult {
     netReward?: number;
 }
 
+export interface QuizAdminStats {
+    totalQuizzesSold: number;
+    completedQuizzes: number;
+    totalQuestionsSold: number;
+    totalRevenue: number;
+    totalUserRewardsPaid: number;
+    netProfit: number;
+    categoryStats: {
+        id: string;
+        name: string;
+        imageUrl: string;
+        totalQuestions: number;
+        totalSold: number;
+        totalQuestionsSold: number;
+        totalRevenue: number;
+    }[];
+    userPurchaseLogs?: {
+        id: string;
+        user: { id: string; name: string; phone?: string; email?: string };
+        category: { id: string; name: string; imageUrl: string };
+        questionCount: number;
+        pricePaid: number;
+        correctCount: number;
+        wrongCount: number;
+        userReward: number;
+        platformProfit: number;
+        status: "PURCHASED" | "COMPLETED";
+        purchasedAt: string;
+        completedAt?: string;
+    }[];
+}
+
 export const quizApi = {
     // Categories
     getCategories: async (): Promise<QuizCategoryItem[]> => {
@@ -148,6 +180,11 @@ export const quizApi = {
     },
 
     // Admin: Questions
+    adminGetStats: async (): Promise<QuizAdminStats> => {
+        const res = await api.get("/quiz/admin/stats");
+        return res.data;
+    },
+
     adminAddQuestions: async (categoryId: string, questions: { question: string; options: string[]; correctIndex: number }[], levelId?: string): Promise<any> => {
         const params = levelId ? { levelId } : undefined;
         const res = await api.post(`/quiz/admin/questions/${categoryId}`, questions, { params });

@@ -125,6 +125,24 @@ export default function DashboardOverview() {
         },
         {
             href: "#",
+            label: t("nav.affiliateMarketing"),
+            image: "/images/affilaitemarketing.png",
+            cardBg: "bg-emerald-200 text-emerald-950 border-emerald-300 hover:bg-emerald-300",
+        },
+        {
+            href: "#",
+            label: t("nav.cpaMarketing"),
+            image: "/images/cpamarketing.png",
+            cardBg: "bg-indigo-200 text-indigo-950 border-indigo-300 hover:bg-indigo-300",
+        },
+        {
+            href: "#",
+            label: t("nav.digitalMarketing"),
+            image: "/images/digitalmarketing.png",
+            cardBg: "bg-sky-200 text-sky-950 border-sky-300 hover:bg-sky-300",
+        },
+        {
+            href: "#",
             label: t("nav.shareholder"),
             icon: FaBuilding,
             cardBg: "bg-violet-200 text-violet-950 border-violet-300 hover:bg-violet-300",
