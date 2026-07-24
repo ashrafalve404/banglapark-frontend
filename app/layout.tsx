@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     template: "%s | Bangla Park Limited",
   },
   description:
-    "বাংলা পার্ক লিমিটেড — বাংলাদেশের শীর্ষস্থানীয় ই-কমার্স প্ল্যাটফর্ম। সেরা মূল্যে কেনাকাটা করুন, পণ্য রেফার করে আয় করুন। Bangla Park Limited — Bangladesh's trusted e-commerce platform. Shop online at best prices, earn by referring products.",
+    "বাংলা পার্ক লিমিটেড — বাংলাদেশের শীর্ষস্থানীয় ডিজিটাল প্ল্যাটফর্ম। সেরা মূল্যে কেনাকাটা করুন, পণ্য রেফার করে আয় করুন। Bangla Park Limited — Bangladesh's trusted digital platform. Shop online at best prices, earn by referring products.",
   keywords: [
     "bangla park",
     "banglapark",
@@ -31,9 +31,9 @@ export const metadata: Metadata = {
     "bangladesh ecommerce",
     "online shopping bangladesh",
     "best ecommerce site in bangladesh",
-    "bangla park ecommerce",
+    "bangla park digital",
     "বাংলা পার্ক",
-    "বাংলাদেশ ই-কমার্স",
+    "বাংলাদেশ ডিজিটাল প্ল্যাটফর্ম",
     "অনলাইন শপিং বাংলাদেশ",
     "bangladesh online marketplace",
   ],
@@ -52,9 +52,9 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Bangla Park Limited — Trusted E-commerce Platform in Bangladesh",
+    title: "Bangla Park Limited — Trusted Digital Platform in Bangladesh",
     description:
-      "বাংলা পার্ক লিমিটেড — বাংলাদেশের শীর্ষস্থানীয় ই-কমার্স প্ল্যাটফর্ম। সেরা মূল্যে কেনাকাটা করুন, পণ্য রেফার করে আয় করুন। Shop online at best prices across Bangladesh.",
+      "বাংলা পার্ক লিমিটেড — বাংলাদেশের শীর্ষস্থানীয় ডিজিটাল প্ল্যাটফর্ম। সেরা মূল্যে কেনাকাটা করুন, পণ্য রেফার করে আয় করুন। Shop online at best prices across Bangladesh.",
     url: siteUrl,
     siteName: "Bangla Park Limited",
     locale: "bn_BD",

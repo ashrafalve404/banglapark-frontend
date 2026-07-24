@@ -108,7 +108,7 @@ export default function DashboardOverview() {
         {
             href: "/dashboard/wallet",
             label: t("nav.wallet"),
-            icon: FaWallet,
+            image: "/images/wallet.png",
             cardBg: "bg-green-200 text-green-950 border-green-300 hover:bg-green-300",
         },
         {
@@ -120,7 +120,7 @@ export default function DashboardOverview() {
         {
             href: "/dashboard/withdraw",
             label: t("nav.withdraw"),
-            icon: FaMoneyBills,
+            image: "/images/withdraw.png",
             cardBg: "bg-rose-200 text-rose-950 border-rose-300 hover:bg-rose-300",
         },
         {
