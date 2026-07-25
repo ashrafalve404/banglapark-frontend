@@ -7,7 +7,7 @@ import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { GoogleLogin, type CredentialResponse } from "@react-oauth/google";
-import { Loader2 } from "lucide-react";
+import { Loader2, Eye, EyeOff } from "lucide-react";
 import { useAuthStore } from "@/store/auth";
 import { authApi } from "@/lib/api/auth";
 import { useLocale } from "@/lib/i18n";
@@ -29,6 +29,7 @@ function LoginForm() {
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
     const [googleLoading, setGoogleLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleGoogleSuccess = async (credentialResponse: CredentialResponse) => {
         if (!credentialResponse.credential) return;
@@ -112,12 +113,23 @@ function LoginForm() {
                         <div className="flex items-center justify-between mb-1.5">
                             <label className="label">{t("auth.login.passwordLabel")}</label>
                         </div>
-                        <input
-                            type="password"
-                            className="input text-left"
-                            placeholder="••••••••"
-                            {...register("password")}
-                        />
+                        <div className="relative">
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                className="input text-left pr-10"
+                                placeholder="••••••••"
+                                {...register("password")}
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors p-1"
+                                tabIndex={-1}
+                                title={showPassword ? "Hide password" : "Show password"}
+                            >
+                                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                            </button>
+                        </div>
                         {errors.password && (
                             <p className="mt-1 text-xs text-red-500">{errors.password.message}</p>
                         )}

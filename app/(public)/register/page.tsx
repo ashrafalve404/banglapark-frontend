@@ -3,16 +3,14 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { Download, CheckCircle, ArrowRight } from "lucide-react";
+import { Download, CheckCircle, ArrowRight, Eye, EyeOff } from "lucide-react";
 import { useAuthStore } from "@/store/auth";
 import { authApi } from "@/lib/api/auth";
 import { useLocale } from "@/lib/i18n";
 import jsPDF from "jspdf";
-
-import { Suspense } from "react";
 
 const registerSchema = z.object({
     name: z.string().min(2, "নাম কমপক্ষে ২ অক্ষরের হতে হবে"),
@@ -35,6 +33,7 @@ function RegisterForm() {
     const [referredByCode, setReferredByCode] = useState<string | null>(null);
     const [registeredUser, setRegisteredUser] = useState<any>(null);
     const [usedReferralCode, setUsedReferralCode] = useState<string | null>(null);
+    const [showPassword, setShowPassword] = useState(false);
 
     const pdfRef = useRef<HTMLDivElement>(null);
 
@@ -148,15 +147,15 @@ function RegisterForm() {
                     <h2 className="text-2xl font-bold text-gray-900 mb-2">Registration Successful!</h2>
                     <p className="text-sm text-gray-500 mb-4">Welcome to Bangla Park Limited</p>
 
-                        <div ref={pdfRef} className="bg-gray-50 rounded-xl p-6 text-left space-y-2 mb-6">
-                            <p className="text-center text-lg font-bold text-green-800">BP-{registeredUser.memberId}</p>
-                            <div className="text-sm space-y-1">
-                                <p><span className="font-semibold text-gray-700">Name:</span> {registeredUser.name}</p>
-                                <p><span className="font-semibold text-gray-700">Email:</span> {registeredUser.email}</p>
-                                <p><span className="font-semibold text-gray-700">Phone:</span> {registeredUser.phone}</p>
-                                <p><span className="font-semibold text-gray-700">Referral Code Used:</span> {usedReferralCode || "No code used"}</p>
-                            </div>
+                    <div ref={pdfRef} className="bg-gray-50 rounded-xl p-6 text-left space-y-2 mb-6">
+                        <p className="text-center text-lg font-bold text-green-800">BP-{registeredUser.memberId}</p>
+                        <div className="text-sm space-y-1">
+                            <p><span className="font-semibold text-gray-700">Name:</span> {registeredUser.name}</p>
+                            <p><span className="font-semibold text-gray-700">Email:</span> {registeredUser.email}</p>
+                            <p><span className="font-semibold text-gray-700">Phone:</span> {registeredUser.phone}</p>
+                            <p><span className="font-semibold text-gray-700">Referral Code Used:</span> {usedReferralCode || "No code used"}</p>
                         </div>
+                    </div>
 
                     <div className="flex flex-col gap-3">
                         <button onClick={downloadPDF} className="btn-primary w-full py-3 flex items-center justify-center gap-2 text-sm font-semibold">
@@ -234,12 +233,23 @@ function RegisterForm() {
 
                     <div>
                         <label className="label mb-1 block">{t("auth.register.passwordLabel")}</label>
-                        <input
-                            type="password"
-                            className="input text-left"
-                            placeholder="••••••••"
-                            {...register("password")}
-                        />
+                        <div className="relative">
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                className="input text-left pr-10"
+                                placeholder="••••••••"
+                                {...register("password")}
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors p-1"
+                                tabIndex={-1}
+                                title={showPassword ? "Hide password" : "Show password"}
+                            >
+                                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                            </button>
+                        </div>
                         {errors.password && (
                             <p className="mt-1 text-xs text-red-500">{errors.password.message}</p>
                         )}

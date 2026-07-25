@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { ShoppingCart, Bell, User, Menu, X, LogOut, LayoutDashboard, Shield, Search } from "lucide-react";
+import { ShoppingCart, Menu, X, Search } from "lucide-react";
+import { FaUser, FaCircleUser, FaGauge, FaBell, FaRightFromBracket, FaShieldHalved } from "react-icons/fa6";
 import { useQuery } from "@tanstack/react-query";
 import { useAuthStore } from "@/store/auth";
 import { useCartStore } from "@/store/cart";
@@ -131,26 +132,26 @@ export function Header() {
                         {mounted && isAuthenticated && user ? (
                             <div ref={profileRef} className="relative">
                                 <button onClick={() => setProfileOpen(!profileOpen)} className="flex items-center gap-2 rounded-sm border border-white/30 px-3 py-1.5 text-sm font-medium text-white/90 hover:bg-white/10 transition-colors">
-                                    <User size={16} />
+                                    <FaCircleUser size={18} className="text-white" />
                                     <span className="hidden sm:block max-w-[120px] lg:max-w-[200px] truncate">{user.name}</span>
                                 </button>
                                 {profileOpen && (
                                     <div className="absolute right-0 top-full mt-1 w-48 rounded-lg border border-gray-100 bg-white shadow-lg z-50">
                                         <div className="p-2">
                                             {(user.role === "ADMIN" || user.role === "SUPER_ADMIN") && (
-                                                <Link href="/admin" onClick={() => setProfileOpen(false)} className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-50">
-                                                    <Shield size={15} /> {t("nav.adminPanel")}
+                                                <Link href="/admin" onClick={() => setProfileOpen(false)} className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 font-medium">
+                                                    <FaShieldHalved size={15} className="text-red-700" /> {t("nav.adminPanel")}
                                                 </Link>
                                             )}
-                                            <Link href="/dashboard" onClick={() => setProfileOpen(false)} className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-50">
-                                                <LayoutDashboard size={15} /> {t("nav.dashboard")}
+                                            <Link href="/dashboard" onClick={() => setProfileOpen(false)} className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 font-medium">
+                                                <FaGauge size={15} className="text-indigo-600" /> {t("nav.dashboard")}
                                             </Link>
-                                            <Link href="/dashboard/notifications" onClick={() => setProfileOpen(false)} className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-50">
-                                                <Bell size={15} /> {t("nav.notifications")}
+                                            <Link href="/dashboard/notifications" onClick={() => setProfileOpen(false)} className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 font-medium">
+                                                <FaBell size={15} className="text-amber-500" /> {t("nav.notifications")}
                                             </Link>
                                             <hr className="my-1 border-gray-100" />
-                                            <button onClick={() => { handleLogout(); setProfileOpen(false); }} className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-red-600 hover:bg-red-50">
-                                                <LogOut size={15} /> {t("nav.logout")}
+                                            <button onClick={() => { handleLogout(); setProfileOpen(false); }} className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-red-600 hover:bg-red-50 font-medium">
+                                                <FaRightFromBracket size={15} className="text-red-600" /> {t("nav.logout")}
                                             </button>
                                         </div>
                                     </div>

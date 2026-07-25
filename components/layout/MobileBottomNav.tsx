@@ -12,11 +12,11 @@ import { useAuthStore } from "@/store/auth";
 import { useEffect, useState } from "react";
 
 const NAV_ITEMS = [
-    { href: "/", icon: FaHouse, labelKey: "nav.home", activeColor: "text-red-700", activeBar: "bg-red-700" },
-    { href: "/shop", icon: FaStore, labelKey: "nav.shop", activeColor: "text-indigo-600", activeBar: "bg-indigo-600" },
-    { href: "/cart", icon: FaBasketShopping, labelKey: "nav.cart", showBadge: true, activeColor: "text-amber-600", activeBar: "bg-amber-600" },
-    { href: "/dashboard", icon: FaGauge, labelKey: "nav.dashboard", auth: true, activeColor: "text-emerald-600", activeBar: "bg-emerald-600" },
-    { href: "/login", icon: FaCircleUser, labelKey: "nav.login", guest: true, activeColor: "text-violet-600", activeBar: "bg-violet-600" },
+    { href: "/", icon: FaHouse, labelKey: "nav.home" },
+    { href: "/shop", icon: FaStore, labelKey: "nav.shop" },
+    { href: "/cart", icon: FaBasketShopping, labelKey: "nav.cart", showBadge: true },
+    { href: "/dashboard", icon: FaGauge, labelKey: "nav.dashboard", auth: true },
+    { href: "/login", icon: FaCircleUser, labelKey: "nav.login", guest: true },
 ];
 
 export function MobileBottomNav() {
@@ -47,7 +47,7 @@ export function MobileBottomNav() {
                             key={item.href}
                             href={item.href}
                             className={`flex flex-col items-center justify-center py-2 px-3 min-w-14 relative transition-colors duration-200 ${
-                                isActive ? item.activeColor : "text-gray-400 hover:text-gray-600"
+                                isActive ? "text-red-700" : "text-gray-400 hover:text-gray-600"
                             }`}
                         >
                             <div className="relative">
