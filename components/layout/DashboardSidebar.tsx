@@ -29,34 +29,34 @@ export function DashboardSidebar({ onClose, mobile }: DashboardSidebarProps) {
     };
 
     const navItems = [
-        { href: "/dashboard", label: t("nav.overview"), icon: FaGauge, exact: true },
-        { href: "/dashboard/profile", label: t("nav.profile"), icon: FaUser },
-        { href: "/dashboard/daily-work", label: t("nav.dailyWork"), icon: FaBriefcase },
-        { href: "/dashboard/wallet", label: t("nav.wallet"), icon: FaWallet },
-        { href: "/dashboard/orders", label: t("nav.orders"), icon: FaBagShopping },
-        { href: "/dashboard/referrals", label: t("nav.referrals"), icon: FaUsers },
-        { href: "/dashboard/position", label: t("nav.position"), icon: FaAward },
-        { href: "/dashboard/travel", label: t("nav.travel"), icon: FaPlane },
-        { href: "/dashboard/withdraw", label: t("nav.withdraw"), icon: FaMoneyBills },
-        { href: "/dashboard/statement", label: t("nav.statement"), icon: FaFileLines },
-        { href: "/dashboard/notifications", label: t("nav.notifications"), icon: FaBell },
+        { href: "/dashboard", label: t("nav.overview"), icon: FaGauge, exact: true, activeBg: "bg-indigo-50 text-indigo-800 border-l-4 border-indigo-600 shadow-xs", iconColor: "text-indigo-600" },
+        { href: "/dashboard/profile", label: t("nav.profile"), icon: FaUser, activeBg: "bg-blue-50 text-blue-800 border-l-4 border-blue-600 shadow-xs", iconColor: "text-blue-600" },
+        { href: "/dashboard/daily-work", label: t("nav.dailyWork"), icon: FaBriefcase, activeBg: "bg-amber-50 text-amber-800 border-l-4 border-amber-600 shadow-xs", iconColor: "text-amber-600" },
+        { href: "/dashboard/wallet", label: t("nav.wallet"), icon: FaWallet, activeBg: "bg-emerald-50 text-emerald-800 border-l-4 border-emerald-600 shadow-xs", iconColor: "text-emerald-600" },
+        { href: "/dashboard/orders", label: t("nav.orders"), icon: FaBagShopping, activeBg: "bg-purple-50 text-purple-800 border-l-4 border-purple-600 shadow-xs", iconColor: "text-purple-600" },
+        { href: "/dashboard/referrals", label: t("nav.referrals"), icon: FaUsers, activeBg: "bg-sky-50 text-sky-800 border-l-4 border-sky-600 shadow-xs", iconColor: "text-sky-600" },
+        { href: "/dashboard/position", label: t("nav.position"), icon: FaAward, activeBg: "bg-teal-50 text-teal-800 border-l-4 border-teal-600 shadow-xs", iconColor: "text-teal-600" },
+        { href: "/dashboard/travel", label: t("nav.travel"), icon: FaPlane, activeBg: "bg-orange-50 text-orange-800 border-l-4 border-orange-600 shadow-xs", iconColor: "text-orange-600" },
+        { href: "/dashboard/withdraw", label: t("nav.withdraw"), icon: FaMoneyBills, activeBg: "bg-rose-50 text-rose-800 border-l-4 border-rose-600 shadow-xs", iconColor: "text-rose-600" },
+        { href: "/dashboard/statement", label: t("nav.statement"), icon: FaFileLines, activeBg: "bg-violet-50 text-violet-800 border-l-4 border-violet-600 shadow-xs", iconColor: "text-violet-600" },
+        { href: "/dashboard/notifications", label: t("nav.notifications"), icon: FaBell, activeBg: "bg-fuchsia-50 text-fuchsia-800 border-l-4 border-fuchsia-600 shadow-xs", iconColor: "text-fuchsia-600" },
     ];
 
     return (
         <aside className={cn("flex h-full flex-col bg-white", mobile && "border-r border-gray-100 pb-16")}>
             {mobile && (
                 <div className="flex h-16 items-center justify-between px-4 border-b border-gray-100">
-                    <span className="font-bold text-green-800">{t("nav.banglaPark")}</span>
+                    <span className="font-bold text-red-700">{t("nav.banglaPark")}</span>
                     <button onClick={onClose} className="p-2 text-gray-500 hover:text-gray-700">
                         <FaXmark size={20} />
                     </button>
                 </div>
             )}
-            <nav className="flex-1 overflow-y-auto p-3 space-y-0.5">
+            <nav className="flex-1 overflow-y-auto p-3 space-y-1">
                 <Link
                     href="/"
                     onClick={onClose}
-                    className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-green-700 hover:bg-green-50 transition-all mb-1 border border-green-100"
+                    className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-red-700 hover:bg-red-50 transition-all mb-1 border border-red-100"
                 >
                     <FaHouse size={17} />
                     {t("nav.backToSite")}
@@ -71,15 +71,15 @@ export function DashboardSidebar({ onClose, mobile }: DashboardSidebarProps) {
                             href={item.href}
                             onClick={onClose}
                             className={cn(
-                                "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all",
+                                "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold transition-all duration-200",
                                 active
-                                    ? "bg-green-50 text-green-800"
+                                    ? item.activeBg
                                     : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
                             )}
                         >
-                            <Icon size={17} className={active ? "text-green-700" : "text-gray-400"} />
+                            <Icon size={17} className={active ? item.iconColor : "text-gray-400 group-hover:text-gray-600"} />
                             {item.label}
-                            {active && <FaChevronRight size={14} className="ml-auto text-green-600" />}
+                            {active && <FaChevronRight size={13} className={cn("ml-auto opacity-70", item.iconColor)} />}
                         </Link>
                     );
                 })}

@@ -16,7 +16,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 
 const CATEGORY_ICONS = [Grid, Package, Shirt, Smartphone, Laptop, Home, Book, Watch, Gem];
 const CATEGORY_COLORS = [
-    { bg: "bg-emerald-50", icon: "text-emerald-600", hover: "hover:border-emerald-300 hover:shadow-emerald-100" },
+    { bg: "bg-red-50", icon: "text-red-600", hover: "hover:border-red-300 hover:shadow-red-100" },
     { bg: "bg-blue-50", icon: "text-blue-600", hover: "hover:border-blue-300 hover:shadow-blue-100" },
     { bg: "bg-violet-50", icon: "text-violet-600", hover: "hover:border-violet-300 hover:shadow-violet-100" },
     { bg: "bg-rose-50", icon: "text-rose-600", hover: "hover:border-rose-300 hover:shadow-rose-100" },
@@ -352,7 +352,7 @@ export default function HomePage() {
                                     </div>
                                     <div className="p-3 sm:p-4">
                                         <h3 className="text-xs sm:text-sm font-semibold text-gray-800 line-clamp-2 leading-snug min-h-[2.2em]">{product.name}</h3>
-                                        <p className="mt-1.5 text-base sm:text-lg font-bold text-green-800 tracking-tight">
+                                        <p className="mt-1.5 text-base sm:text-lg font-bold text-emerald-600 tracking-tight">
                                             ৳{Number(product.price).toLocaleString(locale === "bn" ? "bn-BD" : "en-IN")}
                                         </p>
                                         <div className="flex items-center gap-2 mt-1">
@@ -442,12 +442,12 @@ export default function HomePage() {
                                     </svg>
                                     <p className="text-sm text-gray-600 leading-relaxed mb-5 italic">"{story.quote}"</p>
                                     <div className="border-t border-gray-100 pt-4 flex items-center gap-3">
-                                        <div className="w-14 h-14 rounded-full bg-gradient-to-br from-emerald-200 to-slate-300 flex items-center justify-center text-sm font-bold text-slate-700 shrink-0 border-2 border-emerald-300 shadow-sm">
+                                        <div className="w-14 h-14 rounded-full bg-slate-50 flex items-center justify-center text-sm font-bold text-slate-800 shrink-0 border-2 border-red-300 shadow-sm">
                                             {story.name.split(" ").map((n: string) => n[0]).join("").slice(0, 2)}
                                         </div>
                                         <div>
                                             <p className="text-sm font-bold text-gray-900">{story.name}</p>
-                                            <p className="text-xs text-green-700">{story.role}</p>
+                                            <p className="text-xs text-red-700">{story.role}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -495,11 +495,11 @@ export default function HomePage() {
                                             .join("");
                                         return (
                                             <div key={member.id} className="flex flex-col items-center gap-1.5 w-full">
-                                                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full overflow-hidden border-2 border-emerald-400 shadow-md bg-gradient-to-br from-emerald-100 to-emerald-200 flex items-center justify-center shrink-0">
+                                                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full overflow-hidden border-2 border-red-400 shadow-md bg-slate-50 flex items-center justify-center shrink-0">
                                                     {member.profileImage ? (
                                                         <img src={member.profileImage} alt={member.name} className="w-full h-full object-cover" />
                                                     ) : (
-                                                        <span className="text-xs sm:text-sm font-bold text-emerald-800">{initials}</span>
+                                                        <span className="text-xs sm:text-sm font-bold text-slate-800">{initials}</span>
                                                     )}
                                                 </div>
                                                 <span className="text-[11px] sm:text-xs font-bold text-slate-800 text-center leading-snug whitespace-normal break-words w-full">{member.name}</span>
