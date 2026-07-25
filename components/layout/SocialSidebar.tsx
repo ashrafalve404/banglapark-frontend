@@ -1,24 +1,53 @@
 "use client";
 
+import Link from "next/link";
+import { ShoppingCart } from "lucide-react";
+import { useCartStore } from "@/store/cart";
+import { useState, useEffect } from "react";
+
 export function SocialSidebar() {
+    const [mounted, setMounted] = useState(false);
+    const cartCount = useCartStore((s) => s.count());
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
     return (
-        <div className="hidden lg:flex fixed right-3 lg:right-4 top-1/2 -translate-y-1/2 z-40 flex-col gap-3">
+        <div className="hidden lg:flex fixed right-4 top-1/2 -translate-y-1/2 z-40 flex-col gap-3.5">
+            {/* Shopping Cart Floating Side Button */}
+            <Link
+                href="/cart"
+                className="relative w-11 h-11 rounded-full bg-[#BF0707] hover:bg-[#9e0505] flex items-center justify-center text-white transition-all hover:scale-110 shadow-xl border-2 border-white/20 group"
+                title="Shopping Cart"
+            >
+                <ShoppingCart className="w-5 h-5 text-white transition-transform group-hover:scale-110" />
+                {mounted && cartCount > 0 && (
+                    <span className="absolute -top-1.5 -right-1.5 bg-amber-400 text-slate-950 font-black text-[10px] w-5 h-5 rounded-full flex items-center justify-center shadow-md border-2 border-white animate-bounce">
+                        {cartCount}
+                    </span>
+                )}
+            </Link>
+
+            {/* Facebook Floating Side Button */}
             <a
                 href="https://www.facebook.com/profile.php?id=61589186879275"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-[#1877F2] hover:opacity-90 flex items-center justify-center text-white transition-all hover:scale-110 shadow-lg"
+                className="w-11 h-11 rounded-full bg-[#1877F2] hover:opacity-90 flex items-center justify-center text-white transition-all hover:scale-110 shadow-xl border-2 border-white/20"
                 title="Facebook"
             >
                 <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
                     <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3l-.5 3h-2.5v6.8c4.56-.93 8-4.96 8-9.8z" />
                 </svg>
             </a>
+
+            {/* YouTube Floating Side Button */}
             <a
                 href="https://youtube.com/@banglapark?si=7mFnhHpG0s9fE0Hf"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-[#FF0000] hover:opacity-90 flex items-center justify-center text-white transition-all hover:scale-110 shadow-lg"
+                className="w-11 h-11 rounded-full bg-[#FF0000] hover:opacity-90 flex items-center justify-center text-white transition-all hover:scale-110 shadow-xl border-2 border-white/20"
                 title="YouTube"
             >
                 <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">

@@ -447,7 +447,7 @@ export default function HomePage() {
                                         </div>
                                         <div>
                                             <p className="text-sm font-bold text-gray-900">{story.name}</p>
-                                            <p className="text-xs text-red-700">{story.role}</p>
+                                            <p className="text-xs text-emerald-600 font-semibold">{story.role}</p>
                                         </div>
                                     </div>
                                 </div>
