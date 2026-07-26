@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ArrowRight, ShoppingCart, Loader2, Grid, Shirt, Smartphone, Package, Home, Book, Gem, Watch, Laptop, CheckCircle, X, Users, Sparkles, TrendingUp, ShieldCheck } from "lucide-react";
 import { BannerCarousel } from "@/components/home/BannerCarousel";
+import { SuccessStoriesSlider } from "@/components/home/SuccessStoriesSlider";
 import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
 
 import { productsApi } from "@/lib/api/products";
@@ -153,6 +154,13 @@ export default function HomePage() {
     const { data: newMembers = [] } = useQuery({
         queryKey: ["public-new-members"],
         queryFn: () => publicApi.newMembers(),
+        retry: 0,
+        staleTime: 120_000,
+    });
+
+    const { data: topLeaders = [] } = useQuery({
+        queryKey: ["public-top-leaders"],
+        queryFn: () => publicApi.topLeaders(),
         retry: 0,
         staleTime: 120_000,
     });
@@ -409,50 +417,65 @@ export default function HomePage() {
                         </div>
                     </RevealSection>
                     <RevealSection>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-                            {[
+                        {(() => {
+                            const defaultFallbackStories = [
                                 {
                                     name: locale === "en" ? "Md. Rahman" : "মোঃ রহমান",
-                                    role: locale === "en" ? "Team Leader, Dhaka" : "টিম লিডার, ঢাকা",
-                                    quote: locale === "en"
-                                        ? "Joining Bangla Park changed my life. Within 6 months I built a strong team and now earn a steady monthly income."
-                                        : "ব্যাংলা পার্কে যোগ দেওয়া আমার জীবন বদলে দিয়েছে। ৬ মাসের মধ্যে আমি একটি শক্তিশালী টিম গড়েছি এবং এখন স্থির মাসিক আয় করছি।",
+                                    role: locale === "en" ? "Affiliate, Dhaka" : "অ্যাফিলিয়েট, ঢাকা",
                                 },
                                 {
                                     name: locale === "en" ? "Fatima Begum" : "ফাতিমা বেগম",
-                                    role: locale === "en" ? "Affiliate, Chattogram" : "অ্যাফিলিয়েট, চট্টগ্রাম",
-                                    quote: locale === "en"
-                                        ? "The daily benefits and commission system is amazing. I've never seen such a supportive community."
-                                        : "দৈনিক বেনিফিট এবং কমিশন সিস্টেম অসাধারণ। আমি এত সমর্থনশীল কমিউনিটি কখনো দেখিনি।",
+                                    role: locale === "en" ? "Affiliate, Dhaka" : "অ্যাফিলিয়েট, ঢাকা",
                                 },
                                 {
                                     name: locale === "en" ? "Shahidul Islam" : "শহিদুল ইসলাম",
-                                    role: locale === "en" ? "Senior Affiliate, Sylhet" : "সিনিয়র অ্যাফিলিয়েট, সিলেট",
-                                    quote: locale === "en"
-                                        ? "From a small start to a full-time income — Bangla Park made it possible with their easy system."
-                                        : "ছোট শুরু থেকে পূর্ণকালীন আয় — ব্যাংলা পার্ক তাদের সহজ সিস্টেমের মাধ্যমে এটি সম্ভব করেছে।",
+                                    role: locale === "en" ? "Affiliate, Dhaka" : "অ্যাফিলিয়েট, ঢাকা",
                                 },
-                            ].map((story, i) => (
-                                <div key={i} className="group relative bg-white rounded p-6 sm:p-7 border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                                    <div className="absolute -top-2 -right-2 w-9 h-9 bg-gradient-to-br from-red-700 to-red-500 rounded-full flex items-center justify-center text-white text-[11px] font-bold shadow-lg">
-                                        0{i + 1}
-                                    </div>
-                                    <svg className="w-8 h-8 text-red-700/20 mb-4" viewBox="0 0 24 24" fill="currentColor">
-                                        <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
-                                    </svg>
-                                    <p className="text-sm text-gray-600 leading-relaxed mb-5 italic">"{story.quote}"</p>
-                                    <div className="border-t border-gray-100 pt-4 flex items-center gap-3">
-                                        <div className="w-14 h-14 rounded-full bg-slate-50 flex items-center justify-center text-sm font-bold text-slate-800 shrink-0 border-2 border-red-300 shadow-sm">
-                                            {story.name.split(" ").map((n: string) => n[0]).join("").slice(0, 2)}
-                                        </div>
-                                        <div>
-                                            <p className="text-sm font-bold text-gray-900">{story.name}</p>
-                                            <p className="text-xs text-emerald-600 font-semibold">{story.role}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
+                                {
+                                    name: locale === "en" ? "Tanvir Ahmed" : "তানভীর আহমেদ",
+                                    role: locale === "en" ? "Affiliate, Dhaka" : "অ্যাফিলিয়েট, ঢাকা",
+                                },
+                                {
+                                    name: locale === "en" ? "Nusrat Jahan" : "নুসরত জাহান",
+                                    role: locale === "en" ? "Affiliate, Dhaka" : "অ্যাফিলিয়েট, ঢাকা",
+                                },
+                            ];
+
+                            const storyQuotes = [
+                                locale === "en"
+                                    ? "Joining Bangla Park changed my life. Within 6 months I built a strong team and now earn a steady monthly income."
+                                    : "ব্যাংলা পার্কে যোগ দেওয়া আমার জীবন বদলে দিয়েছে। ৬ মাসের মধ্যে আমি একটি শক্তিশালী টিম গড়েছি এবং এখন স্থির মাসিক আয় করছি।",
+                                locale === "en"
+                                    ? "The daily benefits and commission system is amazing. I've never seen such a supportive community."
+                                    : "দৈনিক বেনিফিট এবং কমিশন সিস্টেম অসাধারণ। আমি এত সমর্থনশীল কমিউনিটি কখনো দেখিনি।",
+                                locale === "en"
+                                    ? "From a small start to a full-time income — Bangla Park made it possible with their easy system."
+                                    : "ছোট শুরু থেকে পূর্ণকালীন আয় — ব্যাংলা পার্ক তাদের সহজ সিস্টেমের মাধ্যমে এটি সম্ভব করেছে।",
+                                locale === "en"
+                                    ? "Bangla Park gave me financial freedom and an opportunity to lead a growing team of dedicated members."
+                                    : "ব্যাংলা পার্ক আমাকে আর্থিক স্বাধীনতা এবং একটি ক্রমবর্ধমান নিবেদিত টিমের নেতৃত্ব দেওয়ার সুযোগ দিয়েছে।",
+                                locale === "en"
+                                    ? "Consistent effort and the transparent system helped me achieve top earnings in a short time."
+                                    : "ধারাবাহিক প্রচেষ্টা এবং স্বচ্ছ সিস্টেম আমাকে স্বল্প সময়ে সেরা আয় অর্জন করতে সাহায্য করেছে।",
+                            ];
+
+                            const stories = Array.from({ length: 5 }).map((_, i) => {
+                                const leader = topLeaders && topLeaders[i];
+                                const fallback = defaultFallbackStories[i];
+                                const name = leader?.name || fallback.name;
+                                const role = locale === "en" ? "Affiliate, Dhaka" : "অ্যাফিলিয়েট, ঢাকা";
+                                const profileImage = leader?.profileImage;
+
+                                return {
+                                    name,
+                                    role,
+                                    quote: storyQuotes[i],
+                                    profileImage,
+                                };
+                            });
+
+                            return <SuccessStoriesSlider stories={stories} />;
+                        })()}
                     </RevealSection>
                 </div>
             </section>
@@ -480,35 +503,49 @@ export default function HomePage() {
                         </p>
 
                         {/* New Member List */}
-                        {newMembers.length > 0 && (
-                            <div className="mb-10">
-                                <p className={`text-sm font-bold text-slate-500 mb-5 text-center ${locale === "en" ? "tracking-widest uppercase" : "tracking-normal"}`}>
-                                    {locale === "en" ? "New Member List" : "নতুন সদস্য তালিকা"}
-                                </p>
-                                <div className="grid grid-cols-3 min-[340px]:grid-cols-4 md:grid-cols-8 gap-3.5 sm:gap-4 lg:gap-6 max-w-4xl mx-auto px-2">
-                                    {newMembers.map((member) => {
-                                        const initials = member.name
-                                            .split(" ")
-                                            .filter(Boolean)
-                                            .map((w: string) => w[0].toUpperCase())
-                                            .slice(0, 2)
-                                            .join("");
-                                        return (
-                                            <div key={member.id} className="flex flex-col items-center gap-1.5 w-full">
-                                                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full overflow-hidden border-2 border-red-400 shadow-md bg-slate-50 flex items-center justify-center shrink-0">
-                                                    {member.profileImage ? (
-                                                        <img src={member.profileImage} alt={member.name} className="w-full h-full object-cover" />
-                                                    ) : (
-                                                        <span className="text-xs sm:text-sm font-bold text-slate-800">{initials}</span>
-                                                    )}
+                        {(() => {
+                            const FALLBACK_NEW_MEMBERS = [
+                                { id: "fb-1", name: "Mahfuza Akter Lovely", initials: "MA", profileImage: null },
+                                { id: "fb-2", name: "Farzana Akter", initials: "FA", profileImage: null },
+                                { id: "fb-3", name: "Mst jannatul Ferdous", initials: "MJ", profileImage: null },
+                                { id: "fb-4", name: "SAZIB", initials: "S", profileImage: null },
+                                { id: "fb-5", name: "Mst.Najma Acter", initials: "MA", profileImage: null },
+                                { id: "fb-6", name: "Md.mustafa iqbal", initials: "MI", profileImage: null },
+                                { id: "fb-7", name: "Sumon chandra", initials: "SC", profileImage: null },
+                                { id: "fb-8", name: "Shikh osman", initials: "SO", profileImage: null },
+                            ];
+                            const memberList = newMembers.length > 0 ? newMembers : FALLBACK_NEW_MEMBERS;
+
+                            return (
+                                <div className="mb-10">
+                                    <p className={`text-sm font-bold text-slate-500 mb-5 text-center ${locale === "en" ? "tracking-widest uppercase" : "tracking-normal"}`}>
+                                        {locale === "en" ? "New Member List" : "নতুন সদস্য তালিকা"}
+                                    </p>
+                                    <div className="grid grid-cols-3 min-[340px]:grid-cols-4 md:grid-cols-8 gap-3.5 sm:gap-4 lg:gap-6 max-w-4xl mx-auto px-2">
+                                        {memberList.map((member: any) => {
+                                            const initials = member.initials || member.name
+                                                .split(" ")
+                                                .filter(Boolean)
+                                                .map((w: string) => w[0].toUpperCase())
+                                                .slice(0, 2)
+                                                .join("");
+                                            return (
+                                                <div key={member.id} className="flex flex-col items-center gap-1.5 w-full">
+                                                    <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full overflow-hidden border-2 border-red-400 shadow-md bg-slate-50 flex items-center justify-center shrink-0">
+                                                        {member.profileImage ? (
+                                                            <img src={member.profileImage} alt={member.name} className="w-full h-full object-cover" />
+                                                        ) : (
+                                                            <span className="text-xs sm:text-sm font-bold text-slate-800">{initials}</span>
+                                                        )}
+                                                    </div>
+                                                    <span className="text-[11px] sm:text-xs font-bold text-slate-800 text-center leading-snug whitespace-normal break-words w-full">{member.name}</span>
                                                 </div>
-                                                <span className="text-[11px] sm:text-xs font-bold text-slate-800 text-center leading-snug whitespace-normal break-words w-full">{member.name}</span>
-                                            </div>
-                                        );
-                                    })}
+                                            );
+                                        })}
+                                    </div>
                                 </div>
-                            </div>
-                        )}
+                            );
+                        })()}
 
                         {/* Tagline Card */}
                         <div className="relative max-w-3xl mx-auto rounded bg-white p-6 sm:p-8 border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300">

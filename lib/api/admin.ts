@@ -99,6 +99,10 @@ export const publicApi = {
         const res = await api.get("/public/new-members");
         return res.data;
     },
+    topLeaders: async (): Promise<{ id: string; name: string; profileImage: string | null; teamCount: number }[]> => {
+        const res = await api.get("/public/top-leaders");
+        return res.data;
+    },
 };
 
 export const reportsApi = {
