@@ -18,8 +18,8 @@ export default function QuizAttemptPage() {
     const [selectedOption, setSelectedOption] = useState<number | null>(null);
     const [submitting, setSubmitting] = useState(false);
     const [finished, setFinished] = useState(false);
-    const [result, setResult] = useState<{ score: number; totalQuestions: number; netReward?: number } | null>(null);
-    const [timeLeft, setTimeLeft] = useState(10);
+    const [result, setResult] = useState<{ score: number; totalQuestions: number; netReward?: number; wrongCount?: number; skippedCount?: number } | null>(null);
+    const [timeLeft, setTimeLeft] = useState(15);
     const [answeredQuestions, setAnsweredQuestions] = useState(0);
 
     const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -70,7 +70,13 @@ export default function QuizAttemptPage() {
             // Attempt may be completed - try loading result
             quizApi.getResult(purchaseId).then((data: any) => {
                 setFinished(true);
-                setResult({ score: data.score ?? 0, totalQuestions: data.questionCount ?? 0, netReward: data.netReward });
+                setResult({
+                    score: data.score ?? 0,
+                    totalQuestions: data.questionCount ?? 0,
+                    netReward: data.netReward,
+                    wrongCount: data.wrongCount,
+                    skippedCount: data.skippedCount,
+                });
             }).catch(() => {
                 router.push("/dashboard/quiz");
             });
@@ -84,49 +90,63 @@ export default function QuizAttemptPage() {
         }
     }, [attemptData]);
 
+    const isSubmittingRef = useRef(false);
+
     const loadNextQuestion = useCallback(async () => {
         try {
             const data = await quizApi.getNextQuestion(purchaseId);
             if (data.completed) {
                 setFinished(true);
-                setResult({ score: data.score ?? 0, totalQuestions: data.totalQuestions ?? 0 });
+                setResult({
+                    score: data.score ?? 0,
+                    totalQuestions: data.totalQuestions ?? 0,
+                    netReward: data.netReward,
+                    wrongCount: (data as any).wrongCount,
+                    skippedCount: (data as any).skippedCount,
+                });
                 return;
             }
             setCurrentQuestion(data);
             setSelectedOption(null);
-            setTimeLeft(10);
+            setTimeLeft(15);
         } catch {
             router.push("/dashboard/quiz");
+        } finally {
+            isSubmittingRef.current = false;
         }
     }, [purchaseId, router]);
 
     const handleAutoAdvance = useCallback(async () => {
-        if (submitting || !currentQuestion?.question || finished) return;
+        if (isSubmittingRef.current || finished) return;
+        isSubmittingRef.current = true;
         setSubmitting(true);
         try {
-            const res = await quizApi.submitAnswer(purchaseId, {
-                questionId: currentQuestion.question.id,
-                selectedIndex: -1, // no answer (timed out)
-            });
-            setAnsweredQuestions((prev) => prev + 1);
-
-            if (res.isLast) {
-                setFinished(true);
-                setResult({
-                    score: res.score ?? 0,
-                    totalQuestions: res.totalQuestions ?? 0,
-                    netReward: (res as any).netReward,
+            if (currentQuestion?.question?.id) {
+                const res = await quizApi.submitAnswer(purchaseId, {
+                    questionId: currentQuestion.question.id,
+                    selectedIndex: -1, // no answer (timed out/skipped)
                 });
-            } else {
-                await loadNextQuestion();
+
+                if (res.isLast) {
+                    setFinished(true);
+                    setResult({
+                        score: res.score ?? 0,
+                        totalQuestions: res.totalQuestions ?? 0,
+                        netReward: (res as any).netReward,
+                        wrongCount: (res as any).wrongCount,
+                        skippedCount: (res as any).skippedCount,
+                    });
+                    return;
+                }
             }
+            await loadNextQuestion();
         } catch (err) {
-            // If already answered or timeout error, load next question directly
             await loadNextQuestion();
         } finally {
             setSubmitting(false);
+            isSubmittingRef.current = false;
         }
-    }, [submitting, currentQuestion, finished, purchaseId, loadNextQuestion]);
+    }, [purchaseId, currentQuestion?.question?.id, finished, loadNextQuestion]);
 
     // Timer
     useEffect(() => {
@@ -151,22 +171,33 @@ export default function QuizAttemptPage() {
     }, [timeLeft, finished, currentQuestion?.question?.id, handleAutoAdvance]);
 
     const handleSubmit = async () => {
-        if (submitting || selectedOption === null || !currentQuestion?.question) return;
+        if (isSubmittingRef.current || selectedOption === null || !currentQuestion?.question?.id) return;
+        isSubmittingRef.current = true;
         setSubmitting(true);
         try {
             const res = await quizApi.submitAnswer(purchaseId, {
                 questionId: currentQuestion.question.id,
                 selectedIndex: selectedOption,
             });
-            setAnsweredQuestions((prev) => prev + 1);
 
             if (res.isLast) {
                 setFinished(true);
-                setResult({ score: res.score ?? 0, totalQuestions: res.totalQuestions ?? 0, netReward: (res as any).netReward });
+                setResult({
+                    score: res.score ?? 0,
+                    totalQuestions: res.totalQuestions ?? 0,
+                    netReward: (res as any).netReward,
+                    wrongCount: (res as any).wrongCount,
+                    skippedCount: (res as any).skippedCount,
+                });
             } else {
                 await loadNextQuestion();
             }
-        } catch { /* ignore */ } finally { setSubmitting(false); }
+        } catch {
+            await loadNextQuestion();
+        } finally {
+            setSubmitting(false);
+            isSubmittingRef.current = false;
+        }
     };
 
     if (startLoading) {
@@ -187,27 +218,30 @@ export default function QuizAttemptPage() {
                             <Award size={48} className={percentage >= 60 ? "text-green-700" : "text-red-600"} />
                         </div>
                     </div>
-                    <div className="text-sm font-semibold text-gray-700">Quiz Attempt Completed</div>
+                    <div className="text-sm text-gray-500">Thanks for completing the quiz!</div>
                     <div className="text-5xl font-extrabold text-green-700">{result.score}<span className="text-2xl text-gray-400">/{result.totalQuestions}</span></div>
 
-                    <div className="bg-gray-50 rounded-xl p-4 text-left space-y-2 text-xs border border-gray-100">
-                        <div className="flex items-center justify-between text-green-700 font-semibold">
-                            <span>Correct Answers ({result.score}):</span>
-                            <span>+{correctReward} tk</span>
-                        </div>
-                        <div className="flex items-center justify-between text-red-600 font-semibold">
-                            <span>Wrong Answers ({wrongCount}):</span>
-                            <span>-{wrongDeduction} tk</span>
-                        </div>
-                        <div className="flex items-center justify-between text-gray-500 font-medium">
-                            <span>Skipped / Missed ({skippedCount}):</span>
-                            <span>0 tk</span>
-                        </div>
+                    <div className="space-y-2 text-sm text-left bg-gray-50 p-4 rounded-xl border border-gray-100">
+                        {result.score > 0 && (
+                            <p className="text-green-700 font-semibold">
+                                You have answered {result.score} questions correctly so you earned {correctReward} tk.
+                            </p>
+                        )}
+                        {wrongCount > 0 && (
+                            <p className="text-red-600 font-semibold">
+                                You have answered {wrongCount} questions wrong so {wrongDeduction} tk deducted.
+                            </p>
+                        )}
+                        {skippedCount > 0 && (
+                            <p className="text-gray-600 font-medium">
+                                You have skipped/missed {skippedCount} questions so 0 tk deducted.
+                            </p>
+                        )}
                     </div>
 
                     {result.netReward !== undefined && (
                         <div className={`rounded-lg p-3 text-sm font-bold ${result.netReward > 0 ? "bg-green-50 text-green-800 border border-green-200" : result.netReward < 0 ? "bg-red-50 text-red-800 border border-red-200" : "bg-gray-50 text-gray-600 border border-gray-200"}`}>
-                            Net Total: {result.netReward > 0 ? "+" : ""}{result.netReward} tk {result.netReward > 0 ? "earned" : result.netReward < 0 ? "deducted" : "no change"}
+                            {result.netReward > 0 ? "+" : ""}{result.netReward} tk {result.netReward > 0 ? "earned" : result.netReward < 0 ? "deducted" : "no change"}
                         </div>
                     )}
                     <button onClick={() => router.push("/dashboard/quiz")} className="btn-primary text-sm w-full py-2.5 mt-2">Back to Quiz</button>

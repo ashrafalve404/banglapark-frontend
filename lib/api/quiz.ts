@@ -81,6 +81,9 @@ export interface QuizNextQuestion {
     totalQuestions?: number;
     answeredCount?: number;
     score?: number;
+    wrongCount?: number;
+    skippedCount?: number;
+    netReward?: number;
     completed?: boolean;
 }
 
@@ -88,6 +91,8 @@ export interface QuizSubmitResult {
     status: "IN_PROGRESS" | "COMPLETED";
     currentIndex?: number;
     score?: number;
+    wrongCount?: number;
+    skippedCount?: number;
     totalQuestions?: number;
     isLast: boolean;
     netReward?: number;
