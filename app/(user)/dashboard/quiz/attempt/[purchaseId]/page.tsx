@@ -23,6 +23,32 @@ export default function QuizAttemptPage() {
     const [answeredQuestions, setAnsweredQuestions] = useState(0);
 
     const timerRef = useRef<NodeJS.Timeout | null>(null);
+    const [tabSwitchCount, setTabSwitchCount] = useState(0);
+    const [showTabWarning, setShowTabWarning] = useState(false);
+
+    // Anti-cheating: detect tab switching / window blur
+    useEffect(() => {
+        if (finished || currentQuestion?.completed) return;
+
+        const handleVisibilityChange = () => {
+            if (document.hidden) {
+                setTabSwitchCount((prev) => {
+                    const next = prev + 1;
+                    if (next >= 2) {
+                        // Strict Penalty: Auto-advance & forfeit current question on 2nd tab switch violation
+                        handleAutoAdvance();
+                    }
+                    return next;
+                });
+                setShowTabWarning(true);
+            }
+        };
+
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+        return () => {
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
+        };
+    }, [finished, currentQuestion?.completed]);
 
     // Load result if already completed
     const { data: existingResult } = useQuery({
@@ -176,7 +202,34 @@ export default function QuizAttemptPage() {
     const q = currentQuestion.question;
 
     return (
-        <div className="max-w-2xl mx-auto space-y-4 py-6">
+        <div
+            className="max-w-2xl mx-auto space-y-4 py-6 select-none"
+            onContextMenu={(e) => e.preventDefault()}
+            onCopy={(e) => e.preventDefault()}
+            onCut={(e) => e.preventDefault()}
+        >
+            {/* Anti-cheating Tab Switch Warning Banner */}
+            {showTabWarning && (
+                <div className={`rounded-lg p-3.5 flex items-center justify-between text-xs font-semibold shadow-xs transition-colors ${
+                    tabSwitchCount >= 2 ? "bg-red-50 border border-red-300 text-red-900" : "bg-amber-50 border border-amber-300 text-amber-900 animate-pulse"
+                }`}>
+                    <div className="flex items-center gap-2">
+                        <span className="text-base">{tabSwitchCount >= 2 ? "🚨" : "⚠️"}</span>
+                        <span>
+                            {tabSwitchCount >= 2
+                                ? `Strict Violation: Tab switched ${tabSwitchCount} times! Question automatically forfeited.`
+                                : `Warning: Tab switching detected (1/2). Switching tabs again will forfeit the question!`}
+                        </span>
+                    </div>
+                    <button
+                        onClick={() => setShowTabWarning(false)}
+                        className="text-gray-700 hover:text-black font-bold px-2 py-0.5"
+                    >
+                        ✕
+                    </button>
+                </div>
+            )}
+
             {/* Progress bar */}
             <div className="space-y-2">
                 <div className="flex items-center justify-between text-xs text-gray-500">

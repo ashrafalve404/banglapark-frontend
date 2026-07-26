@@ -140,14 +140,14 @@ export function Header() {
                                         <div className="p-2">
                                             {(user.role === "ADMIN" || user.role === "SUPER_ADMIN") && (
                                                 <Link href="/admin" onClick={() => setProfileOpen(false)} className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 font-medium">
-                                                    <FaShieldHalved size={15} className="text-red-700" /> {t("nav.adminPanel")}
+                                                    <FaShieldHalved size={15} className="text-slate-500" /> {t("nav.adminPanel")}
                                                 </Link>
                                             )}
                                             <Link href="/dashboard" onClick={() => setProfileOpen(false)} className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 font-medium">
-                                                <FaGauge size={15} className="text-indigo-600" /> {t("nav.dashboard")}
+                                                <FaGauge size={15} className="text-slate-500" /> {t("nav.dashboard")}
                                             </Link>
                                             <Link href="/dashboard/notifications" onClick={() => setProfileOpen(false)} className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 font-medium">
-                                                <FaBell size={15} className="text-amber-500" /> {t("nav.notifications")}
+                                                <FaBell size={15} className="text-slate-500" /> {t("nav.notifications")}
                                             </Link>
                                             <hr className="my-1 border-gray-100" />
                                             <button onClick={() => { handleLogout(); setProfileOpen(false); }} className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-red-600 hover:bg-red-50 font-medium">
