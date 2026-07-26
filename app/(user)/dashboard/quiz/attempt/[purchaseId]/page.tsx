@@ -100,39 +100,55 @@ export default function QuizAttemptPage() {
         }
     }, [purchaseId, router]);
 
+    const handleAutoAdvance = useCallback(async () => {
+        if (submitting || !currentQuestion?.question || finished) return;
+        setSubmitting(true);
+        try {
+            const res = await quizApi.submitAnswer(purchaseId, {
+                questionId: currentQuestion.question.id,
+                selectedIndex: -1, // no answer (timed out)
+            });
+            setAnsweredQuestions((prev) => prev + 1);
+
+            if (res.isLast) {
+                setFinished(true);
+                setResult({
+                    score: res.score ?? 0,
+                    totalQuestions: res.totalQuestions ?? 0,
+                    netReward: (res as any).netReward,
+                });
+            } else {
+                await loadNextQuestion();
+            }
+        } catch (err) {
+            // If already answered or timeout error, load next question directly
+            await loadNextQuestion();
+        } finally {
+            setSubmitting(false);
+        }
+    }, [submitting, currentQuestion, finished, purchaseId, loadNextQuestion]);
+
     // Timer
     useEffect(() => {
-        if (finished || currentQuestion?.completed) return;
+        if (finished || currentQuestion?.completed || !currentQuestion?.question) return;
+
         if (timeLeft <= 0) {
             handleAutoAdvance();
             return;
         }
-        timerRef.current = setInterval(() => {
+
+        const interval = setInterval(() => {
             setTimeLeft((prev) => {
                 if (prev <= 1) {
-                    if (timerRef.current) clearInterval(timerRef.current);
+                    clearInterval(interval);
                     return 0;
                 }
                 return prev - 1;
             });
         }, 1000);
-        return () => {
-            if (timerRef.current) clearInterval(timerRef.current);
-        };
-    }, [timeLeft, finished, currentQuestion?.question?.id]);
 
-    const handleAutoAdvance = async () => {
-        if (submitting || !currentQuestion?.question) return;
-        setSubmitting(true);
-        try {
-            await quizApi.submitAnswer(purchaseId, {
-                questionId: currentQuestion.question.id,
-                selectedIndex: -1, // no answer (timed out)
-            });
-            setAnsweredQuestions((prev) => prev + 1);
-            await loadNextQuestion();
-        } catch { /* ignore */ } finally { setSubmitting(false); }
-    };
+        return () => clearInterval(interval);
+    }, [timeLeft, finished, currentQuestion?.question?.id, handleAutoAdvance]);
 
     const handleSubmit = async () => {
         if (submitting || selectedOption === null || !currentQuestion?.question) return;
