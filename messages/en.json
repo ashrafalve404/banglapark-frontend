@@ -1014,7 +1014,7 @@
       },
       "dailyBenefit": {
         "heading": "Daily Benefit Tiers",
-        "subheading": "Every active member gets 100 BDT base reward daily. Additional tier bonus based on active team size.",
+        "subheading": "Every active member gets 10 BDT base reward daily. Additional tier bonus based on active team size.",
         "baseLabel": "Base Daily Reward",
         "baseDesc": "All active users",
         "colTeam": "Active Team",

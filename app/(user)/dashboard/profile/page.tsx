@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useState, useEffect, useRef } from "react";
-import { Download, IdCard, Camera, Loader2, User as UserIcon } from "lucide-react";
+import { Download, IdCard, Camera, Loader2, User as UserIcon, X } from "lucide-react";
 import jsPDF from "jspdf";
 import { useAuthStore } from "@/store/auth";
 import { api } from "@/lib/api/client";
@@ -129,9 +129,29 @@ export default function ProfilePage() {
             });
             const imageUrl = uploadRes.data.url;
 
-            const updateRes = await api.patch("/users/profile", { profileImage: imageUrl });
+            const updateRes = await api.patch("/users/me", { profileImage: imageUrl });
             setUser({ ...user, profileImage: imageUrl, ...updateRes.data });
             setProfileMsg({ type: "success", text: t("profile.msg.imageSuccess") });
+        } catch (err: any) {
+            setProfileMsg({ type: "error", text: err.response?.data?.message || t("profile.msg.imageError") });
+        } finally {
+            setImageUploading(false);
+        }
+    };
+
+    const handleRemoveImage = async (e?: React.MouseEvent) => {
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        if (!user?.profileImage || imageUploading) return;
+
+        setImageUploading(true);
+        setProfileMsg(null);
+        try {
+            const updateRes = await api.patch("/users/me", { profileImage: null });
+            setUser({ ...user, profileImage: null, ...updateRes.data });
+            setProfileMsg({ type: "success", text: t("profile.msg.removeSuccess", undefined, "Profile picture removed successfully!") });
         } catch (err: any) {
             setProfileMsg({ type: "error", text: err.response?.data?.message || t("profile.msg.imageError") });
         } finally {
@@ -143,7 +163,7 @@ export default function ProfilePage() {
         setProfileLoading(true);
         setProfileMsg(null);
         try {
-            const res = await api.patch("/users/profile", data);
+            const res = await api.patch("/users/me", data);
             setUser({ ...user, ...res.data });
             setProfileMsg({ type: "success", text: t("profile.msg.updateSuccess") });
         } catch (err: any) {
@@ -217,8 +237,11 @@ export default function ProfilePage() {
 
                     {/* Profile Picture Upload Avatar Box */}
                     <div className="flex flex-col items-center mb-6 pb-4 border-b border-gray-100">
-                        <div className="relative group cursor-pointer" onClick={() => fileInputRef.current?.click()}>
-                            <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-emerald-500/20 bg-gradient-to-br from-emerald-100 to-emerald-200 flex items-center justify-center shadow-md">
+                        <div className="relative group">
+                            <div
+                                className="w-24 h-24 rounded-full overflow-hidden border-4 border-emerald-500/20 bg-gradient-to-br from-emerald-100 to-emerald-200 flex items-center justify-center shadow-md cursor-pointer"
+                                onClick={() => fileInputRef.current?.click()}
+                            >
                                 {imageUploading ? (
                                     <Loader2 className="w-8 h-8 text-emerald-600 animate-spin" />
                                 ) : user?.profileImage ? (
@@ -226,10 +249,22 @@ export default function ProfilePage() {
                                 ) : (
                                     <span className="text-2xl font-black text-emerald-800">{initials}</span>
                                 )}
+                                <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <Camera className="w-6 h-6 text-white" />
+                                </div>
                             </div>
-                            <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                <Camera className="w-6 h-6 text-white" />
-                            </div>
+
+                            {/* Small Cross Icon Badge to Remove Profile Picture */}
+                            {user?.profileImage && !imageUploading && (
+                                <button
+                                    type="button"
+                                    onClick={handleRemoveImage}
+                                    title="Remove profile picture"
+                                    className="absolute top-0 right-0 w-7 h-7 rounded-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center shadow-md z-10 transition-all hover:scale-110 cursor-pointer border-2 border-white"
+                                >
+                                    <X size={14} className="stroke-[3]" />
+                                </button>
+                            )}
                         </div>
                         <input
                             ref={fileInputRef}
