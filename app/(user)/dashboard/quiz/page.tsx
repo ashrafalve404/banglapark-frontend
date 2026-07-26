@@ -3,7 +3,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Loader2, HelpCircle, Clock, DollarSign, CheckCircle, Wallet, ArrowLeft, ShoppingCart } from "lucide-react";
+import { Loader2, HelpCircle, Clock, DollarSign, CheckCircle, Wallet, ArrowLeft, ShoppingCart, Briefcase, Play, Sparkles } from "lucide-react";
 import { quizApi, type QuizCategoryItem, type QuizPurchaseInfo, type QuizLevelItem } from "@/lib/api/quiz";
 import { walletApi } from "@/lib/api/wallet";
 import { useLocale } from "@/lib/i18n";
@@ -22,7 +22,7 @@ export default function QuizPage() {
     const [selectedLevelId, setSelectedLevelId] = useState<string | null>(null);
     const [purchaseModal, setPurchaseModal] = useState<{ categoryId: string; name: string; maxQuestions: number; levelId?: string | null; levelName?: string } | null>(null);
     const [purchaseError, setPurchaseError] = useState<string | null>(null);
-    const [purchaseMsg, setPurchaseMsg] = useState<string | null>(null);
+    const [successModal, setSuccessModal] = useState<{ purchaseId: string; name: string; questionCount: number; amount: number; levelName?: string } | null>(null);
 
     const { data: categories = [] } = useQuery<QuizCategoryItem[]>({
         queryKey: ["quiz-categories"],
@@ -52,14 +52,20 @@ export default function QuizPage() {
     const purchaseMutation = useMutation({
         mutationFn: ({ categoryId, questionCount, method, levelId }: { categoryId: string; questionCount: number; method: string; levelId?: string }) =>
             quizApi.purchase(categoryId, { questionCount, paymentMethod: method, levelId }),
-        onSuccess: () => {
+        onSuccess: (res: any) => {
             queryClient.invalidateQueries({ queryKey: ["quiz-purchases"] });
             queryClient.invalidateQueries({ queryKey: ["wallet"] });
+            const pModal = purchaseModal;
             setPurchaseModal(null);
             setSelectedLevelId(null);
             setPurchaseError(null);
-            setPurchaseMsg(t("dashboard.quiz.purchaseSuccess"));
-            setTimeout(() => setPurchaseMsg(null), 4000);
+            setSuccessModal({
+                purchaseId: res.id,
+                name: pModal?.name || "Quiz",
+                questionCount: res.questionCount || questionCount,
+                amount: (res.questionCount || questionCount) * PRICE_PER_QUESTION,
+                levelName: pModal?.levelName,
+            });
         },
         onError: (err: any) => {
             setPurchaseError(err?.response?.data?.message || err?.message || "Purchase failed");
@@ -77,11 +83,6 @@ export default function QuizPage() {
 
     return (
         <div className="max-w-3xl mx-auto space-y-6">
-            {purchaseMsg && (
-                <div className="rounded-lg bg-green-50 border border-green-200 text-green-800 text-sm font-semibold px-4 py-3 text-center">
-                    {purchaseMsg}
-                </div>
-            )}
             {/* Header */}
             <div>
                 <div className="flex items-center gap-3 mb-1">
@@ -259,6 +260,68 @@ export default function QuizPage() {
                                 {purchaseMutation.isPending ? <Loader2 size={14} className="animate-spin mx-auto" /> : "Buy Now"}
                             </button>
                             <button onClick={() => { setPurchaseModal(null); setPurchaseError(null); }} className="btn-outline-primary text-sm">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Success Modal Popup */}
+            {successModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4 fade-in">
+                    <div className="bg-white rounded-2xl p-6 w-full max-w-sm text-center space-y-4 shadow-2xl border border-emerald-100">
+                        <div className="mx-auto w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 shadow-inner">
+                            <CheckCircle size={36} />
+                        </div>
+
+                        <div>
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold mb-2">
+                                <Sparkles size={14} /> Purchased Successfully!
+                            </span>
+                            <h3 className="text-lg font-extrabold text-slate-900 leading-snug">
+                                Quiz Questions Added
+                            </h3>
+                            <p className="text-xs text-slate-500 mt-1">
+                                Your quiz purchase is active and ready to play.
+                            </p>
+                        </div>
+
+                        <div className="bg-slate-50 rounded-xl p-4 text-left border border-slate-100 space-y-1.5 text-xs">
+                            <p><span className="text-slate-400 font-medium">Category:</span> <strong className="text-slate-800">{successModal.name}</strong></p>
+                            {successModal.levelName && (
+                                <p><span className="text-slate-400 font-medium">Level:</span> <strong className="text-slate-800">{successModal.levelName}</strong></p>
+                            )}
+                            <p><span className="text-slate-400 font-medium">Questions Purchased:</span> <strong className="text-emerald-700 font-bold">{successModal.questionCount} Questions</strong></p>
+                            <p><span className="text-slate-400 font-medium">Amount Paid:</span> <strong className="text-slate-800">{formatCurrency(successModal.amount, locale)}</strong></p>
+                        </div>
+
+                        <div className="flex flex-col gap-2.5 pt-2">
+                            <button
+                                onClick={() => {
+                                    const pid = successModal.purchaseId;
+                                    setSuccessModal(null);
+                                    router.push(`/dashboard/quiz/attempt/${pid}`);
+                                }}
+                                className="w-full btn-primary py-3 text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all"
+                            >
+                                <Play size={16} /> Start Quiz Now
+                            </button>
+
+                            <button
+                                onClick={() => {
+                                    setSuccessModal(null);
+                                    router.push("/dashboard/daily-work");
+                                }}
+                                className="w-full btn-secondary py-2.5 text-xs sm:text-sm font-bold flex items-center justify-center gap-2 text-slate-700 hover:bg-slate-100 transition-all border border-slate-200"
+                            >
+                                <Briefcase size={16} className="text-slate-500" /> Go to Daily Work
+                            </button>
+
+                            <button
+                                onClick={() => setSuccessModal(null)}
+                                className="text-xs text-slate-400 hover:text-slate-600 font-semibold pt-1"
+                            >
+                                Close
+                            </button>
                         </div>
                     </div>
                 </div>
