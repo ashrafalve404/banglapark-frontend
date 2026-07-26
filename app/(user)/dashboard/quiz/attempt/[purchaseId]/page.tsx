@@ -41,7 +41,6 @@ export default function QuizAttemptPage() {
         setPhase("submitting");
 
         // Submit the answer (or -1 for timed out)
-        let isLastQuestion = false;
         try {
             const res = await quizApi.submitAnswer(purchaseId, { questionId, selectedIndex });
 
@@ -78,21 +77,26 @@ export default function QuizAttemptPage() {
                 return;
             }
 
-            // Set the new question — this changes currentQuestion?.question?.id
-            // which triggers the timer useEffect to reset the countdown automatically
             activeQuestionIdRef.current = data.question?.id ?? null;
             setCurrentQuestion(data);
             setSelectedOption(null);
-            setTimeLeft(QUESTION_TIME);   // reset displayed timer
+            setTimeLeft(QUESTION_TIME);
             setPhase("question");
         } catch {
             router.push("/dashboard/quiz");
         }
     }, [purchaseId, router]);
 
-    // ── Timer: resets automatically whenever the question ID changes ──────────
-    // This is the KEY design: the effect depends on currentQuestion?.question?.id.
-    // When a new question is loaded, the old interval is cleared and a fresh one starts.
+    // Keep a stable ref to submitAndAdvance so the timer never needs it in its deps.
+    // Without this, a new router reference from Next.js would cause submitAndAdvance
+    // to get a new identity → timer effect re-runs → remaining resets → same question restarts.
+    const submitAndAdvanceRef = useRef(submitAndAdvance);
+    useEffect(() => { submitAndAdvanceRef.current = submitAndAdvance; }, [submitAndAdvance]);
+
+    // ── Timer: resets ONLY when the question ID or phase changes ─────────────
+    // IMPORTANT: submitAndAdvance is intentionally NOT in this deps array.
+    // It is called via submitAndAdvanceRef so a new router reference from Next.js
+    // cannot cause the timer to restart mid-countdown.
     useEffect(() => {
         if (phase !== "question" || !currentQuestion?.question?.id) return;
 
@@ -105,13 +109,13 @@ export default function QuizAttemptPage() {
 
             if (remaining <= 0) {
                 clearInterval(interval);
-                // questionId is captured — will match activeQuestionIdRef only if not already submitted
-                submitAndAdvance(-1, questionId);
+                submitAndAdvanceRef.current(-1, questionId);
             }
         }, 1000);
 
-        return () => clearInterval(interval); // cleanup on question change or unmount
-    }, [phase, currentQuestion?.question?.id, submitAndAdvance]);
+        return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [phase, currentQuestion?.question?.id]); // submitAndAdvance intentionally omitted — use ref
 
     // ── Start attempt ─────────────────────────────────────────────────────────
     const { data: attemptData, isLoading: startLoading, error: startError } = useQuery({
