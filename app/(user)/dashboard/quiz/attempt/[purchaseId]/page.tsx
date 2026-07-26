@@ -8,72 +8,66 @@ import { quizApi, type QuizNextQuestion } from "@/lib/api/quiz";
 
 const QUESTION_TIME = 15; // seconds per question
 
+type QuizResult = {
+    score: number;
+    totalQuestions: number;
+    netReward?: number;
+    wrongCount?: number;
+    skippedCount?: number;
+};
+
 export default function QuizAttemptPage() {
     const { purchaseId } = useParams<{ purchaseId: string }>();
     const router = useRouter();
 
+    const [phase, setPhase] = useState<"loading" | "question" | "submitting" | "done">("loading");
     const [currentQuestion, setCurrentQuestion] = useState<QuizNextQuestion | null>(null);
     const [selectedOption, setSelectedOption] = useState<number | null>(null);
-    const [submitting, setSubmitting] = useState(false);
-    const [finished, setFinished] = useState(false);
-    const [result, setResult] = useState<{
-        score: number;
-        totalQuestions: number;
-        netReward?: number;
-        wrongCount?: number;
-        skippedCount?: number;
-    } | null>(null);
     const [timeLeft, setTimeLeft] = useState(QUESTION_TIME);
+    const [result, setResult] = useState<QuizResult | null>(null);
     const [tabSwitchCount, setTabSwitchCount] = useState(0);
     const [showTabWarning, setShowTabWarning] = useState(false);
 
-    // Refs — never stale, never cause re-renders
-    const isSubmittingRef = useRef(false);
-    const finishedRef = useRef(false);
-    const currentQuestionIdRef = useRef<string | null>(null);
-    const intervalRef = useRef<NodeJS.Timeout | null>(null);
-    const timeLeftRef = useRef(QUESTION_TIME);
+    // Guards — never cause re-renders
+    const activeQuestionIdRef = useRef<string | null>(null); // prevents double-submit
+    const isFinishedRef = useRef(false);
 
-    // ── Timer helpers ──────────────────────────────────────────────────────────
-    const stopTimer = useCallback(() => {
-        if (intervalRef.current) {
-            clearInterval(intervalRef.current);
-            intervalRef.current = null;
-        }
-    }, []);
+    // ── Core: submit answer then load next question ───────────────────────────
+    const submitAndAdvance = useCallback(async (selectedIndex: number, questionId: string) => {
+        // Guard: stale timer call for an already-moved-past question
+        if (activeQuestionIdRef.current !== questionId) return;
+        activeQuestionIdRef.current = null; // lock — no other call for this question
 
-    const startTimer = useCallback(() => {
-        stopTimer();
-        timeLeftRef.current = QUESTION_TIME;
-        setTimeLeft(QUESTION_TIME);
+        setPhase("submitting");
 
-        intervalRef.current = setInterval(() => {
-            timeLeftRef.current -= 1;
-            setTimeLeft(timeLeftRef.current);
+        // Submit the answer (or -1 for timed out)
+        let isLastQuestion = false;
+        try {
+            const res = await quizApi.submitAnswer(purchaseId, { questionId, selectedIndex });
 
-            if (timeLeftRef.current <= 0) {
-                stopTimer();
-                // Time's up — advance immediately (using the ref so it's never stale)
-                advanceQuestion(-1); // -1 = timed out / no answer
+            if (res.isLast) {
+                isFinishedRef.current = true;
+                setPhase("done");
+                setResult({
+                    score: res.score ?? 0,
+                    totalQuestions: res.totalQuestions ?? 0,
+                    netReward: res.netReward,
+                    wrongCount: res.wrongCount,
+                    skippedCount: res.skippedCount,
+                });
+                return;
             }
-        }, 1000);
-    }, [stopTimer]); // advanceQuestion will be defined below via ref
+        } catch {
+            // Submit failed — still advance to avoid the user getting stuck
+        }
 
-    // ── Core advance logic (ref-wrapped so timer closure is never stale) ──────
-    const advanceRef = useRef<((selectedIndex: number) => Promise<void>) | undefined>(undefined);
-
-    const advanceQuestion = useCallback((selectedIndex: number) => {
-        advanceRef.current?.(selectedIndex);
-    }, []);
-
-    // ── Load next question ─────────────────────────────────────────────────────
-    const loadNextQuestion = useCallback(async () => {
+        // Load the next question
         try {
             const data = await quizApi.getNextQuestion(purchaseId);
+
             if (data.completed) {
-                finishedRef.current = true;
-                stopTimer();
-                setFinished(true);
+                isFinishedRef.current = true;
+                setPhase("done");
                 setResult({
                     score: data.score ?? 0,
                     totalQuestions: data.totalQuestions ?? 0,
@@ -83,109 +77,98 @@ export default function QuizAttemptPage() {
                 });
                 return;
             }
-            currentQuestionIdRef.current = data.question?.id ?? null;
+
+            // Set the new question — this changes currentQuestion?.question?.id
+            // which triggers the timer useEffect to reset the countdown automatically
+            activeQuestionIdRef.current = data.question?.id ?? null;
             setCurrentQuestion(data);
             setSelectedOption(null);
-            startTimer();
+            setTimeLeft(QUESTION_TIME);   // reset displayed timer
+            setPhase("question");
         } catch {
-            stopTimer();
             router.push("/dashboard/quiz");
-        } finally {
-            isSubmittingRef.current = false;
-            setSubmitting(false);
         }
-    }, [purchaseId, router, startTimer, stopTimer]);
+    }, [purchaseId, router]);
 
-    // ── Assign the mutable advance function to the ref ────────────────────────
+    // ── Timer: resets automatically whenever the question ID changes ──────────
+    // This is the KEY design: the effect depends on currentQuestion?.question?.id.
+    // When a new question is loaded, the old interval is cleared and a fresh one starts.
     useEffect(() => {
-        advanceRef.current = async (selectedIndex: number) => {
-            if (isSubmittingRef.current || finishedRef.current) return;
-            const questionId = currentQuestionIdRef.current;
-            if (!questionId) return;
+        if (phase !== "question" || !currentQuestion?.question?.id) return;
 
-            isSubmittingRef.current = true;
-            setSubmitting(true);
-            stopTimer();
+        const questionId = currentQuestion.question.id;
+        let remaining = QUESTION_TIME;
 
-            try {
-                const res = await quizApi.submitAnswer(purchaseId, {
-                    questionId,
-                    selectedIndex,
-                });
+        const interval = setInterval(() => {
+            remaining -= 1;
+            setTimeLeft(remaining);
 
-                if (res.isLast) {
-                    finishedRef.current = true;
-                    setFinished(true);
-                    setResult({
-                        score: res.score ?? 0,
-                        totalQuestions: res.totalQuestions ?? 0,
-                        netReward: res.netReward,
-                        wrongCount: res.wrongCount,
-                        skippedCount: res.skippedCount,
-                    });
-                    isSubmittingRef.current = false;
-                    setSubmitting(false);
-                } else {
-                    await loadNextQuestion();
-                }
-            } catch {
-                // On error, still try to load next question
-                await loadNextQuestion();
+            if (remaining <= 0) {
+                clearInterval(interval);
+                // questionId is captured — will match activeQuestionIdRef only if not already submitted
+                submitAndAdvance(-1, questionId);
             }
-        };
-    }, [purchaseId, stopTimer, loadNextQuestion]);
+        }, 1000);
 
-    // ── Start the attempt ─────────────────────────────────────────────────────
+        return () => clearInterval(interval); // cleanup on question change or unmount
+    }, [phase, currentQuestion?.question?.id, submitAndAdvance]);
+
+    // ── Start attempt ─────────────────────────────────────────────────────────
     const { data: attemptData, isLoading: startLoading, error: startError } = useQuery({
         queryKey: ["quiz-attempt", purchaseId],
         queryFn: () => quizApi.startAttempt(purchaseId),
         retry: false,
     });
 
-    // If already completed (startAttempt throws), load result
+    // If already completed (startAttempt throws), load final result
     useEffect(() => {
-        if (startError) {
-            quizApi.getResult(purchaseId).then((data: any) => {
-                finishedRef.current = true;
-                setFinished(true);
-                setResult({
-                    score: data.score ?? 0,
-                    totalQuestions: data.questionCount ?? 0,
-                    netReward: data.netReward,
-                    wrongCount: data.wrongCount,
-                    skippedCount: data.skippedCount,
-                });
-            }).catch(() => {
-                router.push("/dashboard/quiz");
+        if (!startError) return;
+        quizApi.getResult(purchaseId).then((data: any) => {
+            isFinishedRef.current = true;
+            setPhase("done");
+            setResult({
+                score: data.score ?? 0,
+                totalQuestions: data.questionCount ?? 0,
+                netReward: data.netReward,
+                wrongCount: data.wrongCount,
+                skippedCount: data.skippedCount,
             });
-        }
+        }).catch(() => router.push("/dashboard/quiz"));
     }, [startError, purchaseId, router]);
 
-    // Load first question once attempt starts
+    // Load first question once attempt data arrives
     useEffect(() => {
-        if (attemptData) {
-            loadNextQuestion();
-        }
-    }, [attemptData]); // eslint-disable-line react-hooks/exhaustive-deps
+        if (!attemptData) return;
+        quizApi.getNextQuestion(purchaseId).then((data) => {
+            if (data.completed) {
+                isFinishedRef.current = true;
+                setPhase("done");
+                setResult({ score: data.score ?? 0, totalQuestions: data.totalQuestions ?? 0, netReward: data.netReward, wrongCount: data.wrongCount, skippedCount: data.skippedCount });
+                return;
+            }
+            activeQuestionIdRef.current = data.question?.id ?? null;
+            setCurrentQuestion(data);
+            setSelectedOption(null);
+            setTimeLeft(QUESTION_TIME);
+            setPhase("question");
+        }).catch(() => router.push("/dashboard/quiz"));
+    }, [attemptData, purchaseId, router]);
 
-    // Cleanup timer + abandon quiz on unmount (SPA navigation away)
+    // ── Abandon on SPA navigation (component unmounts) ───────────────────────
     useEffect(() => {
         return () => {
-            stopTimer();
-            // If quiz is not finished, force-complete it with whatever was answered
-            if (!finishedRef.current) {
+            if (!isFinishedRef.current) {
                 quizApi.abandon(purchaseId).catch(() => { /* best effort */ });
             }
         };
-    }, [stopTimer, purchaseId]);
+    }, [purchaseId]);
 
-    // Abandon quiz on browser close / refresh / hard navigation (keepalive fetch survives page unload)
+    // ── Abandon on browser close / refresh (keepalive fetch) ─────────────────
     useEffect(() => {
         const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000/v1";
 
         const handleBeforeUnload = () => {
-            if (finishedRef.current) return;
-            // Read token from cookie directly — js-cookie not available in this sync context
+            if (isFinishedRef.current) return;
             const token = document.cookie
                 .split("; ")
                 .find((row) => row.startsWith("access_token="))
@@ -193,7 +176,7 @@ export default function QuizAttemptPage() {
 
             fetch(`${BASE_URL}/quiz/attempt/${purchaseId}/abandon`, {
                 method: "POST",
-                keepalive: true, // critical: keeps request alive after page unloads
+                keepalive: true,
                 headers: {
                     "Content-Type": "application/json",
                     ...(token ? { Authorization: `Bearer ${token}` } : {}),
@@ -207,41 +190,40 @@ export default function QuizAttemptPage() {
 
     // ── Anti-cheating: tab switch detection ───────────────────────────────────
     useEffect(() => {
-        if (finished) return;
+        if (phase === "done") return;
 
         const handleVisibilityChange = () => {
-            if (document.hidden) {
-                setTabSwitchCount((prev) => {
-                    const next = prev + 1;
-                    if (next >= 2) {
-                        // 2nd violation: auto-forfeit current question
-                        advanceRef.current?.(-1);
-                    }
-                    return next;
-                });
-                setShowTabWarning(true);
-            }
+            if (!document.hidden) return;
+            setTabSwitchCount((prev) => {
+                const next = prev + 1;
+                if (next >= 2 && activeQuestionIdRef.current) {
+                    // 2nd violation — forfeit current question immediately
+                    submitAndAdvance(-1, activeQuestionIdRef.current);
+                }
+                return next;
+            });
+            setShowTabWarning(true);
         };
 
         document.addEventListener("visibilitychange", handleVisibilityChange);
         return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
-    }, [finished]);
+    }, [phase, submitAndAdvance]);
 
     // ── Submit selected answer ─────────────────────────────────────────────────
     const handleSubmit = () => {
-        if (selectedOption === null) return;
-        advanceQuestion(selectedOption);
+        if (selectedOption === null || !currentQuestion?.question?.id) return;
+        submitAndAdvance(selectedOption, currentQuestion.question.id);
     };
 
     // ─────────────────────────────────────────────────────────────────────────
     // RENDER
     // ─────────────────────────────────────────────────────────────────────────
 
-    if (startLoading) {
+    if (startLoading || phase === "loading") {
         return <div className="flex justify-center items-center min-h-[60vh]"><Loader2 className="animate-spin" size={32} /></div>;
     }
 
-    if (finished && result) {
+    if (phase === "done" && result) {
         const percentage = result.totalQuestions > 0 ? Math.round((result.score / result.totalQuestions) * 100) : 0;
         const wrongCount = result.wrongCount ?? 0;
         const skippedCount = result.skippedCount ?? 0;
@@ -261,17 +243,17 @@ export default function QuizAttemptPage() {
                     <div className="space-y-2 text-sm text-left bg-gray-50 p-4 rounded-xl border border-gray-100">
                         {result.score > 0 && (
                             <p className="text-green-700 font-semibold">
-                                You have answered {result.score} questions correctly so you earned {correctReward} tk.
+                                You answered {result.score} questions correctly and earned {correctReward} tk.
                             </p>
                         )}
                         {wrongCount > 0 && (
                             <p className="text-red-600 font-semibold">
-                                You have answered {wrongCount} questions wrong so {wrongDeduction} tk deducted.
+                                You answered {wrongCount} questions wrong so {wrongDeduction} tk deducted.
                             </p>
                         )}
                         {skippedCount > 0 && (
                             <p className="text-gray-600 font-medium">
-                                You missed {skippedCount} questions (time up) so 0 tk deducted.
+                                You missed {skippedCount} questions (time up) — no deduction.
                             </p>
                         )}
                     </div>
@@ -285,6 +267,10 @@ export default function QuizAttemptPage() {
                 </div>
             </div>
         );
+    }
+
+    if (phase === "submitting") {
+        return <div className="flex justify-center items-center min-h-[60vh]"><Loader2 className="animate-spin" size={24} /></div>;
     }
 
     if (!currentQuestion?.question) {
@@ -301,7 +287,7 @@ export default function QuizAttemptPage() {
             onCopy={(e) => e.preventDefault()}
             onCut={(e) => e.preventDefault()}
         >
-            {/* Anti-cheating Tab Switch Warning Banner */}
+            {/* Tab Switch Warning Banner */}
             {showTabWarning && (
                 <div className={`rounded-lg p-3.5 flex items-center justify-between text-xs font-semibold shadow-xs transition-colors ${
                     tabSwitchCount >= 2 ? "bg-red-50 border border-red-300 text-red-900" : "bg-amber-50 border border-amber-300 text-amber-900 animate-pulse"
@@ -310,15 +296,15 @@ export default function QuizAttemptPage() {
                         <span className="text-base">{tabSwitchCount >= 2 ? "🚨" : "⚠️"}</span>
                         <span>
                             {tabSwitchCount >= 2
-                                ? `Strict Violation: Tab switched ${tabSwitchCount} times! Question automatically forfeited.`
-                                : `Warning: Tab switching detected (1/2). Switching tabs again will forfeit the question!`}
+                                ? `Strict Violation: Tab switched ${tabSwitchCount} times! Question forfeited.`
+                                : `Warning: Tab switching detected (1/2). Switching again will forfeit this question!`}
                         </span>
                     </div>
                     <button onClick={() => setShowTabWarning(false)} className="text-gray-700 hover:text-black font-bold px-2 py-0.5">✕</button>
                 </div>
             )}
 
-            {/* Progress bar */}
+            {/* Progress */}
             <div className="space-y-2">
                 <div className="flex items-center justify-between text-xs text-gray-500">
                     <span>Question {Math.min(currentAnswered + 1, currentQuestion.totalQuestions ?? 1)} of {currentQuestion.totalQuestions}</span>
@@ -339,7 +325,6 @@ export default function QuizAttemptPage() {
                         style={{ width: `${(currentAnswered / (currentQuestion.totalQuestions ?? 1)) * 100}%` }}
                     />
                 </div>
-                {/* Progress dots */}
                 <div className="flex gap-1 flex-wrap">
                     {Array.from({ length: currentQuestion.totalQuestions ?? 0 }).map((_, i) => (
                         <div
@@ -371,10 +356,10 @@ export default function QuizAttemptPage() {
 
                 <button
                     onClick={handleSubmit}
-                    disabled={submitting || selectedOption === null}
+                    disabled={phase !== "question" || selectedOption === null}
                     className="btn-primary w-full text-sm py-2.5 flex items-center justify-center gap-2"
                 >
-                    {submitting ? <Loader2 size={14} className="animate-spin" /> : <><ArrowRight size={16} /> {currentAnswered + 1 >= (currentQuestion.totalQuestions ?? 0) ? "Finish" : "Next"}</>}
+                    <ArrowRight size={16} /> {currentAnswered + 1 >= (currentQuestion.totalQuestions ?? 0) ? "Finish" : "Next"}
                 </button>
             </div>
         </div>
