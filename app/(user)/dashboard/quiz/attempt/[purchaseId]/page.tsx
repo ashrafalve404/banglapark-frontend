@@ -19,7 +19,7 @@ export default function QuizAttemptPage() {
     const [submitting, setSubmitting] = useState(false);
     const [finished, setFinished] = useState(false);
     const [result, setResult] = useState<{ score: number; totalQuestions: number; netReward?: number } | null>(null);
-    const [timeLeft, setTimeLeft] = useState(60);
+    const [timeLeft, setTimeLeft] = useState(10);
     const [answeredQuestions, setAnsweredQuestions] = useState(0);
 
     const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -94,7 +94,7 @@ export default function QuizAttemptPage() {
             }
             setCurrentQuestion(data);
             setSelectedOption(null);
-            setTimeLeft(60);
+            setTimeLeft(10);
         } catch {
             router.push("/dashboard/quiz");
         }
@@ -234,10 +234,14 @@ export default function QuizAttemptPage() {
             <div className="space-y-2">
                 <div className="flex items-center justify-between text-xs text-gray-500">
                     <span>Question {answeredQuestions + 1} of {currentQuestion.totalQuestions}</span>
-                    <span className="flex items-center gap-1">
-                        <Clock size={12} />
-                        <span className={timeLeft <= 10 ? "text-red-600 font-bold" : ""}>
-                            {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, "0")}
+                    <span className="flex items-center gap-1.5 font-bold">
+                        <Clock size={14} className={timeLeft <= 3 ? "text-red-600 animate-spin" : "text-red-700"} />
+                        <span className={`px-2 py-0.5 rounded text-xs transition-all ${
+                            timeLeft <= 3
+                                ? "bg-red-100 text-red-700 font-black animate-pulse border border-red-300"
+                                : "bg-red-50 text-red-700 font-bold border border-red-200"
+                        }`}>
+                            00:{(timeLeft % 60).toString().padStart(2, "0")}s
                         </span>
                     </span>
                 </div>
