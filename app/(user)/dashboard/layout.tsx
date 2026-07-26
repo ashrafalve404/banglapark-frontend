@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Menu, Loader2 } from "lucide-react";
@@ -40,6 +41,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
     if (!isAuthenticated || !user) return null;
 
+    const firstLetter = user.name ? user.name.trim().charAt(0).toUpperCase() : "U";
+
     return (
         <div className="flex h-screen bg-gray-50 overflow-hidden">
             {/* Desktop sidebar */}
@@ -73,6 +76,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                             <span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${user.status === "ACTIVE" ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-500"}`}>
                                 {user.status === "ACTIVE" ? t("dashboard.header.active") : t("dashboard.header.inactive")}
                             </span>
+                            <Link href="/dashboard/profile" title={user.name}>
+                                <div className="w-8 h-8 rounded-full overflow-hidden border-2 border-slate-600 bg-slate-200 flex items-center justify-center text-xs font-bold text-slate-700 shadow-xs shrink-0 ml-1 transition-transform hover:scale-105">
+                                    {user.profileImage ? (
+                                        <img src={user.profileImage} alt={user.name} className="w-full h-full object-cover" />
+                                    ) : (
+                                        <span>{firstLetter}</span>
+                                    )}
+                                </div>
+                            </Link>
                         </div>
                     </div>
                 </header>

@@ -3,7 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { AlertCircle, Clock } from "lucide-react";
-import { FaWallet, FaUsers, FaMoneyBills, FaBuilding, FaTrophy } from "react-icons/fa6";
+import { FaWallet, FaUsers, FaMoneyBills, FaBuilding, FaTrophy, FaFileInvoice } from "react-icons/fa6";
 import { useAuthStore } from "@/store/auth";
 import { authApi } from "@/lib/api/auth";
 import { useLocale } from "@/lib/i18n";
@@ -152,6 +152,12 @@ export default function DashboardOverview() {
             label: t("nav.reward"),
             icon: FaTrophy,
             cardBg: "bg-fuchsia-200 text-fuchsia-950 border-fuchsia-300 hover:bg-fuchsia-300",
+        },
+        {
+            href: "/dashboard/statement",
+            label: t("nav.statement"),
+            icon: FaFileInvoice,
+            cardBg: "bg-slate-200 text-slate-950 border-slate-300 hover:bg-slate-300",
         },
     ];
 
