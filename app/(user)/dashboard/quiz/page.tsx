@@ -274,11 +274,11 @@ export default function QuizPage() {
                         </div>
 
                         <div>
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold mb-2">
-                                <Sparkles size={14} /> Purchased Successfully!
+                            <span className="inline-block px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold mb-2">
+                                Purchased Successfully!
                             </span>
                             <h3 className="text-lg font-extrabold text-slate-900 leading-snug">
-                                Quiz Questions Added
+                                Quiz Questions Added to daily work
                             </h3>
                             <p className="text-xs text-slate-500 mt-1">
                                 Your quiz purchase is active and ready to play.

@@ -175,37 +175,42 @@ export default function QuizAttemptPage() {
 
     if (finished && result) {
         const percentage = result.totalQuestions > 0 ? Math.round((result.score / result.totalQuestions) * 100) : 0;
-        const wrongCount = result.totalQuestions - result.score;
+        const wrongCount = (result as any).wrongCount ?? Math.max(0, result.totalQuestions - result.score);
+        const skippedCount = (result as any).skippedCount ?? Math.max(0, result.totalQuestions - (result.score + wrongCount));
         const correctReward = result.score * 2;
         const wrongDeduction = wrongCount * 1;
         return (
             <div className="max-w-md mx-auto py-10">
-                <div className="card bg-white p-8 text-center space-y-4">
+                <div className="card bg-white p-8 text-center space-y-4 shadow-sm border border-gray-100">
                     <div className="flex justify-center">
                         <div className={`rounded-full p-4 ${percentage >= 60 ? "bg-green-100" : "bg-red-100"}`}>
                             <Award size={48} className={percentage >= 60 ? "text-green-700" : "text-red-600"} />
                         </div>
                     </div>
-                    <div className="text-sm text-gray-500">Thanks for completing the quiz!</div>
+                    <div className="text-sm font-semibold text-gray-700">Quiz Attempt Completed</div>
                     <div className="text-5xl font-extrabold text-green-700">{result.score}<span className="text-2xl text-gray-400">/{result.totalQuestions}</span></div>
-                    <div className="space-y-2 text-sm">
-                        {result.score > 0 && (
-                            <p className="text-green-700 font-semibold">
-                                You have answered {result.score} questions correctly so you earned {correctReward} tk.
-                            </p>
-                        )}
-                        {wrongCount > 0 && (
-                            <p className="text-red-600 font-semibold">
-                                You have answered {wrongCount} questions wrong so {wrongDeduction} tk deducted.
-                            </p>
-                        )}
+
+                    <div className="bg-gray-50 rounded-xl p-4 text-left space-y-2 text-xs border border-gray-100">
+                        <div className="flex items-center justify-between text-green-700 font-semibold">
+                            <span>Correct Answers ({result.score}):</span>
+                            <span>+{correctReward} tk</span>
+                        </div>
+                        <div className="flex items-center justify-between text-red-600 font-semibold">
+                            <span>Wrong Answers ({wrongCount}):</span>
+                            <span>-{wrongDeduction} tk</span>
+                        </div>
+                        <div className="flex items-center justify-between text-gray-500 font-medium">
+                            <span>Skipped / Missed ({skippedCount}):</span>
+                            <span>0 tk</span>
+                        </div>
                     </div>
+
                     {result.netReward !== undefined && (
-                        <div className={`rounded-lg p-3 text-sm font-bold ${result.netReward > 0 ? "bg-green-50 text-green-800" : result.netReward < 0 ? "bg-red-50 text-red-800" : "bg-gray-50 text-gray-600"}`}>
-                            {result.netReward > 0 ? "+" : ""}{result.netReward} tk {result.netReward > 0 ? "earned" : result.netReward < 0 ? "deducted" : "no change"}
+                        <div className={`rounded-lg p-3 text-sm font-bold ${result.netReward > 0 ? "bg-green-50 text-green-800 border border-green-200" : result.netReward < 0 ? "bg-red-50 text-red-800 border border-red-200" : "bg-gray-50 text-gray-600 border border-gray-200"}`}>
+                            Net Total: {result.netReward > 0 ? "+" : ""}{result.netReward} tk {result.netReward > 0 ? "earned" : result.netReward < 0 ? "deducted" : "no change"}
                         </div>
                     )}
-                    <button onClick={() => router.push("/dashboard/quiz")} className="btn-primary text-sm mt-4">Back to Quiz</button>
+                    <button onClick={() => router.push("/dashboard/quiz")} className="btn-primary text-sm w-full py-2.5 mt-2">Back to Quiz</button>
                 </div>
             </div>
         );
@@ -216,6 +221,7 @@ export default function QuizAttemptPage() {
     }
 
     const q = currentQuestion.question;
+    const currentAnswered = currentQuestion.answeredCount ?? 0;
 
     return (
         <div
@@ -249,7 +255,7 @@ export default function QuizAttemptPage() {
             {/* Progress bar */}
             <div className="space-y-2">
                 <div className="flex items-center justify-between text-xs text-gray-500">
-                    <span>Question {answeredQuestions + 1} of {currentQuestion.totalQuestions}</span>
+                    <span>Question {Math.min(currentAnswered + 1, currentQuestion.totalQuestions ?? 1)} of {currentQuestion.totalQuestions}</span>
                     <span className="flex items-center gap-1.5 font-bold">
                         <Clock size={14} className={timeLeft <= 3 ? "text-red-600 animate-spin" : "text-red-700"} />
                         <span className={`px-2 py-0.5 rounded text-xs transition-all ${
@@ -264,7 +270,7 @@ export default function QuizAttemptPage() {
                 <div className="w-full bg-gray-200 rounded-full h-1.5">
                     <div
                         className="bg-green-700 h-1.5 rounded-full transition-all duration-300"
-                        style={{ width: `${((answeredQuestions) / (currentQuestion.totalQuestions ?? 1)) * 100}%` }}
+                        style={{ width: `${((currentAnswered) / (currentQuestion.totalQuestions ?? 1)) * 100}%` }}
                     />
                 </div>
                 {/* Progress dots */}
@@ -272,7 +278,7 @@ export default function QuizAttemptPage() {
                     {Array.from({ length: currentQuestion.totalQuestions ?? 0 }).map((_, i) => (
                         <div
                             key={i}
-                            className={`w-2.5 h-2.5 rounded-full ${i < answeredQuestions ? "bg-green-700" : i === answeredQuestions ? "bg-green-700 ring-2 ring-green-300" : "bg-gray-300"}`}
+                            className={`w-2.5 h-2.5 rounded-full ${i < currentAnswered ? "bg-green-700" : i === currentAnswered ? "bg-green-700 ring-2 ring-green-300" : "bg-gray-300"}`}
                         />
                     ))}
                 </div>
@@ -297,13 +303,22 @@ export default function QuizAttemptPage() {
                     ))}
                 </div>
 
-                <button
-                    onClick={handleSubmit}
-                    disabled={submitting || selectedOption === null}
-                    className="btn-primary w-full text-sm flex items-center justify-center gap-2"
-                >
-                    {submitting ? <Loader2 size={14} className="animate-spin" /> : <><ArrowRight size={16} /> {answeredQuestions + 1 >= (currentQuestion.totalQuestions ?? 0) ? "Finish" : "Next"}</>}
-                </button>
+                <div className="flex items-center gap-3 pt-2">
+                    <button
+                        onClick={handleAutoAdvance}
+                        disabled={submitting}
+                        className="btn-secondary text-sm px-4 py-2.5 text-gray-600 border border-gray-300 hover:bg-gray-100 transition-colors"
+                    >
+                        Skip Question
+                    </button>
+                    <button
+                        onClick={handleSubmit}
+                        disabled={submitting || selectedOption === null}
+                        className="btn-primary flex-1 text-sm py-2.5 flex items-center justify-center gap-2"
+                    >
+                        {submitting ? <Loader2 size={14} className="animate-spin" /> : <><ArrowRight size={16} /> {currentAnswered + 1 >= (currentQuestion.totalQuestions ?? 0) ? "Finish" : "Next"}</>}
+                    </button>
+                </div>
             </div>
         </div>
     );

@@ -442,7 +442,11 @@
         "PURCHASE": "ক্রয়",
         "WITHDRAWAL": "উত্তোলন",
         "REFUND": "রিফান্ড",
-        "ADMIN_ADJUSTMENT": "এডজাস্টমেন্ট"
+        "ADMIN_ADJUSTMENT": "এডজাস্টমেন্ট",
+        "QUIZ_EARNING": "কুইজ ইনকাম",
+        "QUIZ_REWARD": "কুইজ রিওয়ার্ড",
+        "QUIZ_PURCHASE": "কুইজ ক্রয়",
+        "QUIZ_DEDUCTION": "কুইজ কর্তন"
       },
       "withdrawStatus": {
         "PENDING": "পেন্ডিং",

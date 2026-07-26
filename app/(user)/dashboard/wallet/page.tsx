@@ -299,8 +299,13 @@ export default function WalletPage() {
                                         <tr key={tx.id} className="hover:bg-gray-50/50">
                                             <td className="p-4 text-xs text-gray-600">{formatDateTime(tx.createdAt, locale)}</td>
                                             <td className="p-4 text-xs">
-                                                <span className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${isDebit ? "bg-green-50 text-green-700" : "bg-green-50 text-green-700"}`}>
-                                                    {t("wallet.ledger.transactionType." + tx.type)}
+                                                <span className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${isDebit ? "bg-red-50 text-red-700" : "bg-green-50 text-green-700"}`}>
+                                                    {(() => {
+                                                        const key = `dashboard.wallet.transactionType.${tx.type}`;
+                                                        const translated = t(key as any);
+                                                        if (translated && translated !== key) return translated;
+                                                        return tx.type.replace(/_/g, " ").replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase());
+                                                    })()}
                                                 </span>
                                             </td>
                                             <td className="p-4 text-xs text-gray-500">{tx.description}</td>

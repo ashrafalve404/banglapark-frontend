@@ -262,7 +262,12 @@ export default function StatementPage() {
                                     <tr key={tx.id} className={i % 2 === 0 ? "bg-green-50/30" : ""}>
                                         <td className="px-3 py-2 text-gray-600">{new Date(tx.createdAt).toLocaleDateString()}</td>
                                         <td className="px-3 py-2 font-semibold text-gray-800">
-                                            {t(`dashboard.statement.transactionType.${tx.type}` as any, undefined, tx.type)}
+                                            {(() => {
+                                                const key = `dashboard.wallet.transactionType.${tx.type}`;
+                                                const translated = t(key as any);
+                                                if (translated && translated !== key) return translated;
+                                                return tx.type.replace(/_/g, " ").replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase());
+                                            })()}
                                         </td>
                                         <td className="px-3 py-2 text-gray-500 max-w-[200px] truncate">
                                             {(tx.benefitCategory === "BASE" ? `${t("dashboard.statement.dailyReward")} - ` : tx.benefitCategory === "TIER" ? `${t("dashboard.statement.tierBonus")} - ` : "")}{tx.description}

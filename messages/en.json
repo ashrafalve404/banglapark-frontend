@@ -442,7 +442,11 @@
         "PURCHASE": "Purchase",
         "WITHDRAWAL": "Withdrawal",
         "REFUND": "Refund",
-        "ADMIN_ADJUSTMENT": "Adjustment"
+        "ADMIN_ADJUSTMENT": "Adjustment",
+        "QUIZ_EARNING": "Quiz Earning",
+        "QUIZ_REWARD": "Quiz Reward",
+        "QUIZ_PURCHASE": "Quiz Purchase",
+        "QUIZ_DEDUCTION": "Quiz Deduction"
       },
       "withdrawStatus": {
         "PENDING": "Pending",
