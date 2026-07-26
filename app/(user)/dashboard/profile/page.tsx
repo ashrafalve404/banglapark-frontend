@@ -239,15 +239,15 @@ export default function ProfilePage() {
                     <div className="flex flex-col items-center mb-6 pb-4 border-b border-gray-100">
                         <div className="relative group">
                             <div
-                                className="w-24 h-24 rounded-full overflow-hidden border-4 border-emerald-500/20 bg-gradient-to-br from-emerald-100 to-emerald-200 flex items-center justify-center shadow-md cursor-pointer"
+                                className="w-24 h-24 rounded-full overflow-hidden border-4 border-slate-600 bg-slate-200 flex items-center justify-center shadow-md cursor-pointer"
                                 onClick={() => fileInputRef.current?.click()}
                             >
                                 {imageUploading ? (
-                                    <Loader2 className="w-8 h-8 text-emerald-600 animate-spin" />
+                                    <Loader2 className="w-8 h-8 text-slate-600 animate-spin" />
                                 ) : user?.profileImage ? (
                                     <img src={user.profileImage} alt={user.name} className="w-full h-full object-cover" />
                                 ) : (
-                                    <span className="text-2xl font-black text-emerald-800">{initials}</span>
+                                    <span className="text-2xl font-black text-slate-700">{initials}</span>
                                 )}
                                 <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                     <Camera className="w-6 h-6 text-white" />
@@ -277,7 +277,7 @@ export default function ProfilePage() {
                             type="button"
                             onClick={() => fileInputRef.current?.click()}
                             disabled={imageUploading}
-                            className="mt-2 text-xs font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-1.5"
+                            className="mt-2 text-xs font-bold text-slate-700 hover:text-slate-900 flex items-center gap-1.5"
                         >
                             <Camera size={14} />
                             {imageUploading ? t("profile.profileImage.uploading") : t("profile.profileImage.change")}
