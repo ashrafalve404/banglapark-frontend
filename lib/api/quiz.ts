@@ -252,6 +252,10 @@ export const quizApi = {
         const res = await api.get(`/quiz/attempt/${purchaseId}/result`);
         return res.data;
     },
+
+    abandon: async (purchaseId: string): Promise<void> => {
+        await api.post(`/quiz/attempt/${purchaseId}/abandon`);
+    },
 };
 
 export const importCsv = async (categoryId: string, file: File): Promise<{ imported: number; errors: { row: number; message: string }[]; total: number }> => {
