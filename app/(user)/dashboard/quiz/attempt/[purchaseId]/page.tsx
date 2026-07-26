@@ -6,7 +6,7 @@ import { useParams, useRouter } from "next/navigation";
 import { Loader2, Clock, Award, ArrowRight } from "lucide-react";
 import { quizApi, type QuizNextQuestion } from "@/lib/api/quiz";
 
-const QUESTION_TIME = 15; // seconds per question
+const QUESTION_TIME = 10; // seconds per question
 
 type QuizResult = {
     score: number;
