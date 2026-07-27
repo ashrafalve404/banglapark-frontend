@@ -70,7 +70,8 @@
     "commissionRules": "কমিশন রুলস",
     "profitLoss": "লাভ ও ক্ষতি",
     "reports": "রিপোর্ট",
-    "travel": "ট্রাভেল"
+    "travel": "ট্রাভেলিং",
+    "marketingExpense": "মার্কেটিং আয় ব্যয়"
   },
   "travel": {
     "title": "ট্রাভেল রিওয়ার্ডস",
