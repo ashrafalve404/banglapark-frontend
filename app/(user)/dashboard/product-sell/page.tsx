@@ -11,6 +11,7 @@ import { userProductsApi } from "@/lib/api/products";
 import { categoriesApi } from "@/lib/api/categories";
 import { uploadsApi } from "@/lib/api/uploads";
 import type { Category, Product } from "@/types";
+import { useLocale } from "@/lib/i18n";
 import Link from "next/link";
 
 type UserProductItem = Product & {
@@ -21,6 +22,9 @@ type UserProductItem = Product & {
 
 export default function ProductSellPage() {
     const { user } = useAuthStore();
+    const { locale } = useLocale();
+    const isBn = locale === "bn";
+
     const isActiveUser = user?.status === "ACTIVE";
 
     const [products, setProducts] = useState<UserProductItem[]>([]);
@@ -67,7 +71,7 @@ export default function ProductSellPage() {
         const files = e.target.files;
         if (!files || files.length === 0) return;
         if (formData.images.length >= 4) {
-            setFormMsg({ type: "error", text: "Maximum 4 images allowed per product" });
+            setFormMsg({ type: "error", text: isBn ? "সর্বোচ্চ ৪ টি ছবি আপলোড করা যাবে" : "Maximum 4 images allowed per product" });
             return;
         }
 
@@ -78,7 +82,7 @@ export default function ProductSellPage() {
             const { url } = await uploadsApi.upload(file);
             setFormData((prev) => ({ ...prev, images: [...prev.images, url] }));
         } catch (err: any) {
-            setFormMsg({ type: "error", text: err?.response?.data?.message || "Failed to upload image" });
+            setFormMsg({ type: "error", text: err?.response?.data?.message || (isBn ? "ছবি আপলোড ব্যর্থ হয়েছে" : "Failed to upload image") });
         } finally {
             setUploading(false);
         }
@@ -95,11 +99,11 @@ export default function ProductSellPage() {
         e.preventDefault();
         setFormMsg(null);
         if (!formData.name.trim()) {
-            setFormMsg({ type: "error", text: "Product name is required" });
+            setFormMsg({ type: "error", text: isBn ? "পোডাক্টের নাম দেওয়া আবশ্যক" : "Product name is required" });
             return;
         }
         if (!formData.price || Number(formData.price) <= 0) {
-            setFormMsg({ type: "error", text: "Valid price is required" });
+            setFormMsg({ type: "error", text: isBn ? "সঠিক বিক্রয় মূল্য দেওয়া আবশ্যক" : "Valid price is required" });
             return;
         }
 
@@ -115,7 +119,12 @@ export default function ProductSellPage() {
                 sizes: formData.sizes ? formData.sizes.split(",").map((s) => s.trim()).filter(Boolean) : [],
             });
 
-            setFormMsg({ type: "success", text: "Product submitted successfully! Pending admin approval." });
+            setFormMsg({
+                type: "success",
+                text: isBn
+                    ? "পোডাক্ট সফলভাবে জমা দেওয়া হয়েছে! এডমিন অনুমোদনের অপেক্ষায় রয়েছে।"
+                    : "Product submitted successfully! Pending admin approval."
+            });
             setTimeout(() => {
                 setIsModalOpen(false);
                 setFormMsg(null);
@@ -131,7 +140,7 @@ export default function ProductSellPage() {
             });
             loadData();
         } catch (err: any) {
-            setFormMsg({ type: "error", text: err?.response?.data?.message || "Failed to submit product" });
+            setFormMsg({ type: "error", text: err?.response?.data?.message || (isBn ? "পোডাক্ট সাবমিট করতে সমস্যা হয়েছে" : "Failed to submit product") });
         } finally {
             setSubmitting(false);
         }
@@ -147,10 +156,12 @@ export default function ProductSellPage() {
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
                         <FaStore className="text-teal-600" />
-                        Product Selling Dashboard
+                        {isBn ? "পোডাক্ট বিক্রয় ড্যাশবোর্ড" : "Product Selling Dashboard"}
                     </h1>
                     <p className="text-sm text-gray-500 mt-1">
-                        List your products on Bangla Park and earn 80% on every sale
+                        {isBn
+                            ? "বাংলা পার্কে আপনার পণ্য যুক্ত করুন এবং প্রতি বিক্রয়ে ৮০% অর্থ উপার্জন করুন"
+                            : "List your products on Bangla Park and earn 80% on every sale"}
                     </p>
                 </div>
                 {isActiveUser ? (
@@ -158,14 +169,14 @@ export default function ProductSellPage() {
                         onClick={() => setIsModalOpen(true)}
                         className="flex items-center justify-center gap-2 rounded-xl bg-teal-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-teal-700 transition-all cursor-pointer"
                     >
-                        <FaPlus size={14} /> Add New Product
+                        <FaPlus size={14} /> {isBn ? "নতুন পোডাক্ট যোগ করুন" : "Add New Product"}
                     </button>
                 ) : (
                     <button
                         disabled
                         className="flex items-center justify-center gap-2 rounded-xl bg-gray-300 px-4 py-2.5 text-sm font-semibold text-gray-500 cursor-not-allowed"
                     >
-                        <FaLock size={14} /> Add Product (Active Users Only)
+                        <FaLock size={14} /> {isBn ? "পোডাক্ট যোগ করুন (শুধুমাত্র অ্যাক্টিভ ইউজার)" : "Add Product (Active Users Only)"}
                     </button>
                 )}
             </div>
@@ -175,16 +186,20 @@ export default function ProductSellPage() {
                 <div className="rounded-2xl bg-amber-50 border border-amber-200 p-4 sm:p-5 flex items-start gap-4 text-amber-800">
                     <FaLock size={22} className="text-amber-600 mt-0.5 shrink-0" />
                     <div className="space-y-1">
-                        <h3 className="font-bold text-amber-900 text-base">Active Account Required for Selling</h3>
+                        <h3 className="font-bold text-amber-900 text-base">
+                            {isBn ? "পণ্য বিক্রয়ের জন্য অ্যাক্টিভ একাউন্ট প্রয়োজন" : "Active Account Required for Selling"}
+                        </h3>
                         <p className="text-xs sm:text-sm text-amber-700 leading-relaxed">
-                            Only active members can list and sell products on Bangla Park. Please activate your account first by placing a qualifying purchase or completing activation.
+                            {isBn
+                                ? "শুধুমাত্র সক্রিয় সদস্যগণ বাংলা পার্কে তাদের নিজস্ব পণ্য তালিকাভুক্ত ও বিক্রি করতে পারবেন। অনুগ্রহ করে একটি পণ্য ক্রয় করে বা অ্যাক্টিভেশন সম্পন্ন করে প্রথমে একাউন্ট সক্রিয় করুন।"
+                                : "Only active members can list and sell products on Bangla Park. Please activate your account first by placing a qualifying purchase or completing activation."}
                         </p>
                         <div className="pt-2">
                             <Link
                                 href="/shop"
                                 className="inline-flex items-center gap-2 rounded-lg bg-amber-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-amber-700 transition-all"
                             >
-                                Shop & Activate Now
+                                {isBn ? "শপ করুন ও অ্যাক্টিভ হন" : "Shop & Activate Now"}
                             </Link>
                         </div>
                     </div>
@@ -195,25 +210,37 @@ export default function ProductSellPage() {
             <div className="rounded-2xl bg-gradient-to-br from-teal-900 to-emerald-950 p-5 text-white shadow-lg space-y-3 border border-teal-700/50">
                 <div className="flex items-center gap-3 text-teal-300 font-bold text-base">
                     <FaCircleInfo size={20} />
-                    <span>How Product Selling Works on Bangla Park</span>
+                    <span>{isBn ? "বাংলা পার্কে কিভাবে পণ্য বিক্রি কাজ করে" : "How Product Selling Works on Bangla Park"}</span>
                 </div>
                 <div className="grid gap-3 sm:grid-cols-3 text-xs sm:text-sm pt-1 text-teal-100/90">
                     <div className="bg-white/10 rounded-xl p-3 backdrop-blur-xs border border-white/10 space-y-1">
-                        <div className="font-bold text-teal-200">1. List Product Online</div>
+                        <div className="font-bold text-teal-200">
+                            {isBn ? "১. অনলাইনে পণ্য জমা দিন" : "1. List Product Online"}
+                        </div>
                         <p className="text-xs leading-relaxed text-teal-100/80">
-                            Submit product details & images. Your product stays pending until admin approval.
+                            {isBn
+                                ? "পণ্যের বিবরণ ও ছবি দিন। এডমিন অনুমোদনের পূর্বে এটি পেন্ডিং থাকবে।"
+                                : "Submit product details & images. Your product stays pending until admin approval."}
                         </p>
                     </div>
                     <div className="bg-white/10 rounded-xl p-3 backdrop-blur-xs border border-white/10 space-y-1">
-                        <div className="font-bold text-teal-200">2. Deliver Stock to Store</div>
+                        <div className="font-bold text-teal-200">
+                            {isBn ? "২. টিম স্টোরে পণ্য জমা দিন" : "2. Deliver Stock to Store"}
+                        </div>
                         <p className="text-xs leading-relaxed text-teal-100/80">
-                            Deliver your physical product to Bangla Park team store by contacting support.
+                            {isBn
+                                ? "সাপোর্টে যোগাযোগ করে পণ্যটি সরাসরি বাংলা পার্ক টিম স্টোরে পৌঁছে দিন।"
+                                : "Deliver your physical product to Bangla Park team store by contacting support."}
                         </p>
                     </div>
                     <div className="bg-white/10 rounded-xl p-3 backdrop-blur-xs border border-white/10 space-y-1">
-                        <div className="font-bold text-teal-200">3. Get 80% Payout on Sale</div>
+                        <div className="font-bold text-teal-200">
+                            {isBn ? "৩. বিক্রয়ে ৮০% পে-আউট পান" : "3. Get 80% Payout on Sale"}
+                        </div>
                         <p className="text-xs leading-relaxed text-teal-100/80">
-                            When sold and delivered, 80% of price is instantly credited to your wallet (20% platform fee).
+                            {isBn
+                                ? "পণ্য বিক্রি ও ডেলিভারি হওয়ার সাথে সাথে ৮০% অর্থ ওয়ালেটে যুক্ত হবে (২০% প্ল্যাটফর্ম কমিশন)।"
+                                : "When sold and delivered, 80% of price is instantly credited to your wallet (20% platform fee)."}
                         </p>
                     </div>
                 </div>
@@ -226,7 +253,7 @@ export default function ProductSellPage() {
                         <FaBoxOpen size={24} />
                     </div>
                     <div>
-                        <div className="text-xs font-medium text-gray-500">My Listed Products</div>
+                        <div className="text-xs font-medium text-gray-500">{isBn ? "আমার তালিকাভুক্ত পোডাক্ট" : "My Listed Products"}</div>
                         <div className="text-2xl font-extrabold text-gray-900 mt-0.5">{products.length}</div>
                     </div>
                 </div>
@@ -235,7 +262,7 @@ export default function ProductSellPage() {
                         <FaStore size={24} />
                     </div>
                     <div>
-                        <div className="text-xs font-medium text-gray-500">Total Units Sold</div>
+                        <div className="text-xs font-medium text-gray-500">{isBn ? "মোট বিক্রিত ইউনিট" : "Total Units Sold"}</div>
                         <div className="text-2xl font-extrabold text-gray-900 mt-0.5">{totalSoldUnits}</div>
                     </div>
                 </div>
@@ -244,7 +271,7 @@ export default function ProductSellPage() {
                         <FaCoins size={24} />
                     </div>
                     <div>
-                        <div className="text-xs font-medium text-gray-500">Total Earned</div>
+                        <div className="text-xs font-medium text-gray-500">{isBn ? "মোট অর্জিত আয়" : "Total Earned"}</div>
                         <div className="text-2xl font-extrabold text-emerald-600 mt-0.5">BDT {totalSellerEarnings.toFixed(2)}</div>
                     </div>
                 </div>
@@ -253,25 +280,25 @@ export default function ProductSellPage() {
             {/* Products Table */}
             <div className="rounded-2xl bg-white border border-gray-100 shadow-xs overflow-hidden">
                 <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
-                    <h2 className="font-bold text-gray-900">My Product Listings</h2>
-                    <span className="text-xs text-gray-400 font-medium">{products.length} items</span>
+                    <h2 className="font-bold text-gray-900">{isBn ? "আমার পোডাক্ট তালিকা" : "My Product Listings"}</h2>
+                    <span className="text-xs text-gray-400 font-medium">{products.length} {isBn ? "টি" : "items"}</span>
                 </div>
 
                 {loading ? (
                     <div className="p-12 text-center text-gray-400 space-y-2">
                         <FaSpinner className="animate-spin text-teal-600 mx-auto" size={24} />
-                        <p className="text-xs font-medium">Loading products...</p>
+                        <p className="text-xs font-medium">{isBn ? "পোডাক্ট লোড হচ্ছে..." : "Loading products..."}</p>
                     </div>
                 ) : products.length === 0 ? (
                     <div className="p-12 text-center space-y-3">
                         <FaBoxOpen className="mx-auto text-gray-300" size={40} />
-                        <div className="text-gray-500 text-sm font-medium">No products listed yet</div>
+                        <div className="text-gray-500 text-sm font-medium">{isBn ? "এখনও কোনো পোডাক্ট যোগ করা হয়নি" : "No products listed yet"}</div>
                         {isActiveUser && (
                             <button
                                 onClick={() => setIsModalOpen(true)}
                                 className="inline-flex items-center gap-2 rounded-xl bg-teal-600 px-4 py-2 text-xs font-semibold text-white hover:bg-teal-700 transition-all cursor-pointer"
                             >
-                                <FaPlus size={12} /> Add Your First Product
+                                <FaPlus size={12} /> {isBn ? "আপনার প্রথম পোডাক্ট যোগ করুন" : "Add Your First Product"}
                             </button>
                         )}
                     </div>
@@ -280,13 +307,13 @@ export default function ProductSellPage() {
                         <table className="w-full text-left text-xs">
                             <thead className="bg-gray-50 text-gray-500 font-semibold uppercase tracking-wider border-b border-gray-100">
                                 <tr>
-                                    <th className="px-5 py-3.5">Product</th>
-                                    <th className="px-5 py-3.5">Category</th>
-                                    <th className="px-5 py-3.5">Price</th>
-                                    <th className="px-5 py-3.5">Stock</th>
-                                    <th className="px-5 py-3.5">Status</th>
-                                    <th className="px-5 py-3.5">Sold</th>
-                                    <th className="px-5 py-3.5">Total Earned</th>
+                                    <th className="px-5 py-3.5">{isBn ? "পোডাক্ট" : "Product"}</th>
+                                    <th className="px-5 py-3.5">{isBn ? "ক্যাটাগরি" : "Category"}</th>
+                                    <th className="px-5 py-3.5">{isBn ? "মূল্য" : "Price"}</th>
+                                    <th className="px-5 py-3.5">{isBn ? "স্টক" : "Stock"}</th>
+                                    <th className="px-5 py-3.5">{isBn ? "স্ট্যাটাস" : "Status"}</th>
+                                    <th className="px-5 py-3.5">{isBn ? "বিক্রি" : "Sold"}</th>
+                                    <th className="px-5 py-3.5">{isBn ? "মোট অর্জিত আয়" : "Total Earned"}</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-100 text-gray-700 font-medium">
@@ -304,35 +331,35 @@ export default function ProductSellPage() {
                                                 </div>
                                             </td>
                                             <td className="px-5 py-3.5 text-gray-600">
-                                                {p.category?.name || "General"}
+                                                {p.category?.name || (isBn ? "সাধারণ" : "General")}
                                             </td>
                                             <td className="px-5 py-3.5 font-bold text-gray-900">
                                                 BDT {Number(p.price).toFixed(2)}
                                             </td>
                                             <td className="px-5 py-3.5">
                                                 <span className="rounded-md bg-gray-100 px-2 py-1 text-gray-700 font-semibold">
-                                                    {p.stock} units
+                                                    {p.stock} {isBn ? "টি" : "units"}
                                                 </span>
                                             </td>
                                             <td className="px-5 py-3.5">
                                                 {p.approvalStatus === "PENDING" && (
                                                     <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-1 text-[11px] font-bold text-amber-700 border border-amber-200">
-                                                        <FaClock size={11} /> Pending Approval
+                                                        <FaClock size={11} /> {isBn ? "অনুমোদনের অপেক্ষায়" : "Pending Approval"}
                                                     </span>
                                                 )}
                                                 {p.approvalStatus === "APPROVED" && (
                                                     <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-bold text-emerald-700 border border-emerald-200">
-                                                        <FaCircleCheck size={11} /> Approved & Live
+                                                        <FaCircleCheck size={11} /> {isBn ? "অনুমোদিত ও লাইভ" : "Approved & Live"}
                                                     </span>
                                                 )}
                                                 {p.approvalStatus === "REJECTED" && (
-                                                    <span className="inline-flex items-center gap-1.5 rounded-full bg-rose-50 px-2.5 py-1 text-[11px] font-bold text-rose-700 border border-rose-200" title={p.rejectionReason || "Not approved"}>
-                                                        <FaCircleXmark size={11} /> Rejected
+                                                    <span className="inline-flex items-center gap-1.5 rounded-full bg-rose-50 px-2.5 py-1 text-[11px] font-bold text-rose-700 border border-rose-200" title={p.rejectionReason || (isBn ? "অনুমোদিত নয়" : "Not approved")}>
+                                                        <FaCircleXmark size={11} /> {isBn ? "প্রত্যাখ্যাত" : "Rejected"}
                                                     </span>
                                                 )}
                                             </td>
                                             <td className="px-5 py-3.5 font-semibold text-gray-800">
-                                                {p.totalSoldQuantity} units
+                                                {p.totalSoldQuantity} {isBn ? "টি" : "units"}
                                             </td>
                                             <td className="px-5 py-3.5 font-extrabold text-emerald-600 text-sm">
                                                 BDT {p.sellerEarnings80Percent.toFixed(2)}
@@ -352,7 +379,7 @@ export default function ProductSellPage() {
                     <div className="relative w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl space-y-4 my-8">
                         <div className="flex items-center justify-between border-b border-gray-100 pb-3">
                             <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-                                <FaPlus className="text-teal-600" size={16} /> Add Product for Selling
+                                <FaPlus className="text-teal-600" size={16} /> {isBn ? "বিক্রয়ের জন্য পোডাক্ট যোগ করুন" : "Add Product for Selling"}
                             </h3>
                             <button
                                 onClick={() => setIsModalOpen(false)}
@@ -369,11 +396,11 @@ export default function ProductSellPage() {
                                 </div>
                             )}
                             <div>
-                                <label className="block font-bold text-gray-700 mb-1">Product Title *</label>
+                                <label className="block font-bold text-gray-700 mb-1">{isBn ? "পোডাক্টের নাম *" : "Product Title *"}</label>
                                 <input
                                     type="text"
                                     required
-                                    placeholder="e.g. Handmade Cotton Shirt"
+                                    placeholder={isBn ? "যেমন: হাতের কাজের কটন শার্ট" : "e.g. Handmade Cotton Shirt"}
                                     value={formData.name}
                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                                     className="w-full rounded-xl border border-gray-200 p-2.5 text-sm focus:border-teal-500 focus:outline-hidden"
@@ -382,7 +409,7 @@ export default function ProductSellPage() {
 
                             <div className="grid grid-cols-2 gap-3">
                                 <div>
-                                    <label className="block font-bold text-gray-700 mb-1">Selling Price (BDT) *</label>
+                                    <label className="block font-bold text-gray-700 mb-1">{isBn ? "বিক্রয় মূল্য (টাকা) *" : "Selling Price (BDT) *"}</label>
                                     <input
                                         type="number"
                                         required
@@ -393,12 +420,14 @@ export default function ProductSellPage() {
                                         className="w-full rounded-xl border border-gray-200 p-2.5 text-sm focus:border-teal-500 focus:outline-hidden"
                                     />
                                     <span className="text-[10px] text-teal-600 font-medium mt-0.5 block">
-                                        You get BDT {formData.price ? (Number(formData.price) * 0.8).toFixed(2) : "0.00"} (80%)
+                                        {isBn
+                                            ? `আপনি পাবেন ৳ ${formData.price ? (Number(formData.price) * 0.8).toFixed(2) : "0.00"} (৮০%)`
+                                            : `You get BDT ${formData.price ? (Number(formData.price) * 0.8).toFixed(2) : "0.00"} (80%)`}
                                     </span>
                                 </div>
 
                                 <div>
-                                    <label className="block font-bold text-gray-700 mb-1">Initial Stock Quantity *</label>
+                                    <label className="block font-bold text-gray-700 mb-1">{isBn ? "প্রাথমিক স্টক পরিমাণ *" : "Initial Stock Quantity *"}</label>
                                     <input
                                         type="number"
                                         required
@@ -412,13 +441,13 @@ export default function ProductSellPage() {
                             </div>
 
                             <div>
-                                <label className="block font-bold text-gray-700 mb-1">Category</label>
+                                <label className="block font-bold text-gray-700 mb-1">{isBn ? "ক্যাটাগরি" : "Category"}</label>
                                 <select
                                     value={formData.categoryId}
                                     onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
                                     className="w-full rounded-xl border border-gray-200 p-2.5 text-sm focus:border-teal-500 focus:outline-hidden bg-white"
                                 >
-                                    <option value="">Select Category</option>
+                                    <option value="">{isBn ? "ক্যাটাগরি নির্বাচন করুন" : "Select Category"}</option>
                                     {categories.map((c) => (
                                         <option key={c.id} value={c.id}>
                                             {c.name}
@@ -428,10 +457,10 @@ export default function ProductSellPage() {
                             </div>
 
                             <div>
-                                <label className="block font-bold text-gray-700 mb-1">Description</label>
+                                <label className="block font-bold text-gray-700 mb-1">{isBn ? "বিবরণ" : "Description"}</label>
                                 <textarea
                                     rows={3}
-                                    placeholder="Write a brief detail about your product..."
+                                    placeholder={isBn ? "আপনার পণ্য সম্পর্কে বিস্তারিত লিখুন..." : "Write a brief detail about your product..."}
                                     value={formData.description}
                                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                                     className="w-full rounded-xl border border-gray-200 p-2.5 text-sm focus:border-teal-500 focus:outline-hidden"
@@ -439,7 +468,7 @@ export default function ProductSellPage() {
                             </div>
 
                             <div>
-                                <label className="block font-bold text-gray-700 mb-1">Sizes (Optional, comma separated)</label>
+                                <label className="block font-bold text-gray-700 mb-1">{isBn ? "সাইজ (ঐচ্ছিক, কমা দিয়ে আলাদা করুন)" : "Sizes (Optional, comma separated)"}</label>
                                 <input
                                     type="text"
                                     placeholder="M, L, XL"
@@ -451,7 +480,7 @@ export default function ProductSellPage() {
 
                             {/* Images Upload */}
                             <div>
-                                <label className="block font-bold text-gray-700 mb-1">Product Images (Max 4)</label>
+                                <label className="block font-bold text-gray-700 mb-1">{isBn ? "পোডাক্টের ছবি (সর্বোচ্চ ৪ টি)" : "Product Images (Max 4)"}</label>
                                 <div className="flex flex-wrap gap-2 mb-2">
                                     {formData.images.map((url, idx) => (
                                         <div key={idx} className="relative h-16 w-16 rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
@@ -473,7 +502,7 @@ export default function ProductSellPage() {
                                             ) : (
                                                 <>
                                                     <FaUpload size={14} />
-                                                    <span className="text-[9px] font-semibold mt-1">Upload</span>
+                                                    <span className="text-[9px] font-semibold mt-1">{isBn ? "আপলোড" : "Upload"}</span>
                                                 </>
                                             )}
                                             <input
@@ -494,7 +523,7 @@ export default function ProductSellPage() {
                                     onClick={() => setIsModalOpen(false)}
                                     className="rounded-xl px-4 py-2.5 text-xs font-semibold text-gray-600 hover:bg-gray-100 transition-all cursor-pointer"
                                 >
-                                    Cancel
+                                    {isBn ? "বাতিল" : "Cancel"}
                                 </button>
                                 <button
                                     type="submit"
@@ -502,7 +531,7 @@ export default function ProductSellPage() {
                                     className="flex items-center gap-2 rounded-xl bg-teal-600 px-5 py-2.5 text-xs font-semibold text-white shadow-sm hover:bg-teal-700 transition-all cursor-pointer disabled:opacity-50"
                                 >
                                     {submitting && <FaSpinner className="animate-spin" />}
-                                    Submit Product for Approval
+                                    {isBn ? "অনুমোদনের জন্য জমা দিন" : "Submit Product for Approval"}
                                 </button>
                             </div>
                         </form>
