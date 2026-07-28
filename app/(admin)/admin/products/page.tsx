@@ -36,6 +36,7 @@ export default function AdminProductsPage() {
     const queryClient = useQueryClient();
     const [page, setPage] = useState(1);
     const [search, setSearch] = useState("");
+    const [filterTab, setFilterTab] = useState<"ALL" | "ADMIN" | "USER_PENDING" | "USER_APPROVED" | "USER_REJECTED">("ALL");
     const [view, setView] = useState<"list" | "form">("list");
     const [editingId, setEditingId] = useState<string | null>(null);
     const [form, setForm] = useState<ProductFormState>(initialForm);
@@ -47,10 +48,18 @@ export default function AdminProductsPage() {
     // Selected product IDs for bulk operations
     const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
+    const getFilterParams = () => {
+        if (filterTab === "ADMIN") return { sellerType: "ADMIN" as const };
+        if (filterTab === "USER_PENDING") return { sellerType: "USER" as const, approvalStatus: "PENDING" as const };
+        if (filterTab === "USER_APPROVED") return { sellerType: "USER" as const, approvalStatus: "APPROVED" as const };
+        if (filterTab === "USER_REJECTED") return { sellerType: "USER" as const, approvalStatus: "REJECTED" as const };
+        return {};
+    };
+
     // Load products list
     const { data: prodData, isLoading: prodLoading } = useQuery({
-        queryKey: ["admin-products", page, search],
-        queryFn: () => productsApi.list({ page, limit: 12, search: search || undefined }),
+        queryKey: ["admin-products", page, search, filterTab],
+        queryFn: () => productsApi.list({ page, limit: 12, search: search || undefined, ...getFilterParams() }),
     });
 
     // Load categories list for dropdowns
@@ -86,6 +95,21 @@ export default function AdminProductsPage() {
         },
         onError: (err: any) => {
             setMsg({ type: "error", text: err.response?.data?.message || t("admin.products.updateError") });
+        },
+    });
+
+    const approvalMutation = useMutation({
+        mutationFn: ({ id, status, reason }: { id: string; status: 'APPROVED' | 'REJECTED'; reason?: string }) =>
+            productsApi.updateApproval(id, { approvalStatus: status, rejectionReason: reason }),
+        onSuccess: (_, variables) => {
+            setMsg({
+                type: "success",
+                text: variables.status === 'APPROVED' ? "Product approved & published to shop!" : "Product rejected",
+            });
+            queryClient.invalidateQueries({ queryKey: ["admin-products"] });
+        },
+        onError: (err: any) => {
+            setMsg({ type: "error", text: err.response?.data?.message || "Failed to update approval status" });
         },
     });
 
@@ -435,6 +459,41 @@ export default function AdminProductsPage() {
             ) : (
                 /* Read list directory */
                 <div className="card overflow-hidden bg-white">
+                    {/* Filter Tabs */}
+                    <div className="flex border-b border-slate-100 bg-slate-50/70 overflow-x-auto">
+                        <button
+                            onClick={() => { setFilterTab("ALL"); setPage(1); }}
+                            className={`px-4 py-3 text-xs font-bold transition-all border-b-2 whitespace-nowrap ${filterTab === "ALL" ? "border-teal-600 text-teal-700 bg-white" : "border-transparent text-slate-500 hover:text-slate-700"}`}
+                        >
+                            All Products
+                        </button>
+                        <button
+                            onClick={() => { setFilterTab("ADMIN"); setPage(1); }}
+                            className={`px-4 py-3 text-xs font-bold transition-all border-b-2 whitespace-nowrap ${filterTab === "ADMIN" ? "border-teal-600 text-teal-700 bg-white" : "border-transparent text-slate-500 hover:text-slate-700"}`}
+                        >
+                            Admin Products
+                        </button>
+                        <button
+                            onClick={() => { setFilterTab("USER_PENDING"); setPage(1); }}
+                            className={`px-4 py-3 text-xs font-bold transition-all border-b-2 flex items-center gap-1.5 whitespace-nowrap ${filterTab === "USER_PENDING" ? "border-amber-500 text-amber-700 bg-white" : "border-transparent text-amber-600 hover:text-amber-700"}`}
+                        >
+                            <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                            User Pending Approval
+                        </button>
+                        <button
+                            onClick={() => { setFilterTab("USER_APPROVED"); setPage(1); }}
+                            className={`px-4 py-3 text-xs font-bold transition-all border-b-2 whitespace-nowrap ${filterTab === "USER_APPROVED" ? "border-emerald-600 text-emerald-700 bg-white" : "border-transparent text-slate-500 hover:text-slate-700"}`}
+                        >
+                            User Products (Approved)
+                        </button>
+                        <button
+                            onClick={() => { setFilterTab("USER_REJECTED"); setPage(1); }}
+                            className={`px-4 py-3 text-xs font-bold transition-all border-b-2 whitespace-nowrap ${filterTab === "USER_REJECTED" ? "border-red-500 text-red-700 bg-white" : "border-transparent text-slate-500 hover:text-slate-700"}`}
+                        >
+                            User Products (Rejected)
+                        </button>
+                    </div>
+
                     {/* Search bar & Bulk actions */}
                     <div className="p-4 border-b border-slate-100 flex flex-wrap gap-4 items-center justify-between">
                         <input
@@ -489,6 +548,7 @@ export default function AdminProductsPage() {
                                         </th>
                                         <th className="p-4 text-xs font-bold text-slate-600">ID</th>
                                         <th className="p-4 text-xs font-bold text-slate-600">{t("admin.products.list.colProduct")}</th>
+                                        <th className="p-4 text-xs font-bold text-slate-600">Seller / Approval</th>
                                         <th className="p-4 text-xs font-bold text-slate-600">{t("admin.products.list.colCategory")}</th>
                                         <th className="p-4 text-xs font-bold text-slate-600 text-right">{t("admin.products.list.colPrice")}</th>
                                         <th className="p-4 text-xs font-bold text-slate-600 text-center">{t("admin.products.list.colStock")}</th>
@@ -509,7 +569,7 @@ export default function AdminProductsPage() {
                                             <td className="p-4">
                                                 <span className="font-mono text-[10px] text-gray-400 font-medium" title={item.id}>{item.id.slice(0, 8)}...</span>
                                             </td>
-                                            <td className="p-4 min-w-[240px]">
+                                            <td className="p-4 min-w-[200px]">
                                                 <div className="flex gap-3 items-center">
                                                     <div className="w-12 h-12 rounded bg-slate-50 border border-slate-100 overflow-hidden flex-shrink-0">
                                                         {item.images?.[0] ? <img src={item.images[0]} alt={item.name} className="h-full w-full object-cover" /> : <div className="text-[9px] text-gray-300 h-full flex items-center justify-center">No image</div>}
@@ -522,6 +582,38 @@ export default function AdminProductsPage() {
                                                     </div>
                                                 </div>
                                             </td>
+                                            <td className="p-4 text-xs space-y-1">
+                                                {item.seller ? (
+                                                    <div className="font-semibold text-teal-800 flex items-center gap-1">
+                                                        <span className="rounded bg-teal-50 text-teal-700 px-1.5 py-0.5 text-[10px] font-bold border border-teal-200">
+                                                            User: {item.seller.name}
+                                                        </span>
+                                                    </div>
+                                                ) : (
+                                                    <span className="rounded bg-slate-100 text-slate-600 px-1.5 py-0.5 text-[10px] font-bold">
+                                                        Admin Product
+                                                    </span>
+                                                )}
+                                                {item.sellerId && (
+                                                    <div className="pt-0.5">
+                                                        {item.approvalStatus === "PENDING" && (
+                                                            <span className="rounded-full bg-amber-100 text-amber-800 px-2 py-0.5 text-[10px] font-bold">
+                                                                ⏳ Pending Approval
+                                                            </span>
+                                                        )}
+                                                        {item.approvalStatus === "APPROVED" && (
+                                                            <span className="rounded-full bg-emerald-100 text-emerald-800 px-2 py-0.5 text-[10px] font-bold">
+                                                                ✓ Approved
+                                                            </span>
+                                                        )}
+                                                        {item.approvalStatus === "REJECTED" && (
+                                                            <span className="rounded-full bg-rose-100 text-rose-800 px-2 py-0.5 text-[10px] font-bold" title={item.rejectionReason}>
+                                                                ✕ Rejected
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                )}
+                                            </td>
                                             <td className="p-4 text-xs text-slate-650">{item.category?.name || t("admin.products.list.uncategorized")}</td>
                                             <td className="p-4 text-sm font-bold text-slate-800 text-right">{formatCurrency(item.price, locale)}</td>
                                             <td className="p-4 text-center">
@@ -531,11 +623,34 @@ export default function AdminProductsPage() {
                                                 </span>
                                             </td>
                                             <td className="p-4 text-center">
-                                                <div className="flex gap-2 justify-center">
-                                                    <button onClick={() => handleEditInit(item)} className="p-1.5 rounded-lg border border-slate-150 text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors">
+                                                <div className="flex flex-col sm:flex-row gap-1.5 justify-center items-center">
+                                                    {item.approvalStatus === "PENDING" && (
+                                                        <>
+                                                            <button
+                                                                onClick={() => approvalMutation.mutate({ id: item.id, status: "APPROVED" })}
+                                                                disabled={approvalMutation.isPending}
+                                                                className="px-2 py-1 rounded bg-emerald-600 text-white text-[11px] font-bold hover:bg-emerald-700 shadow-xs"
+                                                            >
+                                                                Approve
+                                                            </button>
+                                                            <button
+                                                                onClick={() => {
+                                                                    const reason = prompt("Enter rejection reason (optional):");
+                                                                    if (reason !== null) {
+                                                                        approvalMutation.mutate({ id: item.id, status: "REJECTED", reason });
+                                                                    }
+                                                                }}
+                                                                disabled={approvalMutation.isPending}
+                                                                className="px-2 py-1 rounded bg-rose-600 text-white text-[11px] font-bold hover:bg-rose-700 shadow-xs"
+                                                            >
+                                                                Reject
+                                                            </button>
+                                                        </>
+                                                    )}
+                                                    <button onClick={() => handleEditInit(item)} title="Edit" className="p-1.5 rounded-lg border border-slate-150 text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors">
                                                         <Edit2 size={13} />
                                                     </button>
-                                                    <button onClick={() => { if (confirm(t("admin.products.list.confirmDelete"))) deleteMutation.mutate(item.id); }} className="p-1.5 rounded-lg border border-slate-150 text-slate-600 hover:text-green-600 hover:bg-green-50 transition-colors">
+                                                    <button onClick={() => { if (confirm(t("admin.products.list.confirmDelete"))) deleteMutation.mutate(item.id); }} title="Delete" className="p-1.5 rounded-lg border border-slate-150 text-slate-600 hover:text-green-600 hover:bg-green-50 transition-colors">
                                                         <Trash2 size={13} />
                                                     </button>
                                                 </div>

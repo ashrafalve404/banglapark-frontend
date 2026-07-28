@@ -7,7 +7,7 @@ export type PaymentMethod = "CASH_ON_DELIVERY" | "BKASH";
 export type DeliveryArea = "INSIDE_DHAKA" | "OUTSIDE_DHAKA";
 export type WithdrawStatus = "PENDING" | "APPROVED" | "REJECTED";
 export type WithdrawMethod = "BKASH" | "NAGAD" | "ROCKET" | "BANK";
-export type TxType = "GENERATION_COMMISSION" | "DAILY_BENEFIT" | "PURCHASE" | "WITHDRAWAL" | "REFUND" | "ADMIN_ADJUSTMENT" | "QUIZ_PURCHASE";
+export type TxType = "GENERATION_COMMISSION" | "DAILY_BENEFIT" | "PURCHASE" | "WITHDRAWAL" | "REFUND" | "ADMIN_ADJUSTMENT" | "QUIZ_PURCHASE" | "SELLER_PAYOUT";
 export type NotificationType = "ACTIVATION_REMINDER" | "COMMISSION_RECEIVED" | "DAILY_BENEFIT_RECEIVED" | "WITHDRAWAL_STATUS" | "ORDER_STATUS" | "SYSTEM";
 export type BannerSection = "SLIDER" | "OFFER" | "DAILY_WORK";
 
@@ -41,6 +41,7 @@ export interface Wallet {
     tierBonus?: number;
     generationIncome?: number;
     quizEarning?: number;
+    productSalesIncome?: number;
     reward?: number;
     salary?: number;
     travelling?: number;
@@ -74,6 +75,10 @@ export interface Product {
     stock: number;
     categoryId: string;
     category?: Category;
+    sellerId?: string;
+    seller?: { id: string; name: string; email: string; phone: string };
+    approvalStatus?: 'PENDING' | 'APPROVED' | 'REJECTED';
+    rejectionReason?: string;
     images: string[];
     sizes: string[];
     isActive: boolean;

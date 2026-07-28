@@ -3,7 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import Link from "next/link";
-import { Wallet, AlertCircle, RefreshCw, Gift, TrendingUp, Award, DollarSign, MapPin, PieChart, Users, ShieldCheck, Plane } from "lucide-react";
+import { Wallet, AlertCircle, RefreshCw, Gift, TrendingUp, Award, DollarSign, MapPin, PieChart, Users, ShieldCheck, Plane, ShoppingBag } from "lucide-react";
 import { walletApi } from "@/lib/api/wallet";
 import { referralApi } from "@/lib/api/categories";
 import { commissionsApi } from "@/lib/api/commissions";
@@ -91,7 +91,7 @@ export default function WalletPage() {
                 </div>
             )}
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-7 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-8 gap-3">
                 <div className="card p-5 bg-gradient-to-br from-green-900 to-green-800 text-white">
                     <div className="flex items-center justify-between mb-3">
                         <span className="text-[10px] text-green-100 font-semibold uppercase tracking-wider">{t("wallet.balance.total")}</span>
@@ -99,6 +99,18 @@ export default function WalletPage() {
                     </div>
                     <h2 className="text-2xl font-extrabold text-white">
                         {balLoading ? "..." : formatCurrency(balanceData?.balance ?? 0, locale)}
+                    </h2>
+                </div>
+
+                <div className="card p-5 bg-gradient-to-br from-teal-900 to-teal-800 text-white">
+                    <div className="flex items-center justify-between mb-3">
+                        <span className="text-[10px] text-teal-100 font-semibold uppercase tracking-wider">
+                            {locale === "bn" ? "পোডাক্ট বিক্রয় আয় (৮০%)" : "Product Sales (80%)"}
+                        </span>
+                        <ShoppingBag size={18} className="text-teal-300" />
+                    </div>
+                    <h2 className="text-2xl font-extrabold text-white">
+                        {balLoading ? "..." : formatCurrency(balanceData?.productSalesIncome ?? 0, locale)}
                     </h2>
                 </div>
 

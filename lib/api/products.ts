@@ -8,6 +8,8 @@ export const productsApi = {
         search?: string;
         categoryId?: string;
         sort?: 'price_asc' | 'price_desc' | 'newest' | 'popular';
+        sellerType?: 'ALL' | 'ADMIN' | 'USER';
+        approvalStatus?: 'PENDING' | 'APPROVED' | 'REJECTED';
     }): Promise<{ products: Product[]; total: number; page: number; limit: number }> => {
         const res = await api.get("/products", { params });
         return res.data;
@@ -28,6 +30,11 @@ export const productsApi = {
         return res.data;
     },
 
+    updateApproval: async (id: string, data: { approvalStatus: 'APPROVED' | 'REJECTED'; rejectionReason?: string }): Promise<Product> => {
+        const res = await api.patch(`/products/${id}/approval`, data);
+        return res.data;
+    },
+
     delete: async (id: string): Promise<void> => {
         await api.delete(`/products/${id}`);
     },
@@ -38,5 +45,25 @@ export const productsApi = {
 
     recordClick: async (id: string): Promise<void> => {
         await api.post(`/products/${id}/click`);
+    },
+};
+
+export const userProductsApi = {
+    submitProduct: async (data: {
+        name: string;
+        description?: string;
+        price: number;
+        stock?: number;
+        categoryId?: string;
+        images?: string[];
+        sizes?: string[];
+    }): Promise<Product> => {
+        const res = await api.post("/user-products", data);
+        return res.data;
+    },
+
+    getMyProducts: async (): Promise<(Product & { totalSoldQuantity: number; totalRevenue: number; sellerEarnings80Percent: number })[]> => {
+        const res = await api.get("/user-products/my-products");
+        return res.data;
     },
 };

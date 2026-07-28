@@ -38,7 +38,7 @@ export function DashboardSidebar({ onClose, mobile }: DashboardSidebarProps) {
         { href: "/dashboard/quiz", label: t("nav.quiz"), icon: FaCircleQuestion, activeBg: "bg-purple-50 text-purple-800 border-l-4 border-purple-600 shadow-xs", iconColor: "text-purple-600" },
         { href: "/dashboard/daily-work", label: t("nav.dailyWork"), icon: FaBriefcase, activeBg: "bg-amber-50 text-amber-800 border-l-4 border-amber-600 shadow-xs", iconColor: "text-amber-600" },
         { href: "/shop", label: t("nav.buyProduct"), icon: FaCartShopping, activeBg: "bg-orange-50 text-orange-800 border-l-4 border-orange-600 shadow-xs", iconColor: "text-orange-600" },
-        { href: "#", label: t("nav.productSell"), icon: FaStore, activeBg: "bg-teal-50 text-teal-800 border-l-4 border-teal-600 shadow-xs", iconColor: "text-teal-600" },
+        { href: "/dashboard/product-sell", label: t("nav.productSell"), icon: FaStore, activeBg: "bg-teal-50 text-teal-800 border-l-4 border-teal-600 shadow-xs", iconColor: "text-teal-600" },
         { href: "/dashboard/travel", label: t("nav.travel"), icon: FaPlane, activeBg: "bg-orange-50 text-orange-800 border-l-4 border-orange-600 shadow-xs", iconColor: "text-orange-600" },
         { href: "/dashboard/position", label: t("nav.position"), icon: FaAward, activeBg: "bg-teal-50 text-teal-800 border-l-4 border-teal-600 shadow-xs", iconColor: "text-teal-600" },
         { href: "#", label: t("nav.digitalMarketing"), icon: FaBullhorn, activeBg: "bg-indigo-50 text-indigo-800 border-l-4 border-indigo-600 shadow-xs", iconColor: "text-indigo-600" },
