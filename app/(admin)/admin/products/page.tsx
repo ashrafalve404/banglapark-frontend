@@ -584,10 +584,16 @@ export default function AdminProductsPage() {
                                             </td>
                                             <td className="p-4 text-xs space-y-1">
                                                 {item.seller ? (
-                                                    <div className="font-semibold text-teal-800 flex items-center gap-1">
-                                                        <span className="rounded bg-teal-50 text-teal-700 px-1.5 py-0.5 text-[10px] font-bold border border-teal-200">
+                                                    <div className="font-semibold text-teal-800 space-y-0.5">
+                                                        <span className="inline-block rounded bg-teal-50 text-teal-700 px-1.5 py-0.5 text-[10px] font-bold border border-teal-200">
                                                             User: {item.seller.name}
                                                         </span>
+                                                        {item.seller.phone && (
+                                                            <div className="text-[11px] text-slate-500 font-mono font-medium flex items-center gap-1">
+                                                                <span>📞</span>
+                                                                <span>{item.seller.phone}</span>
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 ) : (
                                                     <span className="rounded bg-slate-100 text-slate-600 px-1.5 py-0.5 text-[10px] font-bold">

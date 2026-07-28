@@ -5,7 +5,7 @@ import {
     Users, ShoppingBag, ArrowUpRight, TrendingUp,
     AlertCircle, ShieldAlert, BadgeAlert, CheckCircle2,
     Package, DollarSign, CreditCard, Wallet,
-    AlertTriangle, TrendingDown
+    AlertTriangle, TrendingDown, Coins
 } from "lucide-react";
 import { adminApi } from "@/lib/api/admin";
 import { formatCurrency } from "@/lib/utils";
@@ -76,6 +76,21 @@ export default function AdminOverview() {
                     </div>
                     <div className="rounded-lg bg-emerald-50 p-2.5 text-emerald-800">
                         <TrendingUp size={20} />
+                    </div>
+                </div>
+
+                {/* User Product Commission (20%) */}
+                <div className="card p-5 bg-white flex items-center justify-between">
+                    <div className="space-y-1">
+                        <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block">
+                            {locale === "bn" ? "ইউজার প্রোডাক্ট কমিশন (২০%)" : "Seller Product Commission (20%)"}
+                        </span>
+                        <span className="text-2xl font-bold text-teal-700">
+                            {isLoading ? "..." : formatCurrency((stats as any)?.userProductCommission ?? 0, locale)}
+                        </span>
+                    </div>
+                    <div className="rounded-lg bg-teal-50 p-2.5 text-teal-800">
+                        <Coins size={20} />
                     </div>
                 </div>
 

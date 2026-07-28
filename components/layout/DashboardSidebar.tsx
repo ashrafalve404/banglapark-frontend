@@ -33,7 +33,7 @@ export function DashboardSidebar({ onClose, mobile }: DashboardSidebarProps) {
         { href: "/dashboard", label: t("nav.overview"), icon: FaGauge, exact: true, activeBg: "bg-indigo-50 text-indigo-800 border-l-4 border-indigo-600 shadow-xs", iconColor: "text-indigo-600" },
         { href: "/dashboard/profile", label: t("nav.profile"), icon: FaUser, activeBg: "bg-blue-50 text-blue-800 border-l-4 border-blue-600 shadow-xs", iconColor: "text-blue-600" },
         { href: "/dashboard/referrals", label: t("nav.referrals"), icon: FaUsers, activeBg: "bg-cyan-50 text-cyan-800 border-l-4 border-cyan-600 shadow-xs", iconColor: "text-cyan-600" },
-        { href: "#", label: t("nav.categories"), icon: FaTags, activeBg: "bg-sky-50 text-sky-800 border-l-4 border-sky-600 shadow-xs", iconColor: "text-sky-600" },
+        { href: "/dashboard/categories", label: t("nav.categories"), icon: FaTags, activeBg: "bg-sky-50 text-sky-800 border-l-4 border-sky-600 shadow-xs", iconColor: "text-sky-600" },
         { href: "/dashboard/orders", label: t("nav.orders"), icon: FaBagShopping, activeBg: "bg-purple-50 text-purple-800 border-l-4 border-purple-600 shadow-xs", iconColor: "text-purple-600" },
         { href: "/dashboard/quiz", label: t("nav.quiz"), icon: FaCircleQuestion, activeBg: "bg-purple-50 text-purple-800 border-l-4 border-purple-600 shadow-xs", iconColor: "text-purple-600" },
         { href: "/dashboard/daily-work", label: t("nav.dailyWork"), icon: FaBriefcase, activeBg: "bg-amber-50 text-amber-800 border-l-4 border-amber-600 shadow-xs", iconColor: "text-amber-600" },

@@ -244,7 +244,7 @@ export default function ProductSellPage() {
                         <FaCoins size={24} />
                     </div>
                     <div>
-                        <div className="text-xs font-medium text-gray-500">Total Earned (80%)</div>
+                        <div className="text-xs font-medium text-gray-500">Total Earned</div>
                         <div className="text-2xl font-extrabold text-emerald-600 mt-0.5">BDT {totalSellerEarnings.toFixed(2)}</div>
                     </div>
                 </div>
@@ -286,7 +286,7 @@ export default function ProductSellPage() {
                                     <th className="px-5 py-3.5">Stock</th>
                                     <th className="px-5 py-3.5">Status</th>
                                     <th className="px-5 py-3.5">Sold</th>
-                                    <th className="px-5 py-3.5">80% Earnings</th>
+                                    <th className="px-5 py-3.5">Total Earned</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-100 text-gray-700 font-medium">

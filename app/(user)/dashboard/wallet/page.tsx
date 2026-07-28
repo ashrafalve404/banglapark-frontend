@@ -105,7 +105,7 @@ export default function WalletPage() {
                 <div className="card p-5 bg-gradient-to-br from-teal-900 to-teal-800 text-white">
                     <div className="flex items-center justify-between mb-3">
                         <span className="text-[10px] text-teal-100 font-semibold uppercase tracking-wider">
-                            {locale === "bn" ? "পোডাক্ট বিক্রয় আয় (৮০%)" : "Product Sales (80%)"}
+                            {locale === "bn" ? "পোডাক্ট বিক্রয় আয়" : "Product Sales"}
                         </span>
                         <ShoppingBag size={18} className="text-teal-300" />
                     </div>

@@ -56,6 +56,12 @@ export default function DashboardOverview() {
             cardBg: "bg-purple-200 text-purple-950 border-purple-300 hover:bg-purple-300",
         },
         {
+            href: "/dashboard/product-sell",
+            label: t("nav.productSell"),
+            image: "/images/productsell.png",
+            cardBg: "bg-cyan-200 text-cyan-950 border-cyan-300 hover:bg-cyan-300",
+        },
+        {
             href: "/dashboard/daily-work",
             label: t("nav.dailyWork"),
             image: "/images/dailywork.png",
@@ -73,12 +79,6 @@ export default function DashboardOverview() {
             label: t("nav.buyProduct"),
             image: "/images/buy product.png",
             cardBg: "bg-orange-200 text-orange-950 border-orange-300 hover:bg-orange-300",
-        },
-        {
-            href: "#",
-            label: t("nav.productSell"),
-            image: "/images/productsell.png",
-            cardBg: "bg-cyan-200 text-cyan-950 border-cyan-300 hover:bg-cyan-300",
         },
         {
             href: "#",
