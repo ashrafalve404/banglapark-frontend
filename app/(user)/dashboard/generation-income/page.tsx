@@ -44,34 +44,34 @@ export default function GenerationIncomePage() {
                 </button>
             </div>
 
-            {/* Metric Summary Cards Grid */}
+            {/* Metric Summary Cards Grid with Light Solid Colors */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 {/* Card 1: Total Generation Income Balance */}
-                <div className="rounded-xl bg-gradient-to-br from-blue-900 via-blue-850 to-slate-900 p-6 text-white shadow-xl space-y-4 border border-blue-700/50">
+                <div className="rounded-xl bg-blue-50/80 border border-blue-200/80 p-6 space-y-3">
                     <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-blue-300 uppercase tracking-wider">
+                        <span className="text-xs font-bold text-blue-800 uppercase tracking-wider">
                             {isBn ? "মোট অর্জিত জেনারেশন বোনাস" : "Total Generation Bonus Balance"}
                         </span>
-                        <div className="rounded-xl bg-white/10 p-2.5 backdrop-blur-md">
-                            <TrendingUp size={22} className="text-blue-300" />
+                        <div className="rounded-xl bg-blue-100 p-2.5">
+                            <TrendingUp size={22} className="text-blue-700" />
                         </div>
                     </div>
-                    <div className="text-3xl sm:text-4xl font-extrabold text-white">
+                    <div className="text-3xl sm:text-4xl font-extrabold text-blue-950">
                         {balLoading ? "..." : formatCurrency(balanceData?.generationIncome ?? 0, locale)}
                     </div>
                 </div>
 
                 {/* Card 2: Active Network Levels */}
-                <div className="rounded-xl bg-gradient-to-br from-purple-900 via-indigo-900 to-slate-900 p-6 text-white shadow-xl space-y-4 border border-purple-700/50">
+                <div className="rounded-xl bg-indigo-50/80 border border-indigo-200/80 p-6 space-y-3">
                     <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-purple-300 uppercase tracking-wider">
+                        <span className="text-xs font-bold text-indigo-800 uppercase tracking-wider">
                             {isBn ? "সক্রিয় রেফারেল লেভেল সীমা" : "Active Network Coverage"}
                         </span>
-                        <div className="rounded-xl bg-white/10 p-2.5 backdrop-blur-md">
-                            <Users size={22} className="text-purple-300" />
+                        <div className="rounded-xl bg-indigo-100 p-2.5">
+                            <Users size={22} className="text-indigo-700" />
                         </div>
                     </div>
-                    <div className="text-3xl sm:text-4xl font-extrabold text-white">
+                    <div className="text-3xl sm:text-4xl font-extrabold text-indigo-950">
                         {isBn ? "লেভেল ১ - ১০" : "Level 1 - 10"}
                     </div>
                 </div>

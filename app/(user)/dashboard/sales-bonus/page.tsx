@@ -52,34 +52,34 @@ export default function SalesBonusPage() {
                 </button>
             </div>
 
-            {/* Metric Summary Cards Grid */}
+            {/* Metric Summary Cards Grid with Light Solid Colors */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 {/* Card 1: Total Sales Bonus Balance */}
-                <div className="rounded-xl bg-gradient-to-br from-indigo-900 via-indigo-850 to-slate-900 p-6 text-white shadow-xl space-y-4 border border-indigo-700/50">
+                <div className="rounded-xl bg-teal-50/80 border border-teal-200/80 p-6 space-y-3">
                     <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-indigo-300 uppercase tracking-wider">
+                        <span className="text-xs font-bold text-teal-800 uppercase tracking-wider">
                             {isBn ? "মোট অর্জিত সেলস বোনাস" : "Total Sales Bonus Balance"}
                         </span>
-                        <div className="rounded-xl bg-white/10 p-2.5 backdrop-blur-md">
-                            <Award size={22} className="text-indigo-300" />
+                        <div className="rounded-xl bg-teal-100 p-2.5">
+                            <Award size={22} className="text-teal-700" />
                         </div>
                     </div>
-                    <div className="text-3xl sm:text-4xl font-extrabold text-white">
+                    <div className="text-3xl sm:text-4xl font-extrabold text-teal-950">
                         {balLoading ? "..." : formatCurrency(balanceData?.tierBonus ?? 0, locale)}
                     </div>
                 </div>
 
                 {/* Card 2: Latest Bonus Earned */}
-                <div className="rounded-xl bg-gradient-to-br from-teal-900 via-emerald-850 to-slate-900 p-6 text-white shadow-xl space-y-4 border border-teal-700/50">
+                <div className="rounded-xl bg-emerald-50/80 border border-emerald-200/80 p-6 space-y-3">
                     <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-teal-300 uppercase tracking-wider">
+                        <span className="text-xs font-bold text-emerald-800 uppercase tracking-wider">
                             {isBn ? "সর্বশেষ অর্জিত বোনাস" : "Latest Bonus Earned"}
                         </span>
-                        <div className="rounded-xl bg-white/10 p-2.5 backdrop-blur-md">
-                            <TrendingUp size={22} className="text-teal-300" />
+                        <div className="rounded-xl bg-emerald-100 p-2.5">
+                            <TrendingUp size={22} className="text-emerald-700" />
                         </div>
                     </div>
-                    <div className="text-3xl sm:text-4xl font-extrabold text-white">
+                    <div className="text-3xl sm:text-4xl font-extrabold text-emerald-950">
                         {txLoading ? "..." : formatCurrency(latestTx?.amount ?? 0, locale)}
                     </div>
                 </div>
