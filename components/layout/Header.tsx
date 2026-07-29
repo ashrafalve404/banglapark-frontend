@@ -27,7 +27,7 @@ export function Header() {
         queryKey: ["categories"],
         queryFn: () => categoriesApi.list(),
     });
-    const categories = categoriesData?.categories ?? [];
+    const categories = (categoriesData?.categories ?? []).filter((c: any) => (c._count?.products ?? 0) > 0);
 
     useEffect(() => { setMounted(true); }, []);
 

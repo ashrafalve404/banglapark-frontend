@@ -267,7 +267,7 @@ export default function HomePage() {
             )}
 
             {/* Categories */}
-            {categories.length > 0 && (
+            {categories.some((c) => ((c as any)._count?.products ?? 0) > 0) && (
                 <section className="py-8 sm:py-12 bg-gray-50/80">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <RevealSection>
