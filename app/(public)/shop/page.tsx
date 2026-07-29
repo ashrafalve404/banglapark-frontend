@@ -3,7 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Search, Loader2, ChevronDown, ShoppingCart } from "lucide-react";
 import { productsApi } from "@/lib/api/products";
 import { categoriesApi } from "@/lib/api/categories";
@@ -13,6 +13,7 @@ import { formatCurrency } from "@/lib/utils";
 
 function ShopPageContent() {
     const { t, locale } = useLocale();
+    const router = useRouter();
     const searchParams = useSearchParams();
     const [search, setSearch] = useState(searchParams.get("search") || "");
     const [selectedCategory, setSelectedCategory] = useState("all");
@@ -40,19 +41,30 @@ function ShopPageContent() {
 
     const categories = (categoriesData?.categories ?? []).filter((c: any) => (c._count?.products ?? 0) > 0);
 
+    const handleCategorySelect = (catId: string) => {
+        setSelectedCategory(catId);
+        const params = new URLSearchParams(searchParams.toString());
+        if (catId === "all") {
+            params.delete("categoryId");
+            params.delete("category");
+        } else {
+            params.set("categoryId", catId);
+        }
+        const queryString = params.toString();
+        router.replace(queryString ? `/shop?${queryString}` : "/shop", { scroll: false });
+    };
+
     useEffect(() => {
         const catParam = searchParams.get("categoryId") || searchParams.get("category");
         if (catParam) {
-            if (categories.length > 0) {
-                const found = categories.find((c) => c.id === catParam || c.slug === catParam);
-                if (found) {
-                    setSelectedCategory(found.id);
-                } else {
-                    setSelectedCategory(catParam);
-                }
+            const found = categories.find((c) => c.id === catParam || c.slug === catParam);
+            if (found) {
+                setSelectedCategory(found.id);
             } else {
                 setSelectedCategory(catParam);
             }
+        } else {
+            setSelectedCategory("all");
         }
         const sParam = searchParams.get("search");
         if (sParam !== null) {
@@ -114,7 +126,7 @@ function ShopPageContent() {
                 <div className="block lg:hidden mb-4">
                     <div className="flex items-center gap-2 overflow-x-auto pb-2 pt-1 scrollbar-none snap-x">
                         <button
-                            onClick={() => setSelectedCategory("all")}
+                            onClick={() => handleCategorySelect("all")}
                             className={`shrink-0 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all snap-start cursor-pointer ${selectedCategory === "all"
                                     ? "bg-red-700 text-white shadow-xs"
                                     : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-50"
@@ -125,7 +137,7 @@ function ShopPageContent() {
                         {categories.map((cat) => (
                             <button
                                 key={cat.id}
-                                onClick={() => setSelectedCategory(cat.id)}
+                                onClick={() => handleCategorySelect(cat.id)}
                                 className={`shrink-0 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all snap-start cursor-pointer ${selectedCategory === cat.id
                                         ? "bg-red-700 text-white shadow-xs"
                                         : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-50"
@@ -151,7 +163,7 @@ function ShopPageContent() {
                             </div>
                             <div className="max-h-[calc(100vh-180px)] overflow-y-auto pr-1.5 space-y-1 divide-y divide-slate-50 flex flex-col">
                                 <button
-                                    onClick={() => setSelectedCategory("all")}
+                                    onClick={() => handleCategorySelect("all")}
                                     className={`text-left rounded-lg px-3 py-2 text-xs font-semibold transition-colors flex items-center justify-between cursor-pointer ${selectedCategory === "all"
                                             ? "bg-red-700 text-white shadow-xs"
                                             : "text-slate-700 hover:bg-slate-50"
@@ -162,7 +174,7 @@ function ShopPageContent() {
                                 {categories.map((cat) => (
                                     <button
                                         key={cat.id}
-                                        onClick={() => setSelectedCategory(cat.id)}
+                                        onClick={() => handleCategorySelect(cat.id)}
                                         className={`text-left rounded-lg px-3 py-2 text-xs font-semibold transition-colors flex items-center justify-between cursor-pointer ${selectedCategory === cat.id
                                                 ? "bg-red-700 text-white shadow-xs"
                                                 : "text-slate-700 hover:bg-slate-50"
