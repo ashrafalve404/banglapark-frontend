@@ -174,10 +174,10 @@ export function Header() {
                 {menuOpen && (
                     <div className="fixed inset-0 z-[100] md:hidden">
                         <div className="absolute inset-0 bg-black/50 fade-in" onClick={() => setMenuOpen(false)} />
-                        <div className="absolute right-0 top-0 bottom-0 w-[280px] max-w-[80vw] bg-white shadow-2xl overflow-y-auto slide-from-right">
-                            <div className="flex items-center justify-between px-4 py-4 border-b border-gray-100">
-                                <span className="text-sm font-bold text-gray-800">Menu</span>
-                                <button onClick={() => setMenuOpen(false)} className="p-1 text-gray-500 hover:text-gray-800">
+                        <div className="absolute right-0 top-0 bottom-0 w-[280px] max-w-[80vw] bg-white shadow-2xl overflow-y-auto pb-28 slide-from-right">
+                            <div className="flex items-center justify-between px-4 py-3.5 border-b border-slate-100 bg-slate-50/50 sticky top-0 bg-white z-10">
+                                <span className="text-sm font-bold text-slate-800">Menu</span>
+                                <button onClick={() => setMenuOpen(false)} className="p-1 text-slate-500 hover:text-slate-800 cursor-pointer">
                                     <X size={20} />
                                 </button>
                             </div>
@@ -262,7 +262,7 @@ export function Header() {
                                 )}
                             </div>
 
-                            <div className="px-4 py-3 bg-slate-50/50">
+                            <div className="p-4 bg-slate-50/50 border-t border-slate-100 mt-2">
                                 <LocaleSwitcher />
                             </div>
                         </div>

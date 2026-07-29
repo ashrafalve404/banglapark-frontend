@@ -286,7 +286,8 @@ export default function HomePage() {
                         <RevealSection>
                             <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-2.5 sm:gap-4">
                                 {(() => {
-                                    const popularCategories = [...categories]
+                                    const popularCategories = categories
+                                        .filter((c) => ((c as any)._count?.products ?? 0) > 0)
                                         .sort((a, b) => {
                                             const countA = (a as any)._count?.products ?? 0;
                                             const countB = (b as any)._count?.products ?? 0;

@@ -60,8 +60,9 @@ export default function UserCategoriesPage() {
     };
 
     const filteredCategories = categories.filter((cat) =>
-        cat.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        cat.slug.toLowerCase().includes(searchQuery.toLowerCase())
+        ((cat as any)._count?.products ?? 0) > 0 &&
+        (cat.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+         cat.slug.toLowerCase().includes(searchQuery.toLowerCase()))
     );
 
     return (
