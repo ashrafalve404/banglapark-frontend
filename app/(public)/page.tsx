@@ -297,7 +297,7 @@ export default function HomePage() {
                                         >
                                             {cat.image ? (
                                                 <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-2xl overflow-hidden border border-slate-200 shadow-md group-hover:scale-110 transition-transform duration-300">
-                                                    <Image src={cat.image} alt={cat.name} fill className="object-cover" />
+                                                    <img src={cat.image} alt={cat.name} className="h-full w-full object-cover" />
                                                 </div>
                                             ) : (
                                                 <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br ${gradient} text-white shadow-md flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
@@ -308,7 +308,7 @@ export default function HomePage() {
                                                 <span className="text-xs sm:text-sm font-bold text-slate-800 group-hover:text-red-700 transition-colors block line-clamp-1">
                                                     {cat.name}
                                                 </span>
-                                                {productCount !== undefined && (
+                                                {!!productCount && productCount > 0 && (
                                                     <span className="text-[10px] font-semibold text-slate-400 block">
                                                         {productCount} {locale === "bn" ? "টি পণ্য" : "items"}
                                                     </span>

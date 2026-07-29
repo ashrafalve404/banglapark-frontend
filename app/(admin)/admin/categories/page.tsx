@@ -229,7 +229,7 @@ export default function AdminCategoriesPage() {
                             {imageUrl ? (
                                 <div className="flex items-center gap-3">
                                     <div className="relative w-20 h-20 rounded-xl overflow-hidden border border-slate-200 bg-slate-50 shadow-xs">
-                                        <Image src={imageUrl} alt="Category image" fill className="object-cover" />
+                                        <img src={imageUrl} alt="Category image" className="h-full w-full object-cover" />
                                     </div>
                                     <button
                                         type="button"
@@ -332,7 +332,7 @@ export default function AdminCategoriesPage() {
                                                 {editingImageUrl ? (
                                                     <div className="flex items-center gap-2">
                                                         <div className="relative w-10 h-10 rounded-lg overflow-hidden border border-slate-200 bg-slate-50 shrink-0">
-                                                            <Image src={editingImageUrl} alt="Preview" fill className="object-cover" />
+                                                            <img src={editingImageUrl} alt="Preview" className="h-full w-full object-cover" />
                                                         </div>
                                                         <button
                                                             type="button"
@@ -402,7 +402,7 @@ export default function AdminCategoriesPage() {
 
                                                 <div className="relative w-11 h-11 rounded-xl overflow-hidden border border-slate-200 bg-slate-100 shrink-0 flex items-center justify-center">
                                                     {item.image ? (
-                                                        <Image src={item.image} alt={item.name} fill className="object-cover" />
+                                                        <img src={item.image} alt={item.name} className="h-full w-full object-cover" />
                                                     ) : (
                                                         <ImageIcon size={20} className="text-slate-400" />
                                                     )}
