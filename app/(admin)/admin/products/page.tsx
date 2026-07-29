@@ -2,7 +2,7 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, useRef, useTransition } from "react";
-import { Plus, Edit2, Trash2, CheckCircle2, ArrowLeft, Loader2, ImagePlus, X } from "lucide-react";
+import { Plus, Edit2, Trash2, CheckCircle2, ArrowLeft, Loader2, ImagePlus, X, Phone, Clock, XCircle, User } from "lucide-react";
 import { productsApi } from "@/lib/api/products";
 import { categoriesApi } from "@/lib/api/categories";
 import { uploadsApi } from "@/lib/api/uploads";
@@ -584,13 +584,14 @@ export default function AdminProductsPage() {
                                             </td>
                                             <td className="p-4 text-xs space-y-1">
                                                 {item.seller ? (
-                                                    <div className="font-semibold text-teal-800 space-y-0.5">
-                                                        <span className="inline-block rounded bg-teal-50 text-teal-700 px-1.5 py-0.5 text-[10px] font-bold border border-teal-200">
-                                                            User: {item.seller.name}
+                                                    <div className="font-semibold text-teal-800 space-y-1">
+                                                        <span className="inline-flex items-center gap-1 rounded bg-teal-50 text-teal-700 px-1.5 py-0.5 text-[10px] font-bold border border-teal-200">
+                                                            <User size={11} className="text-teal-600" />
+                                                            <span>User: {item.seller.name}</span>
                                                         </span>
                                                         {item.seller.phone && (
                                                             <div className="text-[11px] text-slate-500 font-mono font-medium flex items-center gap-1">
-                                                                <span>📞</span>
+                                                                <Phone size={11} className="text-slate-400" />
                                                                 <span>{item.seller.phone}</span>
                                                             </div>
                                                         )}
@@ -603,18 +604,21 @@ export default function AdminProductsPage() {
                                                 {item.sellerId && (
                                                     <div className="pt-0.5">
                                                         {item.approvalStatus === "PENDING" && (
-                                                            <span className="rounded-full bg-amber-100 text-amber-800 px-2 py-0.5 text-[10px] font-bold">
-                                                                ⏳ Pending Approval
+                                                            <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 text-amber-800 px-2 py-0.5 text-[10px] font-bold">
+                                                                <Clock size={11} className="text-amber-700" />
+                                                                <span>Pending Approval</span>
                                                             </span>
                                                         )}
                                                         {item.approvalStatus === "APPROVED" && (
-                                                            <span className="rounded-full bg-emerald-100 text-emerald-800 px-2 py-0.5 text-[10px] font-bold">
-                                                                ✓ Approved
+                                                            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 text-emerald-800 px-2 py-0.5 text-[10px] font-bold">
+                                                                <CheckCircle2 size={11} className="text-emerald-700" />
+                                                                <span>Approved</span>
                                                             </span>
                                                         )}
                                                         {item.approvalStatus === "REJECTED" && (
-                                                            <span className="rounded-full bg-rose-100 text-rose-800 px-2 py-0.5 text-[10px] font-bold" title={item.rejectionReason}>
-                                                                ✕ Rejected
+                                                            <span className="inline-flex items-center gap-1 rounded-full bg-rose-100 text-rose-800 px-2 py-0.5 text-[10px] font-bold" title={item.rejectionReason}>
+                                                                <XCircle size={11} className="text-rose-700" />
+                                                                <span>Rejected</span>
                                                             </span>
                                                         )}
                                                     </div>

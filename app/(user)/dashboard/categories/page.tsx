@@ -164,7 +164,7 @@ export default function UserCategoriesPage() {
                             <Link
                                 key={cat.id}
                                 href={`/shop?categoryId=${cat.id}`}
-                                className="group relative flex flex-col items-center justify-center text-center gap-3 rounded-2xl bg-white border border-slate-150/90 p-5 shadow-xs hover:shadow-xl hover:border-indigo-500/30 hover:-translate-y-1 transition-all duration-300 overflow-hidden cursor-pointer"
+                                className="group relative flex flex-col items-center justify-center text-center gap-3 rounded-xl bg-white border border-slate-150/90 p-5 shadow-xs hover:shadow-xl hover:border-indigo-500/30 hover:-translate-y-1 transition-all duration-300 overflow-hidden cursor-pointer"
                             >
                                 {/* Top Color Accent Line */}
                                 <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${gradient.split(" ")[0]} ${gradient.split(" ")[1]}`} />
@@ -174,7 +174,7 @@ export default function UserCategoriesPage() {
                                         <img src={cat.image} alt={cat.name} className="max-h-full max-w-full object-contain" />
                                     </div>
                                 ) : (
-                                    <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br ${gradient} text-white shadow-md flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+                                    <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br ${gradient} text-white shadow-md flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
                                         <Icon size={24} className="sm:w-6 sm:h-6 stroke-[2.2]" />
                                     </div>
                                 )}

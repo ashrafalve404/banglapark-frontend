@@ -305,14 +305,14 @@ export default function HomePage() {
                                             <Link
                                                 key={cat.id}
                                                 href={`/shop?categoryId=${cat.id}`}
-                                                className={`${isExtraForMobile ? "hidden sm:flex" : "flex"} group relative flex-col items-center justify-center text-center gap-2 sm:gap-3 rounded-2xl bg-white border border-slate-150/90 p-2.5 sm:p-5 shadow-xs hover:shadow-xl hover:border-red-500/30 hover:-translate-y-1 transition-all duration-300 overflow-hidden cursor-pointer`}
+                                                className={`${isExtraForMobile ? "hidden sm:flex" : "flex"} group relative flex-col items-center justify-center text-center gap-2 sm:gap-3 rounded-xl bg-white border border-slate-150/90 p-2.5 sm:p-5 shadow-xs hover:shadow-xl hover:border-red-500/30 hover:-translate-y-1 transition-all duration-300 overflow-hidden cursor-pointer`}
                                             >
                                                 {cat.image ? (
                                                     <div className="w-12 h-12 sm:w-20 sm:h-20 flex items-center justify-center p-0.5 sm:p-1 group-hover:scale-105 transition-transform duration-300">
                                                         <img src={cat.image} alt={cat.name} className="max-h-full max-w-full object-contain" />
                                                     </div>
                                                 ) : (
-                                                    <div className={`w-10 h-10 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br ${gradient} text-white shadow-md flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+                                                    <div className={`w-10 h-10 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br ${gradient} text-white shadow-md flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
                                                         <Icon size={20} className="sm:w-6 sm:h-6 stroke-[2.2]" />
                                                     </div>
                                                 )}
