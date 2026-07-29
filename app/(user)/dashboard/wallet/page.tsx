@@ -175,7 +175,7 @@ export default function WalletPage() {
                 </div>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-3">
                 <div className="card p-4 border border-dashed border-gray-200 bg-gray-50/50">
                     <div className="flex items-center justify-between mb-2">
                         <span className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider">{t("wallet.balance.reward")}</span>
@@ -185,6 +185,47 @@ export default function WalletPage() {
                         {balLoading ? "..." : formatCurrency(balanceData?.reward ?? 0, locale)}
                     </h2>
                 </div>
+
+                <Link href="/dashboard/travel" className="card p-4 border border-indigo-100 bg-indigo-50/40 hover:bg-indigo-50 transition-all group flex flex-col justify-between">
+                    <div className="flex items-center justify-between mb-2">
+                        <span className="text-[10px] text-indigo-600 font-bold uppercase tracking-wider">{t("wallet.balance.travelling")}</span>
+                        <Plane size={16} className="text-indigo-600 group-hover:scale-110 transition-transform" />
+                    </div>
+                    <div className="mt-1">
+                        <span className="text-xs font-bold text-indigo-900 group-hover:underline block">{locale === "bn" ? "প্যাকেজ ও বিবরণ →" : "Eligibility →"}</span>
+                    </div>
+                </Link>
+
+                <Link href="/dashboard/sales-bonus" className="card p-4 border border-teal-100 bg-teal-50/40 hover:bg-teal-50 transition-all group flex flex-col justify-between">
+                    <div className="flex items-center justify-between mb-1">
+                        <span className="text-[10px] text-teal-700 font-bold uppercase tracking-wider">
+                            {locale === "bn" ? "সেলস বোনাস" : "Sales Bonus"}
+                        </span>
+                        <Award size={16} className="text-teal-600 group-hover:scale-110 transition-transform" />
+                    </div>
+                    <h2 className="text-lg font-extrabold text-teal-800">
+                        {balLoading ? "..." : formatCurrency(balanceData?.tierBonus ?? 0, locale)}
+                    </h2>
+                    <span className="text-[11px] font-bold text-teal-700 group-hover:underline mt-1 block">
+                        {locale === "bn" ? "বিবরণ ও ইনকাম →" : "View Details →"}
+                    </span>
+                </Link>
+
+                <Link href="/dashboard/generation-income" className="card p-4 border border-blue-100 bg-blue-50/40 hover:bg-blue-50 transition-all group flex flex-col justify-between">
+                    <div className="flex items-center justify-between mb-1">
+                        <span className="text-[10px] text-blue-700 font-bold uppercase tracking-wider">
+                            {locale === "bn" ? "জেনারেশন বোনাস" : "Generation Bonus"}
+                        </span>
+                        <TrendingUp size={16} className="text-blue-600 group-hover:scale-110 transition-transform" />
+                    </div>
+                    <h2 className="text-lg font-extrabold text-blue-800">
+                        {balLoading ? "..." : formatCurrency(balanceData?.generationIncome ?? 0, locale)}
+                    </h2>
+                    <span className="text-[11px] font-bold text-blue-700 group-hover:underline mt-1 block">
+                        {locale === "bn" ? "বিবরণ ও ইনকাম →" : "View Details →"}
+                    </span>
+                </Link>
+
                 <div className="card p-4 border border-dashed border-gray-200 bg-gray-50/50">
                     <div className="flex items-center justify-between mb-2">
                         <span className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider">{t("wallet.balance.salary")}</span>
@@ -194,15 +235,7 @@ export default function WalletPage() {
                         {balLoading ? "..." : formatCurrency(balanceData?.salary ?? 0, locale)}
                     </h2>
                 </div>
-                <Link href="/dashboard/travel" className="card p-4 border border-indigo-100 bg-indigo-50/40 hover:bg-indigo-50 transition-all group">
-                    <div className="flex items-center justify-between mb-2">
-                        <span className="text-[10px] text-indigo-600 font-bold uppercase tracking-wider">{t("wallet.balance.travelling")}</span>
-                        <Plane size={16} className="text-indigo-600 group-hover:scale-110 transition-transform" />
-                    </div>
-                    <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-indigo-900 group-hover:underline">Check Eligibility & Destination →</span>
-                    </div>
-                </Link>
+
                 <div className="card p-4 border border-dashed border-gray-200 bg-gray-50/50">
                     <div className="flex items-center justify-between mb-2">
                         <span className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider">{t("wallet.balance.share")}</span>

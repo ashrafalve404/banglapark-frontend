@@ -1,13 +1,13 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { TrendingUp, Users, RefreshCw, ArrowLeft } from "lucide-react";
+import { Award, RefreshCw, ArrowLeft, TrendingUp } from "lucide-react";
 import { walletApi } from "@/lib/api/wallet";
 import { formatCurrency } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
 import Link from "next/link";
 
-export default function GenerationIncomePage() {
+export default function SalesBonusPage() {
     const { locale } = useLocale();
     const isBn = locale === "bn";
 
@@ -16,8 +16,16 @@ export default function GenerationIncomePage() {
         queryFn: () => walletApi.balance(),
     });
 
+    const { data: txData, isLoading: txLoading, refetch: refetchTx } = useQuery({
+        queryKey: ["sales-bonus-transactions"],
+        queryFn: () => walletApi.transactions({ page: 1, limit: 1, type: "TIER_BONUS" }),
+    });
+
+    const latestTx = txData?.transactions?.[0];
+
     const handleRefresh = () => {
         refetchBal();
+        refetchTx();
     };
 
     return (
@@ -30,13 +38,13 @@ export default function GenerationIncomePage() {
                             <ArrowLeft size={20} />
                         </Link>
                         <h1 className="text-2xl font-bold text-slate-900">
-                            {isBn ? "জেনারেশন বোনাস" : "Generation Bonus"}
+                            {isBn ? "সেলস বোনাস" : "Sales Bonus"}
                         </h1>
                     </div>
                     <p className="text-sm text-slate-500 mt-1">
                         {isBn
-                            ? "আপনার টিম স্পনসর নেটওয়ার্কের সদস্যবৃন্দের ক্রয় থেকে অর্জিত মোট বোনাস"
-                            : "Bonuses earned from sales across your multi-level referral network"}
+                            ? "বাংলা পার্কে আপনার ও আপনার টিমের সেলস পারফরম্যান্স অর্জনের উপর অর্জিত সেলস বোনাস"
+                            : "Earnings from sales milestones and team sales achievements on Bangla Park"}
                     </p>
                 </div>
                 <button onClick={handleRefresh} className="btn-secondary self-start py-2 px-3 flex items-center gap-1.5 text-xs cursor-pointer">
@@ -46,33 +54,33 @@ export default function GenerationIncomePage() {
 
             {/* Metric Summary Cards Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                {/* Card 1: Total Generation Income Balance */}
-                <div className="rounded-xl bg-gradient-to-br from-blue-900 via-blue-850 to-slate-900 p-6 text-white shadow-xl space-y-4 border border-blue-700/50">
+                {/* Card 1: Total Sales Bonus Balance */}
+                <div className="rounded-xl bg-gradient-to-br from-indigo-900 via-indigo-850 to-slate-900 p-6 text-white shadow-xl space-y-4 border border-indigo-700/50">
                     <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-blue-300 uppercase tracking-wider">
-                            {isBn ? "মোট অর্জিত জেনারেশন বোনাস" : "Total Generation Bonus Balance"}
+                        <span className="text-xs font-bold text-indigo-300 uppercase tracking-wider">
+                            {isBn ? "মোট অর্জিত সেলস বোনাস" : "Total Sales Bonus Balance"}
                         </span>
                         <div className="rounded-xl bg-white/10 p-2.5 backdrop-blur-md">
-                            <TrendingUp size={22} className="text-blue-300" />
+                            <Award size={22} className="text-indigo-300" />
                         </div>
                     </div>
                     <div className="text-3xl sm:text-4xl font-extrabold text-white">
-                        {balLoading ? "..." : formatCurrency(balanceData?.generationIncome ?? 0, locale)}
+                        {balLoading ? "..." : formatCurrency(balanceData?.tierBonus ?? 0, locale)}
                     </div>
                 </div>
 
-                {/* Card 2: Active Network Levels */}
-                <div className="rounded-xl bg-gradient-to-br from-purple-900 via-indigo-900 to-slate-900 p-6 text-white shadow-xl space-y-4 border border-purple-700/50">
+                {/* Card 2: Latest Bonus Earned */}
+                <div className="rounded-xl bg-gradient-to-br from-teal-900 via-emerald-850 to-slate-900 p-6 text-white shadow-xl space-y-4 border border-teal-700/50">
                     <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-purple-300 uppercase tracking-wider">
-                            {isBn ? "সক্রিয় রেফারেল লেভেল সীমা" : "Active Network Coverage"}
+                        <span className="text-xs font-bold text-teal-300 uppercase tracking-wider">
+                            {isBn ? "সর্বশেষ অর্জিত বোনাস" : "Latest Bonus Earned"}
                         </span>
                         <div className="rounded-xl bg-white/10 p-2.5 backdrop-blur-md">
-                            <Users size={22} className="text-purple-300" />
+                            <TrendingUp size={22} className="text-teal-300" />
                         </div>
                     </div>
                     <div className="text-3xl sm:text-4xl font-extrabold text-white">
-                        {isBn ? "লেভেল ১ - ১০" : "Level 1 - 10"}
+                        {txLoading ? "..." : formatCurrency(latestTx?.amount ?? 0, locale)}
                     </div>
                 </div>
             </div>
