@@ -70,11 +70,10 @@ export function Header() {
             className="fixed top-0 left-0 right-0 z-50 bg-red-700 border-b border-red-800 shadow-sm"
         >
             <div className="page-container">
-                <div className="flex h-16 items-center justify-between">
+                <div className="flex h-14 sm:h-16 items-center justify-between">
                     {/* Logo */}
-                    <Link href="/" className="flex items-center">
-                        <img src="/logo.png?v=2" alt="Bangla Park Limited" className="h-11 w-auto" />
-                        <span className="ml-1.5 sm:ml-2 text-lg sm:text-xl font-extrabold text-white tracking-tight">{locale === "bn" ? "বাংলা পার্ক" : "Bangla Park"}</span>
+                    <Link href="/" className="flex items-center h-full py-0.5 shrink-0">
+                        <img src="/logo.png?v=5" alt="Bangla Park Limited" className="h-full max-h-[50px] sm:max-h-[58px] w-auto object-contain drop-shadow-sm" />
                     </Link>
 
                     {/* Search Bar - Desktop */}
