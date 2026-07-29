@@ -67,7 +67,7 @@ export default function UserCategoriesPage() {
     return (
         <div className="space-y-6">
             {/* Header Banner */}
-            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 p-6 sm:p-8 text-white shadow-xl">
+            <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 p-6 sm:p-8 text-white shadow-xl">
                 <div className="absolute top-0 right-0 -mr-16 -mt-16 h-64 w-64 rounded-full bg-indigo-500/10 blur-3xl" />
                 <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div className="space-y-2">
@@ -84,20 +84,11 @@ export default function UserCategoriesPage() {
                                 : "Browse through our curated collection of product categories and explore top deals."}
                         </p>
                     </div>
-
-                    <div className="flex items-center gap-3">
-                        <div className="rounded-2xl bg-white/10 p-4 backdrop-blur-md border border-white/10 text-center shrink-0 min-w-28">
-                            <span className="block text-2xl font-black text-white">{categories.length}</span>
-                            <span className="text-[11px] font-semibold text-slate-300 uppercase tracking-wider">
-                                {isBn ? "ক্যাটাগরি" : "Categories"}
-                            </span>
-                        </div>
-                    </div>
                 </div>
             </div>
 
             {/* Search & Filter Bar */}
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white p-4 rounded-2xl border border-gray-100 shadow-xs">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white p-4 rounded-xl border border-gray-100 shadow-xs">
                 <div className="relative w-full sm:w-80">
                     <FaMagnifyingGlass className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={14} />
                     <input

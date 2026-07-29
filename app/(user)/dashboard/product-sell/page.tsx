@@ -183,7 +183,7 @@ export default function ProductSellPage() {
 
             {/* Inactive Alert Banner */}
             {!isActiveUser && (
-                <div className="rounded-2xl bg-amber-50 border border-amber-200 p-4 sm:p-5 flex items-start gap-4 text-amber-800">
+                <div className="rounded-xl bg-amber-50 border border-amber-200 p-4 sm:p-5 flex items-start gap-4 text-amber-800">
                     <FaLock size={22} className="text-amber-600 mt-0.5 shrink-0" />
                     <div className="space-y-1">
                         <h3 className="font-bold text-amber-900 text-base">
@@ -207,7 +207,7 @@ export default function ProductSellPage() {
             )}
 
             {/* Store Delivery & Commission Rules Info Banner */}
-            <div className="rounded-2xl bg-gradient-to-br from-teal-900 to-emerald-950 p-5 text-white shadow-lg space-y-3 border border-teal-700/50">
+            <div className="rounded-xl bg-gradient-to-br from-teal-900 to-emerald-950 p-5 text-white shadow-lg space-y-3 border border-teal-700/50">
                 <div className="flex items-center gap-3 text-teal-300 font-bold text-base">
                     <FaCircleInfo size={20} />
                     <span>{isBn ? "বাংলা পার্কে কিভাবে পণ্য বিক্রি কাজ করে" : "How Product Selling Works on Bangla Park"}</span>
@@ -248,7 +248,7 @@ export default function ProductSellPage() {
 
             {/* Seller Stats Cards */}
             <div className="grid gap-4 sm:grid-cols-3">
-                <div className="rounded-2xl bg-white p-5 border border-gray-100 shadow-xs flex items-center gap-4">
+                <div className="rounded-xl bg-white p-5 border border-gray-100 shadow-xs flex items-center gap-4">
                     <div className="rounded-xl bg-teal-100 p-3.5 text-teal-700">
                         <FaBoxOpen size={24} />
                     </div>
@@ -257,7 +257,7 @@ export default function ProductSellPage() {
                         <div className="text-2xl font-extrabold text-gray-900 mt-0.5">{products.length}</div>
                     </div>
                 </div>
-                <div className="rounded-2xl bg-white p-5 border border-gray-100 shadow-xs flex items-center gap-4">
+                <div className="rounded-xl bg-white p-5 border border-gray-100 shadow-xs flex items-center gap-4">
                     <div className="rounded-xl bg-purple-100 p-3.5 text-purple-700">
                         <FaStore size={24} />
                     </div>
@@ -266,7 +266,7 @@ export default function ProductSellPage() {
                         <div className="text-2xl font-extrabold text-gray-900 mt-0.5">{totalSoldUnits}</div>
                     </div>
                 </div>
-                <div className="rounded-2xl bg-white p-5 border border-gray-100 shadow-xs flex items-center gap-4">
+                <div className="rounded-xl bg-white p-5 border border-gray-100 shadow-xs flex items-center gap-4">
                     <div className="rounded-xl bg-emerald-100 p-3.5 text-emerald-700">
                         <FaCoins size={24} />
                     </div>
@@ -278,7 +278,7 @@ export default function ProductSellPage() {
             </div>
 
             {/* Products Table */}
-            <div className="rounded-2xl bg-white border border-gray-100 shadow-xs overflow-hidden">
+            <div className="rounded-xl bg-white border border-gray-100 shadow-xs overflow-hidden">
                 <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
                     <h2 className="font-bold text-gray-900">{isBn ? "আমার পোডাক্ট তালিকা" : "My Product Listings"}</h2>
                     <span className="text-xs text-gray-400 font-medium">{products.length} {isBn ? "টি" : "items"}</span>
@@ -376,7 +376,7 @@ export default function ProductSellPage() {
             {/* Add Product Modal */}
             {isModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs overflow-y-auto">
-                    <div className="relative w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl space-y-4 my-8">
+                    <div className="relative w-full max-w-lg rounded-xl bg-white p-6 shadow-2xl space-y-4 my-8">
                         <div className="flex items-center justify-between border-b border-gray-100 pb-3">
                             <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
                                 <FaPlus className="text-teal-600" size={16} /> {isBn ? "বিক্রয়ের জন্য পোডাক্ট যোগ করুন" : "Add Product for Selling"}

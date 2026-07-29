@@ -102,18 +102,6 @@ export default function WalletPage() {
                     </h2>
                 </div>
 
-                <div className="card p-5 bg-gradient-to-br from-teal-900 to-teal-800 text-white">
-                    <div className="flex items-center justify-between mb-3">
-                        <span className="text-[10px] text-teal-100 font-semibold uppercase tracking-wider">
-                            {locale === "bn" ? "পোডাক্ট বিক্রয় আয়" : "Product Sales"}
-                        </span>
-                        <ShoppingBag size={18} className="text-teal-300" />
-                    </div>
-                    <h2 className="text-2xl font-extrabold text-white">
-                        {balLoading ? "..." : formatCurrency(balanceData?.productSalesIncome ?? 0, locale)}
-                    </h2>
-                </div>
-
                 <div className="card p-5 bg-gradient-to-br from-purple-900 to-purple-800 text-white">
                     <div className="flex items-center justify-between mb-3">
                         <span className="text-[10px] text-purple-100 font-semibold uppercase tracking-wider">{t("wallet.balance.dailyReward")}</span>
@@ -151,6 +139,18 @@ export default function WalletPage() {
                     </div>
                     <h2 className="text-2xl font-extrabold text-white">
                         {balLoading ? "..." : formatCurrency(balanceData?.quizEarning ?? 0, locale)}
+                    </h2>
+                </div>
+
+                <div className="card p-5 bg-gradient-to-br from-teal-900 to-teal-800 text-white">
+                    <div className="flex items-center justify-between mb-3">
+                        <span className="text-[10px] text-teal-100 font-semibold uppercase tracking-wider">
+                            {locale === "bn" ? "পোডাক্ট বিক্রয় আয়" : "Product Sales"}
+                        </span>
+                        <ShoppingBag size={18} className="text-teal-300" />
+                    </div>
+                    <h2 className="text-2xl font-extrabold text-white">
+                        {balLoading ? "..." : formatCurrency(balanceData?.productSalesIncome ?? 0, locale)}
                     </h2>
                 </div>
 
