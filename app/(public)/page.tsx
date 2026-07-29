@@ -19,7 +19,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useLocale } from "@/lib/i18n";
 import { useState, useEffect, useRef, useCallback } from "react";
 
-function getCategoryIcon() {
+function getCategoryIcon(_name?: string, _slug?: string) {
     return LayoutGrid;
 }
 

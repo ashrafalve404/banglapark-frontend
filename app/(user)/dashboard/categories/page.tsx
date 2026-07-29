@@ -20,7 +20,7 @@ type CategoryWithCount = Category & {
     };
 };
 
-function getCategoryIcon() {
+function getCategoryIcon(_name?: string, _slug?: string) {
     return LayoutGrid;
 }
 
