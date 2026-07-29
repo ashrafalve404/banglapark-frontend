@@ -105,12 +105,12 @@ export default function QuizPage() {
                         <p className="text-sm">{t("dashboard.quiz.noQuizzes")}</p>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 justify-items-center sm:justify-items-stretch">
                         {categories.map((cat) => (
                             <button
                                 key={cat.id}
                                 onClick={() => router.push(`/dashboard/quiz?category=${cat.id}`)}
-                                className="group rounded-xl overflow-hidden border border-gray-200 bg-white hover:-translate-y-0.5 transition-transform text-left"
+                                className="group rounded-xl overflow-hidden border border-gray-200 bg-white hover:-translate-y-0.5 transition-transform text-left w-full max-w-sm mx-auto"
                             >
                                 <div className="aspect-[4/3] bg-gray-100">
                                     <img src={cat.imageUrl} alt={cat.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
@@ -143,7 +143,7 @@ export default function QuizPage() {
                     {/* Level cards */}
                     {activeCategory.levels && activeCategory.levels.length > 0 && (
                         <div>
-                            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                                 {activeCategory.levels.map((level) => (
                                     <button
                                         key={level.id}

@@ -232,7 +232,7 @@ export default function QuizAttemptPage() {
         const wrongCount = result.wrongCount ?? 0;
         const skippedCount = result.skippedCount ?? 0;
         const correctReward = result.score * 2;
-        const wrongDeduction = wrongCount;
+        const wrongDeduction = wrongCount * 2;
         return (
             <div className="max-w-md mx-auto py-10">
                 <div className="card bg-white p-8 text-center space-y-4 shadow-sm border border-gray-100">
