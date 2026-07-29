@@ -3,9 +3,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import {
-    ArrowRight, ShoppingCart, Loader2, Grid, Shirt, Smartphone, Package, Home,
-    BookOpen, Gem, Watch, Laptop, CheckCircle, X, Users, Sparkles, TrendingUp,
-    ShieldCheck, Utensils, Dumbbell, Tv, Heart, Footprints, Tag, ShoppingBag, Layers
+    ArrowRight, ShoppingCart, Loader2, LayoutGrid, CheckCircle, X, Users, Sparkles, TrendingUp,
+    ShieldCheck, Package
 } from "lucide-react";
 import { BannerCarousel } from "@/components/home/BannerCarousel";
 import { SuccessStoriesSlider } from "@/components/home/SuccessStoriesSlider";
@@ -20,21 +19,8 @@ import { useQuery } from "@tanstack/react-query";
 import { useLocale } from "@/lib/i18n";
 import { useState, useEffect, useRef, useCallback } from "react";
 
-function getCategoryIcon(name: string = "", slug: string = "") {
-    const s = (name + " " + slug).toLowerCase();
-    if (s.includes("elec") || s.includes("tech") || s.includes("gadget") || s.includes("mobile") || s.includes("phone")) return Smartphone;
-    if (s.includes("computer") || s.includes("laptop") || s.includes("device")) return Laptop;
-    if (s.includes("fashion") || s.includes("cloth") || s.includes("apparel") || s.includes("shirt") || s.includes("dress")) return Shirt;
-    if (s.includes("shoe") || s.includes("footwear")) return Footprints;
-    if (s.includes("beauty") || s.includes("cosmetics") || s.includes("care")) return Sparkles;
-    if (s.includes("jewel") || s.includes("watch") || s.includes("acc")) return Gem;
-    if (s.includes("home") || s.includes("decor") || s.includes("furn")) return Home;
-    if (s.includes("food") || s.includes("grocer") || s.includes("snack")) return Utensils;
-    if (s.includes("book") || s.includes("stationery")) return BookOpen;
-    if (s.includes("sport") || s.includes("fitness")) return Dumbbell;
-    if (s.includes("appliance") || s.includes("tv")) return Tv;
-    if (s.includes("health")) return Heart;
-    return Layers;
+function getCategoryIcon() {
+    return LayoutGrid;
 }
 
 const CATEGORY_GRADIENTS = [

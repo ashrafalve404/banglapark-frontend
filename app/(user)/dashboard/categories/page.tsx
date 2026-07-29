@@ -11,10 +11,7 @@ import {
     FaMagnifyingGlass,
     FaLayerGroup
 } from "react-icons/fa6";
-import {
-    Shirt, Smartphone, Laptop, Home, BookOpen, Gem, Watch,
-    Utensils, Sparkles, Dumbbell, Tv, Heart, Footprints, Layers
-} from "lucide-react";
+import { LayoutGrid } from "lucide-react";
 import { useLocale } from "@/lib/i18n";
 
 type CategoryWithCount = Category & {
@@ -23,21 +20,8 @@ type CategoryWithCount = Category & {
     };
 };
 
-function getCategoryIcon(name: string = "", slug: string = "") {
-    const s = (name + " " + slug).toLowerCase();
-    if (s.includes("elec") || s.includes("tech") || s.includes("gadget") || s.includes("mobile") || s.includes("phone")) return Smartphone;
-    if (s.includes("computer") || s.includes("laptop") || s.includes("device")) return Laptop;
-    if (s.includes("fashion") || s.includes("cloth") || s.includes("apparel") || s.includes("shirt") || s.includes("dress")) return Shirt;
-    if (s.includes("shoe") || s.includes("footwear")) return Footprints;
-    if (s.includes("beauty") || s.includes("cosmetics") || s.includes("care")) return Sparkles;
-    if (s.includes("jewel") || s.includes("watch") || s.includes("acc")) return Gem;
-    if (s.includes("home") || s.includes("decor") || s.includes("furn")) return Home;
-    if (s.includes("food") || s.includes("grocer") || s.includes("snack")) return Utensils;
-    if (s.includes("book") || s.includes("stationery")) return BookOpen;
-    if (s.includes("sport") || s.includes("fitness")) return Dumbbell;
-    if (s.includes("appliance") || s.includes("tv")) return Tv;
-    if (s.includes("health")) return Heart;
-    return Layers;
+function getCategoryIcon() {
+    return LayoutGrid;
 }
 
 const CATEGORY_GRADIENTS = [
