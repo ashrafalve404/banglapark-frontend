@@ -38,14 +38,14 @@ function getCategoryIcon(name: string = "", slug: string = "") {
 }
 
 const CATEGORY_GRADIENTS = [
-    "from-indigo-500 to-purple-600 shadow-purple-500/20",
-    "from-blue-500 to-cyan-600 shadow-cyan-500/20",
-    "from-emerald-500 to-teal-600 shadow-teal-500/20",
-    "from-amber-500 to-orange-600 shadow-orange-500/20",
-    "from-rose-500 to-pink-600 shadow-pink-500/20",
-    "from-violet-500 to-indigo-600 shadow-indigo-500/20",
-    "from-sky-500 to-blue-600 shadow-blue-500/20",
-    "from-teal-500 to-emerald-600 shadow-emerald-500/20",
+    "from-red-600 to-rose-700 shadow-red-600/20",
+    "from-slate-800 to-slate-900 shadow-slate-900/20",
+    "from-rose-600 to-red-800 shadow-rose-600/20",
+    "from-red-700 to-amber-700 shadow-red-700/20",
+    "from-slate-700 to-zinc-900 shadow-slate-800/20",
+    "from-red-600 to-rose-800 shadow-red-600/20",
+    "from-rose-700 to-red-900 shadow-rose-700/20",
+    "from-zinc-800 to-slate-900 shadow-zinc-800/20",
 ];
 
 function useScrollReveal() {
@@ -307,7 +307,7 @@ export default function HomePage() {
                                         <Link
                                             key={cat.id}
                                             href={`/shop?categoryId=${cat.id}`}
-                                            className="group relative flex flex-col items-center justify-center text-center gap-3 rounded-2xl bg-white border border-slate-150/90 p-5 shadow-xs hover:shadow-xl hover:border-indigo-500/30 hover:-translate-y-1 transition-all duration-300 overflow-hidden cursor-pointer"
+                                            className="group relative flex flex-col items-center justify-center text-center gap-3 rounded-2xl bg-white border border-slate-150/90 p-5 shadow-xs hover:shadow-xl hover:border-red-500/30 hover:-translate-y-1 transition-all duration-300 overflow-hidden cursor-pointer"
                                         >
                                             {cat.image ? (
                                                 <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-2xl overflow-hidden border border-slate-200 shadow-md group-hover:scale-110 transition-transform duration-300">
@@ -319,7 +319,7 @@ export default function HomePage() {
                                                 </div>
                                             )}
                                             <div className="space-y-0.5">
-                                                <span className="text-xs sm:text-sm font-bold text-slate-800 group-hover:text-indigo-600 transition-colors block line-clamp-1">
+                                                <span className="text-xs sm:text-sm font-bold text-slate-800 group-hover:text-red-700 transition-colors block line-clamp-1">
                                                     {cat.name}
                                                 </span>
                                                 {productCount !== undefined && (
