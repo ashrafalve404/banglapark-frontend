@@ -109,32 +109,63 @@ function ShopPageContent() {
                 </div>
             </div>
 
+            {/* Mobile Category Horizontal Scroll Pill Bar */}
+            <div className="block lg:hidden mb-4">
+                <div className="flex items-center gap-2 overflow-x-auto pb-2 pt-1 scrollbar-none snap-x">
+                    <button
+                        onClick={() => setSelectedCategory("all")}
+                        className={`shrink-0 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all snap-start cursor-pointer ${selectedCategory === "all"
+                                ? "bg-red-700 text-white shadow-xs"
+                                : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-50"
+                            }`}
+                    >
+                        {t("shop.filter.all")}
+                    </button>
+                    {categories.map((cat) => (
+                        <button
+                            key={cat.id}
+                            onClick={() => setSelectedCategory(cat.id)}
+                            className={`shrink-0 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all snap-start cursor-pointer ${selectedCategory === cat.id
+                                    ? "bg-red-700 text-white shadow-xs"
+                                    : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-50"
+                                }`}
+                        >
+                            {cat.name}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
             <div className="flex flex-col lg:flex-row gap-8">
-                <div className="w-full lg:w-64 space-y-6">
-                    <div className="card-flat p-5">
-                        <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">
-                            {t("shop.filter.categories")}
-                        </h3>
-                        <div className="flex flex-wrap gap-2 lg:flex-col">
+                {/* Desktop Category Sidebar */}
+                <div className="hidden lg:block lg:w-64 space-y-6 shrink-0">
+                    <div className="card-flat p-4 sticky top-24">
+                        <div className="flex items-center justify-between mb-3 border-b border-slate-100 pb-2">
+                            <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+                                {t("shop.filter.categories")}
+                            </h3>
+                            <span className="text-[11px] font-semibold text-slate-400">({categories.length})</span>
+                        </div>
+                        <div className="max-h-[calc(100vh-180px)] overflow-y-auto pr-1.5 space-y-1 divide-y divide-slate-50 flex flex-col">
                             <button
                                 onClick={() => setSelectedCategory("all")}
-                                className={`text-left rounded-sm px-3 py-2 text-sm font-medium transition-colors ${selectedCategory === "all"
-                                        ? "bg-red-700 text-white"
-                                        : "text-gray-600 hover:bg-gray-50"
+                                className={`text-left rounded-lg px-3 py-2 text-xs font-semibold transition-colors flex items-center justify-between cursor-pointer ${selectedCategory === "all"
+                                        ? "bg-red-700 text-white shadow-xs"
+                                        : "text-slate-700 hover:bg-slate-50"
                                     }`}
                             >
-                                {t("shop.filter.all")}
+                                <span>{t("shop.filter.all")}</span>
                             </button>
                             {categories.map((cat) => (
                                 <button
                                     key={cat.id}
                                     onClick={() => setSelectedCategory(cat.id)}
-                                    className={`text-left rounded-sm px-3 py-2 text-sm font-medium transition-colors ${selectedCategory === cat.id
-                                            ? "bg-red-700 text-white"
-                                            : "text-gray-600 hover:bg-gray-50"
+                                    className={`text-left rounded-lg px-3 py-2 text-xs font-semibold transition-colors flex items-center justify-between cursor-pointer ${selectedCategory === cat.id
+                                            ? "bg-red-700 text-white shadow-xs"
+                                            : "text-slate-700 hover:bg-slate-50"
                                         }`}
                                 >
-                                    {cat.name}
+                                    <span className="truncate">{cat.name}</span>
                                 </button>
                             ))}
                         </div>

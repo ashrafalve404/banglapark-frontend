@@ -97,17 +97,15 @@ export function Header() {
                         <Link href="/shop" className="text-sm font-medium text-white/95 hover:text-white transition-colors">{t("nav.shop")}</Link>
                         {categories.length > 0 && (
                         <div className="relative group">
-                            <button className="text-sm font-medium text-white/85 hover:text-white transition-colors flex items-center gap-1">
-                                {t("nav.category")}
+                            <button className="text-sm font-medium text-white/85 hover:text-white transition-colors flex items-center gap-1 py-5">
+                                {t("nav.category")} <ChevronDown size={14} className="group-hover:rotate-180 transition-transform duration-200" />
                             </button>
-                            <div className="absolute top-full left-0 mt-2 w-48 rounded-lg border border-gray-100 bg-white shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50">
-                                <div className="p-2">
-                                    {categories.map((cat) => (
-                                        <Link key={cat.id} href={`/shop?categoryId=${cat.id}`} className="block px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-md">
-                                            {cat.name}
-                                        </Link>
-                                    ))}
-                                </div>
+                            <div className="absolute top-full left-0 w-64 max-h-[70vh] overflow-y-auto rounded-xl border border-slate-100 bg-white shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 p-2 divide-y divide-slate-50">
+                                {categories.map((cat) => (
+                                    <Link key={cat.id} href={`/shop?categoryId=${cat.id}`} className="flex items-center justify-between px-3 py-2 text-xs font-semibold text-slate-700 hover:text-red-700 hover:bg-slate-50 rounded-lg transition-colors">
+                                        <span className="truncate">{cat.name}</span>
+                                    </Link>
+                                ))}
                             </div>
                         </div>
                         )}
@@ -217,7 +215,7 @@ export function Header() {
                                             <ChevronDown size={16} className={`text-slate-400 transition-transform duration-200 ${categoriesExpanded ? "rotate-180" : ""}`} />
                                         </button>
                                         {categoriesExpanded && (
-                                            <div className="bg-slate-50/80 border-t border-slate-100 py-1.5 px-3 space-y-1">
+                                            <div className="bg-slate-50/80 border-t border-slate-100 py-1.5 px-3 space-y-1 max-h-[60vh] overflow-y-auto">
                                                 {categories.map((cat) => (
                                                     <Link
                                                         key={cat.id}
