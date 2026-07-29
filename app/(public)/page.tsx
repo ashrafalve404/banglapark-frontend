@@ -1,7 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, ShoppingCart, Loader2, Grid, Shirt, Smartphone, Package, Home, Book, Gem, Watch, Laptop, CheckCircle, X, Users, Sparkles, TrendingUp, ShieldCheck } from "lucide-react";
+import Image from "next/image";
+import {
+    ArrowRight, ShoppingCart, Loader2, Grid, Shirt, Smartphone, Package, Home,
+    BookOpen, Gem, Watch, Laptop, CheckCircle, X, Users, Sparkles, TrendingUp,
+    ShieldCheck, Utensils, Dumbbell, Tv, Heart, Footprints, Tag, ShoppingBag, Layers
+} from "lucide-react";
 import { BannerCarousel } from "@/components/home/BannerCarousel";
 import { SuccessStoriesSlider } from "@/components/home/SuccessStoriesSlider";
 import { AnnouncementBar } from "@/components/layout/AnnouncementBar";
@@ -15,17 +20,32 @@ import { useQuery } from "@tanstack/react-query";
 import { useLocale } from "@/lib/i18n";
 import { useState, useEffect, useRef, useCallback } from "react";
 
-const CATEGORY_ICONS = [Grid, Package, Shirt, Smartphone, Laptop, Home, Book, Watch, Gem];
-const CATEGORY_COLORS = [
-    { bg: "bg-red-50", icon: "text-red-600", hover: "hover:border-red-300 hover:shadow-red-100" },
-    { bg: "bg-blue-50", icon: "text-blue-600", hover: "hover:border-blue-300 hover:shadow-blue-100" },
-    { bg: "bg-violet-50", icon: "text-violet-600", hover: "hover:border-violet-300 hover:shadow-violet-100" },
-    { bg: "bg-rose-50", icon: "text-rose-600", hover: "hover:border-rose-300 hover:shadow-rose-100" },
-    { bg: "bg-amber-50", icon: "text-amber-600", hover: "hover:border-amber-300 hover:shadow-amber-100" },
-    { bg: "bg-cyan-50", icon: "text-cyan-600", hover: "hover:border-cyan-300 hover:shadow-cyan-100" },
-    { bg: "bg-orange-50", icon: "text-orange-600", hover: "hover:border-orange-300 hover:shadow-orange-100" },
-    { bg: "bg-pink-50", icon: "text-pink-600", hover: "hover:border-pink-300 hover:shadow-pink-100" },
-    { bg: "bg-teal-50", icon: "text-teal-600", hover: "hover:border-teal-300 hover:shadow-teal-100" },
+function getCategoryIcon(name: string = "", slug: string = "") {
+    const s = (name + " " + slug).toLowerCase();
+    if (s.includes("elec") || s.includes("tech") || s.includes("gadget") || s.includes("mobile") || s.includes("phone")) return Smartphone;
+    if (s.includes("computer") || s.includes("laptop") || s.includes("device")) return Laptop;
+    if (s.includes("fashion") || s.includes("cloth") || s.includes("apparel") || s.includes("shirt") || s.includes("dress")) return Shirt;
+    if (s.includes("shoe") || s.includes("footwear")) return Footprints;
+    if (s.includes("beauty") || s.includes("cosmetics") || s.includes("care")) return Sparkles;
+    if (s.includes("jewel") || s.includes("watch") || s.includes("acc")) return Gem;
+    if (s.includes("home") || s.includes("decor") || s.includes("furn")) return Home;
+    if (s.includes("food") || s.includes("grocer") || s.includes("snack")) return Utensils;
+    if (s.includes("book") || s.includes("stationery")) return BookOpen;
+    if (s.includes("sport") || s.includes("fitness")) return Dumbbell;
+    if (s.includes("appliance") || s.includes("tv")) return Tv;
+    if (s.includes("health")) return Heart;
+    return Layers;
+}
+
+const CATEGORY_GRADIENTS = [
+    "from-indigo-500 to-purple-600 shadow-purple-500/20",
+    "from-blue-500 to-cyan-600 shadow-cyan-500/20",
+    "from-emerald-500 to-teal-600 shadow-teal-500/20",
+    "from-amber-500 to-orange-600 shadow-orange-500/20",
+    "from-rose-500 to-pink-600 shadow-pink-500/20",
+    "from-violet-500 to-indigo-600 shadow-indigo-500/20",
+    "from-sky-500 to-blue-600 shadow-blue-500/20",
+    "from-teal-500 to-emerald-600 shadow-emerald-500/20",
 ];
 
 function useScrollReveal() {
@@ -278,20 +298,36 @@ export default function HomePage() {
                             </div>
                         </RevealSection>
                         <RevealSection>
-                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
+                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3.5 sm:gap-4">
                                 {categories.map((cat, i) => {
-                                    const Icon = CATEGORY_ICONS[i % CATEGORY_ICONS.length];
-                                    const colors = CATEGORY_COLORS[i % CATEGORY_COLORS.length];
+                                    const Icon = getCategoryIcon(cat.name, cat.slug);
+                                    const gradient = CATEGORY_GRADIENTS[i % CATEGORY_GRADIENTS.length];
+                                    const productCount = (cat as any)._count?.products;
                                     return (
                                         <Link
                                             key={cat.id}
                                             href={`/shop?categoryId=${cat.id}`}
-                                            className={`group flex flex-col items-center gap-3 rounded-xl border border-gray-100 ${colors.bg} p-5 sm:p-6 shadow-sm ${colors.hover} hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200`}
+                                            className="group relative flex flex-col items-center justify-center text-center gap-3 rounded-2xl bg-white border border-slate-150/90 p-5 shadow-xs hover:shadow-xl hover:border-indigo-500/30 hover:-translate-y-1 transition-all duration-300 overflow-hidden cursor-pointer"
                                         >
-                                            <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white shadow-sm flex items-center justify-center ${colors.icon} group-hover:scale-110 transition-transform duration-200`}>
-                                                <Icon size={20} className="sm:w-[22px] sm:h-[22px]" />
+                                            {cat.image ? (
+                                                <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-2xl overflow-hidden border border-slate-200 shadow-md group-hover:scale-110 transition-transform duration-300">
+                                                    <Image src={cat.image} alt={cat.name} fill className="object-cover" />
+                                                </div>
+                                            ) : (
+                                                <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br ${gradient} text-white shadow-md flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+                                                    <Icon size={24} className="sm:w-6 sm:h-6 stroke-[2.2]" />
+                                                </div>
+                                            )}
+                                            <div className="space-y-0.5">
+                                                <span className="text-xs sm:text-sm font-bold text-slate-800 group-hover:text-indigo-600 transition-colors block line-clamp-1">
+                                                    {cat.name}
+                                                </span>
+                                                {productCount !== undefined && (
+                                                    <span className="text-[10px] font-semibold text-slate-400 block">
+                                                        {productCount} {locale === "bn" ? "টি পণ্য" : "items"}
+                                                    </span>
+                                                )}
                                             </div>
-                                            <span className="text-xs sm:text-sm font-semibold text-gray-700 text-center leading-tight">{cat.name}</span>
                                         </Link>
                                     );
                                 })}

@@ -2,18 +2,23 @@ import { api } from "./client";
 import type { Category } from "@/types";
 
 export const categoriesApi = {
-    list: async (): Promise<{ categories: Category[]; total: number }> => {
-        const res = await api.get("/categories");
+    list: async (params?: { includeHidden?: boolean }): Promise<{ categories: Category[]; total: number }> => {
+        const res = await api.get("/categories", { params });
         return { categories: res.data, total: res.data.length };
     },
 
-    create: async (data: { name: string }): Promise<Category> => {
+    create: async (data: { name: string; image?: string; sortOrder?: number; isHidden?: boolean }): Promise<Category> => {
         const res = await api.post("/categories", data);
         return res.data;
     },
 
-    update: async (id: string, data: { name: string }): Promise<Category> => {
+    update: async (id: string, data: { name?: string; image?: string | null; sortOrder?: number; isHidden?: boolean }): Promise<Category> => {
         const res = await api.patch(`/categories/${id}`, data);
+        return res.data;
+    },
+
+    toggleVisibility: async (id: string): Promise<Category> => {
+        const res = await api.patch(`/categories/${id}/toggle-visibility`);
         return res.data;
     },
 

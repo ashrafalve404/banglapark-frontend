@@ -2,16 +2,19 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { categoriesApi } from "@/lib/api/categories";
 import type { Category } from "@/types";
 import {
     FaTags,
-    FaBoxOpen,
-    FaArrowRight,
     FaSpinner,
     FaMagnifyingGlass,
     FaLayerGroup
 } from "react-icons/fa6";
+import {
+    Shirt, Smartphone, Laptop, Home, BookOpen, Gem, Watch,
+    Utensils, Sparkles, Dumbbell, Tv, Heart, Footprints, Layers
+} from "lucide-react";
 import { useLocale } from "@/lib/i18n";
 
 type CategoryWithCount = Category & {
@@ -19,6 +22,34 @@ type CategoryWithCount = Category & {
         products?: number;
     };
 };
+
+function getCategoryIcon(name: string = "", slug: string = "") {
+    const s = (name + " " + slug).toLowerCase();
+    if (s.includes("elec") || s.includes("tech") || s.includes("gadget") || s.includes("mobile") || s.includes("phone")) return Smartphone;
+    if (s.includes("computer") || s.includes("laptop") || s.includes("device")) return Laptop;
+    if (s.includes("fashion") || s.includes("cloth") || s.includes("apparel") || s.includes("shirt") || s.includes("dress")) return Shirt;
+    if (s.includes("shoe") || s.includes("footwear")) return Footprints;
+    if (s.includes("beauty") || s.includes("cosmetics") || s.includes("care")) return Sparkles;
+    if (s.includes("jewel") || s.includes("watch") || s.includes("acc")) return Gem;
+    if (s.includes("home") || s.includes("decor") || s.includes("furn")) return Home;
+    if (s.includes("food") || s.includes("grocer") || s.includes("snack")) return Utensils;
+    if (s.includes("book") || s.includes("stationery")) return BookOpen;
+    if (s.includes("sport") || s.includes("fitness")) return Dumbbell;
+    if (s.includes("appliance") || s.includes("tv")) return Tv;
+    if (s.includes("health")) return Heart;
+    return Layers;
+}
+
+const CATEGORY_GRADIENTS = [
+    "from-indigo-500 to-purple-600 shadow-purple-500/20",
+    "from-blue-500 to-cyan-600 shadow-cyan-500/20",
+    "from-emerald-500 to-teal-600 shadow-teal-500/20",
+    "from-amber-500 to-orange-600 shadow-orange-500/20",
+    "from-rose-500 to-pink-600 shadow-pink-500/20",
+    "from-violet-500 to-indigo-600 shadow-indigo-500/20",
+    "from-sky-500 to-blue-600 shadow-blue-500/20",
+    "from-teal-500 to-emerald-600 shadow-emerald-500/20",
+];
 
 export default function UserCategoriesPage() {
     const { locale } = useLocale();
@@ -48,20 +79,6 @@ export default function UserCategoriesPage() {
         cat.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         cat.slug.toLowerCase().includes(searchQuery.toLowerCase())
     );
-
-    const getGradientByIndex = (index: number) => {
-        const gradients = [
-            "from-indigo-500 to-purple-600",
-            "from-blue-500 to-cyan-600",
-            "from-emerald-500 to-teal-600",
-            "from-amber-500 to-orange-600",
-            "from-rose-500 to-pink-600",
-            "from-violet-500 to-indigo-600",
-            "from-sky-500 to-blue-600",
-            "from-teal-500 to-emerald-600",
-        ];
-        return gradients[index % gradients.length];
-    };
 
     return (
         <div className="space-y-6">
@@ -153,45 +170,38 @@ export default function UserCategoriesPage() {
                     )}
                 </div>
             ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3.5 sm:gap-4">
                     {filteredCategories.map((cat, idx) => {
                         const productCount = cat._count?.products ?? 0;
-                        const gradient = getGradientByIndex(idx);
+                        const Icon = getCategoryIcon(cat.name, cat.slug);
+                        const gradient = CATEGORY_GRADIENTS[idx % CATEGORY_GRADIENTS.length];
 
                         return (
                             <Link
                                 key={cat.id}
                                 href={`/shop?category=${cat.slug}`}
-                                className="group relative rounded-2xl bg-white p-5 border border-gray-100 shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between overflow-hidden cursor-pointer"
+                                className="group relative flex flex-col items-center justify-center text-center gap-3 rounded-2xl bg-white border border-slate-150/90 p-5 shadow-xs hover:shadow-xl hover:border-indigo-500/30 hover:-translate-y-1 transition-all duration-300 overflow-hidden cursor-pointer"
                             >
-                                {/* Top Color Accent Bar */}
-                                <div className={`absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r ${gradient}`} />
+                                {/* Top Color Accent Line */}
+                                <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${gradient.split(" ")[0]} ${gradient.split(" ")[1]}`} />
 
-                                <div className="space-y-4 pt-1">
-                                    <div className="flex items-center justify-between">
-                                        <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${gradient} text-white flex items-center justify-center font-bold text-lg shadow-md group-hover:scale-110 transition-transform duration-300`}>
-                                            {cat.name.charAt(0).toUpperCase()}
-                                        </div>
-
-                                        <span className="inline-flex items-center gap-1.5 rounded-full bg-indigo-50 px-2.5 py-1 text-[11px] font-bold text-indigo-700 border border-indigo-100">
-                                            <FaBoxOpen size={11} />
-                                            {isBn ? `${productCount} টি পণ্য` : `${productCount} Products`}
-                                        </span>
+                                {cat.image ? (
+                                    <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-2xl overflow-hidden border border-slate-200 shadow-md group-hover:scale-110 transition-transform duration-300">
+                                        <Image src={cat.image} alt={cat.name} fill className="object-cover" />
                                     </div>
-
-                                    <div>
-                                        <h3 className="text-base font-bold text-gray-900 group-hover:text-indigo-600 transition-colors line-clamp-1">
-                                            {cat.name}
-                                        </h3>
-                                        <p className="text-[11px] text-gray-400 font-mono mt-0.5">
-                                            /{cat.slug}
-                                        </p>
+                                ) : (
+                                    <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br ${gradient} text-white shadow-md flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+                                        <Icon size={24} className="sm:w-6 sm:h-6 stroke-[2.2]" />
                                     </div>
-                                </div>
+                                )}
 
-                                <div className="pt-4 mt-4 border-t border-gray-50 flex items-center justify-between text-xs font-bold text-indigo-600 group-hover:text-indigo-700">
-                                    <span>{isBn ? "পণ্যসমূহ দেখুন" : "Explore Products"}</span>
-                                    <FaArrowRight className="group-hover:translate-x-1 transition-transform" size={12} />
+                                <div className="space-y-0.5">
+                                    <span className="text-xs sm:text-sm font-bold text-slate-800 group-hover:text-indigo-600 transition-colors block line-clamp-1">
+                                        {cat.name}
+                                    </span>
+                                    <span className="text-[10px] font-semibold text-slate-400 block">
+                                        {productCount} {isBn ? "টি পণ্য" : "products"}
+                                    </span>
                                 </div>
                             </Link>
                         );

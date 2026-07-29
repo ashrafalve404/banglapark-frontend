@@ -63,6 +63,9 @@ export interface Category {
     id: string;
     name: string;
     slug: string;
+    image?: string;
+    sortOrder?: number;
+    isHidden?: boolean;
     createdAt: string;
 }
 

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { ShoppingCart, Menu, X, Search } from "lucide-react";
+import { ShoppingCart, Menu, X, Search, ChevronDown } from "lucide-react";
 import { FaUser, FaCircleUser, FaGauge, FaBell, FaRightFromBracket, FaShieldHalved } from "react-icons/fa6";
 import { useQuery } from "@tanstack/react-query";
 import { useAuthStore } from "@/store/auth";
@@ -18,6 +18,7 @@ export function Header() {
     const { t, locale } = useLocale();
     const [menuOpen, setMenuOpen] = useState(false);
     const [profileOpen, setProfileOpen] = useState(false);
+    const [categoriesExpanded, setCategoriesExpanded] = useState(false);
     const [mounted, setMounted] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const router = useRouter();
@@ -205,11 +206,32 @@ export function Header() {
                                 <Link href="/shop" onClick={() => setMenuOpen(false)} className="flex items-center px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors border-b border-slate-100">
                                     {t("nav.shop")}
                                 </Link>
-                                {categories.length > 0 && categories.map((cat) => (
-                                    <Link key={cat.id} href={`/shop?categoryId=${cat.id}`} onClick={() => setMenuOpen(false)} className="flex items-center px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors border-b border-slate-100">
-                                        {cat.name}
-                                    </Link>
-                                ))}
+                                {categories.length > 0 && (
+                                    <div className="border-b border-slate-100">
+                                        <button
+                                            type="button"
+                                            onClick={() => setCategoriesExpanded(!categoriesExpanded)}
+                                            className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+                                        >
+                                            <span>{t("nav.category")}</span>
+                                            <ChevronDown size={16} className={`text-slate-400 transition-transform duration-200 ${categoriesExpanded ? "rotate-180" : ""}`} />
+                                        </button>
+                                        {categoriesExpanded && (
+                                            <div className="bg-slate-50/80 border-t border-slate-100 py-1.5 px-3 space-y-1">
+                                                {categories.map((cat) => (
+                                                    <Link
+                                                        key={cat.id}
+                                                        href={`/shop?categoryId=${cat.id}`}
+                                                        onClick={() => { setMenuOpen(false); setCategoriesExpanded(false); }}
+                                                        className="flex items-center px-3 py-2 text-xs font-semibold text-slate-700 hover:text-red-700 hover:bg-white rounded-md transition-colors"
+                                                    >
+                                                        {cat.name}
+                                                    </Link>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
                                 {isAuthenticated ? (
                                     <>
                                         <Link href="/dashboard" onClick={() => setMenuOpen(false)} className="flex items-center px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors border-b border-slate-100">
