@@ -143,12 +143,12 @@
     },
     "categories": {
       "heading": "ক্যাটাগরি",
-      "viewAll": "সব দেখুন →",
+      "viewAll": "সব দেখুন",
       "empty": "কোনো ক্যাটাগরি পাওয়া যায়নি"
     },
     "featuredProducts": {
       "heading": "জনপ্রিয় পণ্য",
-      "viewAll": "সব পণ্য দেখুন →",
+      "viewAll": "সব পণ্য দেখুন",
       "empty": "কোনো পণ্য পাওয়া যায়নি",
       "noImage": "কোনো ছবি নেই",
       "activationBadge": "✓ একটিভেশন যোগ্য",
@@ -157,12 +157,12 @@
     },
     "bestSellers": {
       "heading": "বেস্ট সেলার",
-      "viewAll": "সব দেখুন →",
+      "viewAll": "সব দেখুন",
       "empty": "কোনো পণ্য পাওয়া যায়নি"
     },
     "allProducts": {
       "heading": "সব পণ্য",
-      "viewAll": "সব দেখুন →",
+      "viewAll": "সব দেখুন",
       "empty": "কোনো পণ্য পাওয়া যায়নি"
     },
     "earningsBanner": {

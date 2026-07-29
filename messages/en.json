@@ -143,12 +143,12 @@
     },
     "categories": {
       "heading": "Categories",
-      "viewAll": "View All →",
+      "viewAll": "View All",
       "empty": "No categories found"
     },
     "featuredProducts": {
       "heading": "Featured Products",
-      "viewAll": "View All Products →",
+      "viewAll": "View All Products",
       "empty": "No products found",
       "noImage": "No image",
       "activationBadge": "✓ Activation Eligible",
@@ -157,12 +157,12 @@
     },
     "bestSellers": {
       "heading": "Best Sellers",
-      "viewAll": "View All →",
+      "viewAll": "View All",
       "empty": "No products found"
     },
     "allProducts": {
       "heading": "All Products",
-      "viewAll": "View All →",
+      "viewAll": "View All",
       "empty": "No products found"
     },
     "earningsBanner": {

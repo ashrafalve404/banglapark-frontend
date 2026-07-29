@@ -12,6 +12,11 @@ export const categoriesApi = {
         return res.data;
     },
 
+    createBulk: async (names: string[]): Promise<{ createdCount: number; skippedCount: number; totalProcessed: number }> => {
+        const res = await api.post("/categories/bulk", { names });
+        return res.data;
+    },
+
     update: async (id: string, data: { name?: string; image?: string | null; sortOrder?: number; isHidden?: boolean }): Promise<Category> => {
         const res = await api.patch(`/categories/${id}`, data);
         return res.data;

@@ -30,6 +30,50 @@ export default function AdminCategoriesPage() {
 
     const [msg, setMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
+    // Bulk Create Form State
+    const [createMode, setCreateMode] = useState<"single" | "bulk">("single");
+    const [bulkText, setBulkText] = useState("");
+
+    const bulkCreateMutation = useMutation({
+        mutationFn: (names: string[]) => categoriesApi.createBulk(names),
+        onSuccess: (res) => {
+            queryClient.invalidateQueries({ queryKey: ["categories"] });
+            queryClient.invalidateQueries({ queryKey: ["categories-admin"] });
+            setBulkText("");
+            setMsg({
+                type: "success",
+                text: isBn
+                    ? `সফলভাবে ${res.createdCount} টি ক্যাটাগরি যোগ করা হয়েছে! (${res.skippedCount} টি ইতিপূর্বে ছিল)`
+                    : `Successfully created ${res.createdCount} categories! (${res.skippedCount} skipped as duplicate)`
+            });
+        },
+        onError: (err: any) => {
+            setMsg({
+                type: "error",
+                text: err.response?.data?.message || (isBn ? "বাল্ক ক্যাটাগরি তৈরি করতে ব্যর্থ হয়েছে" : "Failed to bulk create categories")
+            });
+        }
+    });
+
+    const handleBulkCreate = (e: React.FormEvent) => {
+        e.preventDefault();
+        const names = bulkText
+            .split("\n")
+            .map(n => n.trim())
+            .filter(Boolean);
+
+        if (names.length === 0) {
+            setMsg({
+                type: "error",
+                text: isBn ? "অনুগ্রহ করে অন্তত একটি ক্যাটাগরি নাম লিখুন" : "Please enter at least one category name"
+            });
+            return;
+        }
+
+        setMsg(null);
+        bulkCreateMutation.mutate(names);
+    };
+
     // Read all categories including hidden ones for admin
     const { data: categoriesData, isLoading } = useQuery({
         queryKey: ["categories-admin"],
@@ -49,7 +93,7 @@ export default function AdminCategoriesPage() {
         } catch (err: any) {
             setMsg({
                 type: "error",
-                text: err?.response?.data?.message || (isBn ? "ছবি আপলোড ব্যর্থ হয়েছে" : "Failed to upload image"),
+                text: err.response?.data?.message || t("admin.categories.uploadError"),
             });
         } finally {
             if (isEdit) setEditingUploading(false);
@@ -59,7 +103,7 @@ export default function AdminCategoriesPage() {
 
     // Create category mutation
     const createMutation = useMutation({
-        mutationFn: (data: { name: string; image?: string; sortOrder?: number; isHidden: boolean }) => categoriesApi.create(data),
+        mutationFn: (dto: { name: string; image?: string; sortOrder?: number; isHidden?: boolean }) => categoriesApi.create(dto),
         onSuccess: () => {
             setName("");
             setImageUrl("");
@@ -117,11 +161,10 @@ export default function AdminCategoriesPage() {
                 categoriesApi.update(currentCat.id, { sortOrder: newCurrentOrder }),
                 categoriesApi.update(targetCat.id, { sortOrder: newTargetOrder }),
             ]);
-            setMsg({ type: "success", text: isBn ? "ক্যাটাগরি ক্রমানুসার আপডেট করা হয়েছে" : "Category order updated" });
             queryClient.invalidateQueries({ queryKey: ["categories-admin"] });
             queryClient.invalidateQueries({ queryKey: ["categories"] });
         } catch (err: any) {
-            setMsg({ type: "error", text: isBn ? "ক্রম আপডেট করা সম্ভব হয়নি" : "Failed to update category order" });
+            setMsg({ type: "error", text: isBn ? "ক্রম বিন্যাস পরিবর্তন ব্যর্থ হয়েছে" : "Failed to reorder categories" });
         }
     };
 
@@ -188,102 +231,147 @@ export default function AdminCategoriesPage() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Create Input form wrapper */}
                 <div className="card p-6 bg-white space-y-4 h-fit">
-                    <h2 className="text-base font-bold text-slate-800 border-b border-slate-100 pb-2">{t("admin.categories.form.heading")}</h2>
-                    <form onSubmit={handleCreate} className="space-y-4">
-                        <div>
-                            <label className="label mb-1 block">{t("admin.categories.form.nameLabel")}</label>
-                            <input
-                                type="text"
-                                required
-                                className="input text-left"
-                                placeholder={t("admin.categories.form.placeholder")}
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                            />
+                    <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                        <h2 className="text-base font-bold text-slate-800">{t("admin.categories.form.heading")}</h2>
+                        <div className="flex bg-slate-100 p-0.5 rounded-lg border border-slate-200">
+                            <button
+                                type="button"
+                                onClick={() => setCreateMode("single")}
+                                className={`px-2.5 py-1 text-xs font-bold rounded-md transition-all cursor-pointer ${createMode === "single" ? "bg-white text-indigo-700 shadow-xs" : "text-slate-500 hover:text-slate-800"}`}
+                            >
+                                {isBn ? "একক (Single)" : "Single"}
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setCreateMode("bulk")}
+                                className={`px-2.5 py-1 text-xs font-bold rounded-md transition-all cursor-pointer ${createMode === "bulk" ? "bg-white text-indigo-700 shadow-xs" : "text-slate-500 hover:text-slate-800"}`}
+                            >
+                                {isBn ? "বাল্ক (Bulk)" : "Bulk List"}
+                            </button>
                         </div>
+                    </div>
 
-                        {/* Display Order / Position Input */}
-                        <div>
-                            <label className="label mb-1 block text-slate-700 font-bold">
-                                {isBn ? "প্রদর্শনের ক্রমিক (Display Order)" : "Display Order (Position)"}
-                            </label>
-                            <input
-                                type="number"
-                                min="0"
-                                className="input text-left"
-                                placeholder="0"
-                                value={sortOrder}
-                                onChange={(e) => setSortOrder(Number(e.target.value))}
-                            />
-                            <p className="text-[11px] text-slate-400 mt-1">
-                                {isBn ? "কম নম্বর আগে দেখাবে (যেমন: ১, ২, ৩...)" : "Lower numbers display first (e.g. 1, 2, 3...)"}
-                            </p>
-                        </div>
+                    {createMode === "single" ? (
+                        <form onSubmit={handleCreate} className="space-y-4">
+                            <div>
+                                <label className="label mb-1 block">{t("admin.categories.form.nameLabel")}</label>
+                                <input
+                                    type="text"
+                                    required
+                                    className="input text-left"
+                                    placeholder={t("admin.categories.form.placeholder")}
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                />
+                            </div>
 
-                        {/* Category Image Upload (1:1 Ratio) */}
-                        <div>
-                            <label className="label mb-1 block text-slate-700 font-bold">
-                                {isBn ? "ক্যাটাগরি ছবি (ঐচ্ছিক - ১:১ আকার)" : "Category Image (Optional - 1:1 ratio)"}
-                            </label>
-
-                            {imageUrl ? (
-                                <div className="flex items-center gap-3">
-                                    <div className="relative w-20 h-20 rounded-xl overflow-hidden border border-slate-200 bg-slate-50 shadow-xs">
-                                        <img src={imageUrl} alt="Category image" className="h-full w-full object-cover" />
-                                    </div>
-                                    <button
-                                        type="button"
-                                        onClick={() => setImageUrl("")}
-                                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 transition-colors cursor-pointer"
-                                    >
-                                        <X size={14} /> {isBn ? "ছবি মুছুন" : "Remove Image"}
-                                    </button>
-                                </div>
-                            ) : (
-                                <label className="flex h-20 w-20 cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 text-slate-400 hover:border-indigo-500 hover:bg-indigo-50/50 transition-all">
-                                    {uploading ? (
-                                        <Loader2 className="animate-spin text-indigo-600" size={20} />
-                                    ) : (
-                                        <>
-                                            <Upload size={18} />
-                                            <span className="text-[10px] font-bold mt-1">{isBn ? "আপলোড" : "Upload"}</span>
-                                        </>
-                                    )}
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        disabled={uploading}
-                                        onChange={(e) => e.target.files?.[0] && handleFileUpload(e.target.files[0], false)}
-                                        className="hidden"
-                                    />
+                            {/* Display Order / Position Input */}
+                            <div>
+                                <label className="label mb-1 block text-slate-700 font-bold">
+                                    {isBn ? "প্রদর্শনের ক্রমিক (Display Order)" : "Display Order (Position)"}
                                 </label>
-                            )}
+                                <input
+                                    type="number"
+                                    min="0"
+                                    className="input text-left"
+                                    placeholder="0"
+                                    value={sortOrder}
+                                    onChange={(e) => setSortOrder(Number(e.target.value))}
+                                />
+                                <p className="text-[11px] text-slate-400 mt-1">
+                                    {isBn ? "কম নম্বর আগে দেখাবে (যেমন: ১, ২, ৩...)" : "Lower numbers display first (e.g. 1, 2, 3...)"}
+                                </p>
+                            </div>
 
-                            {/* PNG Note */}
-                            <p className="text-[11px] text-amber-700 bg-amber-50 p-2 rounded-lg border border-amber-200 mt-2 leading-tight">
-                                💡 <strong>{isBn ? "নোট:" : "Note:"}</strong> {isBn
-                                    ? "সেরা রূপের জন্য ১:১ আকারের PNG ছবি ব্যবহার করুন। ছবি দেওয়া না থাকলে অটোমেটিক ডিফল্ট আইকন দেখানো হবে।"
-                                    : "Use a 1:1 aspect ratio PNG image. If no image is added, default icon will be displayed."}
-                            </p>
-                        </div>
+                            {/* Category Image Upload (1:1 Ratio) */}
+                            <div>
+                                <label className="label mb-1 block text-slate-700 font-bold">
+                                    {isBn ? "ক্যাটাগরি ছবি (ঐচ্ছিক - ১:১ আকার)" : "Category Image (Optional - 1:1 ratio)"}
+                                </label>
 
-                        <div className="flex items-center gap-2 pt-1">
-                            <input
-                                type="checkbox"
-                                id="create-hidden"
-                                checked={isHidden}
-                                onChange={(e) => setIsHidden(e.target.checked)}
-                                className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
-                            />
-                            <label htmlFor="create-hidden" className="text-xs font-semibold text-slate-700 cursor-pointer select-none">
-                                {isBn ? "ক্যাটাগরি লুকান (Hide Category)" : "Hide Category (Hidden from website)"}
-                            </label>
-                        </div>
+                                {imageUrl ? (
+                                    <div className="flex items-center gap-3">
+                                        <div className="relative w-20 h-20 rounded-xl overflow-hidden border border-slate-200 bg-slate-50 shadow-xs">
+                                            <img src={imageUrl} alt="Category image" className="h-full w-full object-cover" />
+                                        </div>
+                                        <button
+                                            type="button"
+                                            onClick={() => setImageUrl("")}
+                                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 transition-colors cursor-pointer"
+                                        >
+                                            <X size={14} /> {isBn ? "ছবি মুছুন" : "Remove Image"}
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <label className="flex h-20 w-20 cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 text-slate-400 hover:border-indigo-500 hover:bg-indigo-50/50 transition-all">
+                                        {uploading ? (
+                                            <Loader2 className="animate-spin text-indigo-600" size={20} />
+                                        ) : (
+                                            <>
+                                                <Upload size={18} />
+                                                <span className="text-[10px] font-bold mt-1">{isBn ? "আপলোড" : "Upload"}</span>
+                                            </>
+                                        )}
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            disabled={uploading}
+                                            onChange={(e) => e.target.files?.[0] && handleFileUpload(e.target.files[0], false)}
+                                            className="hidden"
+                                        />
+                                    </label>
+                                )}
 
-                        <button type="submit" disabled={createMutation.isPending || uploading} className="btn-primary w-full py-2.5 flex items-center justify-center gap-1.5 text-xs font-bold cursor-pointer">
-                            <Plus size={16} /> {t("admin.categories.form.submit")}
-                        </button>
-                    </form>
+                                {/* PNG Note */}
+                                <p className="text-[11px] text-amber-700 bg-amber-50 p-2 rounded-lg border border-amber-200 mt-2 leading-tight">
+                                    💡 <strong>{isBn ? "নোট:" : "Note:"}</strong> {isBn
+                                        ? "সেরা রূপের জন্য ১:১ আকারের PNG ছবি ব্যবহার করুন। ছবি দেওয়া না থাকলে অটোমেটিক ডিফল্ট আইকন দেখানো হবে।"
+                                        : "Use a 1:1 aspect ratio PNG image. If no image is added, default icon will be displayed."}
+                                </p>
+                            </div>
+
+                            <div className="flex items-center gap-2 pt-1">
+                                <input
+                                    type="checkbox"
+                                    id="create-hidden"
+                                    checked={isHidden}
+                                    onChange={(e) => setIsHidden(e.target.checked)}
+                                    className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+                                />
+                                <label htmlFor="create-hidden" className="text-xs font-semibold text-slate-700 cursor-pointer select-none">
+                                    {isBn ? "ক্যাটাগরি লুকান (Hide Category)" : "Hide Category (Hidden from website)"}
+                                </label>
+                            </div>
+
+                            <button type="submit" disabled={createMutation.isPending || uploading} className="btn-primary w-full py-2.5 flex items-center justify-center gap-1.5 text-xs font-bold cursor-pointer">
+                                <Plus size={16} /> {t("admin.categories.form.submit")}
+                            </button>
+                        </form>
+                    ) : (
+                        <form onSubmit={handleBulkCreate} className="space-y-4">
+                            <div>
+                                <label className="label mb-1 block font-bold text-slate-700">
+                                    {isBn ? "ক্যাটাগরি তালিকা (প্রতি লাইনে ১টি)" : "Category List (One per line)"}
+                                </label>
+                                <textarea
+                                    rows={10}
+                                    required
+                                    className="input font-mono text-xs text-left p-3 leading-relaxed"
+                                    placeholder={isBn ? "এখানে পেস্ট করুন:\nElectronics\nClothing\nBooks\nAutomotive" : "Paste list here:\nAppliances\nArts, Crafts & Sewing\nAutomotive\nBaby\nBooks\nComputers"}
+                                    value={bulkText}
+                                    onChange={(e) => setBulkText(e.target.value)}
+                                />
+                                <p className="text-[11px] text-slate-400 mt-1">
+                                    {isBn ? "যেকোনো দীর্ঘ ক্যাটাগরি তালিকা এখানে পেস্ট করুন। ডুপ্লিকেটসমূহ নিজে থেকেই বাদ যাবে।" : "Paste any large category list here. Duplicates will automatically be skipped."}
+                                </p>
+                            </div>
+
+                            <button type="submit" disabled={bulkCreateMutation.isPending} className="btn-primary w-full py-2.5 flex items-center justify-center gap-1.5 text-xs font-bold cursor-pointer">
+                                {bulkCreateMutation.isPending ? <Loader2 size={16} className="animate-spin" /> : <Plus size={16} />}
+                                {isBn ? "সব ক্যাটাগরি একসাথে যোগ করুন" : "Create All Categories in Bulk"}
+                            </button>
+                        </form>
+                    )}
                 </div>
 
                 {/* Categories table directory list */}
