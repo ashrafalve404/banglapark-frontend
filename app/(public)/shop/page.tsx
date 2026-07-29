@@ -33,6 +33,33 @@ function ShopPageContent() {
         setTimeout(() => setAddedId(null), 1500);
     };
 
+    const { data: categoriesData } = useQuery({
+        queryKey: ["categories"],
+        queryFn: () => categoriesApi.list(),
+    });
+
+    const categories = categoriesData?.categories ?? [];
+
+    useEffect(() => {
+        const catParam = searchParams.get("categoryId") || searchParams.get("category");
+        if (catParam) {
+            if (categories.length > 0) {
+                const found = categories.find((c) => c.id === catParam || c.slug === catParam);
+                if (found) {
+                    setSelectedCategory(found.id);
+                } else {
+                    setSelectedCategory(catParam);
+                }
+            } else {
+                setSelectedCategory(catParam);
+            }
+        }
+        const sParam = searchParams.get("search");
+        if (sParam !== null) {
+            setSearch(sParam);
+        }
+    }, [searchParams, categories]);
+
     const { data: productsData, isLoading: prodLoading, isError: prodError } = useQuery({
         queryKey: ["products", selectedCategory, search, sort],
         queryFn: () =>
@@ -45,13 +72,6 @@ function ShopPageContent() {
     });
 
     const products = productsData?.products ?? [];
-
-    const { data: categoriesData } = useQuery({
-        queryKey: ["categories"],
-        queryFn: () => categoriesApi.list(),
-    });
-
-    const categories = categoriesData?.categories ?? [];
 
     return (
         <div className="page-container py-10">

@@ -400,9 +400,9 @@ export default function AdminCategoriesPage() {
                                                     </button>
                                                 </div>
 
-                                                <div className="relative w-11 h-11 rounded-xl overflow-hidden border border-slate-200 bg-slate-100 shrink-0 flex items-center justify-center">
+                                                <div className="relative w-11 h-11 rounded-xl overflow-hidden border border-slate-200 bg-slate-50 shrink-0 flex items-center justify-center">
                                                     {item.image ? (
-                                                        <img src={item.image} alt={item.name} className="h-full w-full object-cover" />
+                                                        <img src={item.image} alt={item.name} className="max-h-full max-w-full object-contain p-0.5" />
                                                     ) : (
                                                         <ImageIcon size={20} className="text-slate-400" />
                                                     )}
