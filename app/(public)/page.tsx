@@ -284,39 +284,52 @@ export default function HomePage() {
                             </div>
                         </RevealSection>
                         <RevealSection>
-                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3.5 sm:gap-4">
-                                {categories.map((cat, i) => {
-                                    const Icon = getCategoryIcon(cat.name, cat.slug);
-                                    const gradient = CATEGORY_GRADIENTS[i % CATEGORY_GRADIENTS.length];
-                                    const productCount = (cat as any)._count?.products;
-                                    return (
-                                        <Link
-                                            key={cat.id}
-                                            href={`/shop?categoryId=${cat.id}`}
-                                            className="group relative flex flex-col items-center justify-center text-center gap-3 rounded-2xl bg-white border border-slate-150/90 p-5 shadow-xs hover:shadow-xl hover:border-red-500/30 hover:-translate-y-1 transition-all duration-300 overflow-hidden cursor-pointer"
-                                        >
-                                            {cat.image ? (
-                                                <div className="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center p-1 group-hover:scale-105 transition-transform duration-300">
-                                                    <img src={cat.image} alt={cat.name} className="max-h-full max-w-full object-contain" />
-                                                </div>
-                                            ) : (
-                                                <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br ${gradient} text-white shadow-md flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-                                                    <Icon size={24} className="sm:w-6 sm:h-6 stroke-[2.2]" />
-                                                </div>
-                                            )}
-                                            <div className="space-y-0.5">
-                                                <span className="text-xs sm:text-sm font-bold text-slate-800 group-hover:text-red-700 transition-colors block line-clamp-1">
-                                                    {cat.name}
-                                                </span>
-                                                {!!productCount && productCount > 0 && (
-                                                    <span className="text-[10px] font-semibold text-slate-400 block">
-                                                        {productCount} {locale === "bn" ? "টি পণ্য" : "items"}
-                                                    </span>
+                            <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-2.5 sm:gap-4">
+                                {(() => {
+                                    const popularCategories = [...categories]
+                                        .sort((a, b) => {
+                                            const countA = (a as any)._count?.products ?? 0;
+                                            const countB = (b as any)._count?.products ?? 0;
+                                            if (countB !== countA) return countB - countA;
+                                            return (a.sortOrder ?? 0) - (b.sortOrder ?? 0);
+                                        })
+                                        .slice(0, 12);
+
+                                    return popularCategories.map((cat, i) => {
+                                        const Icon = getCategoryIcon(cat.name, cat.slug);
+                                        const gradient = CATEGORY_GRADIENTS[i % CATEGORY_GRADIENTS.length];
+                                        const productCount = (cat as any)._count?.products;
+                                        const isExtraForMobile = i >= 6;
+
+                                        return (
+                                            <Link
+                                                key={cat.id}
+                                                href={`/shop?categoryId=${cat.id}`}
+                                                className={`${isExtraForMobile ? "hidden sm:flex" : "flex"} group relative flex-col items-center justify-center text-center gap-2 sm:gap-3 rounded-2xl bg-white border border-slate-150/90 p-2.5 sm:p-5 shadow-xs hover:shadow-xl hover:border-red-500/30 hover:-translate-y-1 transition-all duration-300 overflow-hidden cursor-pointer`}
+                                            >
+                                                {cat.image ? (
+                                                    <div className="w-12 h-12 sm:w-20 sm:h-20 flex items-center justify-center p-0.5 sm:p-1 group-hover:scale-105 transition-transform duration-300">
+                                                        <img src={cat.image} alt={cat.name} className="max-h-full max-w-full object-contain" />
+                                                    </div>
+                                                ) : (
+                                                    <div className={`w-10 h-10 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br ${gradient} text-white shadow-md flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+                                                        <Icon size={20} className="sm:w-6 sm:h-6 stroke-[2.2]" />
+                                                    </div>
                                                 )}
-                                            </div>
-                                        </Link>
-                                    );
-                                })}
+                                                <div className="space-y-0.5">
+                                                    <span className="text-[11px] sm:text-sm font-bold text-slate-800 group-hover:text-red-700 transition-colors block line-clamp-1">
+                                                        {cat.name}
+                                                    </span>
+                                                    {!!productCount && productCount > 0 && (
+                                                        <span className="text-[9px] sm:text-[10px] font-semibold text-slate-400 block">
+                                                            {productCount} {locale === "bn" ? "টি পণ্য" : "items"}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            </Link>
+                                        );
+                                    });
+                                })()}
                             </div>
                         </RevealSection>
                         <div className="flex sm:hidden justify-center mt-5">
