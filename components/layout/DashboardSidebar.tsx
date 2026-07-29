@@ -40,6 +40,8 @@ export function DashboardSidebar({ onClose, mobile }: DashboardSidebarProps) {
         { href: "/shop", label: t("nav.buyProduct"), icon: FaCartShopping, activeBg: "bg-orange-50 text-orange-800 border-l-4 border-orange-600 shadow-xs", iconColor: "text-orange-600" },
         { href: "/dashboard/product-sell", label: t("nav.productSell"), icon: FaStore, activeBg: "bg-teal-50 text-teal-800 border-l-4 border-teal-600 shadow-xs", iconColor: "text-teal-600" },
         { href: "/dashboard/travel", label: t("nav.travel"), icon: FaPlane, activeBg: "bg-orange-50 text-orange-800 border-l-4 border-orange-600 shadow-xs", iconColor: "text-orange-600" },
+        { href: "/dashboard/sales-bonus", label: isBn ? "সেলস বোনাস" : "Sales Bonus", icon: FaAward, activeBg: "bg-teal-50 text-teal-800 border-l-4 border-teal-600 shadow-xs", iconColor: "text-teal-600" },
+        { href: "/dashboard/generation-income", label: isBn ? "জেনারেশন বোনাস" : "Generation Bonus", icon: FaMoneyBills, activeBg: "bg-blue-50 text-blue-800 border-l-4 border-blue-600 shadow-xs", iconColor: "text-blue-600" },
         { href: "/dashboard/position", label: t("nav.position"), icon: FaAward, activeBg: "bg-teal-50 text-teal-800 border-l-4 border-teal-600 shadow-xs", iconColor: "text-teal-600" },
         { href: "#", label: t("nav.digitalMarketing"), icon: FaBullhorn, activeBg: "bg-indigo-50 text-indigo-800 border-l-4 border-indigo-600 shadow-xs", iconColor: "text-indigo-600" },
         { href: "#", label: t("nav.cpaMarketing"), icon: FaRectangleAd, activeBg: "bg-purple-50 text-purple-800 border-l-4 border-purple-600 shadow-xs", iconColor: "text-purple-600" },
