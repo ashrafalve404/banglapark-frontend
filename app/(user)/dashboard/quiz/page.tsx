@@ -17,7 +17,7 @@ export default function QuizPage() {
     const searchParams = useSearchParams();
     const queryClient = useQueryClient();
     const categoryFilter = searchParams.get("category");
-    const [questionCount, setQuestionCount] = useState(10);
+    const [questionCount, setQuestionCount] = useState(100);
     const [payMethod, setPayMethod] = useState<"WALLET" | "BKASH">("WALLET");
     const [selectedLevelId, setSelectedLevelId] = useState<string | null>(null);
     const [purchaseModal, setPurchaseModal] = useState<{ categoryId: string; name: string; maxQuestions: number; levelId?: string | null; levelName?: string } | null>(null);
@@ -76,6 +76,17 @@ export default function QuizPage() {
     const hasActivePurchase = catPurchases.length > 0;
     const selectedLevelObj = selectedLevelId ? activeCategory?.levels?.find(l => l.id === selectedLevelId) : null;
     const maxQuestionsForLevel = selectedLevelObj ? (selectedLevelObj._count?.questions ?? 0) : totalQuestions;
+
+    const purchasesToday = purchases.filter((p) => {
+        if (!p.purchasedAt) return false;
+        const pDate = new Date(p.purchasedAt);
+        const today = new Date();
+        return pDate.getFullYear() === today.getFullYear() &&
+               pDate.getMonth() === today.getMonth() &&
+               pDate.getDate() === today.getDate();
+    }).length;
+
+    const isDailyLimitReached = purchasesToday >= 5;
 
     if (pLoading) {
         return <div className="flex justify-center py-20"><Loader2 className="animate-spin" size={32} /></div>;
@@ -182,37 +193,45 @@ export default function QuizPage() {
 
                         <div className="flex items-center gap-4 mb-4">
                             <div className="flex-1">
-                                <label className="text-xs text-gray-500 font-semibold block mb-1">Number of Questions</label>
+                                <label className="text-xs text-gray-500 font-semibold block mb-1">
+                                    {locale === "bn" ? "সর্বনিম্ন ১০০টি প্রশ্ন" : "Minimum 100 questions"}
+                                </label>
                                 <div className="flex items-center gap-2">
-                                    <button onClick={() => setQuestionCount(Math.max(1, questionCount - 5))} className="btn-outline-primary text-xs px-2 py-1">-5</button>
+                                    <button onClick={() => setQuestionCount(Math.max(100, questionCount - 10))} className="btn-outline-primary text-xs px-2 py-1 cursor-pointer">-10</button>
                                     <input
                                         type="number"
-                                        min={1}
+                                        min={100}
                                         max={maxQuestionsForLevel}
                                         value={questionCount}
-                                        onChange={(e) => setQuestionCount(Math.min(maxQuestionsForLevel, Math.max(1, Number(e.target.value) || 1)))}
-                                        className="input w-24 text-center text-sm"
+                                        onChange={(e) => setQuestionCount(Math.min(maxQuestionsForLevel, Math.max(100, Number(e.target.value) || 100)))}
+                                        className="input w-24 text-center text-sm font-bold"
                                     />
-                                    <button onClick={() => setQuestionCount(Math.min(maxQuestionsForLevel, questionCount + 5))} className="btn-outline-primary text-xs px-2 py-1">+5</button>
+                                    <button onClick={() => setQuestionCount(Math.min(maxQuestionsForLevel, questionCount + 10))} className="btn-outline-primary text-xs px-2 py-1 cursor-pointer">+10</button>
                                 </div>
                             </div>
                             <div className="text-right">
-                                <label className="text-xs text-gray-500 font-semibold block mb-1">Total Price</label>
+                                <label className="text-xs text-gray-500 font-semibold block mb-1">{locale === "bn" ? "মোট মূল্য" : "Total Price"}</label>
                                 <p className="text-2xl font-extrabold text-green-700">{formatCurrency(questionCount * PRICE_PER_QUESTION, locale)}</p>
                                 <p className="text-[10px] text-gray-400">{PRICE_PER_QUESTION} tk/question</p>
                             </div>
                         </div>
 
-                        <button
-                            onClick={() => {
-                                const levelName = selectedLevelId ? activeCategory.levels?.find(l => l.id === selectedLevelId)?.name : undefined;
-                                setPurchaseModal({ categoryId: categoryFilter, name: activeCategory.name, maxQuestions: maxQuestionsForLevel, levelId: selectedLevelId, levelName });
-                            }}
-                            disabled={totalQuestions === 0}
-                            className="btn-primary text-sm w-full flex items-center justify-center gap-2"
-                        >
-                            <ShoppingCart size={16} /> Buy Quiz Questions
-                        </button>
+                        {isDailyLimitReached ? (
+                            <div className="rounded-xl bg-red-50 border border-red-200 p-3 text-center text-xs font-bold text-red-700">
+                                {locale === "bn" ? "⚠️ আজকের ক্রয়ের সীমা শেষ!" : "⚠️ Daily purchase limit over!"}
+                            </div>
+                        ) : (
+                            <button
+                                onClick={() => {
+                                    const levelName = selectedLevelId ? activeCategory.levels?.find(l => l.id === selectedLevelId)?.name : undefined;
+                                    setPurchaseModal({ categoryId: categoryFilter, name: activeCategory.name, maxQuestions: maxQuestionsForLevel, levelId: selectedLevelId, levelName });
+                                }}
+                                disabled={totalQuestions === 0}
+                                className="btn-primary text-sm w-full flex items-center justify-center gap-2 cursor-pointer"
+                            >
+                                <ShoppingCart size={16} /> Buy Quiz Questions
+                            </button>
+                        )}
                     </div>
 
 
@@ -241,12 +260,18 @@ export default function QuizPage() {
                             </div>
                         </div>
 
+                        {isDailyLimitReached && (
+                            <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-xs font-bold text-red-700 text-center">
+                                {locale === "bn" ? "⚠️ আজকের ক্রয়ের সীমা শেষ!" : "⚠️ Daily purchase limit over!"}
+                            </div>
+                        )}
+
                         {wallet && Number(wallet.balance) < questionCount * PRICE_PER_QUESTION && (
-                            <p className="text-xs text-red-600 text-center">Insufficient balance</p>
+                            <p className="text-xs text-red-600 text-center font-semibold">Insufficient balance</p>
                         )}
 
                         {purchaseError && (
-                            <p className="text-xs text-red-600 text-center bg-red-50 rounded-lg p-2">{purchaseError}</p>
+                            <p className="text-xs text-red-600 text-center bg-red-50 border border-red-100 rounded-lg p-2 font-semibold">{purchaseError}</p>
                         )}
                         <div className="flex gap-3">
                             <button
@@ -254,8 +279,8 @@ export default function QuizPage() {
                                     setPurchaseError(null);
                                     purchaseMutation.mutate({ categoryId: purchaseModal.categoryId, questionCount, method: payMethod, levelId: purchaseModal.levelId ?? undefined });
                                 }}
-                                disabled={purchaseMutation.isPending}
-                                className="btn-primary flex-1 text-sm"
+                                disabled={purchaseMutation.isPending || isDailyLimitReached}
+                                className="btn-primary flex-1 text-sm disabled:opacity-50"
                             >
                                 {purchaseMutation.isPending ? <Loader2 size={14} className="animate-spin mx-auto" /> : "Buy Now"}
                             </button>
