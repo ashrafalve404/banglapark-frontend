@@ -114,9 +114,8 @@ export function SuccessStoriesSlider({ stories }: SuccessStoriesSliderProps) {
                                 width: `calc((100% - (${visibleCount - 1} * ${gap}px)) / ${visibleCount})`,
                             }}
                         >
-                            {/* Original Floating Corner Badge */}
                             <div className="absolute -top-2.5 -right-2.5 w-9 h-9 bg-gradient-to-br from-red-700 to-red-500 rounded-full flex items-center justify-center text-white text-[11px] font-bold shadow-lg z-20">
-                                0{i + 1}
+                                {String(i + 1).padStart(2, "0")}
                             </div>
                             <svg className="w-8 h-8 text-red-700/20 mb-4" viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
