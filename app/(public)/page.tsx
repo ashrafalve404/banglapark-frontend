@@ -475,6 +475,26 @@ export default function HomePage() {
                                     name: locale === "en" ? "Nusrat Jahan" : "নুসরত জাহান",
                                     role: locale === "en" ? "Affiliate, Dhaka" : "অ্যাফিলিয়েট, ঢাকা",
                                 },
+                                {
+                                    name: locale === "en" ? "Ariful Islam" : "আরিফুল ইসলাম",
+                                    role: locale === "en" ? "Affiliate, Dhaka" : "অ্যাফিলিয়েট, ঢাকা",
+                                },
+                                {
+                                    name: locale === "en" ? "Sharmin Akter" : "শারমিন আক্তার",
+                                    role: locale === "en" ? "Affiliate, Dhaka" : "অ্যাফিলিয়েট, ঢাকা",
+                                },
+                                {
+                                    name: locale === "en" ? "Kawsar Hossain" : "কাওসার হোসেন",
+                                    role: locale === "en" ? "Affiliate, Dhaka" : "অ্যাফিলিয়েট, ঢাকা",
+                                },
+                                {
+                                    name: locale === "en" ? "Farhana Yasmin" : "ফারহানা ইয়াসমিন",
+                                    role: locale === "en" ? "Affiliate, Dhaka" : "অ্যাফিলিয়েট, ঢাকা",
+                                },
+                                {
+                                    name: locale === "en" ? "Mahmudul Hasan" : "মাহমুদুল হাসান",
+                                    role: locale === "en" ? "Affiliate, Dhaka" : "অ্যাফিলিয়েট, ঢাকা",
+                                },
                             ];
 
                             const storyQuotes = [
@@ -493,13 +513,28 @@ export default function HomePage() {
                                 locale === "en"
                                     ? "Consistent effort and the transparent system helped me achieve top earnings in a short time."
                                     : "ধারাবাহিক প্রচেষ্টা এবং স্বচ্ছ সিস্টেম আমাকে স্বল্প সময়ে সেরা আয় অর্জন করতে সাহায্য করেছে।",
+                                locale === "en"
+                                    ? "Working with Bangla Park has given me true independence and confidence to achieve my financial goals."
+                                    : "বাংলা পার্কের সাথে কাজ করা আমাকে নিজের আর্থিক লক্ষ্য অর্জনের জন্য প্রকৃত স্বাধীনতা এবং আত্মবিশ্বাস দিয়েছে।",
+                                locale === "en"
+                                    ? "The affiliate program is transparent and reliable. I recommend it to all ambitious individuals looking to grow!"
+                                    : "অ্যাফিলিয়েট প্রোগ্রামটি স্বচ্ছ এবং অত্যন্ত নির্ভরযোগ্য। সফল হতে চাওয়া প্রত্যেক মানুষের জন্য এটি সেরা সুযোগ!",
+                                locale === "en"
+                                    ? "I started part-time alongside my studies, and now Bangla Park supports all my educational and daily expenses."
+                                    : "আমি পড়াশোনার পাশাপাশি পার্ট-টাইম শুরু করেছিলাম, আর এখন বাংলা পার্ক আমার সকল খরচ বহন করছে।",
+                                locale === "en"
+                                    ? "Fast payouts, incredible team guidance, and great growth opportunities make this platform the best."
+                                    : "দ্রুত পে-আউট, অসাধারণ টিম গাইডেন্স এবং চমৎকার বৃদ্ধির সুযোগ এই প্ল্যাটফর্মটিকে অনন্য করে তুলেছে।",
+                                locale === "en"
+                                    ? "Bangla Park empowers ordinary people to achieve extraordinary financial success with dedication."
+                                    : "বাংলা পার্ক সাধারণ মানুষকে নিষ্ঠার সাথে অসাধারণ আর্থিক সাফল্য অর্জনে ক্ষমতায়ন করে।",
                             ];
 
-                            const stories = Array.from({ length: 5 }).map((_, i) => {
+                            const stories = Array.from({ length: 10 }).map((_, i) => {
                                 const leader = topLeaders && topLeaders[i];
                                 const fallback = defaultFallbackStories[i];
                                 const name = leader?.name || fallback.name;
-                                const role = locale === "en" ? "Affiliate, Dhaka" : "অ্যাফিলিয়েট, ঢাকা";
+                                const role = fallback.role;
                                 const profileImage = leader?.profileImage;
 
                                 return {
