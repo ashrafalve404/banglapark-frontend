@@ -11,7 +11,7 @@ import { useEffect } from "react";
 
 export default function DashboardOverview() {
     const { user: storeUser, setUser } = useAuthStore();
-    const { t } = useLocale();
+    const { t, locale } = useLocale();
 
     // Always fetch fresh user profile — the auth store can be stale from login time
     const { data: freshUser } = useQuery({
@@ -189,10 +189,27 @@ export default function DashboardOverview() {
                         </div>
                         <div>
                             <h3 className="font-bold text-amber-900 text-sm sm:text-base">{t("dashboard.alert.expiring.title")}</h3>
-                            <p className="text-xs text-amber-700 mt-0.5">{t("dashboard.alert.expiring.desc", { days: activeDays })}</p>
+                            <p className="text-xs text-amber-800 mt-0.5">
+                                {locale === "bn" ? (
+                                    <>
+                                        আপনার একাউন্টের মেয়াদ আর মাত্র{" "}
+                                        <span className="font-bold text-red-600">{activeDays} দিন আছে</span>
+                                        । যেকোনো অর্ডার করে মেয়াদ{" "}
+                                        <span className="font-bold text-red-600">নবায়ন করুন</span>
+                                        ।
+                                    </>
+                                ) : (
+                                    <>
+                                        Your account expires in{" "}
+                                        <span className="font-bold text-red-600">{activeDays} days</span>
+                                        .{" "}
+                                        <span className="font-bold text-red-600">Renew</span> by placing any order.
+                                    </>
+                                )}
+                            </p>
                         </div>
                     </div>
-                    <Link href="/shop" className="btn-primary bg-amber-600 hover:bg-amber-700 whitespace-nowrap text-xs font-bold py-2.5 px-5 rounded-md">
+                    <Link href="/shop" className="btn-primary bg-red-600 hover:bg-red-700 whitespace-nowrap text-xs font-bold py-2.5 px-5 rounded-md">
                         {t("dashboard.alert.expiring.cta")}
                     </Link>
                 </div>
