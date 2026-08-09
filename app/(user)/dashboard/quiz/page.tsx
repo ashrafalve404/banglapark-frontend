@@ -17,7 +17,7 @@ export default function QuizPage() {
     const searchParams = useSearchParams();
     const queryClient = useQueryClient();
     const categoryFilter = searchParams.get("category");
-    const [questionCount, setQuestionCount] = useState(100);
+    const [questionCount, setQuestionCount] = useState(20);
     const [payMethod, setPayMethod] = useState<"WALLET" | "BKASH">("WALLET");
     const [selectedLevelId, setSelectedLevelId] = useState<string | null>(null);
     const [purchaseModal, setPurchaseModal] = useState<{ categoryId: string; name: string; maxQuestions: number; levelId?: string | null; levelName?: string } | null>(null);
@@ -86,7 +86,7 @@ export default function QuizPage() {
                pDate.getDate() === today.getDate();
     }).length;
 
-    const isDailyLimitReached = purchasesToday >= 5;
+    const isDailyLimitReached = purchasesToday >= 20;
 
     if (pLoading) {
         return <div className="flex justify-center py-20"><Loader2 className="animate-spin" size={32} /></div>;
@@ -194,16 +194,16 @@ export default function QuizPage() {
                         <div className="flex items-center gap-4 mb-4">
                             <div className="flex-1">
                                 <label className="text-xs text-gray-500 font-semibold block mb-1">
-                                    {locale === "bn" ? "সর্বনিম্ন ১০০টি প্রশ্ন" : "Minimum 100 questions"}
+                                    {locale === "bn" ? "সর্বনিম্ন ২০টি প্রশ্ন" : "Minimum 20 questions"}
                                 </label>
                                 <div className="flex items-center gap-2">
-                                    <button onClick={() => setQuestionCount(Math.max(100, questionCount - 10))} className="btn-outline-primary text-xs px-2 py-1 cursor-pointer">-10</button>
+                                    <button onClick={() => setQuestionCount(Math.max(20, questionCount - 10))} className="btn-outline-primary text-xs px-2 py-1 cursor-pointer">-10</button>
                                     <input
                                         type="number"
-                                        min={100}
+                                        min={20}
                                         max={maxQuestionsForLevel}
                                         value={questionCount}
-                                        onChange={(e) => setQuestionCount(Math.min(maxQuestionsForLevel, Math.max(100, Number(e.target.value) || 100)))}
+                                        onChange={(e) => setQuestionCount(Math.min(maxQuestionsForLevel, Math.max(20, Number(e.target.value) || 20)))}
                                         className="input w-24 text-center text-sm font-bold"
                                     />
                                     <button onClick={() => setQuestionCount(Math.min(maxQuestionsForLevel, questionCount + 10))} className="btn-outline-primary text-xs px-2 py-1 cursor-pointer">+10</button>
@@ -322,23 +322,12 @@ export default function QuizPage() {
                         <div className="flex flex-col gap-2.5 pt-2">
                             <button
                                 onClick={() => {
-                                    const pid = successModal.purchaseId;
-                                    setSuccessModal(null);
-                                    router.push(`/dashboard/quiz/attempt/${pid}`);
-                                }}
-                                className="w-full btn-primary py-3 text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all"
-                            >
-                                <Play size={16} /> Start Quiz Now
-                            </button>
-
-                            <button
-                                onClick={() => {
                                     setSuccessModal(null);
                                     router.push("/dashboard/daily-work");
                                 }}
-                                className="w-full btn-secondary py-2.5 text-xs sm:text-sm font-bold flex items-center justify-center gap-2 text-slate-700 hover:bg-slate-100 transition-all border border-slate-200"
+                                className="w-full btn-primary py-3 text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all"
                             >
-                                <Briefcase size={16} className="text-slate-500" /> Go to Daily Work
+                                <Briefcase size={16} /> Go to Daily Work
                             </button>
 
                             <button
