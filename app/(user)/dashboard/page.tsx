@@ -62,11 +62,10 @@ export default function DashboardOverview() {
             cardBg: "bg-emerald-200 text-emerald-950 border-emerald-300 hover:bg-emerald-300",
         },
         {
-            href: "/dashboard/travel",
-            label: t("nav.travel"),
-            image: "/images/trveling.png",
+            href: "/dashboard/cpa-marketing",
+            label: t("nav.cpaMarketing"),
+            image: "/images/cpamarketing.png",
             cardBg: "bg-indigo-200 text-indigo-950 border-indigo-300 hover:bg-indigo-300",
-            badge: "New",
         },
         {
             href: "/shop",
@@ -79,6 +78,13 @@ export default function DashboardOverview() {
             label: t("nav.productSell"),
             image: "/images/productsell.png",
             cardBg: "bg-cyan-200 text-cyan-950 border-cyan-300 hover:bg-cyan-300",
+        },
+        {
+            href: "/dashboard/travel",
+            label: t("nav.travel"),
+            image: "/images/trveling.png",
+            cardBg: "bg-indigo-200 text-indigo-950 border-indigo-300 hover:bg-indigo-300",
+            badge: "New",
         },
         {
             href: "#",
@@ -128,12 +134,6 @@ export default function DashboardOverview() {
             label: t("nav.affiliateMarketing"),
             image: "/images/affilaitemarketing.png",
             cardBg: "bg-emerald-200 text-emerald-950 border-emerald-300 hover:bg-emerald-300",
-        },
-        {
-            href: "/dashboard/cpa-marketing",
-            label: t("nav.cpaMarketing"),
-            image: "/images/cpamarketing.png",
-            cardBg: "bg-indigo-200 text-indigo-950 border-indigo-300 hover:bg-indigo-300",
         },
         {
             href: "#",
