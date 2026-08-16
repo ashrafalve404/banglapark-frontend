@@ -1109,5 +1109,27 @@
       "rocket": "Rocket",
       "bank": "Bank Transfer"
     }
+  },
+  "cpa": {
+    "title": "CPA Marketing Tasks",
+    "noTasks": "No CPA tasks available at the moment.",
+    "tag": "CPA Task",
+    "purchased": "Purchased",
+    "lockHint": "Unlock this task by purchasing it!",
+    "buyTask": "Buy Task",
+    "viewInDailyWork": "View in Daily Work",
+    "successTitle": "Task Purchased Successfully!",
+    "successDesc": "is now unlocked in your Daily Work page.",
+    "goToDailyWork": "Go to Daily Work",
+    "confirmTitle": "Confirm CPA Task Purchase",
+    "confirmPrompt": "Are you sure you want to buy",
+    "taskPrice": "Task Price:",
+    "walletBalance": "Your Wallet Balance:",
+    "insufficientBalance": "Insufficient wallet balance. Please add funds to your wallet.",
+    "confirmAndPay": "Confirm & Pay",
+    "cancel": "Cancel",
+    "purchasedCpaTasks": "Purchased CPA Marketing Tasks",
+    "activeTask": "Active Task",
+    "openLink": "Open Task"
   }
 }

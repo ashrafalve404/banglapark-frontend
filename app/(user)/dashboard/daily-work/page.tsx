@@ -80,10 +80,10 @@ export default function DailyWorkPage() {
                     <div className="flex items-center justify-between">
                         <h2 className="text-sm font-bold text-gray-800 flex items-center gap-2">
                             <Sparkles size={16} className="text-purple-600" />
-                            Purchased CPA Marketing Tasks
+                            {t("cpa.purchasedCpaTasks")}
                         </h2>
                         <span className="text-xs text-purple-700 bg-purple-50 px-2.5 py-0.5 rounded-full font-semibold">
-                            {cpaPurchases.length} Task(s)
+                            {cpaPurchases.length} {locale === "bn" ? "টি" : "Task(s)"}
                         </span>
                     </div>
 
@@ -100,10 +100,10 @@ export default function DailyWorkPage() {
                                     <div className="space-y-1 flex-1">
                                         <div className="flex items-center gap-2">
                                             <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100 flex items-center gap-1">
-                                                <CheckCircle size={10} /> Active Task
+                                                <CheckCircle size={10} /> {t("cpa.activeTask")}
                                             </span>
                                             <span className="text-[10px] text-slate-400">
-                                                Paid: {formatCurrency(task.pricePaid, locale)}
+                                                {formatCurrency(task.pricePaid, locale)}
                                             </span>
                                         </div>
                                         <h3 className="font-bold text-slate-900 text-sm group-hover:text-purple-700 transition-colors">
@@ -113,7 +113,7 @@ export default function DailyWorkPage() {
                                     </div>
 
                                     <div className="flex items-center gap-1 text-xs font-bold text-purple-700 bg-purple-50 group-hover:bg-purple-600 group-hover:text-white px-3 py-2 rounded-lg transition-all shrink-0">
-                                        Open Link <ExternalLink size={14} />
+                                        {t("cpa.openLink")} <ExternalLink size={14} />
                                     </div>
                                 </div>
                             </a>
