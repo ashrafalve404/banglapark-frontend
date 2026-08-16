@@ -1130,6 +1130,27 @@
     "cancel": "Cancel",
     "purchasedCpaTasks": "Purchased CPA Marketing Tasks",
     "activeTask": "Active Task",
-    "openLink": "Open Task"
+    "openLink": "Open Task",
+    "adminTitle": "CPA Marketing Management",
+    "adminDesc": "Add CPA tasks with prices and destination links for users to buy and perform in Daily Work.",
+    "addNewTask": "Add New CPA Task",
+    "searchPlaceholder": "Search tasks by title or description...",
+    "active": "Active",
+    "inactive": "Inactive",
+    "purchasesCount": "Purchases:",
+    "targetUrlHint": "🔒 Hidden from unpurchased users. Only revealed on Daily Work after purchase!",
+    "editTask": "Edit CPA Task",
+    "createTask": "Add New CPA Task",
+    "taskTitleLabel": "Task Title *",
+    "taskTitlePlaceholder": "e.g., Complete App Registration",
+    "taskDescLabel": "Task Description *",
+    "taskDescPlaceholder": "Describe the instructions for this CPA task...",
+    "priceLabel": "Task Price (BDT) *",
+    "priceHint": "Amount user pays from wallet to unlock/buy this task.",
+    "redirectLinkLabel": "Secret Redirect Link (Target URL) *",
+    "isActiveLabel": "Is Active (visible for purchase in user dashboard)",
+    "updateTaskBtn": "Update Task",
+    "createTaskBtn": "Create Task",
+    "deleteConfirm": "Are you sure you want to delete CPA Task"
   }
 }

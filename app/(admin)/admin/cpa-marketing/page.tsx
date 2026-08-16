@@ -6,12 +6,10 @@ import {
     Plus,
     Trash2,
     Edit2,
-    ExternalLink,
     Loader2,
     CheckCircle,
     XCircle,
     Search,
-    DollarSign,
     Link as LinkIcon,
     AlertCircle,
     FileText,
@@ -48,7 +46,7 @@ export default function AdminCpaMarketingPage() {
             setIsCreateModalOpen(false);
         },
         onError: (err: any) => {
-            setFormError(err?.response?.data?.message || err?.message || "Failed to create CPA task");
+            setFormError(err?.response?.data?.message || err?.message || (locale === "bn" ? "টাস্ক তৈরি ব্যর্থ হয়েছে" : "Failed to create CPA task"));
         },
     });
 
@@ -61,7 +59,7 @@ export default function AdminCpaMarketingPage() {
             setEditingTask(null);
         },
         onError: (err: any) => {
-            setFormError(err?.response?.data?.message || err?.message || "Failed to update CPA task");
+            setFormError(err?.response?.data?.message || err?.message || (locale === "bn" ? "টাস্ক আপডেট ব্যর্থ হয়েছে" : "Failed to update CPA task"));
         },
     });
 
@@ -102,7 +100,7 @@ export default function AdminCpaMarketingPage() {
         setFormError(null);
 
         if (!title.trim() || !description.trim() || !redirectLink.trim()) {
-            setFormError("Title, Description, and Redirect Link are required.");
+            setFormError(locale === "bn" ? "শিরোনাম, বিবরণ এবং রিডাইরেক্ট লিংক আবশ্যক।" : "Title, Description, and Redirect Link are required.");
             return;
         }
 
@@ -126,16 +124,16 @@ export default function AdminCpaMarketingPage() {
             {/* Header */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-800">CPA Marketing Management</h1>
+                    <h1 className="text-2xl font-bold text-slate-800">{t("cpa.adminTitle")}</h1>
                     <p className="text-sm text-slate-500 mt-1">
-                        Add CPA tasks with prices and destination links for users to buy and perform in Daily Work.
+                        {t("cpa.adminDesc")}
                     </p>
                 </div>
                 <button
                     onClick={handleOpenCreate}
                     className="btn-primary flex items-center gap-2 text-sm px-4 py-2.5 rounded-lg shadow-sm"
                 >
-                    <Plus size={18} /> Add New CPA Task
+                    <Plus size={18} /> {t("cpa.addNewTask")}
                 </button>
             </div>
 
@@ -145,7 +143,7 @@ export default function AdminCpaMarketingPage() {
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                     <input
                         type="text"
-                        placeholder="Search tasks by title or description..."
+                        placeholder={t("cpa.searchPlaceholder")}
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className="input pl-10 w-full text-sm"
@@ -161,7 +159,7 @@ export default function AdminCpaMarketingPage() {
             ) : filteredTasks.length === 0 ? (
                 <div className="card p-12 bg-white text-center text-slate-400 space-y-3">
                     <FileText size={48} className="mx-auto text-slate-300" />
-                    <p className="text-sm font-semibold">No CPA tasks found.</p>
+                    <p className="text-sm font-semibold">{t("cpa.noTasks")}</p>
                 </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -180,10 +178,10 @@ export default function AdminCpaMarketingPage() {
                                         }`}
                                     >
                                         {task.isActive ? <CheckCircle size={12} /> : <XCircle size={12} />}
-                                        {task.isActive ? "Active" : "Inactive"}
+                                        {task.isActive ? t("cpa.active") : t("cpa.inactive")}
                                     </span>
                                     <span className="text-xs font-semibold text-purple-700 bg-purple-50 px-2.5 py-1 rounded-full">
-                                        Purchases: {task._count?.purchases ?? 0}
+                                        {t("cpa.purchasesCount")} {task._count?.purchases ?? 0}
                                     </span>
                                 </div>
 
@@ -194,7 +192,7 @@ export default function AdminCpaMarketingPage() {
 
                                 <div className="pt-2 border-t border-slate-100 space-y-2">
                                     <div className="flex items-center justify-between text-xs">
-                                        <span className="text-slate-500 font-medium">Task Price:</span>
+                                        <span className="text-slate-500 font-medium">{t("cpa.taskPrice")}</span>
                                         <span className="text-base font-extrabold text-emerald-700">
                                             {formatCurrency(Number(task.price), locale)}
                                         </span>
@@ -213,13 +211,13 @@ export default function AdminCpaMarketingPage() {
                                 <button
                                     onClick={() => handleOpenEdit(task)}
                                     className="p-2 rounded-lg text-slate-600 hover:bg-slate-100 hover:text-purple-700 transition-colors"
-                                    title="Edit Task"
+                                    title={t("cpa.editTask")}
                                 >
                                     <Edit2 size={16} />
                                 </button>
                                 <button
                                     onClick={() => {
-                                        if (confirm(`Are you sure you want to delete CPA Task "${task.title}"?`)) {
+                                        if (confirm(`${t("cpa.deleteConfirm")} "${task.title}"?`)) {
                                             deleteMutation.mutate(task.id);
                                         }
                                     }}
@@ -240,7 +238,7 @@ export default function AdminCpaMarketingPage() {
                     <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-5">
                         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                             <h2 className="text-lg font-bold text-slate-900">
-                                {editingTask ? "Edit CPA Task" : "Add New CPA Task"}
+                                {editingTask ? t("cpa.editTask") : t("cpa.createTask")}
                             </h2>
                             <button
                                 onClick={() => {
@@ -262,10 +260,10 @@ export default function AdminCpaMarketingPage() {
 
                         <form onSubmit={handleSubmit} className="space-y-4 text-xs">
                             <div>
-                                <label className="block text-slate-700 font-bold mb-1">Task Title *</label>
+                                <label className="block text-slate-700 font-bold mb-1">{t("cpa.taskTitleLabel")}</label>
                                 <input
                                     type="text"
-                                    placeholder="e.g., Complete App Registration"
+                                    placeholder={t("cpa.taskTitlePlaceholder")}
                                     value={title}
                                     onChange={(e) => setTitle(e.target.value)}
                                     className="input w-full"
@@ -274,10 +272,10 @@ export default function AdminCpaMarketingPage() {
                             </div>
 
                             <div>
-                                <label className="block text-slate-700 font-bold mb-1">Task Description *</label>
+                                <label className="block text-slate-700 font-bold mb-1">{t("cpa.taskDescLabel")}</label>
                                 <textarea
                                     rows={3}
-                                    placeholder="Describe the instructions for this CPA task..."
+                                    placeholder={t("cpa.taskDescPlaceholder")}
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
                                     className="input w-full"
@@ -286,7 +284,7 @@ export default function AdminCpaMarketingPage() {
                             </div>
 
                             <div>
-                                <label className="block text-slate-700 font-bold mb-1">Task Price (BDT) *</label>
+                                <label className="block text-slate-700 font-bold mb-1">{t("cpa.priceLabel")}</label>
                                 <input
                                     type="number"
                                     min={0}
@@ -297,11 +295,11 @@ export default function AdminCpaMarketingPage() {
                                     className="input w-full"
                                     required
                                 />
-                                <p className="text-[11px] text-slate-400 mt-1">Amount user pays from wallet to unlock/buy this task.</p>
+                                <p className="text-[11px] text-slate-400 mt-1">{t("cpa.priceHint")}</p>
                             </div>
 
                             <div>
-                                <label className="block text-slate-700 font-bold mb-1">Secret Redirect Link (Target URL) *</label>
+                                <label className="block text-slate-700 font-bold mb-1">{t("cpa.redirectLinkLabel")}</label>
                                 <input
                                     type="url"
                                     placeholder="https://example.com/cpa-offer"
@@ -311,7 +309,7 @@ export default function AdminCpaMarketingPage() {
                                     required
                                 />
                                 <p className="text-[11px] text-amber-600 mt-1 font-medium">
-                                    🔒 Hidden from unpurchased users. Only revealed on Daily Work after purchase!
+                                    {t("cpa.targetUrlHint")}
                                 </p>
                             </div>
 
@@ -324,7 +322,7 @@ export default function AdminCpaMarketingPage() {
                                     className="rounded text-purple-600 focus:ring-purple-500 h-4 w-4"
                                 />
                                 <label htmlFor="isActiveTask" className="text-slate-700 font-semibold cursor-pointer">
-                                    Is Active (visible for purchase in user dashboard)
+                                    {t("cpa.isActiveLabel")}
                                 </label>
                             </div>
 
@@ -337,7 +335,7 @@ export default function AdminCpaMarketingPage() {
                                     {(createMutation.isPending || updateMutation.isPending) && (
                                         <Loader2 size={16} className="animate-spin" />
                                     )}
-                                    {editingTask ? "Update Task" : "Create Task"}
+                                    {editingTask ? t("cpa.updateTaskBtn") : t("cpa.createTaskBtn")}
                                 </button>
                                 <button
                                     type="button"
@@ -347,7 +345,7 @@ export default function AdminCpaMarketingPage() {
                                     }}
                                     className="btn-outline-primary py-2.5 text-sm font-semibold"
                                 >
-                                    Cancel
+                                    {t("cpa.cancel")}
                                 </button>
                             </div>
                         </form>
