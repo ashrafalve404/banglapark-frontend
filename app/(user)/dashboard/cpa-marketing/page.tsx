@@ -116,9 +116,6 @@ export default function UserCpaMarketingPage() {
                         >
                             <div className="space-y-3">
                                 <div className="flex items-center justify-between gap-2">
-                                    <span className="text-xs font-semibold text-purple-700 bg-purple-50 px-2.5 py-1 rounded-full border border-purple-100">
-                                        {t("cpa.tag")}
-                                    </span>
                                     {task.isPurchased ? (
                                         <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
                                             <CheckCircle size={14} /> {t("cpa.purchased")}
