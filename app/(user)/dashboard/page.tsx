@@ -130,7 +130,7 @@ export default function DashboardOverview() {
             cardBg: "bg-emerald-200 text-emerald-950 border-emerald-300 hover:bg-emerald-300",
         },
         {
-            href: "#",
+            href: "/dashboard/cpa-marketing",
             label: t("nav.cpaMarketing"),
             image: "/images/cpamarketing.png",
             cardBg: "bg-indigo-200 text-indigo-950 border-indigo-300 hover:bg-indigo-300",
