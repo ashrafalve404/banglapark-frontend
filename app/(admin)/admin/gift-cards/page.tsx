@@ -318,9 +318,9 @@ export default function AdminGiftCardsPage() {
                                         }`}
                                     >
                                         {/* Card Image Banner */}
-                                        <div className="relative h-40 bg-gradient-to-r from-rose-900 via-purple-900 to-indigo-900 overflow-hidden flex items-center justify-center p-2">
+                                        <div className="relative w-full aspect-[3/2] bg-slate-900 overflow-hidden flex items-center justify-center">
                                             {card.image ? (
-                                                <img src={card.image} alt={card.title} className="w-full h-full object-contain rounded-lg" />
+                                                <img src={card.image} alt={card.title} className="w-full h-full object-cover" />
                                             ) : (
                                                 <div className="text-center text-white space-y-1">
                                                     <Gift size={40} className="mx-auto text-rose-300" />
@@ -481,6 +481,12 @@ export default function AdminGiftCardsPage() {
                                                         <span className="text-[10px] font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded uppercase">
                                                             {log.paymentMethod || "WALLET"}
                                                         </span>
+                                                        {log.paymentMethod === "BKASH" && (
+                                                            <div className="text-[10px] text-pink-700 font-medium pt-1 space-y-0.5 border-t border-pink-100 mt-1">
+                                                                {log.userBkashNumber && <p>{locale === "bn" ? "বিকাশ:" : "bKash:"} <span className="font-mono font-bold">{log.userBkashNumber}</span></p>}
+                                                                {log.bkashTrxId && <p>{locale === "bn" ? "TrxID:" : "TrxID:"} <span className="font-mono font-bold uppercase text-purple-700">{log.bkashTrxId}</span></p>}
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 </td>
                                                 <td className="py-3 px-4 font-mono font-bold text-purple-700">
@@ -525,7 +531,7 @@ export default function AdminGiftCardsPage() {
             {/* Create / Edit Modal */}
             {(isCreateModalOpen || editingCard) && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4 fade-in">
-                    <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-5">
+                    <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto">
                         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                             <h2 className="text-lg font-bold text-slate-900">
                                 {editingCard ? t("giftCard.updateCardBtn") : t("giftCard.createCardBtn")}
@@ -594,8 +600,8 @@ export default function AdminGiftCardsPage() {
                                 <label className="block text-slate-700 font-bold mb-1">{locale === "bn" ? "কার্ড ছবি আপলোড করুন" : "Card Image Upload"}</label>
                                 <div className="space-y-2">
                                     {image ? (
-                                        <div className="relative w-full h-36 bg-slate-100 rounded-xl overflow-hidden border border-slate-200 flex items-center justify-center p-2">
-                                            <img src={image} alt="Card Preview" className="w-full h-full object-contain" />
+                                        <div className="relative w-full aspect-[3/2] bg-slate-900 rounded-xl overflow-hidden border border-slate-200 flex items-center justify-center">
+                                            <img src={image} alt="Card Preview" className="w-full h-full object-cover" />
                                             <button
                                                 type="button"
                                                 onClick={() => setImage("")}

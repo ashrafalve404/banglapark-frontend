@@ -306,9 +306,9 @@ export default function HomePage() {
                                             className="group relative rounded-2xl bg-white border border-rose-100 p-4 shadow-sm hover:shadow-xl hover:border-rose-300 transition-all duration-300 flex flex-col justify-between"
                                         >
                                             <div className="space-y-3">
-                                                <div className="relative h-36 bg-slate-900 rounded-xl overflow-hidden flex items-center justify-center p-2">
+                                                <div className="relative w-full aspect-[3/2] bg-slate-900 rounded-xl overflow-hidden flex items-center justify-center">
                                                     {card.image ? (
-                                                        <img src={card.image} alt={card.title} className="w-full h-full object-contain rounded-lg group-hover:scale-105 transition-transform duration-300" />
+                                                        <img src={card.image} alt={card.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                                                     ) : (
                                                         <div className="text-center text-white space-y-1">
                                                             <Gift size={36} className="mx-auto text-rose-300 group-hover:scale-110 transition-transform duration-300" />

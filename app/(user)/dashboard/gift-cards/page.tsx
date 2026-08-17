@@ -163,9 +163,9 @@ export default function UserGiftCardsPage() {
                                         }`}
                                     >
                                         {/* Card Image Banner */}
-                                        <div className="relative h-40 bg-slate-900 overflow-hidden flex items-center justify-center p-2">
+                                        <div className="relative w-full aspect-[3/2] bg-slate-900 overflow-hidden flex items-center justify-center">
                                             {card.image ? (
-                                                <img src={card.image} alt={card.title} className="w-full h-full object-contain rounded-lg" />
+                                                <img src={card.image} alt={card.title} className="w-full h-full object-cover" />
                                             ) : (
                                                 <div className="text-center text-white space-y-1">
                                                     <Gift size={36} className="mx-auto text-rose-300" />
