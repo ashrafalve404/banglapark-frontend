@@ -83,7 +83,7 @@ export interface GiftCardUserPurchase {
 
 export interface CreateGiftCardInput {
     title: string;
-    description: string;
+    description?: string;
     price: number;
     image?: string;
     voucherCode?: string;

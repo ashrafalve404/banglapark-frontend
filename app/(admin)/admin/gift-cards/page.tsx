@@ -150,8 +150,8 @@ export default function AdminGiftCardsPage() {
         e.preventDefault();
         setFormError(null);
 
-        if (!title.trim() || !description.trim()) {
-            setFormError(locale === "bn" ? "শিরোনাম এবং বিবরণ আবশ্যক।" : "Title and Description are required.");
+        if (!title.trim()) {
+            setFormError(locale === "bn" ? "শিরোনাম আবশ্যক।" : "Title is required.");
             return;
         }
 
@@ -562,14 +562,15 @@ export default function AdminGiftCardsPage() {
                             </div>
 
                             <div>
-                                <label className="block text-slate-700 font-bold mb-1">{t("giftCard.cardDescLabel")}</label>
+                                <label className="block text-slate-700 font-bold mb-1">
+                                    {t("giftCard.cardDescLabel")} ({locale === "bn" ? "ঐচ্ছিক" : "optional"})
+                                </label>
                                 <textarea
                                     rows={3}
                                     placeholder={t("giftCard.cardDescPlaceholder")}
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
                                     className="input w-full"
-                                    required
                                 />
                             </div>
 
