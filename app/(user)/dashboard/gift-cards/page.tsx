@@ -16,6 +16,7 @@ import {
     Clock,
     ArrowRightLeft,
     X,
+    XCircle,
 } from "lucide-react";
 import { giftCardsApi, type GiftCardPublic, type GiftCardUserPurchase } from "@/lib/api/gift-cards";
 import { useLocale } from "@/lib/i18n";
@@ -224,7 +225,7 @@ export default function UserGiftCardsPage() {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             {myCards.map((card) => {
                                 const daysLeft = getDaysRemaining(card.canSellAt);
-                                const isEligibleToSell = daysLeft === 0 && !card.isSold;
+                                const isEligibleToSell = daysLeft === 0 && !card.isSold && (card.status === "APPROVED" || card.status === "PURCHASED");
 
                                 return (
                                     <div
@@ -236,7 +237,15 @@ export default function UserGiftCardsPage() {
                                         <div className="flex items-start justify-between gap-3">
                                             <div className="space-y-1">
                                                 <div>
-                                                    {card.isSold ? (
+                                                    {card.status === "PENDING" ? (
+                                                        <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full border border-amber-200">
+                                                            <Clock size={11} className="animate-pulse" /> {locale === "bn" ? "বিকাশ পেমেন্ট পেন্ডিং (এডমিন এডমিন অনুমোদন সাপেক্ষ)" : "Pending Admin Approval"}
+                                                        </span>
+                                                    ) : card.status === "REJECTED" ? (
+                                                        <span className="inline-flex items-center gap-1 text-[10px] font-bold text-red-700 bg-red-50 px-2 py-0.5 rounded-full border border-red-200">
+                                                            <XCircle size={11} /> {locale === "bn" ? "পেমেন্ট বাতিলকৃত (REJECTED)" : "Payment Rejected"}
+                                                        </span>
+                                                    ) : card.isSold || card.status === "SOLD" ? (
                                                         <span className="inline-flex items-center gap-1 text-[10px] font-bold text-slate-600 bg-slate-200 px-2 py-0.5 rounded-full">
                                                             <CheckCircle size={10} /> {locale === "bn" ? "বিক্রি ও রিফান্ডকৃত" : "Sold & Refunded"}
                                                         </span>
@@ -257,22 +266,42 @@ export default function UserGiftCardsPage() {
                                         <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200 flex items-center justify-between gap-2">
                                             <div>
                                                 <span className="text-[10px] text-slate-400 font-medium block">{t("giftCard.voucherCode")}</span>
-                                                <span className="font-mono text-xs font-bold text-purple-700 tracking-wider">
-                                                    {card.voucherCode}
-                                                </span>
+                                                {card.status === "PENDING" ? (
+                                                    <span className="text-xs font-semibold text-amber-700 italic">
+                                                        {locale === "bn" ? "এডমিন অনুমোদনের পর কোড সক্রিয় হবে" : "Pending Admin Approval"}
+                                                    </span>
+                                                ) : card.status === "REJECTED" ? (
+                                                    <span className="text-xs font-semibold text-red-600">N/A</span>
+                                                ) : (
+                                                    <span className="font-mono text-xs font-bold text-purple-700 tracking-wider">
+                                                        {card.voucherCode}
+                                                    </span>
+                                                )}
                                             </div>
-                                            <button
-                                                onClick={() => handleCopyVoucher(card.voucherCode, card.id)}
-                                                className="btn-outline-primary py-1 px-2.5 text-[11px] flex items-center gap-1 shrink-0"
-                                            >
-                                                {copiedId === card.id ? <Check size={12} /> : <Copy size={12} />}
-                                                {copiedId === card.id ? (locale === "bn" ? "কপি হয়েছে" : "Copied") : (locale === "bn" ? "কপি" : "Copy")}
-                                            </button>
+                                            {card.status !== "PENDING" && card.status !== "REJECTED" && (
+                                                <button
+                                                    onClick={() => handleCopyVoucher(card.voucherCode, card.id)}
+                                                    className="btn-outline-primary py-1 px-2.5 text-[11px] flex items-center gap-1 shrink-0"
+                                                >
+                                                    {copiedId === card.id ? <Check size={12} /> : <Copy size={12} />}
+                                                    {copiedId === card.id ? (locale === "bn" ? "কপি হয়েছে" : "Copied") : (locale === "bn" ? "কপি" : "Copy")}
+                                                </button>
+                                            )}
                                         </div>
 
                                         {/* Resale Action or Eligibility Countdown */}
                                         <div className="pt-2 border-t border-slate-100">
-                                            {card.isSold ? (
+                                            {card.status === "PENDING" ? (
+                                                <div className="text-[11px] text-amber-800 bg-amber-50 p-2.5 rounded-xl border border-amber-200 flex items-center gap-2">
+                                                    <Clock size={15} className="text-amber-600 shrink-0 animate-pulse" />
+                                                    <span>{locale === "bn" ? "বিকাশ TrxID জমা দেওয়া হয়েছে। এডমিন পেমেন্ট ভেরিফাই করে অনুমোদন করলেই ভাউচার কোড প্রকাশ ও কার্ড অ্যাক্টিভ হবে।" : "bKash TrxID submitted. Your gift card will be issued once approved by Admin."}</span>
+                                                </div>
+                                            ) : card.status === "REJECTED" ? (
+                                                <div className="text-[11px] text-red-700 bg-red-50 p-2.5 rounded-xl border border-red-200 flex items-center gap-2">
+                                                    <AlertCircle size={15} className="text-red-500 shrink-0" />
+                                                    <span>{locale === "bn" ? "আপনার বিকাশ ট্রানজেকশন তথ্যটি এডমিন কর্তৃক বাতিল করা হয়েছে। দয়া করে সঠিক TrxID দিয়ে পুনরায় কেনাকাটা করুন।" : "Your bKash payment details were rejected by admin. Please try again with valid TrxID."}</span>
+                                                </div>
+                                            ) : card.isSold ? (
                                                 <div className="text-[11px] text-slate-500 flex items-center justify-between bg-slate-100 p-2 rounded-lg">
                                                     <span>{locale === "bn" ? "ওয়ালেটে রিফান্ড করা হয়েছে" : "Refunded to Wallet"}</span>
                                                     <span className="font-semibold">{new Date(card.soldAt || card.purchasedAt).toLocaleDateString()}</span>
@@ -308,7 +337,7 @@ export default function UserGiftCardsPage() {
             {/* Purchase Confirmation Modal */}
             {selectedCard && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4 fade-in">
-                    <div className="bg-white rounded-2xl p-5 w-full max-w-md shadow-2xl space-y-4">
+                    <div className="bg-white rounded-2xl p-5 w-full max-w-md shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
                         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                             <h2 className="text-base font-bold text-slate-900">{t("giftCard.confirmTitle")}</h2>
                             <button onClick={() => setSelectedCard(null)} className="text-slate-400 hover:text-slate-600 p-1">
@@ -367,29 +396,31 @@ export default function UserGiftCardsPage() {
                             {paymentMethod === "BKASH" && (
                                 <div className="p-3 bg-pink-50/70 border border-pink-200 rounded-xl space-y-2.5">
                                     <p className="text-[11px] font-semibold text-pink-900">
-                                        {locale === "bn" ? "বিকাশ মার্চেন্ট নম্বরে পেমেন্ট দিয়ে তথ্য দিন:" : "Send Payment to bKash Merchant Number: "}
+                                        {locale === "bn" ? "বিকাশ মার্চেন্ট নম্বরে পেমেন্ট দিয়ে তথ্য দিন (এডমিন রিভিউর পর ভাউচার কোড সক্রিয় হবে):" : "Send Payment to bKash Merchant Number (Pending Admin Review): "}
                                         <span className="font-bold text-pink-700 font-mono text-xs block">01823674796</span>
                                     </p>
 
                                     <div>
-                                        <label className="block text-[10px] font-bold text-slate-700 mb-0.5">{locale === "bn" ? "আপনার বিকাশ নম্বর" : "bKash Phone Number"}</label>
+                                        <label className="block text-[10px] font-bold text-slate-700 mb-0.5">{locale === "bn" ? "আপনার বিকাশ নম্বর *" : "bKash Phone Number *"}</label>
                                         <input
                                             type="text"
                                             placeholder="018XXXXXXXX"
                                             value={userBkashNumber}
                                             onChange={(e) => setUserBkashNumber(e.target.value)}
                                             className="input w-full bg-white text-xs py-1.5"
+                                            required
                                         />
                                     </div>
 
                                     <div>
-                                        <label className="block text-[10px] font-bold text-slate-700 mb-0.5">{locale === "bn" ? "ট্রানজেকশন আইডি (TrxID)" : "Transaction ID (TrxID)"}</label>
+                                        <label className="block text-[10px] font-bold text-slate-700 mb-0.5">{locale === "bn" ? "ট্রানজেকশন আইডি (TrxID) *" : "Transaction ID (TrxID) *"}</label>
                                         <input
                                             type="text"
                                             placeholder="TRX998877"
                                             value={bkashTrxId}
                                             onChange={(e) => setBkashTrxId(e.target.value)}
                                             className="input w-full bg-white font-mono text-xs uppercase py-1.5"
+                                            required
                                         />
                                     </div>
                                 </div>
@@ -419,7 +450,7 @@ export default function UserGiftCardsPage() {
             {/* Resale Confirmation Modal */}
             {sellingCard && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4 fade-in">
-                    <div className="bg-white rounded-2xl p-5 w-full max-w-md shadow-2xl space-y-4">
+                    <div className="bg-white rounded-2xl p-5 w-full max-w-md shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
                         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                             <h2 className="text-base font-bold text-slate-900">{locale === "bn" ? "গিফট কার্ড বিক্রয় নিশ্চিতকরণ" : "Confirm Gift Card Resale"}</h2>
                             <button onClick={() => setSellingCard(null)} className="text-slate-400 hover:text-slate-600 p-1">

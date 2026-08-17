@@ -19,6 +19,7 @@ export interface GiftCardAdmin {
 export interface GiftCardAdminStats {
     totalRevenue: number;
     totalPurchases: number;
+    pendingApprovalsCount?: number;
     totalResalePayout?: number;
     totalCardsSold?: number;
     totalCards: number;
@@ -113,6 +114,14 @@ export const giftCardsApi = {
     },
     adminGetPurchases: async (): Promise<GiftCardAdminPurchaseLog[]> => {
         const res = await api.get("/gift-cards/admin/purchases");
+        return res.data;
+    },
+    adminApprovePurchase: async (id: string): Promise<{ message: string }> => {
+        const res = await api.post(`/gift-cards/admin/purchases/${id}/approve`);
+        return res.data;
+    },
+    adminRejectPurchase: async (id: string): Promise<{ message: string }> => {
+        const res = await api.post(`/gift-cards/admin/purchases/${id}/reject`);
         return res.data;
     },
     adminGetCards: async (): Promise<GiftCardAdmin[]> => {

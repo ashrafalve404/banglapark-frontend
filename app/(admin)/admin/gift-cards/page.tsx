@@ -26,6 +26,7 @@ import {
     Upload,
     ImagePlus,
     X,
+    Clock,
 } from "lucide-react";
 import { giftCardsApi, type GiftCardAdmin, type CreateGiftCardInput, type GiftCardAdminStats, type GiftCardAdminPurchaseLog } from "@/lib/api/gift-cards";
 import { uploadsApi } from "@/lib/api/uploads";
@@ -37,7 +38,8 @@ export default function AdminGiftCardsPage() {
     const queryClient = useQueryClient();
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    const [activeTab, setActiveTab] = useState<"cards" | "purchases">("cards");
+    const [activeTab, setActiveTab] = useState<"cards" | "purchases">("purchases");
+    const [statusFilter, setStatusFilter] = useState<"ALL" | "PENDING" | "APPROVED" | "REJECTED" | "SOLD">("ALL");
     const [searchTerm, setSearchTerm] = useState("");
     const [purchaseSearch, setPurchaseSearch] = useState("");
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -106,6 +108,30 @@ export default function AdminGiftCardsPage() {
         },
     });
 
+    const approveMutation = useMutation({
+        mutationFn: (purchaseId: string) => giftCardsApi.adminApprovePurchase(purchaseId),
+        onSuccess: (res) => {
+            queryClient.invalidateQueries({ queryKey: ["admin-gift-card-purchases"] });
+            queryClient.invalidateQueries({ queryKey: ["admin-gift-card-stats"] });
+            alert(res.message);
+        },
+        onError: (err: any) => {
+            alert(err?.response?.data?.message || err?.message || "Failed to approve purchase");
+        },
+    });
+
+    const rejectMutation = useMutation({
+        mutationFn: (purchaseId: string) => giftCardsApi.adminRejectPurchase(purchaseId),
+        onSuccess: (res) => {
+            queryClient.invalidateQueries({ queryKey: ["admin-gift-card-purchases"] });
+            queryClient.invalidateQueries({ queryKey: ["admin-gift-card-stats"] });
+            alert(res.message);
+        },
+        onError: (err: any) => {
+            alert(err?.response?.data?.message || err?.message || "Failed to reject purchase");
+        },
+    });
+
     const resetForm = () => {
         setTitle("");
         setDescription("");
@@ -170,13 +196,26 @@ export default function AdminGiftCardsPage() {
         c.description.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    const filteredPurchases = purchases.filter((p) =>
-        p.user?.fullName.toLowerCase().includes(purchaseSearch.toLowerCase()) ||
-        p.user?.phone.toLowerCase().includes(purchaseSearch.toLowerCase()) ||
-        p.user?.email.toLowerCase().includes(purchaseSearch.toLowerCase()) ||
-        p.giftCard?.title.toLowerCase().includes(purchaseSearch.toLowerCase()) ||
-        (p.voucherCode && p.voucherCode.toLowerCase().includes(purchaseSearch.toLowerCase()))
-    );
+    const filteredPurchases = purchases.filter((p) => {
+        const matchesSearch =
+            p.user?.fullName.toLowerCase().includes(purchaseSearch.toLowerCase()) ||
+            p.user?.phone.toLowerCase().includes(purchaseSearch.toLowerCase()) ||
+            p.user?.email.toLowerCase().includes(purchaseSearch.toLowerCase()) ||
+            p.giftCard?.title.toLowerCase().includes(purchaseSearch.toLowerCase()) ||
+            (p.userBkashNumber && p.userBkashNumber.toLowerCase().includes(purchaseSearch.toLowerCase())) ||
+            (p.bkashTrxId && p.bkashTrxId.toLowerCase().includes(purchaseSearch.toLowerCase())) ||
+            (p.voucherCode && p.voucherCode.toLowerCase().includes(purchaseSearch.toLowerCase()));
+
+        if (!matchesSearch) return false;
+        if (statusFilter === "PENDING") return p.status === "PENDING";
+        if (statusFilter === "APPROVED") return p.status === "APPROVED" || p.status === "PURCHASED";
+        if (statusFilter === "REJECTED") return p.status === "REJECTED";
+        if (statusFilter === "SOLD") return p.isSold || p.status === "SOLD";
+
+        return true;
+    });
+
+    const pendingCount = purchases.filter((p) => p.status === "PENDING").length;
 
     return (
         <div className="space-y-6 max-w-6xl mx-auto">
@@ -210,14 +249,19 @@ export default function AdminGiftCardsPage() {
                     </div>
                 </div>
 
-                <div className="card p-4 bg-white border border-purple-100 flex items-center gap-3 shadow-sm">
-                    <div className="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center shrink-0">
-                        <ShoppingBag size={20} />
+                <div className="card p-4 bg-white border border-amber-200 flex items-center gap-3 shadow-sm relative overflow-hidden">
+                    <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
+                        <Clock size={20} className={pendingCount > 0 ? "animate-spin" : ""} />
                     </div>
                     <div>
-                        <p className="text-[11px] text-slate-500 font-medium">{locale === "bn" ? "মোট বিক্রি সংখ্যা" : "Total Purchases"}</p>
-                        <h3 className="text-lg font-extrabold text-slate-900 mt-0.5">
-                            {stats?.totalPurchases ?? 0}
+                        <p className="text-[11px] text-amber-800 font-bold">{locale === "bn" ? "বিকাশ পেন্ডিং অনুমোদন" : "bKash Pending Approval"}</p>
+                        <h3 className="text-lg font-extrabold text-amber-700 mt-0.5 flex items-center gap-1.5">
+                            {stats?.pendingApprovalsCount ?? pendingCount}
+                            {pendingCount > 0 && (
+                                <span className="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full animate-bounce">
+                                    Action Required
+                                </span>
+                            )}
                         </h3>
                     </div>
                 </div>
@@ -262,20 +306,25 @@ export default function AdminGiftCardsPage() {
             {/* Navigation Tabs */}
             <div className="flex border-b border-slate-200 gap-6">
                 <button
+                    onClick={() => setActiveTab("purchases")}
+                    className={`pb-3 text-sm font-bold border-b-2 transition-all flex items-center gap-2 relative ${
+                        activeTab === "purchases" ? "border-rose-600 text-rose-700" : "border-transparent text-slate-500 hover:text-slate-700"
+                    }`}
+                >
+                    <ShoppingBag size={16} /> {locale === "bn" ? "ব্যবহারকারী ক্রয় ও বিকাশ রিভিউ হিস্টোরি" : "Purchase & bKash Review Logs"} ({purchases.length})
+                    {pendingCount > 0 && (
+                        <span className="bg-amber-500 text-white font-black text-[10px] px-2 py-0.5 rounded-full animate-pulse">
+                            {pendingCount} Pending
+                        </span>
+                    )}
+                </button>
+                <button
                     onClick={() => setActiveTab("cards")}
                     className={`pb-3 text-sm font-bold border-b-2 transition-all flex items-center gap-2 ${
                         activeTab === "cards" ? "border-rose-600 text-rose-700" : "border-transparent text-slate-500 hover:text-slate-700"
                     }`}
                 >
                     <Gift size={16} /> {locale === "bn" ? "গিফট কার্ড ক্যাটালগ" : "Cards Catalog"} ({cards.length})
-                </button>
-                <button
-                    onClick={() => setActiveTab("purchases")}
-                    className={`pb-3 text-sm font-bold border-b-2 transition-all flex items-center gap-2 ${
-                        activeTab === "purchases" ? "border-rose-600 text-rose-700" : "border-transparent text-slate-500 hover:text-slate-700"
-                    }`}
-                >
-                    <ShoppingBag size={16} /> {locale === "bn" ? "ব্যবহারকারী ক্রয় ও বিক্রয় হিস্টোরি" : "Purchase & Resale Logs"} ({purchases.length})
                 </button>
             </div>
 
@@ -309,7 +358,6 @@ export default function AdminGiftCardsPage() {
                     ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                             {filteredCards.map((card) => {
-                                const isActivationEligible = Number(card.price) >= 2000;
                                 return (
                                     <div
                                         key={card.id}
@@ -326,11 +374,6 @@ export default function AdminGiftCardsPage() {
                                                     <Gift size={40} className="mx-auto text-rose-300" />
                                                     <p className="text-xs font-bold text-rose-200">GIFT CARD</p>
                                                 </div>
-                                            )}
-                                            {isActivationEligible && (
-                                                <span className="absolute top-2 right-2 bg-emerald-500 text-white font-extrabold text-[10px] px-2.5 py-1 rounded-full shadow-md flex items-center gap-1">
-                                                    <Sparkles size={12} /> {locale === "bn" ? "৩০ দিন অ্যাক্টিভেশন" : "30-Day Auto Activate"}
-                                                </span>
                                             )}
                                         </div>
 
@@ -403,16 +446,42 @@ export default function AdminGiftCardsPage() {
                 </div>
             )}
 
-            {/* TAB 2: USER PURCHASE & RESALE LOGS TABLE */}
+            {/* TAB 2: USER PURCHASE & BKASH REVIEW LOGS TABLE */}
             {activeTab === "purchases" && (
                 <div className="space-y-4">
-                    {/* Search Purchase Logs */}
-                    <div className="card p-4 bg-white">
+                    {/* Status Filters & Search */}
+                    <div className="card p-4 bg-white space-y-3">
+                        <div className="flex flex-wrap items-center gap-2 border-b border-slate-100 pb-3">
+                            <span className="text-xs font-bold text-slate-600 mr-2">{locale === "bn" ? "ফিল্টার:" : "Filter:"}</span>
+                            {(["ALL", "PENDING", "APPROVED", "REJECTED", "SOLD"] as const).map((st) => (
+                                <button
+                                    key={st}
+                                    onClick={() => setStatusFilter(st)}
+                                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
+                                        statusFilter === st
+                                            ? st === "PENDING" ? "bg-amber-600 text-white shadow-xs" : "bg-rose-600 text-white shadow-xs"
+                                            : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                                    }`}
+                                >
+                                    {st === "ALL" && (locale === "bn" ? "সবগুলো" : "All Logs")}
+                                    {st === "PENDING" && (
+                                        <>
+                                            <Clock size={13} />
+                                            {locale === "bn" ? "পেন্ডিং অনুমোদন" : "Pending bKash"} ({purchases.filter(p => p.status === "PENDING").length})
+                                        </>
+                                    )}
+                                    {st === "APPROVED" && (locale === "bn" ? "অনুমোদিত" : "Approved")}
+                                    {st === "REJECTED" && (locale === "bn" ? "বাতিলকৃত" : "Rejected")}
+                                    {st === "SOLD" && (locale === "bn" ? "বিক্রি ও রিফান্ডকৃত" : "Sold & Refunded")}
+                                </button>
+                            ))}
+                        </div>
+
                         <div className="relative">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                             <input
                                 type="text"
-                                placeholder={locale === "bn" ? "ব্যবহারকারীর নাম, মোবাইল, ইমেইল বা ভাউচার কোড দিয়ে খুঁজুন..." : "Search by user name, phone, email, card title or voucher..."}
+                                placeholder={locale === "bn" ? "ব্যবহারকারীর নাম, মোবাইল, বিকাশ নম্বর, TrxID বা ভাউচার দিয়ে খুঁজুন..." : "Search by user name, phone, bKash number, TrxID or voucher..."}
                                 value={purchaseSearch}
                                 onChange={(e) => setPurchaseSearch(e.target.value)}
                                 className="input pl-10 w-full text-sm"
@@ -428,7 +497,7 @@ export default function AdminGiftCardsPage() {
                     ) : filteredPurchases.length === 0 ? (
                         <div className="card p-12 bg-white text-center text-slate-400 space-y-3">
                             <ShoppingBag size={48} className="mx-auto text-slate-300" />
-                            <p className="text-sm font-semibold">{locale === "bn" ? "কোনো ক্রয় বা বিক্রয় রেজিষ্ট্রেশন পাওয়া যায়নি।" : "No purchase logs found."}</p>
+                            <p className="text-sm font-semibold">{locale === "bn" ? "কোনো পেমেন্ট বা ক্রয় হিস্টোরি পাওয়া যায়নি।" : "No purchase logs found."}</p>
                         </div>
                     ) : (
                         <div className="card bg-white overflow-hidden shadow-xs border border-slate-200">
@@ -440,13 +509,13 @@ export default function AdminGiftCardsPage() {
                                             <th className="py-3.5 px-4">{locale === "bn" ? "ক্রয়কৃত গিফট কার্ড" : "Gift Card"}</th>
                                             <th className="py-3.5 px-4">{locale === "bn" ? "পরিশোধের মূল্য ও মাধ্যম" : "Price & Method"}</th>
                                             <th className="py-3.5 px-4">{locale === "bn" ? "ভাউচার কোড" : "Voucher Code"}</th>
-                                            <th className="py-3.5 px-4 text-center">{locale === "bn" ? "অবস্থা (Status)" : "Resale Status"}</th>
+                                            <th className="py-3.5 px-4 text-center">{locale === "bn" ? "অবস্থা ও এডমিন অ্যাকশন" : "Status & Actions"}</th>
                                             <th className="py-3.5 px-4">{locale === "bn" ? "তারিখ" : "Date"}</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-slate-100">
                                         {filteredPurchases.map((log) => (
-                                            <tr key={log.id} className="hover:bg-slate-50/80 transition-colors">
+                                            <tr key={log.id} className={`hover:bg-slate-50/80 transition-colors ${log.status === "PENDING" ? "bg-amber-50/40" : ""}`}>
                                                 <td className="py-3 px-4">
                                                     <div className="space-y-0.5">
                                                         <p className="font-bold text-slate-900 text-sm flex items-center gap-1.5">
@@ -490,10 +559,50 @@ export default function AdminGiftCardsPage() {
                                                     </div>
                                                 </td>
                                                 <td className="py-3 px-4 font-mono font-bold text-purple-700">
-                                                    {log.voucherCode || "N/A"}
+                                                    {log.status === "PENDING" ? (
+                                                        <span className="text-[11px] text-amber-700 italic font-normal">Pending Approval</span>
+                                                    ) : (
+                                                        log.voucherCode || "N/A"
+                                                    )}
                                                 </td>
                                                 <td className="py-3 px-4 text-center">
-                                                    {log.isSold ? (
+                                                    {log.status === "PENDING" ? (
+                                                        <div className="space-y-1.5 flex flex-col items-center">
+                                                            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-800 bg-amber-100 px-2.5 py-1 rounded-full border border-amber-300">
+                                                                <Clock size={12} className="animate-pulse" />
+                                                                {locale === "bn" ? "পেন্ডিং অনুমোদন" : "PENDING APPROVAL"}
+                                                            </span>
+                                                            <div className="flex items-center gap-1.5">
+                                                                <button
+                                                                    onClick={() => {
+                                                                        if (confirm(locale === "bn" ? "পেমেন্ট পাওয়ার বিষয়টি নিশ্চিত করে অনুমোদন করবেন?" : "Approve this bKash purchase?")) {
+                                                                            approveMutation.mutate(log.id);
+                                                                        }
+                                                                    }}
+                                                                    disabled={approveMutation.isPending}
+                                                                    className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-[10px] font-bold flex items-center gap-1 shadow-xs transition-colors cursor-pointer"
+                                                                >
+                                                                    <CheckCircle size={11} /> {locale === "bn" ? "অনুমোদন" : "Approve"}
+                                                                </button>
+                                                                <button
+                                                                    onClick={() => {
+                                                                        if (confirm(locale === "bn" ? "পেমেন্ট না পাওয়া গেলে বাতিল করবেন?" : "Reject this bKash purchase?")) {
+                                                                            rejectMutation.mutate(log.id);
+                                                                        }
+                                                                    }}
+                                                                    disabled={rejectMutation.isPending}
+                                                                    className="px-2.5 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-[10px] font-bold flex items-center gap-1 shadow-xs transition-colors cursor-pointer"
+                                                                >
+                                                                    <XCircle size={11} /> {locale === "bn" ? "বাতিল" : "Reject"}
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    ) : log.status === "REJECTED" ? (
+                                                        <span className="inline-flex items-center gap-1 text-[10px] font-bold text-red-700 bg-red-50 px-2.5 py-1 rounded-full border border-red-200">
+                                                            <XCircle size={12} />
+                                                            {locale === "bn" ? "বাতিলকৃত (REJECTED)" : "REJECTED"}
+                                                        </span>
+                                                    ) : log.isSold || log.status === "SOLD" ? (
                                                         <span className="inline-flex items-center gap-1 text-[10px] font-bold text-slate-700 bg-slate-200 px-2.5 py-1 rounded-full">
                                                             <ArrowRightLeft size={12} className="text-emerald-600" />
                                                             {locale === "bn" ? "বিক্রি ও রিফান্ডকৃত" : "SOLD & REFUNDED"}
@@ -501,7 +610,7 @@ export default function AdminGiftCardsPage() {
                                                     ) : (
                                                         <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
                                                             <CheckCircle size={12} />
-                                                            {locale === "bn" ? "সক্রিয় রয়েছে" : "ACTIVE"}
+                                                            {locale === "bn" ? "অনুমোদিত ও সক্রিয়" : "ACTIVE / APPROVED"}
                                                         </span>
                                                     )}
                                                 </td>
@@ -624,7 +733,7 @@ export default function AdminGiftCardsPage() {
                                                 <>
                                                     <ImagePlus size={26} className="text-rose-500" />
                                                     <span>{locale === "bn" ? "ছবি নির্বাচন ও আপলোড করুন" : "Click to Upload Image"}</span>
-                                                    <span className="text-[10px] text-slate-400 font-normal">PNG, JPG, WEBP up to 5MB</span>
+                                                    <span className="text-[10px] text-slate-400 font-normal">PNG, JPG, WEBP (Ratio 1536x1024)</span>
                                                 </>
                                             )}
                                         </button>
