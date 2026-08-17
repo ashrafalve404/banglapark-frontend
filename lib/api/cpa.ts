@@ -119,4 +119,8 @@ export const cpaApi = {
         const res = await api.get("/cpa-marketing/user/my-purchases");
         return res.data;
     },
+    completeTask: async (purchaseId: string): Promise<{ message: string; redirectLink: string }> => {
+        const res = await api.post(`/cpa-marketing/user/complete/${purchaseId}`);
+        return res.data;
+    },
 };

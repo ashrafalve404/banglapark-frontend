@@ -1,9 +1,9 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import Link from "next/link";
-import { Download, Copy, Check, Loader2, ImageIcon, ExternalLink, Sparkles, CheckCircle } from "lucide-react";
+import { Download, Copy, Check, Loader2, ImageIcon, ExternalLink, CheckCircle } from "lucide-react";
 import { bannersApi, type Banner } from "@/lib/api/banners";
 import { quizApi, type QuizPurchaseInfo } from "@/lib/api/quiz";
 import { cpaApi, type CpaTaskUserPurchase } from "@/lib/api/cpa";
@@ -12,6 +12,7 @@ import { formatCurrency } from "@/lib/utils";
 
 export default function DailyWorkPage() {
     const { t, locale } = useLocale();
+    const queryClient = useQueryClient();
     const [copied, setCopied] = useState(false);
     const [userLink, setUserLink] = useState("");
 
@@ -29,6 +30,21 @@ export default function DailyWorkPage() {
         queryKey: ["daily-work"],
         queryFn: () => bannersApi.findDailyWork(),
     });
+
+    const completeTaskMutation = useMutation({
+        mutationFn: (purchaseId: string) => cpaApi.completeTask(purchaseId),
+        onSuccess: (res, purchaseId) => {
+            queryClient.invalidateQueries({ queryKey: ["user-cpa-my-purchases"] });
+            queryClient.invalidateQueries({ queryKey: ["user-cpa-tasks"] });
+        },
+    });
+
+    const handleOpenTask = (task: CpaTaskUserPurchase) => {
+        completeTaskMutation.mutate(task.id);
+        if (task.redirectLink && task.redirectLink !== "#") {
+            window.open(task.redirectLink, "_blank");
+        }
+    };
 
     const handleCopy = async () => {
         try {
@@ -88,12 +104,10 @@ export default function DailyWorkPage() {
 
                     <div className="space-y-3">
                         {cpaPurchases.map((task) => (
-                            <a
+                            <button
                                 key={task.id}
-                                href={task.redirectLink}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="card p-4 bg-white block border-2 border-purple-100 hover:border-purple-300 hover:shadow-md transition-all group"
+                                onClick={() => handleOpenTask(task)}
+                                className="card p-4 bg-white block text-left w-full border-2 border-purple-100 hover:border-purple-300 hover:shadow-md transition-all group cursor-pointer"
                             >
                                 <div className="flex items-start justify-between gap-3">
                                     <div className="space-y-1 flex-1">
@@ -115,7 +129,7 @@ export default function DailyWorkPage() {
                                         {t("cpa.openLink")} <ExternalLink size={14} />
                                     </div>
                                 </div>
-                            </a>
+                            </button>
                         ))}
                     </div>
                 </div>
