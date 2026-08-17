@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
     Plus,
@@ -23,14 +23,19 @@ import {
     User as UserIcon,
     ArrowRightLeft,
     Wallet,
+    Upload,
+    ImagePlus,
+    X,
 } from "lucide-react";
 import { giftCardsApi, type GiftCardAdmin, type CreateGiftCardInput, type GiftCardAdminStats, type GiftCardAdminPurchaseLog } from "@/lib/api/gift-cards";
+import { uploadsApi } from "@/lib/api/uploads";
 import { useLocale } from "@/lib/i18n";
 import { formatCurrency } from "@/lib/utils";
 
 export default function AdminGiftCardsPage() {
     const { t, locale } = useLocale();
     const queryClient = useQueryClient();
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const [activeTab, setActiveTab] = useState<"cards" | "purchases">("cards");
     const [searchTerm, setSearchTerm] = useState("");
@@ -45,6 +50,7 @@ export default function AdminGiftCardsPage() {
     const [image, setImage] = useState("");
     const [voucherCode, setVoucherCode] = useState("");
     const [isActive, setIsActive] = useState(true);
+    const [uploadingImage, setUploadingImage] = useState(false);
     const [formError, setFormError] = useState<string | null>(null);
 
     // Stats Query
@@ -125,6 +131,19 @@ export default function AdminGiftCardsPage() {
         setImage(card.image || "");
         setVoucherCode(card.voucherCode || "");
         setIsActive(card.isActive);
+    };
+
+    const handleImageUpload = async (file: File) => {
+        setUploadingImage(true);
+        try {
+            const { url } = await uploadsApi.upload(file);
+            setImage(url);
+        } catch {
+            setFormError(locale === "bn" ? "ছবি আপলোড ব্যর্থ হয়েছে" : "Failed to upload image");
+        } finally {
+            setUploadingImage(false);
+            if (fileInputRef.current) fileInputRef.current.value = "";
+        }
     };
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -569,15 +588,51 @@ export default function AdminGiftCardsPage() {
                                 <p className="text-[11px] text-emerald-600 mt-1 font-medium">{t("giftCard.priceHint")}</p>
                             </div>
 
+                            {/* Image File Upload Option */}
                             <div>
-                                <label className="block text-slate-700 font-bold mb-1">{t("giftCard.imageLabel")}</label>
-                                <input
-                                    type="url"
-                                    placeholder={t("giftCard.imagePlaceholder")}
-                                    value={image}
-                                    onChange={(e) => setImage(e.target.value)}
-                                    className="input w-full font-mono text-[11px]"
-                                />
+                                <label className="block text-slate-700 font-bold mb-1">{locale === "bn" ? "কার্ড ছবি আপলোড করুন" : "Card Image Upload"}</label>
+                                <div className="space-y-2">
+                                    {image ? (
+                                        <div className="relative w-full h-36 bg-slate-100 rounded-xl overflow-hidden border border-slate-200 flex items-center justify-center">
+                                            <img src={image} alt="Card Preview" className="w-full h-full object-cover" />
+                                            <button
+                                                type="button"
+                                                onClick={() => setImage("")}
+                                                className="absolute top-2 right-2 p-1.5 bg-red-600 text-white rounded-full shadow-md hover:bg-red-700 transition-colors"
+                                                title="Remove Image"
+                                            >
+                                                <X size={14} />
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <button
+                                            type="button"
+                                            disabled={uploadingImage}
+                                            onClick={() => fileInputRef.current?.click()}
+                                            className="w-full py-5 border-2 border-dashed border-rose-200 rounded-xl bg-rose-50/50 hover:bg-rose-50 text-rose-700 font-semibold text-xs flex flex-col items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                                        >
+                                            {uploadingImage ? (
+                                                <Loader2 size={24} className="animate-spin text-rose-600" />
+                                            ) : (
+                                                <>
+                                                    <ImagePlus size={26} className="text-rose-500" />
+                                                    <span>{locale === "bn" ? "ছবি নির্বাচন ও আপলোড করুন" : "Click to Upload Image"}</span>
+                                                    <span className="text-[10px] text-slate-400 font-normal">PNG, JPG, WEBP up to 5MB</span>
+                                                </>
+                                            )}
+                                        </button>
+                                    )}
+                                    <input
+                                        ref={fileInputRef}
+                                        type="file"
+                                        accept="image/*"
+                                        className="hidden"
+                                        onChange={(e) => {
+                                            const file = e.target.files?.[0];
+                                            if (file) handleImageUpload(file);
+                                        }}
+                                    />
+                                </div>
                             </div>
 
                             <div>
@@ -607,7 +662,7 @@ export default function AdminGiftCardsPage() {
                             <div className="flex items-center gap-3 pt-3">
                                 <button
                                     type="submit"
-                                    disabled={createMutation.isPending || updateMutation.isPending}
+                                    disabled={createMutation.isPending || updateMutation.isPending || uploadingImage}
                                     className="btn-primary bg-rose-600 hover:bg-rose-700 flex-1 py-2.5 text-sm font-bold flex items-center justify-center gap-2"
                                 >
                                     {(createMutation.isPending || updateMutation.isPending) && (
