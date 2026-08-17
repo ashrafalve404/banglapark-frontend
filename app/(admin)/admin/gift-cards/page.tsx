@@ -318,9 +318,9 @@ export default function AdminGiftCardsPage() {
                                         }`}
                                     >
                                         {/* Card Image Banner */}
-                                        <div className="relative h-40 bg-gradient-to-r from-rose-900 via-purple-900 to-indigo-900 overflow-hidden flex items-center justify-center p-4">
+                                        <div className="relative h-40 bg-gradient-to-r from-rose-900 via-purple-900 to-indigo-900 overflow-hidden flex items-center justify-center p-2">
                                             {card.image ? (
-                                                <img src={card.image} alt={card.title} className="w-full h-full object-cover rounded-lg" />
+                                                <img src={card.image} alt={card.title} className="w-full h-full object-contain rounded-lg" />
                                             ) : (
                                                 <div className="text-center text-white space-y-1">
                                                     <Gift size={40} className="mx-auto text-rose-300" />
@@ -594,8 +594,8 @@ export default function AdminGiftCardsPage() {
                                 <label className="block text-slate-700 font-bold mb-1">{locale === "bn" ? "কার্ড ছবি আপলোড করুন" : "Card Image Upload"}</label>
                                 <div className="space-y-2">
                                     {image ? (
-                                        <div className="relative w-full h-36 bg-slate-100 rounded-xl overflow-hidden border border-slate-200 flex items-center justify-center">
-                                            <img src={image} alt="Card Preview" className="w-full h-full object-cover" />
+                                        <div className="relative w-full h-36 bg-slate-100 rounded-xl overflow-hidden border border-slate-200 flex items-center justify-center p-2">
+                                            <img src={image} alt="Card Preview" className="w-full h-full object-contain" />
                                             <button
                                                 type="button"
                                                 onClick={() => setImage("")}
