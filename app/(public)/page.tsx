@@ -288,7 +288,7 @@ export default function HomePage() {
                                         </span>
                                     </div>
                                     <p className="section-subtitle mt-1">
-                                        {locale === "en" ? "Purchase gift cards with Wallet or bKash & activate your account for 30 days!" : "ওয়ালেট বা বিকাশ দিয়ে গিফট কার্ড কিনুন এবং ৩০ দিনের জন্য অ্যাকাউন্ট সক্রিয় করুন!"}
+                                        {locale === "en" ? "Purchase gift cards with Wallet or bKash." : "ওয়ালেট বা বিকাশ দিয়ে সহজে গিফট কার্ড কিনুন।"}
                                     </p>
                                 </div>
                                 <Link href="/dashboard/gift-cards" className="hidden sm:inline-flex items-center gap-1 text-sm font-bold text-rose-700 hover:text-rose-800 transition-colors">
@@ -300,7 +300,6 @@ export default function HomePage() {
                         <RevealSection>
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                                 {homeGiftCards.slice(0, 4).map((card) => {
-                                    const isActivationEligible = Number(card.price) >= 2000;
                                     return (
                                         <div
                                             key={card.id}
@@ -315,11 +314,6 @@ export default function HomePage() {
                                                             <Gift size={36} className="mx-auto text-rose-300 group-hover:scale-110 transition-transform duration-300" />
                                                             <p className="text-[10px] font-black text-rose-200 tracking-widest uppercase">GIFT CARD</p>
                                                         </div>
-                                                    )}
-                                                    {isActivationEligible && (
-                                                        <span className="absolute top-2 right-2 bg-emerald-600 text-white font-extrabold text-[9px] px-2 py-0.5 rounded-full shadow-md flex items-center gap-1">
-                                                            <Sparkles size={10} /> {locale === "bn" ? "৩০ দিন অ্যাক্টিভেশন" : "30D Activate"}
-                                                        </span>
                                                     )}
                                                 </div>
 

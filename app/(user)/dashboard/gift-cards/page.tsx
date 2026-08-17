@@ -155,7 +155,6 @@ export default function UserGiftCardsPage() {
                     ) : (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                             {cards.map((card) => {
-                                const isActivationEligible = Number(card.price) >= 2000;
                                 return (
                                     <div
                                         key={card.id}
@@ -172,11 +171,6 @@ export default function UserGiftCardsPage() {
                                                     <Gift size={36} className="mx-auto text-rose-300" />
                                                     <p className="text-[10px] font-bold tracking-widest text-rose-200 uppercase">GIFT CARD</p>
                                                 </div>
-                                            )}
-                                            {isActivationEligible && (
-                                                <span className="absolute top-2 right-2 bg-emerald-600 text-white font-bold text-[10px] px-2 py-0.5 rounded-full shadow-xs flex items-center gap-1">
-                                                    <Sparkles size={10} /> {locale === "bn" ? "৩০ দিন অ্যাকাউন্ট অ্যাক্টিভেশন" : "30-Day Auto Activate"}
-                                                </span>
                                             )}
                                         </div>
 
@@ -398,13 +392,6 @@ export default function UserGiftCardsPage() {
                                             className="input w-full bg-white font-mono text-xs uppercase py-1.5"
                                         />
                                     </div>
-                                </div>
-                            )}
-
-                            {Number(selectedCard.price) >= 2000 && (
-                                <div className="p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-800 text-[11px] font-bold flex items-center gap-1.5">
-                                    <Sparkles size={14} className="text-emerald-600 shrink-0" />
-                                    <span>{t("giftCard.activationNotice")}</span>
                                 </div>
                             )}
                         </div>
