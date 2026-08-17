@@ -9,8 +9,36 @@ export interface CpaTaskAdmin {
     isActive: boolean;
     createdAt: string;
     updatedAt: string;
+    totalRevenue?: number;
     _count?: {
         purchases: number;
+    };
+}
+
+export interface CpaAdminStats {
+    totalRevenue: number;
+    totalPurchases: number;
+    totalTasks: number;
+    activeTasks: number;
+    inactiveTasks: number;
+    uniqueBuyers: number;
+}
+
+export interface CpaAdminPurchaseLog {
+    id: string;
+    purchasedAt: string;
+    pricePaid: number;
+    status: string;
+    user: {
+        id: string;
+        fullName: string;
+        phone: string;
+        email: string;
+    };
+    cpaTask: {
+        id: string;
+        title: string;
+        price: number;
     };
 }
 
@@ -53,6 +81,14 @@ export interface UpdateCpaTaskInput {
 
 export const cpaApi = {
     // Admin
+    adminGetStats: async (): Promise<CpaAdminStats> => {
+        const res = await api.get("/cpa-marketing/admin/stats");
+        return res.data;
+    },
+    adminGetPurchases: async (): Promise<CpaAdminPurchaseLog[]> => {
+        const res = await api.get("/cpa-marketing/admin/purchases");
+        return res.data;
+    },
     adminGetTasks: async (): Promise<CpaTaskAdmin[]> => {
         const res = await api.get("/cpa-marketing/admin/tasks");
         return res.data;

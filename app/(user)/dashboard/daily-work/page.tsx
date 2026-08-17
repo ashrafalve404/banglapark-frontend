@@ -78,8 +78,7 @@ export default function DailyWorkPage() {
             {!cpaLoading && cpaPurchases.length > 0 && (
                 <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                        <h2 className="text-sm font-bold text-gray-800 flex items-center gap-2">
-                            <Sparkles size={16} className="text-purple-600" />
+                        <h2 className="text-sm font-bold text-gray-800">
                             {t("cpa.purchasedCpaTasks")}
                         </h2>
                         <span className="text-xs text-purple-700 bg-purple-50 px-2.5 py-0.5 rounded-full font-semibold">
