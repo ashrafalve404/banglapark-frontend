@@ -183,6 +183,17 @@ export default function AdminUsersPage() {
         l(`Withdrawable: ৳${acc.withdrawable}`);
         y += 4;
 
+        doc.setFontSize(12);
+        doc.setFont("helvetica", "bold");
+        l("Summary");
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(9);
+        l(`Team Members: ${statementData.team?.totalTeam ?? 0}`);
+        l(`Total Orders: ${statementData.orders?.totalOrders ?? 0}`);
+        l(`Total Spent: ৳${statementData.orders?.totalSpent ?? 0}`);
+        l(`Generated: ${new Date(statementData.generatedAt || Date.now()).toLocaleDateString("en-GB")}`);
+        y += 4;
+
         if (tx.length > 0) {
             doc.setFontSize(12);
             doc.setFont("helvetica", "bold");
@@ -221,11 +232,6 @@ export default function AdminUsersPage() {
             });
             y = (doc as any).lastAutoTable.finalY + 8;
         }
-
-        doc.setFontSize(9);
-        doc.setFont("helvetica", "normal");
-        l(`Team Members: ${statementData.team?.totalTeam ?? 0}`);
-        l(`Total Orders: ${statementData.orders?.totalOrders ?? 0} | Total Spent: ৳${statementData.orders?.totalSpent ?? 0}`);
 
         doc.save(`statement_${acc.memberId}_${acc.name.replace(/\s+/g, "_")}.pdf`);
     };
@@ -572,6 +578,17 @@ export default function AdminUsersPage() {
                                         <InfoCard label="Generation Income" value={`৳${statementData.account.generationIncome}`} />
                                         <InfoCard label="Pending Withdrawal" value={`৳${statementData.account.pendingWithdrawal}`} />
                                         <InfoCard label="Withdrawable" value={`৳${statementData.account.withdrawable}`} />
+                                    </div>
+                                </div>
+
+                                {/* Summary */}
+                                <div>
+                                    <h3 className="text-sm font-bold text-slate-700 mb-3">Summary</h3>
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+                                        <InfoCard label="Team Members" value={statementData.team?.totalTeam ?? 0} />
+                                        <InfoCard label="Total Orders" value={statementData.orders?.totalOrders ?? 0} />
+                                        <InfoCard label="Total Spent" value={`৳${statementData.orders?.totalSpent ?? 0}`} />
+                                        <InfoCard label="Generated" value={new Date(statementData.generatedAt || Date.now()).toLocaleDateString("en-GB")} />
                                     </div>
                                 </div>
 

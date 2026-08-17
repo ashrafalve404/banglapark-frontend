@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
-    FaGauge, FaImage, FaClipboardList, FaCircleQuestion, FaUserGroup,
+    FaGauge, FaImage, FaGift, FaClipboardList, FaCircleQuestion, FaUserGroup,
     FaAward, FaPlane, FaBoxOpen, FaTags, FaBagShopping,
     FaArrowsDownToLine, FaGear, FaChartLine, FaHouse, FaChevronRight, FaXmark,
     FaChartBar, FaCartShopping, FaStore, FaBullhorn, FaRectangleAd, FaChartPie,
@@ -32,6 +32,7 @@ export function AdminSidebar({ onClose, mobile }: AdminSidebarProps) {
     const navItems = [
         { href: "/admin", label: t("nav.overview"), icon: FaGauge, exact: true, activeBg: "bg-indigo-500/20 text-indigo-300 border-l-4 border-indigo-500 font-bold", iconColor: "text-indigo-400" },
         { href: "/admin/banners", label: t("nav.banners"), icon: FaImage, activeBg: "bg-pink-500/20 text-pink-300 border-l-4 border-pink-500 font-bold", iconColor: "text-pink-400" },
+        { href: "/admin/gift-cards", label: t("nav.giftCards"), icon: FaGift, activeBg: "bg-rose-500/20 text-rose-300 border-l-4 border-rose-500 font-bold", iconColor: "text-rose-400" },
         { href: "/admin/users", label: t("nav.users"), icon: FaUserGroup, activeBg: "bg-cyan-500/20 text-cyan-300 border-l-4 border-cyan-500 font-bold", iconColor: "text-cyan-400" },
         { href: "/admin/categories", label: t("nav.categories"), icon: FaTags, activeBg: "bg-sky-500/20 text-sky-300 border-l-4 border-sky-500 font-bold", iconColor: "text-sky-400" },
         { href: "/admin/products", label: t("nav.products"), icon: FaBoxOpen, activeBg: "bg-emerald-500/20 text-emerald-300 border-l-4 border-emerald-500 font-bold", iconColor: "text-emerald-400" },

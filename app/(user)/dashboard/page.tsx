@@ -3,7 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { AlertCircle, Clock } from "lucide-react";
-import { FaWallet, FaUsers, FaMoneyBills, FaBuilding, FaTrophy, FaFileInvoice } from "react-icons/fa6";
+import { FaWallet, FaUsers, FaMoneyBills, FaBuilding, FaTrophy, FaFileInvoice, FaGift } from "react-icons/fa6";
 import { useAuthStore } from "@/store/auth";
 import { authApi } from "@/lib/api/auth";
 import { useLocale } from "@/lib/i18n";
@@ -78,6 +78,13 @@ export default function DashboardOverview() {
             label: t("nav.productSell"),
             image: "/images/productsell.png",
             cardBg: "bg-cyan-200 text-cyan-950 border-cyan-300 hover:bg-cyan-300",
+        },
+        {
+            href: "/dashboard/gift-cards",
+            label: t("nav.giftCards"),
+            icon: FaGift,
+            cardBg: "bg-rose-200 text-rose-950 border-rose-300 hover:bg-rose-300",
+            badge: "Hot",
         },
         {
             href: "/dashboard/travel",

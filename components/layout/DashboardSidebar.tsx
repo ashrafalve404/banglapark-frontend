@@ -6,7 +6,7 @@ import {
     FaGauge, FaUser, FaBriefcase, FaWallet, FaBagShopping,
     FaUsers, FaBell, FaChevronRight, FaXmark, FaHouse, FaFileLines,
     FaRightFromBracket, FaAward, FaPlane, FaMoneyBills, FaCircleQuestion,
-    FaTags, FaBoxOpen, FaCartShopping, FaStore, FaBullhorn, FaRectangleAd,
+    FaTags, FaBoxOpen, FaCartShopping, FaStore, FaBullhorn, FaRectangleAd, FaGift,
     FaChartPie, FaTag, FaTrophy, FaBuilding, FaChartBar
 } from "react-icons/fa6";
 import { cn } from "@/lib/utils";
@@ -40,6 +40,7 @@ export function DashboardSidebar({ onClose, mobile }: DashboardSidebarProps) {
         { href: "/dashboard/daily-work", label: t("nav.dailyWork"), icon: FaBriefcase, activeBg: "bg-amber-50 text-amber-800 border-l-4 border-amber-600 shadow-xs", iconColor: "text-amber-600" },
         { href: "/shop", label: t("nav.buyProduct"), icon: FaCartShopping, activeBg: "bg-orange-50 text-orange-800 border-l-4 border-orange-600 shadow-xs", iconColor: "text-orange-600" },
         { href: "/dashboard/product-sell", label: t("nav.productSell"), icon: FaStore, activeBg: "bg-teal-50 text-teal-800 border-l-4 border-teal-600 shadow-xs", iconColor: "text-teal-600" },
+        { href: "/dashboard/gift-cards", label: t("nav.giftCards"), icon: FaGift, activeBg: "bg-rose-50 text-rose-800 border-l-4 border-rose-600 shadow-xs", iconColor: "text-rose-600" },
         { href: "/dashboard/travel", label: t("nav.travel"), icon: FaPlane, activeBg: "bg-orange-50 text-orange-800 border-l-4 border-orange-600 shadow-xs", iconColor: "text-orange-600" },
         { href: "/dashboard/sales-bonus", label: t("nav.salesBonus"), icon: FaAward, activeBg: "bg-teal-50 text-teal-800 border-l-4 border-teal-600 shadow-xs", iconColor: "text-teal-600" },
         { href: "/dashboard/generation-income", label: t("nav.generationBonus"), icon: FaMoneyBills, activeBg: "bg-blue-50 text-blue-800 border-l-4 border-blue-600 shadow-xs", iconColor: "text-blue-600" },

@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import {
     ArrowRight, ShoppingCart, Loader2, LayoutGrid, CheckCircle, X, Users, Sparkles, TrendingUp,
-    ShieldCheck, Package
+    ShieldCheck, Package, Gift
 } from "lucide-react";
 import { BannerCarousel } from "@/components/home/BannerCarousel";
 import { SuccessStoriesSlider } from "@/components/home/SuccessStoriesSlider";
@@ -14,10 +14,12 @@ import { productsApi } from "@/lib/api/products";
 import { categoriesApi } from "@/lib/api/categories";
 import { bannersApi } from "@/lib/api/banners";
 import { publicApi } from "@/lib/api/admin";
+import { giftCardsApi, type GiftCardPublic } from "@/lib/api/gift-cards";
 import { useCartStore } from "@/store/cart";
 import { useQuery } from "@tanstack/react-query";
 import { useLocale } from "@/lib/i18n";
 import { useState, useEffect, useRef, useCallback } from "react";
+import { formatCurrency } from "@/lib/utils";
 
 function getCategoryIcon(_name?: string, _slug?: string) {
     return LayoutGrid;
@@ -148,6 +150,11 @@ export default function HomePage() {
         queryFn: () => bannersApi.findOffers(),
     });
 
+    const { data: homeGiftCards = [] } = useQuery<GiftCardPublic[]>({
+        queryKey: ["home-gift-cards"],
+        queryFn: () => giftCardsApi.getPublicCards(),
+    });
+
     const FALLBACK_USER_COUNT = 2010971;
     const { data: publicStats } = useQuery({
         queryKey: ["public-stats"],
@@ -266,80 +273,84 @@ export default function HomePage() {
             </section>
             )}
 
-            {/* Categories */}
-            {categories.some((c) => ((c as any)._count?.products ?? 0) > 0) && (
-                <section className="py-8 sm:py-12 bg-gray-50/80">
+
+            {/* Gift Cards Section */}
+            {homeGiftCards.length > 0 && (
+                <section className="py-8 sm:py-12 bg-gradient-to-b from-rose-50/50 via-purple-50/30 to-white">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <RevealSection>
                             <div className="flex items-center justify-between mb-8">
                                 <div>
-                                    <h2 className="section-title">{t("home.categories.heading")}</h2>
+                                    <div className="flex items-center gap-2">
+                                        <h2 className="section-title text-slate-900">{t("giftCard.title")}</h2>
+                                        <span className="bg-rose-100 text-rose-700 font-extrabold text-[10px] px-2.5 py-0.5 rounded-full border border-rose-200 uppercase tracking-wider">
+                                            {locale === "bn" ? "অফার" : "Offers"}
+                                        </span>
+                                    </div>
                                     <p className="section-subtitle mt-1">
-                                        {locale === "en" ? "Browse by category to find what you need" : "প্রয়োজনীয় জিনিস খুঁজতে ক্যাটাগরি অনুযায়ী ব্রাউজ করুন"}
+                                        {locale === "en" ? "Purchase gift cards with Wallet or bKash & activate your account for 30 days!" : "ওয়ালেট বা বিকাশ দিয়ে গিফট কার্ড কিনুন এবং ৩০ দিনের জন্য অ্যাকাউন্ট সক্রিয় করুন!"}
                                     </p>
                                 </div>
-                                <Link href="/shop" className="hidden sm:inline-flex items-center gap-1 text-sm font-semibold text-green-700 hover:text-green-800 transition-colors">
-                                    {t("home.categories.viewAll")} <ArrowRight size={14} />
+                                <Link href="/dashboard/gift-cards" className="hidden sm:inline-flex items-center gap-1 text-sm font-bold text-rose-700 hover:text-rose-800 transition-colors">
+                                    {t("giftCard.storeTab")} <ArrowRight size={14} />
                                 </Link>
                             </div>
                         </RevealSection>
+
                         <RevealSection>
-                            <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-2.5 sm:gap-4">
-                                {(() => {
-                                    const popularCategories = categories
-                                        .filter((c) => ((c as any)._count?.products ?? 0) > 0)
-                                        .sort((a, b) => {
-                                            const countA = (a as any)._count?.products ?? 0;
-                                            const countB = (b as any)._count?.products ?? 0;
-                                            if (countB !== countA) return countB - countA;
-                                            return (a.sortOrder ?? 0) - (b.sortOrder ?? 0);
-                                        })
-                                        .slice(0, 12);
-
-                                    return popularCategories.map((cat, i) => {
-                                        const Icon = getCategoryIcon(cat.name, cat.slug);
-                                        const gradient = CATEGORY_GRADIENTS[i % CATEGORY_GRADIENTS.length];
-                                        const productCount = (cat as any)._count?.products;
-                                        const isExtraForMobile = i >= 6;
-
-                                        return (
-                                            <Link
-                                                key={cat.id}
-                                                href={`/shop?categoryId=${cat.id}`}
-                                                className={`${isExtraForMobile ? "hidden sm:flex" : "flex"} group relative flex-col items-center justify-center text-center gap-2 sm:gap-3 rounded-xl bg-white border border-slate-150/90 p-2.5 sm:p-5 shadow-xs hover:shadow-xl hover:border-red-500/30 hover:-translate-y-1 transition-all duration-300 overflow-hidden cursor-pointer`}
-                                            >
-                                                {cat.image ? (
-                                                    <div className="w-12 h-12 sm:w-20 sm:h-20 flex items-center justify-center p-0.5 sm:p-1 group-hover:scale-105 transition-transform duration-300">
-                                                        <img src={cat.image} alt={cat.name} className="max-h-full max-w-full object-contain" />
-                                                    </div>
-                                                ) : (
-                                                    <div className={`w-10 h-10 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br ${gradient} text-white shadow-md flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-                                                        <Icon size={20} className="sm:w-6 sm:h-6 stroke-[2.2]" />
-                                                    </div>
-                                                )}
-                                                <div className="space-y-0.5">
-                                                    <span className="text-[11px] sm:text-sm font-bold text-slate-800 group-hover:text-red-700 transition-colors block line-clamp-1">
-                                                        {cat.name}
-                                                    </span>
-                                                    {!!productCount && productCount > 0 && (
-                                                        <span className="text-[9px] sm:text-[10px] font-semibold text-slate-400 block">
-                                                            {productCount} {locale === "bn" ? "টি পণ্য" : "items"}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                                {homeGiftCards.slice(0, 4).map((card) => {
+                                    const isActivationEligible = Number(card.price) >= 2000;
+                                    return (
+                                        <div
+                                            key={card.id}
+                                            className="group relative rounded-2xl bg-white border border-rose-100 p-4 shadow-sm hover:shadow-xl hover:border-rose-300 transition-all duration-300 flex flex-col justify-between"
+                                        >
+                                            <div className="space-y-3">
+                                                <div className="relative h-36 bg-gradient-to-br from-rose-800 via-purple-900 to-slate-900 rounded-xl overflow-hidden flex items-center justify-center p-3">
+                                                    {card.image ? (
+                                                        <img src={card.image} alt={card.title} className="w-full h-full object-cover rounded-lg group-hover:scale-105 transition-transform duration-300" />
+                                                    ) : (
+                                                        <div className="text-center text-white space-y-1">
+                                                            <Gift size={36} className="mx-auto text-rose-300 group-hover:scale-110 transition-transform duration-300" />
+                                                            <p className="text-[10px] font-black text-rose-200 tracking-widest uppercase">GIFT CARD</p>
+                                                        </div>
+                                                    )}
+                                                    {isActivationEligible && (
+                                                        <span className="absolute top-2 right-2 bg-emerald-600 text-white font-extrabold text-[9px] px-2 py-0.5 rounded-full shadow-md flex items-center gap-1">
+                                                            <Sparkles size={10} /> {locale === "bn" ? "৩০ দিন অ্যাক্টিভেশন" : "30D Activate"}
                                                         </span>
                                                     )}
                                                 </div>
-                                            </Link>
-                                        );
-                                    });
-                                })()}
+
+                                                <div>
+                                                    <h3 className="font-bold text-slate-900 text-sm line-clamp-1 group-hover:text-rose-700 transition-colors">
+                                                        {card.title}
+                                                    </h3>
+                                                    <p className="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed">
+                                                        {card.description}
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <div className="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between">
+                                                <span className="text-base font-black text-rose-700">
+                                                    {formatCurrency(card.price, locale)}
+                                                </span>
+                                                <Link
+                                                    href="/dashboard/gift-cards"
+                                                    className="inline-flex items-center gap-1 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs px-3 py-1.5 rounded-lg shadow-xs transition-colors"
+                                                >
+                                                    {t("giftCard.buyCard")}
+                                                </Link>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
                             </div>
                         </RevealSection>
-                        <div className="flex sm:hidden justify-center mt-5">
-                            <Link href="/shop" className="inline-flex items-center gap-1 text-sm font-semibold text-green-700 hover:text-green-800 transition-colors">
-                                {t("home.categories.viewAll")} <ArrowRight size={14} />
-                            </Link>
-                        </div>
                     </div>
-            </section>
+                </section>
             )}
 
             {/* All Products */}
