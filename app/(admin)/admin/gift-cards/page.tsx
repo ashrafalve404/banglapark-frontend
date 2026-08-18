@@ -316,10 +316,10 @@ export default function AdminGiftCardsPage() {
             </div>
 
             {/* Navigation Tabs */}
-            <div className="flex border-b border-slate-200 gap-6">
+            <div className="flex border-b border-slate-200 gap-4 sm:gap-6 overflow-x-auto whitespace-nowrap scrollbar-none pb-0.5">
                 <button
                     onClick={() => setActiveTab("purchases")}
-                    className={`pb-3 text-sm font-bold border-b-2 transition-all flex items-center gap-2 relative ${
+                    className={`pb-3 text-xs sm:text-sm font-bold border-b-2 transition-all flex items-center gap-2 shrink-0 relative ${
                         activeTab === "purchases" ? "border-rose-600 text-rose-700" : "border-transparent text-slate-500 hover:text-slate-700"
                     }`}
                 >
@@ -332,7 +332,7 @@ export default function AdminGiftCardsPage() {
                 </button>
                 <button
                     onClick={() => setActiveTab("cards")}
-                    className={`pb-3 text-sm font-bold border-b-2 transition-all flex items-center gap-2 ${
+                    className={`pb-3 text-xs sm:text-sm font-bold border-b-2 transition-all flex items-center gap-2 shrink-0 ${
                         activeTab === "cards" ? "border-rose-600 text-rose-700" : "border-transparent text-slate-500 hover:text-slate-700"
                     }`}
                 >
@@ -357,7 +357,7 @@ export default function AdminGiftCardsPage() {
                         </div>
                     </div>
 
-                    {/* Card List Grid */}
+                    {/* Card List Grid - 1 Col Mobile, 2 Col Tablet, 3 Col Desktop */}
                     {isCardsLoading ? (
                         <div className="flex justify-center py-16">
                             <Loader2 size={32} className="animate-spin text-slate-400" />
@@ -368,12 +368,12 @@ export default function AdminGiftCardsPage() {
                             <p className="text-sm font-semibold">{locale === "bn" ? "কোনো গিফট কার্ড পাওয়া যায়নি।" : "No gift cards found."}</p>
                         </div>
                     ) : (
-                        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 max-w-full overflow-hidden">
                             {filteredCards.map((card) => {
                                 return (
                                     <div
                                         key={card.id}
-                                        className={`card bg-white border-2 flex flex-col justify-between overflow-hidden transition-all ${
+                                        className={`card bg-white border-2 flex flex-col justify-between overflow-hidden rounded-2xl transition-all w-full ${
                                             card.isActive ? "border-slate-100 hover:border-rose-200" : "border-slate-200 bg-slate-50/50 opacity-75"
                                         }`}
                                     >
@@ -389,9 +389,9 @@ export default function AdminGiftCardsPage() {
                                             )}
                                         </div>
 
-                                        <div className="p-5 space-y-3 flex-1 flex flex-col justify-between">
+                                        <div className="p-4 sm:p-5 space-y-3 flex-1 flex flex-col justify-between">
                                             <div className="space-y-2">
-                                                <div className="flex items-center justify-between gap-2">
+                                                <div className="flex flex-wrap items-center justify-between gap-1.5">
                                                     <span
                                                         className={`inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full ${
                                                             card.isActive ? "bg-emerald-50 text-emerald-700" : "bg-slate-100 text-slate-500"
@@ -400,29 +400,31 @@ export default function AdminGiftCardsPage() {
                                                         {card.isActive ? <CheckCircle size={12} /> : <XCircle size={12} />}
                                                         {card.isActive ? t("cpa.active") : t("cpa.inactive")}
                                                     </span>
-                                                    <span className="text-xs font-semibold text-rose-700 bg-rose-50 px-2.5 py-1 rounded-full border border-rose-100">
+                                                    <span className="text-[11px] sm:text-xs font-semibold text-rose-700 bg-rose-50 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full border border-rose-100">
                                                         {t("cpa.purchasesCount")} {card._count?.purchases ?? 0}
                                                     </span>
                                                 </div>
 
                                                 <div>
-                                                    <h3 className="font-bold text-slate-900 text-base leading-snug">{card.title}</h3>
-                                                    <p className="text-xs text-slate-500 mt-1 line-clamp-2">{card.description}</p>
+                                                    <h3 className="font-bold text-slate-900 text-sm sm:text-base leading-snug line-clamp-1">{card.title}</h3>
+                                                    {card.description && (
+                                                        <p className="text-xs text-slate-500 mt-1 line-clamp-2">{card.description}</p>
+                                                    )}
                                                 </div>
                                             </div>
 
                                             <div className="pt-3 border-t border-slate-100 space-y-2">
                                                 <div className="flex items-center justify-between text-xs">
                                                     <span className="text-slate-500 font-medium">{locale === "bn" ? "কার্ড মূল্য:" : "Card Price:"}</span>
-                                                    <span className="text-lg font-black text-rose-700">
+                                                    <span className="text-base sm:text-lg font-black text-rose-700">
                                                         {formatCurrency(Number(card.price), locale)}
                                                     </span>
                                                 </div>
 
                                                 {card.voucherCode && (
-                                                    <div className="bg-slate-50 rounded-lg p-2 flex items-center justify-between text-xs border border-slate-100">
-                                                        <span className="text-slate-400 text-[10px] font-medium">{t("giftCard.voucherCode")}:</span>
-                                                        <span className="font-mono text-xs font-bold text-purple-700">
+                                                    <div className="bg-slate-50 rounded-lg p-2 flex items-center justify-between gap-1.5 text-xs border border-slate-100 overflow-hidden">
+                                                        <span className="text-slate-400 text-[10px] font-medium shrink-0">{t("giftCard.voucherCode")}:</span>
+                                                        <span className="font-mono text-xs font-bold text-purple-700 truncate">
                                                             {card.voucherCode}
                                                         </span>
                                                     </div>
@@ -430,7 +432,7 @@ export default function AdminGiftCardsPage() {
                                             </div>
                                         </div>
 
-                                        <div className="flex items-center justify-end gap-2 px-5 py-3 border-t border-slate-100 bg-slate-50/50">
+                                        <div className="flex items-center justify-end gap-2 px-4 py-2.5 sm:px-5 sm:py-3 border-t border-slate-100 bg-slate-50/50">
                                             <button
                                                 onClick={() => handleOpenEdit(card)}
                                                 className="p-2 rounded-lg text-slate-600 hover:bg-slate-200/60 hover:text-rose-700 transition-colors"
