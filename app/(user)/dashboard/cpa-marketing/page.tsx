@@ -4,19 +4,15 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import {
-    ShoppingBag,
     CheckCircle,
     Loader2,
-    Lock,
     ArrowRight,
-    AlertCircle,
-    Sparkles,
     Briefcase,
+    Play,
+    Globe,
 } from "lucide-react";
 import { cpaApi, type CpaTaskPublic } from "@/lib/api/cpa";
-import { walletApi } from "@/lib/api/wallet";
 import { useLocale } from "@/lib/i18n";
-import { formatCurrency } from "@/lib/utils";
 
 export default function UserCpaMarketingPage() {
     const { t, locale } = useLocale();
@@ -32,18 +28,10 @@ export default function UserCpaMarketingPage() {
         queryFn: () => cpaApi.getPublicTasks(),
     });
 
-    const { data: wallet } = useQuery({
-        queryKey: ["wallet"],
-        queryFn: () => walletApi.balance(),
-    });
-
-    const walletBalance = Number(wallet?.balance ?? 0);
-
     const buyMutation = useMutation({
         mutationFn: (taskId: string) => cpaApi.buyTask(taskId),
-        onSuccess: (res) => {
+        onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["user-cpa-tasks"] });
-            queryClient.invalidateQueries({ queryKey: ["wallet"] });
             queryClient.invalidateQueries({ queryKey: ["user-cpa-my-purchases"] });
             const title = selectedTask?.title || "CPA Task";
             setSelectedTask(null);
@@ -52,7 +40,7 @@ export default function UserCpaMarketingPage() {
         },
         onError: (err: any) => {
             setPurchaseError(
-                err?.response?.data?.message || err?.message || (locale === "bn" ? "ক্রয় ব্যর্থ হয়েছে। দয়া করে আবার চেষ্টা করুন।" : "Purchase failed. Please try again.")
+                err?.response?.data?.message || err?.message || (locale === "bn" ? "কাজ শুরু করতে ব্যর্থ হয়েছে। দয়া করে আবার চেষ্টা করুন।" : "Failed to start task. Please try again.")
             );
         },
     });
@@ -66,8 +54,15 @@ export default function UserCpaMarketingPage() {
     return (
         <div className="max-w-4xl mx-auto space-y-6">
             {/* Clean Header Banner */}
-            <div className="card p-6 bg-gradient-to-r from-purple-900 via-indigo-900 to-slate-900 text-white shadow-lg">
-                <h1 className="text-2xl font-bold">{t("cpa.title")}</h1>
+            <div className="card p-6 bg-gradient-to-r from-purple-900 via-indigo-900 to-slate-900 text-white shadow-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div>
+                    <h1 className="text-xl sm:text-2xl font-bold">{t("cpa.title")}</h1>
+                    <p className="text-xs text-purple-200 mt-1">
+                        {locale === "bn"
+                            ? "সিপিএ টাস্ক শুরু করুন এবং দৈনিক কাজ পেজে টাস্ক সাবমিট করে আয় করুন।"
+                            : "Start any CPA task. Access redirect links and earn rewards!"}
+                    </p>
+                </div>
             </div>
 
             {/* Success Banner */}
@@ -79,16 +74,16 @@ export default function UserCpaMarketingPage() {
                         </div>
                         <div>
                             <h3 className="font-bold text-slate-900 text-sm sm:text-base">
-                                {t("cpa.successTitle")}
+                                {locale === "bn" ? "টাস্ক শুরু হয়েছে!" : "Task Started!"}
                             </h3>
                             <p className="text-xs text-slate-600 mt-0.5">
-                                "{successTaskTitle}" {t("cpa.successDesc")}
+                                "{successTaskTitle}" {locale === "bn" ? "আপনার ডেলি ওয়ার্ক তালিকায় যুক্ত করা হয়েছে।" : "is now unlocked in your Daily Work page."}
                             </p>
                         </div>
                     </div>
                     <button
                         onClick={() => router.push("/dashboard/daily-work")}
-                        className="btn-primary bg-emerald-600 hover:bg-emerald-700 text-xs font-bold py-2.5 px-5 rounded-lg whitespace-nowrap flex items-center gap-2 shadow-xs"
+                        className="btn-primary bg-emerald-600 hover:bg-emerald-700 text-xs font-bold py-2.5 px-5 rounded-lg whitespace-nowrap flex items-center gap-2 shadow-xs cursor-pointer"
                     >
                         <Briefcase size={16} /> {t("cpa.goToDailyWork")} <ArrowRight size={14} />
                     </button>
@@ -102,7 +97,7 @@ export default function UserCpaMarketingPage() {
                 </div>
             ) : tasks.length === 0 ? (
                 <div className="card p-12 bg-white text-center text-slate-400 space-y-3">
-                    <ShoppingBag size={48} className="mx-auto text-slate-300" />
+                    <Globe size={48} className="mx-auto text-slate-300" />
                     <p className="text-sm font-semibold">{t("cpa.noTasks")}</p>
                 </div>
             ) : (
@@ -110,41 +105,28 @@ export default function UserCpaMarketingPage() {
                     {tasks.map((task) => (
                         <div
                             key={task.id}
-                            className={`card p-6 bg-white border-2 flex flex-col justify-between transition-all hover:shadow-md ${
+                            className={`card p-5 sm:p-6 bg-white border-2 flex flex-col justify-between transition-all hover:shadow-md ${
                                 task.isPurchased ? "border-emerald-200 bg-emerald-50/20" : "border-slate-100 hover:border-purple-200"
                             }`}
                         >
                             <div className="space-y-3">
-                                <div className="flex items-center justify-between gap-2">
-                                    {task.isPurchased ? (
-                                        <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
-                                            <CheckCircle size={14} /> {t("cpa.purchased")}
-                                        </span>
-                                    ) : (
-                                        <span className="text-base font-black text-slate-900">
-                                            {formatCurrency(task.price, locale)}
-                                        </span>
-                                    )}
-                                </div>
+                                {task.isPurchased && (
+                                    <span className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 w-max">
+                                        <CheckCircle size={14} /> {locale === "bn" ? "আনলক করা হয়েছে" : "Unlocked & Active"}
+                                    </span>
+                                )}
 
                                 <div>
-                                    <h3 className="font-bold text-slate-900 text-lg leading-snug">{task.title}</h3>
+                                    <h3 className="font-bold text-slate-900 text-base sm:text-lg leading-snug">{task.title}</h3>
                                     <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">{task.description}</p>
                                 </div>
-
-                                {!task.isPurchased && (
-                                    <div className="p-2.5 bg-amber-50 border border-amber-100 rounded-lg flex items-center gap-2 text-[11px] text-amber-800 font-medium">
-                                        <Lock size={14} className="text-amber-600 shrink-0" />
-                                        <span>{t("cpa.lockHint")}</span>
-                                    </div>
-                                )}
                             </div>
 
                             <div className="pt-4 mt-4 border-t border-slate-100">
                                 {task.isPurchased ? (
                                     <button
                                         onClick={() => router.push("/dashboard/daily-work")}
-                                        className="w-full btn-secondary py-2.5 text-xs font-bold flex items-center justify-center gap-2 text-emerald-700 bg-emerald-50 border-emerald-200 hover:bg-emerald-100 transition-all"
+                                        className="w-full btn-secondary py-2.5 text-xs font-bold flex items-center justify-center gap-2 text-emerald-700 bg-emerald-50 border-emerald-200 hover:bg-emerald-100 transition-all cursor-pointer"
                                     >
                                         <Briefcase size={16} /> {t("cpa.viewInDailyWork")}
                                     </button>
@@ -155,9 +137,9 @@ export default function UserCpaMarketingPage() {
                                             setPurchaseError(null);
                                             setSelectedTask(task);
                                         }}
-                                        className="w-full btn-primary py-2.5 text-xs font-bold flex items-center justify-center gap-2 bg-purple-700 hover:bg-purple-800 text-white shadow-xs transition-all"
+                                        className="w-full btn-primary py-2.5 text-xs font-bold flex items-center justify-center gap-2 bg-purple-700 hover:bg-purple-800 text-white shadow-xs transition-all cursor-pointer"
                                     >
-                                        <ShoppingBag size={16} /> {t("cpa.buyTask")} ({formatCurrency(task.price, locale)})
+                                        <Play size={15} /> {locale === "bn" ? "কাজ শুরু করুন" : "Start Task"}
                                     </button>
                                 )}
                             </div>
@@ -166,40 +148,20 @@ export default function UserCpaMarketingPage() {
                 </div>
             )}
 
-            {/* Buy Modal Confirmation */}
+            {/* Start Task Modal Confirmation */}
             {selectedTask && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4 fade-in">
                     <div className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-2xl space-y-5 text-center">
                         <div className="w-14 h-14 rounded-full bg-purple-100 text-purple-600 mx-auto flex items-center justify-center">
-                            <ShoppingBag size={28} />
+                            <Play size={28} />
                         </div>
 
                         <div>
-                            <h3 className="text-lg font-bold text-slate-900">{t("cpa.confirmTitle")}</h3>
+                            <h3 className="text-lg font-bold text-slate-900">{locale === "bn" ? "সিপিএ টাস্ক শুরু করুন" : "Start CPA Task"}</h3>
                             <p className="text-xs text-slate-500 mt-1">
-                                {t("cpa.confirmPrompt")} <strong className="text-slate-800">"{selectedTask.title}"</strong>?
+                                {locale === "bn" ? "আপনি কি" : "Are you sure you want to start"} <strong className="text-slate-800">"{selectedTask.title}"</strong> {locale === "bn" ? "টাস্কটি শুরু করতে চান?" : "task?"}
                             </p>
                         </div>
-
-                        <div className="bg-slate-50 rounded-xl p-4 text-left border border-slate-100 space-y-2 text-xs">
-                            <div className="flex justify-between">
-                                <span className="text-slate-500 font-medium">{t("cpa.taskPrice")}</span>
-                                <strong className="text-slate-900 font-bold">{formatCurrency(selectedTask.price, locale)}</strong>
-                            </div>
-                            <div className="flex justify-between border-t border-slate-200/60 pt-2">
-                                <span className="text-slate-500 font-medium">{t("cpa.walletBalance")}</span>
-                                <strong className={walletBalance < selectedTask.price ? "text-red-600 font-bold" : "text-emerald-700 font-bold"}>
-                                    {formatCurrency(walletBalance, locale)}
-                                </strong>
-                            </div>
-                        </div>
-
-                        {walletBalance < selectedTask.price && (
-                            <div className="p-3 bg-red-50 border border-red-100 rounded-lg flex items-center gap-2 text-xs text-red-600 font-semibold text-left">
-                                <AlertCircle size={16} className="shrink-0" />
-                                <span>{t("cpa.insufficientBalance")}</span>
-                            </div>
-                        )}
 
                         {purchaseError && (
                             <div className="p-3 bg-red-50 border border-red-100 rounded-lg text-xs text-red-600 font-semibold text-left">
@@ -210,17 +172,17 @@ export default function UserCpaMarketingPage() {
                         <div className="flex items-center gap-3 pt-2">
                             <button
                                 onClick={handleConfirmBuy}
-                                disabled={walletBalance < selectedTask.price || buyMutation.isPending}
-                                className="btn-primary flex-1 py-3 text-xs sm:text-sm font-bold bg-purple-700 hover:bg-purple-800 flex items-center justify-center gap-2 disabled:opacity-50"
+                                disabled={buyMutation.isPending}
+                                className="btn-primary flex-1 py-2.5 text-xs sm:text-sm font-bold bg-purple-700 hover:bg-purple-800 flex items-center justify-center gap-2 cursor-pointer"
                             >
-                                {buyMutation.isPending ? <Loader2 size={16} className="animate-spin" /> : t("cpa.confirmAndPay")}
+                                {buyMutation.isPending ? <Loader2 size={16} className="animate-spin" /> : (locale === "bn" ? "কাজ শুরু করুন" : "Start Task")}
                             </button>
                             <button
                                 onClick={() => {
                                     setSelectedTask(null);
                                     setPurchaseError(null);
                                 }}
-                                className="btn-outline-primary py-3 text-xs sm:text-sm font-semibold"
+                                className="btn-outline-primary py-2.5 text-xs sm:text-sm font-semibold"
                             >
                                 {t("cpa.cancel")}
                             </button>
