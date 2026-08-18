@@ -82,7 +82,7 @@ export default function DashboardOverview() {
         {
             href: "/dashboard/gift-cards",
             label: t("nav.giftCards"),
-            icon: FaGift,
+            image: "/images/giftcardbtn.png",
             cardBg: "bg-rose-200 text-rose-950 border-rose-300 hover:bg-rose-300",
             badge: "Hot",
         },

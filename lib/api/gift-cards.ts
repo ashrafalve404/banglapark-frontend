@@ -124,6 +124,10 @@ export const giftCardsApi = {
         const res = await api.post(`/gift-cards/admin/purchases/${id}/reject`);
         return res.data;
     },
+    adminDeletePurchase: async (id: string): Promise<{ message: string }> => {
+        const res = await api.delete(`/gift-cards/admin/purchases/${id}`);
+        return res.data;
+    },
     adminGetCards: async (): Promise<GiftCardAdmin[]> => {
         const res = await api.get("/gift-cards/admin/cards");
         return res.data;

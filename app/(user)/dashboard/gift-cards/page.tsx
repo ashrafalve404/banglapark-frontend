@@ -154,12 +154,12 @@ export default function UserGiftCardsPage() {
                             <p className="text-sm font-semibold">{locale === "bn" ? "কোনো গিফট কার্ড উপলব্ধ নেই।" : "No Gift Cards available."}</p>
                         </div>
                     ) : (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
                             {cards.map((card) => {
                                 return (
                                     <div
                                         key={card.id}
-                                        className={`card bg-white border flex flex-col justify-between overflow-hidden rounded-2xl transition-all hover:shadow-md ${
+                                        className={`card bg-white border flex flex-col justify-between overflow-hidden rounded-xl sm:rounded-2xl transition-all hover:shadow-md ${
                                             card.isPurchased ? "border-emerald-200 bg-emerald-50/20" : "border-slate-200 hover:border-rose-300"
                                         }`}
                                     >
@@ -169,22 +169,24 @@ export default function UserGiftCardsPage() {
                                                 <img src={card.image} alt={card.title} className="w-full h-full object-cover" />
                                             ) : (
                                                 <div className="text-center text-white space-y-1">
-                                                    <Gift size={36} className="mx-auto text-rose-300" />
-                                                    <p className="text-[10px] font-bold tracking-widest text-rose-200 uppercase">GIFT CARD</p>
+                                                    <Gift size={28} className="mx-auto text-rose-300" />
+                                                    <p className="text-[9px] font-bold tracking-widest text-rose-200 uppercase">GIFT CARD</p>
                                                 </div>
                                             )}
                                         </div>
 
-                                        <div className="p-4 space-y-3 flex-1 flex flex-col justify-between">
-                                            <div className="space-y-1">
-                                                <h3 className="font-bold text-slate-900 text-sm leading-snug">{card.title}</h3>
-                                                <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">{card.description}</p>
+                                        <div className="p-2.5 sm:p-4 space-y-2 sm:space-y-3 flex-1 flex flex-col justify-between">
+                                            <div className="space-y-0.5 sm:space-y-1">
+                                                <h3 className="font-bold text-slate-900 text-xs sm:text-sm leading-snug line-clamp-1">{card.title}</h3>
+                                                {card.description && (
+                                                    <p className="text-[11px] sm:text-xs text-slate-500 line-clamp-2 leading-tight sm:leading-relaxed">{card.description}</p>
+                                                )}
                                             </div>
 
-                                            <div className="pt-3 border-t border-slate-100 space-y-2.5">
-                                                <div className="flex items-center justify-between">
-                                                    <span className="text-xs text-slate-400 font-medium">{locale === "bn" ? "মূল্য:" : "Price:"}</span>
-                                                    <span className="text-lg font-extrabold text-rose-700">
+                                            <div className="pt-2 sm:pt-3 border-t border-slate-100 space-y-2">
+                                                <div className="flex flex-col sm:flex-row sm:items-center justify-between">
+                                                    <span className="text-[11px] sm:text-xs text-slate-400 font-medium">{locale === "bn" ? "মূল্য:" : "Price:"}</span>
+                                                    <span className="text-sm sm:text-lg font-extrabold text-rose-700">
                                                         {formatCurrency(card.price, locale)}
                                                     </span>
                                                 </div>
@@ -195,9 +197,9 @@ export default function UserGiftCardsPage() {
                                                         setPaymentMethod("WALLET");
                                                         setSelectedCard(card);
                                                     }}
-                                                    className="w-full py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs transition-colors shadow-xs flex items-center justify-center gap-1.5"
+                                                    className="w-full py-1.5 sm:py-2 rounded-lg sm:rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-[11px] sm:text-xs transition-colors shadow-xs flex items-center justify-center gap-1 sm:gap-1.5"
                                                 >
-                                                    <ShoppingBag size={14} /> {t("giftCard.buyCard")}
+                                                    <ShoppingBag size={13} /> {t("giftCard.buyCard")}
                                                 </button>
                                             </div>
                                         </div>
@@ -222,7 +224,7 @@ export default function UserGiftCardsPage() {
                             <p className="text-sm font-semibold">{locale === "bn" ? "আপনার কোনো ক্রয়কৃত গিফট কার্ড নেই।" : "You have not purchased any Gift Cards yet."}</p>
                         </div>
                     ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                             {myCards.map((card) => {
                                 const daysLeft = getDaysRemaining(card.canSellAt);
                                 const isEligibleToSell = daysLeft === 0 && !card.isSold && (card.status === "APPROVED" || card.status === "PURCHASED");

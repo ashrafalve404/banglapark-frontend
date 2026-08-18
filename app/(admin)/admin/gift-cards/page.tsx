@@ -132,6 +132,18 @@ export default function AdminGiftCardsPage() {
         },
     });
 
+    const deletePurchaseMutation = useMutation({
+        mutationFn: (purchaseId: string) => giftCardsApi.adminDeletePurchase(purchaseId),
+        onSuccess: (res) => {
+            queryClient.invalidateQueries({ queryKey: ["admin-gift-card-purchases"] });
+            queryClient.invalidateQueries({ queryKey: ["admin-gift-card-stats"] });
+            alert(res.message);
+        },
+        onError: (err: any) => {
+            alert(err?.response?.data?.message || err?.message || "Failed to delete purchase record");
+        },
+    });
+
     const resetForm = () => {
         setTitle("");
         setDescription("");
@@ -356,7 +368,7 @@ export default function AdminGiftCardsPage() {
                             <p className="text-sm font-semibold">{locale === "bn" ? "কোনো গিফট কার্ড পাওয়া যায়নি।" : "No gift cards found."}</p>
                         </div>
                     ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
                             {filteredCards.map((card) => {
                                 return (
                                     <div
@@ -566,53 +578,69 @@ export default function AdminGiftCardsPage() {
                                                     )}
                                                 </td>
                                                 <td className="py-3 px-4 text-center">
-                                                    {log.status === "PENDING" ? (
-                                                        <div className="space-y-1.5 flex flex-col items-center">
-                                                            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-800 bg-amber-100 px-2.5 py-1 rounded-full border border-amber-300">
-                                                                <Clock size={12} className="animate-pulse" />
-                                                                {locale === "bn" ? "পেন্ডিং অনুমোদন" : "PENDING APPROVAL"}
-                                                            </span>
-                                                            <div className="flex items-center gap-1.5">
-                                                                <button
-                                                                    onClick={() => {
-                                                                        if (confirm(locale === "bn" ? "পেমেন্ট পাওয়ার বিষয়টি নিশ্চিত করে অনুমোদন করবেন?" : "Approve this bKash purchase?")) {
-                                                                            approveMutation.mutate(log.id);
-                                                                        }
-                                                                    }}
-                                                                    disabled={approveMutation.isPending}
-                                                                    className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-[10px] font-bold flex items-center gap-1 shadow-xs transition-colors cursor-pointer"
-                                                                >
-                                                                    <CheckCircle size={11} /> {locale === "bn" ? "অনুমোদন" : "Approve"}
-                                                                </button>
-                                                                <button
-                                                                    onClick={() => {
-                                                                        if (confirm(locale === "bn" ? "পেমেন্ট না পাওয়া গেলে বাতিল করবেন?" : "Reject this bKash purchase?")) {
-                                                                            rejectMutation.mutate(log.id);
-                                                                        }
-                                                                    }}
-                                                                    disabled={rejectMutation.isPending}
-                                                                    className="px-2.5 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-[10px] font-bold flex items-center gap-1 shadow-xs transition-colors cursor-pointer"
-                                                                >
-                                                                    <XCircle size={11} /> {locale === "bn" ? "বাতিল" : "Reject"}
-                                                                </button>
+                                                    <div className="flex flex-col items-center gap-1.5">
+                                                        {log.status === "PENDING" ? (
+                                                            <div className="space-y-1.5 flex flex-col items-center">
+                                                                <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-800 bg-amber-100 px-2.5 py-1 rounded-full border border-amber-300">
+                                                                    <Clock size={12} className="animate-pulse" />
+                                                                    {locale === "bn" ? "পেন্ডিং অনুমোদন" : "PENDING APPROVAL"}
+                                                                </span>
+                                                                <div className="flex items-center gap-1.5">
+                                                                    <button
+                                                                        onClick={() => {
+                                                                            if (confirm(locale === "bn" ? "পেমেন্ট পাওয়ার বিষয়টি নিশ্চিত করে অনুমোদন করবেন?" : "Approve this bKash purchase?")) {
+                                                                                approveMutation.mutate(log.id);
+                                                                            }
+                                                                        }}
+                                                                        disabled={approveMutation.isPending}
+                                                                        className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-[10px] font-bold flex items-center gap-1 shadow-xs transition-colors cursor-pointer"
+                                                                    >
+                                                                        <CheckCircle size={11} /> {locale === "bn" ? "অনুমোদন" : "Approve"}
+                                                                    </button>
+                                                                    <button
+                                                                        onClick={() => {
+                                                                            if (confirm(locale === "bn" ? "পেমেন্ট না পাওয়া গেলে বাতিল করবেন?" : "Reject this bKash purchase?")) {
+                                                                                rejectMutation.mutate(log.id);
+                                                                            }
+                                                                        }}
+                                                                        disabled={rejectMutation.isPending}
+                                                                        className="px-2.5 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-[10px] font-bold flex items-center gap-1 shadow-xs transition-colors cursor-pointer"
+                                                                    >
+                                                                        <XCircle size={11} /> {locale === "bn" ? "বাতিল" : "Reject"}
+                                                                    </button>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    ) : log.status === "REJECTED" ? (
-                                                        <span className="inline-flex items-center gap-1 text-[10px] font-bold text-red-700 bg-red-50 px-2.5 py-1 rounded-full border border-red-200">
-                                                            <XCircle size={12} />
-                                                            {locale === "bn" ? "বাতিলকৃত (REJECTED)" : "REJECTED"}
-                                                        </span>
-                                                    ) : log.isSold || log.status === "SOLD" ? (
-                                                        <span className="inline-flex items-center gap-1 text-[10px] font-bold text-slate-700 bg-slate-200 px-2.5 py-1 rounded-full">
-                                                            <ArrowRightLeft size={12} className="text-emerald-600" />
-                                                            {locale === "bn" ? "বিক্রি ও রিফান্ডকৃত" : "SOLD & REFUNDED"}
-                                                        </span>
-                                                    ) : (
-                                                        <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
-                                                            <CheckCircle size={12} />
-                                                            {locale === "bn" ? "অনুমোদিত ও সক্রিয়" : "ACTIVE / APPROVED"}
-                                                        </span>
-                                                    )}
+                                                        ) : log.status === "REJECTED" ? (
+                                                            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-red-700 bg-red-50 px-2.5 py-1 rounded-full border border-red-200">
+                                                                <XCircle size={12} />
+                                                                {locale === "bn" ? "বাতিলকৃত (REJECTED)" : "REJECTED"}
+                                                            </span>
+                                                        ) : log.isSold || log.status === "SOLD" ? (
+                                                            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-slate-700 bg-slate-200 px-2.5 py-1 rounded-full">
+                                                                <ArrowRightLeft size={12} className="text-emerald-600" />
+                                                                {locale === "bn" ? "বিক্রি ও রিফান্ডকৃত" : "SOLD & REFUNDED"}
+                                                            </span>
+                                                        ) : (
+                                                            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+                                                                <CheckCircle size={12} />
+                                                                {locale === "bn" ? "অনুমোদিত ও সক্রিয়" : "ACTIVE / APPROVED"}
+                                                            </span>
+                                                        )}
+
+                                                        {/* Delete Purchase Entry Button */}
+                                                        <button
+                                                            onClick={() => {
+                                                                if (confirm(locale === "bn" ? `আপনি কি নিশ্চিত যে এই গিফট কার্ড ক্রয় রেকর্ডটি (${log.giftCard.title}) ডিলিট করতে চান?` : `Are you sure you want to delete this gift card purchase record (${log.giftCard.title})?`)) {
+                                                                    deletePurchaseMutation.mutate(log.id);
+                                                                }
+                                                            }}
+                                                            disabled={deletePurchaseMutation.isPending}
+                                                            className="p-1 text-slate-400 hover:text-red-600 transition-colors rounded hover:bg-red-50 flex items-center gap-1 text-[10px] font-semibold mt-0.5 cursor-pointer"
+                                                            title="Delete Purchase Record"
+                                                        >
+                                                            <Trash2 size={13} /> {locale === "bn" ? "ডিলিট" : "Delete"}
+                                                        </button>
+                                                    </div>
                                                 </td>
                                                 <td className="py-3 px-4 text-slate-500 text-xs whitespace-nowrap">
                                                     <div className="space-y-0.5">
