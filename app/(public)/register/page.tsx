@@ -12,9 +12,33 @@ import { authApi } from "@/lib/api/auth";
 import { useLocale } from "@/lib/i18n";
 import jsPDF from "jspdf";
 
+const DISPOSABLE_DOMAINS = new Set([
+    'toooby.com', 'tabeebee.com', 'tempmail.com', 'temp-mail.org', 'mailinator.com',
+    '10minutemail.com', 'guerrillamail.com', 'trashmail.com', 'yopmail.com', 'sharklasers.com',
+    'dispostable.com', 'getairmail.com', 'throwawaymail.com', 'fakeinbox.com', 'maildrop.cc',
+    'crazymailing.com', 'tmailor.com', 'burnermail.io', 'generator.email', 'dropmail.me',
+    'mohmal.com', 'inboxkitten.com', 'tempail.com', 'tempmail.net', 'fakemailgenerator.com'
+]);
+
+function isDisposableEmail(email: string): boolean {
+    if (!email || !email.includes('@')) return true;
+    const domain = email.split('@')[1]?.toLowerCase().trim();
+    if (!domain) return true;
+    if (DISPOSABLE_DOMAINS.has(domain)) return true;
+    if (domain.includes('temp') || domain.includes('fake') || domain.includes('trash') || domain.includes('disposable') || domain.includes('text0') || domain.includes('test0')) {
+        return true;
+    }
+    return false;
+}
+
 const registerSchema = z.object({
     name: z.string().min(2, "নাম কমপক্ষে ২ অক্ষরের হতে হবে"),
-    email: z.string().email("সঠিক ইমেইল এড্রেস লিখুন"),
+    email: z
+        .string()
+        .email("সঠিক ইমেইল এড্রেস লিখুন")
+        .refine((val) => !isDisposableEmail(val), {
+            message: "ফেক বা টেম্পোরারি ইমেইল ব্যবহার করা যাবে না। দয়া করে আসল জিমেইল বা পার্সোনাল ইমেইল দিন।",
+        }),
     phone: z.string().min(10, "সঠিক মোবাইল নাম্বার দিন"),
     password: z.string().min(6, "পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে"),
     referralCode: z.string().optional(),
