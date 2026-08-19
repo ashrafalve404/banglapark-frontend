@@ -120,13 +120,19 @@ function RegisterForm() {
         setLoading(true);
         try {
             const res = await authApi.register(data);
-            authApi.saveTokens({
-                accessToken: res.accessToken,
-                refreshToken: res.refreshToken,
-            });
-            setUser(res.user);
-            setRegisteredUser(res.user);
-            setUsedReferralCode(data.referralCode || null);
+            if (res.requiresEmailVerification && res.email) {
+                router.push(`/verify-email?email=${encodeURIComponent(res.email)}`);
+                return;
+            }
+            if (res.accessToken && res.refreshToken && res.user) {
+                authApi.saveTokens({
+                    accessToken: res.accessToken,
+                    refreshToken: res.refreshToken,
+                });
+                setUser(res.user);
+                setRegisteredUser(res.user);
+                setUsedReferralCode(data.referralCode || null);
+            }
         } catch (err: any) {
             setError(
                 err.response?.data?.message ||

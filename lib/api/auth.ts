@@ -2,6 +2,19 @@ import { api } from "./client";
 import Cookies from "js-cookie";
 import type { AuthResponse, User } from "@/types";
 
+export interface RegisterResult {
+    requiresEmailVerification?: boolean;
+    email?: string;
+    message?: string;
+    user?: User;
+    accessToken?: string;
+    refreshToken?: string;
+}
+
+export interface VerifyEmailResult extends AuthResponse {
+    message?: string;
+}
+
 export const authApi = {
     register: async (data: {
         name: string;
@@ -9,8 +22,18 @@ export const authApi = {
         phone: string;
         password: string;
         referralCode?: string;
-    }): Promise<AuthResponse> => {
+    }): Promise<RegisterResult> => {
         const res = await api.post("/auth/register", data);
+        return res.data;
+    },
+
+    verifyEmail: async (data: { email: string; otp: string }): Promise<VerifyEmailResult> => {
+        const res = await api.post("/auth/verify-email", data);
+        return res.data;
+    },
+
+    resendVerification: async (data: { email: string }): Promise<{ message: string }> => {
+        const res = await api.post("/auth/resend-verification", data);
         return res.data;
     },
 

@@ -72,8 +72,13 @@ function LoginForm() {
             router.push(redirectParam || (res.user.role === "ADMIN" || res.user.role === "SUPER_ADMIN" ? "/admin" : "/dashboard"));
             router.refresh();
         } catch (err: any) {
+            const data = err?.response?.data;
+            if (data?.requiresEmailVerification && data?.email) {
+                router.push(`/verify-email?email=${encodeURIComponent(data.email)}`);
+                return;
+            }
             setError(
-                err.response?.data?.message || t("auth.login.error.default")
+                data?.message || t("auth.login.error.default")
             );
         } finally {
             setLoading(false);
