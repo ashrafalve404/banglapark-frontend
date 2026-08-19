@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { Loader2, CheckCircle, RefreshCw, ArrowLeft, ShieldCheck } from "lucide-react";
+import { Loader2, CheckCircle, RefreshCw, ArrowLeft } from "lucide-react";
 import { authApi } from "@/lib/api/auth";
 import { useAuthStore } from "@/store/auth";
 import { useLocale } from "@/lib/i18n";
@@ -118,35 +118,32 @@ function VerifyEmailForm() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4 py-12">
-            <div className="w-full max-w-md bg-white rounded-3xl shadow-xl border border-slate-100 p-8 space-y-6 text-center fade-in">
-                {/* Header Icon */}
-                <div className="w-16 h-16 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center mx-auto shadow-inner">
-                    <ShieldCheck size={36} />
-                </div>
-
-                <div>
-                    <h1 className="text-2xl font-black text-slate-900">
+        <div className="flex min-h-[calc(100vh-16rem)] items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+            <div className="card-flat w-full max-w-md p-8 text-center">
+                {/* Header Logo */}
+                <div className="text-center mb-6">
+                    <img src="/logo.png?v=5" alt="Bangla Park Limited" className="mx-auto h-14 w-auto mb-4" />
+                    <h2 className="text-2xl font-bold text-gray-900">
                         {locale === "bn" ? "ইমেইল ভেরিফিকেশন" : "Verify Your Email"}
-                    </h1>
-                    <p className="text-xs text-slate-500 mt-2 leading-relaxed">
+                    </h2>
+                    <p className="mt-2 text-sm text-gray-500">
                         {locale === "bn" ? "আমরা আপনার ইমেইলে একটি ৬-ডিজিটের ভেরিফিকেশন কোড পাঠিয়েছি:" : "We sent a 6-digit verification code to:"}
                     </p>
-                    <p className="text-sm font-extrabold text-rose-700 font-mono mt-1 bg-rose-50/80 py-1 px-3 rounded-full inline-block">
+                    <p className="mt-1 text-sm font-bold text-red-700 font-mono bg-red-50 py-1 px-3 rounded inline-block border border-red-100">
                         {email || "your email address"}
                     </p>
                 </div>
 
                 {/* Error Banner */}
                 {error && (
-                    <div className="p-3 bg-red-50 border border-red-100 rounded-xl text-xs text-red-600 font-semibold text-center fade-in">
+                    <div className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-600 font-medium text-center">
                         {error}
                     </div>
                 )}
 
                 {/* Success Banner */}
                 {successMsg && (
-                    <div className="p-3 bg-emerald-50 border border-emerald-100 rounded-xl text-xs text-emerald-700 font-semibold flex items-center justify-center gap-1.5 fade-in">
+                    <div className="mb-4 rounded-lg bg-green-50 p-3 text-sm text-green-700 font-medium flex items-center justify-center gap-1.5">
                         <CheckCircle size={16} />
                         <span>{successMsg}</span>
                     </div>
@@ -165,7 +162,7 @@ function VerifyEmailForm() {
                                 value={digit}
                                 onChange={(e) => handleOtpChange(index, e.target.value)}
                                 onKeyDown={(e) => handleKeyDown(index, e)}
-                                className="w-11 h-13 text-center text-xl font-extrabold font-mono rounded-xl border-2 border-slate-200 bg-slate-50 text-slate-900 focus:border-rose-600 focus:bg-white focus:outline-none transition-all shadow-xs"
+                                className="w-11 h-12 text-center text-xl font-bold font-mono rounded-lg border border-gray-300 bg-gray-50 text-gray-900 focus:border-red-700 focus:bg-white focus:outline-none transition-colors shadow-xs"
                                 disabled={loading}
                             />
                         ))}
@@ -174,21 +171,21 @@ function VerifyEmailForm() {
                     <button
                         type="submit"
                         disabled={loading || otp.join("").length < 6}
-                        className="w-full btn-primary py-3 text-sm font-bold bg-rose-600 hover:bg-rose-700 text-white rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                        className="btn-primary w-full py-3 text-sm font-semibold flex items-center justify-center gap-2 disabled:opacity-50"
                     >
                         {loading ? <Loader2 size={18} className="animate-spin" /> : (locale === "bn" ? "অ্যাকাউন্ট ভেরিফাই করুন" : "Verify Account")}
                     </button>
                 </form>
 
                 {/* Resend Code Section */}
-                <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
-                    <span className="text-slate-500 font-medium">
+                <div className="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between text-sm">
+                    <span className="text-gray-500">
                         {locale === "bn" ? "কোড পাননি?" : "Didn't receive code?"}
                     </span>
                     <button
                         onClick={handleResend}
                         disabled={resendTimer > 0 || resending}
-                        className="font-bold text-rose-600 hover:text-rose-700 disabled:text-slate-400 flex items-center gap-1 cursor-pointer"
+                        className="font-semibold text-red-700 hover:text-red-800 disabled:text-gray-400 flex items-center gap-1 cursor-pointer"
                     >
                         {resending ? (
                             <Loader2 size={14} className="animate-spin" />
@@ -196,16 +193,16 @@ function VerifyEmailForm() {
                             <span>{locale === "bn" ? `আবার পাঠান (${resendTimer}s)` : `Resend in ${resendTimer}s`}</span>
                         ) : (
                             <span className="flex items-center gap-1">
-                                <RefreshCw size={12} /> {locale === "bn" ? "কোড পুনরায় পাঠান" : "Resend Code"}
+                                <RefreshCw size={14} /> {locale === "bn" ? "কোড পুনরায় পাঠান" : "Resend Code"}
                             </span>
                         )}
                     </button>
                 </div>
 
-                <div className="pt-2">
+                <div className="mt-4 pt-2">
                     <Link
                         href="/login"
-                        className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-800 font-semibold"
+                        className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-800 font-medium"
                     >
                         <ArrowLeft size={14} /> {locale === "bn" ? "লগইন পেজে ফিরুন" : "Back to Login"}
                     </Link>
@@ -219,7 +216,7 @@ export default function VerifyEmailPage() {
     return (
         <Suspense fallback={
             <div className="flex justify-center py-20">
-                <Loader2 size={32} className="animate-spin text-rose-600" />
+                <Loader2 size={32} className="animate-spin text-red-700" />
             </div>
         }>
             <VerifyEmailForm />
