@@ -46,7 +46,9 @@ api.interceptors.response.use(
     },
     async (error) => {
         const original = error.config;
-        if (error.response?.status === 401 && !original._retry) {
+        const isAuthRoute = original?.url?.includes("/auth/");
+
+        if (error.response?.status === 401 && !original._retry && !isAuthRoute) {
             original._retry = true;
             const refreshToken = Cookies.get("refresh_token");
             if (refreshToken) {
@@ -62,7 +64,9 @@ api.interceptors.response.use(
                     Cookies.remove("refresh_token");
                 }
             }
-            if (typeof window !== "undefined") window.location.href = "/login";
+            if (typeof window !== "undefined" && !window.location.pathname.startsWith("/login")) {
+                window.location.href = "/login";
+            }
         }
         return Promise.reject(error);
     }
