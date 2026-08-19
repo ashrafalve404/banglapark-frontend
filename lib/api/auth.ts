@@ -65,7 +65,7 @@ export const authApi = {
     },
 
     saveTokens: (tokens: { accessToken: string; refreshToken: string }) => {
-        Cookies.set("access_token", tokens.accessToken, { expires: 1 / 96 });
-        Cookies.set("refresh_token", tokens.refreshToken, { expires: 7 });
+        Cookies.set("access_token", tokens.accessToken, { expires: 7 });
+        Cookies.set("refresh_token", tokens.refreshToken, { expires: 30 });
     },
 };

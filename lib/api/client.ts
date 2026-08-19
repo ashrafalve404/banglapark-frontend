@@ -56,7 +56,7 @@ api.interceptors.response.use(
                     const { data } = await axios.post(`${BASE_URL}/auth/refresh`, {
                         refreshToken,
                     });
-                    Cookies.set("access_token", data.accessToken, { expires: 1 / 96 }); // 15 min
+                    Cookies.set("access_token", data.accessToken, { expires: 7 }); // 7 days
                     original.headers.Authorization = `Bearer ${data.accessToken}`;
                     return api(original);
                 } catch {
