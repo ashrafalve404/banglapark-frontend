@@ -361,7 +361,7 @@ export default function UserGiftCardsPage() {
 
                             <div className="bg-slate-50 rounded-xl p-3 space-y-1.5 border border-slate-100">
                                 <div className="flex justify-between items-center text-slate-600">
-                                    <span>{t("cpa.taskPrice")}</span>
+                                    <span>{locale === "bn" ? "কার্ড মূল্য:" : "Price:"}</span>
                                     <span className="font-bold text-slate-900 text-sm">{formatCurrency(selectedCard.price, locale)}</span>
                                 </div>
                             </div>
