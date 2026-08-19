@@ -71,10 +71,21 @@ export function Header() {
         >
             <div className="page-container">
                 <div className="flex h-14 sm:h-16 items-center justify-between">
-                    {/* Logo */}
-                    <Link href="/" className="flex items-center h-full py-0.5 shrink-0">
-                        <img src="/logo.png?v=5" alt="Bangla Park Limited" className="h-full max-h-[50px] sm:max-h-[58px] w-auto object-contain drop-shadow-sm" />
-                    </Link>
+                    <div className="flex items-center gap-1.5 sm:gap-2">
+                        {/* Mobile menu toggle (Left side on mobile) */}
+                        <button
+                            className="header-hamburger md:hidden p-1.5 text-white flex items-center justify-center rounded-md hover:bg-white/10 transition-colors"
+                            onClick={() => setMenuOpen(!menuOpen)}
+                            aria-label="Toggle Navigation Menu"
+                        >
+                            {menuOpen ? <X size={22} /> : <Menu size={22} />}
+                        </button>
+
+                        {/* Logo */}
+                        <Link href="/" className="flex items-center h-full py-0.5 shrink-0">
+                            <img src="/logo.png?v=5" alt="Bangla Park Limited" className="h-full max-h-[46px] sm:max-h-[58px] w-auto object-contain drop-shadow-sm" />
+                        </Link>
+                    </div>
 
                     {/* Search Bar - Desktop */}
                     <form onSubmit={handleSearch} className="header-desktop-nav hidden md:flex items-center flex-1 max-w-md mx-6">
@@ -161,19 +172,14 @@ export function Header() {
                                 <Link href="/register" className="inline-flex items-center justify-center rounded-sm bg-white px-3 py-1.5 text-sm font-semibold text-red-800 transition-all hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2 focus:ring-offset-red-800">{t("nav.register")}</Link>
                             </div>
                         )}
-
-                        {/* Mobile menu toggle */}
-                        <button className="header-hamburger md:hidden p-2 text-white flex items-center justify-center" onClick={() => setMenuOpen(!menuOpen)}>
-                            {menuOpen ? <X size={20} /> : <Menu size={20} />}
-                        </button>
                     </div>
                 </div>
 
-                {/* Mobile Nav - Side Drawer */}
+                {/* Mobile Nav - Side Drawer from Left */}
                 {menuOpen && (
                     <div className="fixed inset-0 z-[100] md:hidden">
                         <div className="absolute inset-0 bg-black/50 fade-in" onClick={() => setMenuOpen(false)} />
-                        <div className="absolute right-0 top-0 bottom-0 w-[280px] max-w-[80vw] bg-white shadow-2xl overflow-y-auto pb-28 slide-from-right">
+                        <div className="absolute left-0 top-0 bottom-0 w-[280px] max-w-[80vw] bg-white shadow-2xl overflow-y-auto pb-28 slide-from-left">
                             <div className="flex items-center justify-between px-4 py-3.5 border-b border-slate-100 bg-slate-50/50 sticky top-0 bg-white z-10">
                                 <span className="text-sm font-bold text-slate-800">Menu</span>
                                 <button onClick={() => setMenuOpen(false)} className="p-1 text-slate-500 hover:text-slate-800 cursor-pointer">
