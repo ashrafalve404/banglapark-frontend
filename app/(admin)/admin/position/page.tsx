@@ -93,7 +93,7 @@ export default function AdminPositionPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2">
                     {POSITIONS.map((pos) => (
                         <div key={pos.rank} className={`rounded-lg border px-3 py-2 text-[11px] font-medium ${RANK_COLORS[pos.rank - 1]}`}>
-                            <div className="font-bold text-[10px]">#{pos.rank} {pos.name}</div>
+                            <div className="font-bold text-[10px]">{pos.name}</div>
                             <div className="mt-0.5 opacity-80">{(pos.requiredMembers / 1000).toLocaleString()}k members</div>
                             <div className="font-bold">{formatCurrency(pos.monthlySalary, locale)}/mo</div>
                         </div>
@@ -171,7 +171,7 @@ export default function AdminPositionPage() {
                                             {user.currentPosition ? (
                                                 <span className={`inline-flex items-center gap-1 rounded-lg border px-2 py-1 text-[11px] font-bold ${RANK_COLORS[user.currentPosition.rank - 1]}`}>
                                                     <Trophy size={10} />
-                                                    #{user.currentPosition.rank} {user.currentPosition.name}
+                                                    {user.currentPosition.name}
                                                 </span>
                                             ) : (
                                                 <span className="inline-flex items-center gap-1 text-[11px] text-slate-400">
