@@ -3,10 +3,10 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import Link from "next/link";
-import { Download, Copy, Check, Loader2, ImageIcon, ExternalLink, CheckCircle } from "lucide-react";
+import { Download, Copy, Check, Loader2, ImageIcon, ExternalLink, CheckCircle, Play, Sparkles } from "lucide-react";
 import { bannersApi, type Banner } from "@/lib/api/banners";
 import { quizApi, type QuizPurchaseInfo } from "@/lib/api/quiz";
-import { cpaApi, type CpaTaskUserPurchase } from "@/lib/api/cpa";
+import { cpaApi, type CpaTaskUserPurchase, type CpaTaskPublic } from "@/lib/api/cpa";
 import { useLocale } from "@/lib/i18n";
 import { formatCurrency } from "@/lib/utils";
 
@@ -15,6 +15,7 @@ export default function DailyWorkPage() {
     const queryClient = useQueryClient();
     const [copied, setCopied] = useState(false);
     const [userLink, setUserLink] = useState("");
+    const [startingTaskId, setStartingTaskId] = useState<string | null>(null);
 
     const { data: purchases = [], isLoading: pLoading } = useQuery<QuizPurchaseInfo[]>({
         queryKey: ["quiz-purchases"],
@@ -26,6 +27,11 @@ export default function DailyWorkPage() {
         queryFn: () => cpaApi.getMyPurchases(),
     });
 
+    const { data: cpaPublicTasks = [] } = useQuery<CpaTaskPublic[]>({
+        queryKey: ["user-cpa-public-tasks"],
+        queryFn: () => cpaApi.getPublicTasks(),
+    });
+
     const { data: dailyWork, isLoading } = useQuery<Banner | null>({
         queryKey: ["daily-work"],
         queryFn: () => bannersApi.findDailyWork(),
@@ -33,9 +39,27 @@ export default function DailyWorkPage() {
 
     const completeTaskMutation = useMutation({
         mutationFn: (purchaseId: string) => cpaApi.completeTask(purchaseId),
-        onSuccess: (res, purchaseId) => {
+        onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["user-cpa-my-purchases"] });
-            queryClient.invalidateQueries({ queryKey: ["user-cpa-tasks"] });
+            queryClient.invalidateQueries({ queryKey: ["user-cpa-public-tasks"] });
+        },
+    });
+
+    const startTaskMutation = useMutation({
+        mutationFn: async (taskId: string) => {
+            setStartingTaskId(taskId);
+            const res = await cpaApi.buyTask(taskId);
+            return res;
+        },
+        onSuccess: (res) => {
+            queryClient.invalidateQueries({ queryKey: ["user-cpa-my-purchases"] });
+            queryClient.invalidateQueries({ queryKey: ["user-cpa-public-tasks"] });
+            if (res.purchase?.redirectLink && res.purchase.redirectLink !== "#") {
+                window.open(res.purchase.redirectLink, "_blank");
+            }
+        },
+        onSettled: () => {
+            setStartingTaskId(null);
         },
     });
 
@@ -76,12 +100,13 @@ export default function DailyWorkPage() {
     if (isLoading) {
         return (
             <div className="flex justify-center py-20">
-                <Loader2 className="animate-spin" size={32} />
+                <Loader2 className="animate-spin text-purple-600" size={32} />
             </div>
         );
     }
 
     const activeQuizPurchases = purchases.filter((p) => p.status === "PURCHASED");
+    const activePublicCpaTasks = cpaPublicTasks.filter((t) => t.isActive);
 
     return (
         <div className="max-w-2xl mx-auto space-y-6">
@@ -90,47 +115,94 @@ export default function DailyWorkPage() {
                 <p className="text-sm text-gray-500">{t("dashboard.dailyWork.description")}</p>
             </div>
 
-            {/* CPA Marketing Purchased Tasks Section */}
-            {!cpaLoading && cpaPurchases.length > 0 && (
+            {/* CPA Marketing Tasks Section (All Available + User Started) */}
+            {(cpaPurchases.length > 0 || activePublicCpaTasks.length > 0) && (
                 <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                        <h2 className="text-sm font-bold text-gray-800">
-                            {t("cpa.purchasedCpaTasks")}
-                        </h2>
-                        <span className="text-xs text-purple-700 bg-purple-50 px-2.5 py-0.5 rounded-full font-semibold">
-                            {cpaPurchases.length} {locale === "bn" ? "টি" : "Task(s)"}
-                        </span>
+                        <div className="flex items-center gap-2">
+                            <Sparkles size={18} className="text-purple-600" />
+                            <h2 className="text-sm font-bold text-gray-800">
+                                {locale === "bn" ? "সিপিএ মার্কেটিং কাজসমূহ" : "CPA Marketing Tasks"}
+                            </h2>
+                        </div>
+                        <Link
+                            href="/dashboard/cpa-marketing"
+                            className="text-xs font-bold text-purple-700 hover:text-purple-800 flex items-center gap-1"
+                        >
+                            {locale === "bn" ? "সব টাস্ক দেখুন" : "View All"} →
+                        </Link>
                     </div>
 
                     <div className="space-y-3">
+                        {/* 1. Show Started/Unlocked Tasks First */}
                         {cpaPurchases.map((task) => (
-                            <button
+                            <div
                                 key={task.id}
-                                onClick={() => handleOpenTask(task)}
-                                className="card p-4 bg-white block text-left w-full border-2 border-purple-100 hover:border-purple-300 hover:shadow-md transition-all group cursor-pointer"
+                                className="card p-4 bg-white block text-left w-full border-2 border-purple-100 hover:border-purple-300 transition-all rounded-2xl shadow-xs"
                             >
                                 <div className="flex items-start justify-between gap-3">
                                     <div className="space-y-1 flex-1">
                                         <div className="flex items-center gap-2">
                                             <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100 flex items-center gap-1">
-                                                <CheckCircle size={10} /> {t("cpa.activeTask")}
+                                                <CheckCircle size={10} /> {locale === "bn" ? "চলতি কাজ" : "Active Work"}
                                             </span>
                                             <span className="text-[10px] text-slate-400">
                                                 {formatCurrency(task.pricePaid, locale)}
                                             </span>
                                         </div>
-                                        <h3 className="font-bold text-slate-900 text-sm group-hover:text-purple-700 transition-colors">
+                                        <h3 className="font-bold text-slate-900 text-sm">
                                             {task.title}
                                         </h3>
                                         <p className="text-xs text-slate-500 line-clamp-2">{task.description}</p>
                                     </div>
 
-                                    <div className="flex items-center gap-1 text-xs font-bold text-purple-700 bg-purple-50 group-hover:bg-purple-600 group-hover:text-white px-3 py-2 rounded-lg transition-all shrink-0">
+                                    <button
+                                        onClick={() => handleOpenTask(task)}
+                                        className="flex items-center gap-1 text-xs font-bold text-white bg-purple-600 hover:bg-purple-700 px-3 py-2 rounded-xl transition-all shrink-0 cursor-pointer shadow-xs"
+                                    >
                                         {t("cpa.openLink")} <ExternalLink size={14} />
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+
+                        {/* 2. Show Unstarted Available Tasks */}
+                        {activePublicCpaTasks
+                            .filter((pt) => !cpaPurchases.some((p) => p.taskId === pt.id))
+                            .map((task) => (
+                                <div
+                                    key={task.id}
+                                    className="card p-4 bg-white block text-left w-full border border-slate-200 hover:border-purple-300 transition-all rounded-2xl shadow-xs"
+                                >
+                                    <div className="flex items-start justify-between gap-3">
+                                        <div className="space-y-1 flex-1">
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-[10px] font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded-full border border-purple-100">
+                                                    {locale === "bn" ? "নতুন টাস্ক (ফ্রি)" : "New Task (FREE)"}
+                                                </span>
+                                            </div>
+                                            <h3 className="font-bold text-slate-900 text-sm">
+                                                {task.title}
+                                            </h3>
+                                            <p className="text-xs text-slate-500 line-clamp-2">{task.description}</p>
+                                        </div>
+
+                                        <button
+                                            onClick={() => startTaskMutation.mutate(task.id)}
+                                            disabled={startingTaskId === task.id}
+                                            className="flex items-center gap-1 text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 px-3 py-2 rounded-xl transition-all shrink-0 cursor-pointer shadow-xs disabled:opacity-50"
+                                        >
+                                            {startingTaskId === task.id ? (
+                                                <Loader2 size={14} className="animate-spin" />
+                                            ) : (
+                                                <>
+                                                    <Play size={13} /> {locale === "bn" ? "কাজ শুরু করুন" : "Start Task"}
+                                                </>
+                                            )}
+                                        </button>
                                     </div>
                                 </div>
-                            </button>
-                        ))}
+                            ))}
                     </div>
                 </div>
             )}
@@ -170,39 +242,52 @@ export default function DailyWorkPage() {
                     <div className="card bg-white overflow-hidden">
                         <img
                             src={dailyWork.imageUrl}
-                            alt="Daily Work"
+                            alt="Daily Task Work"
                             className="w-full h-auto object-contain"
                         />
+                        <div className="p-4 border-t border-gray-100 flex flex-col sm:flex-row gap-3">
+                            <button
+                                onClick={handleDownload}
+                                className="btn-primary flex-1 py-2.5 flex items-center justify-center gap-2 text-xs font-bold bg-green-700 hover:bg-green-800"
+                            >
+                                <Download size={16} /> {t("dashboard.dailyWork.downloadImage")}
+                            </button>
+                        </div>
                     </div>
 
                     <div className="card p-5 bg-white space-y-4">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                                {t("dashboard.dailyWork.yourLink")}
+                        <h2 className="text-sm font-bold text-gray-800">
+                            {t("dashboard.dailyWork.submitTitle")}
+                        </h2>
+                        <div className="space-y-1.5">
+                            <label className="label text-xs">
+                                {t("dashboard.dailyWork.linkPrompt")}
                             </label>
                             <input
-                                type="text"
+                                type="url"
+                                className="input text-xs"
+                                placeholder={t("dashboard.dailyWork.linkPlaceholder")}
                                 value={userLink}
                                 onChange={(e) => setUserLink(e.target.value)}
-                                className="input w-full"
                             />
                         </div>
-
-                        <div className="flex gap-3">
-                            <button onClick={handleDownload} className="btn-primary flex items-center gap-2">
-                                <Download size={16} />
-                                {t("dashboard.dailyWork.download")}
-                            </button>
-                            <button
-                                onClick={handleCopy}
-                                className="btn-outline-primary flex items-center gap-2"
-                            >
-                                {copied ? <Check size={16} /> : <Copy size={16} />}
-                                {copied ? t("dashboard.dailyWork.copied") : t("dashboard.dailyWork.copyLink")}
-                            </button>
-                        </div>
-
-                        <p className="text-xs text-gray-400">{t("dashboard.dailyWork.shareHint")}</p>
+                        <button
+                            onClick={handleCopy}
+                            disabled={!userLink.trim()}
+                            className="btn-secondary w-full py-2.5 flex items-center justify-center gap-2 text-xs font-bold disabled:opacity-50 cursor-pointer"
+                        >
+                            {copied ? (
+                                <>
+                                    <Check size={16} className="text-green-600" />
+                                    <span>{t("dashboard.dailyWork.copied")}</span>
+                                </>
+                            ) : (
+                                <>
+                                    <Copy size={16} />
+                                    <span>{t("dashboard.dailyWork.copyLink")}</span>
+                                </>
+                            )}
+                        </button>
                     </div>
                 </>
             )}

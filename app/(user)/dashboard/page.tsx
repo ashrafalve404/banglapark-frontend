@@ -181,7 +181,11 @@ export default function DashboardOverview() {
                         </div>
                         <div>
                             <h3 className="font-bold text-red-900 text-sm sm:text-base">{t("dashboard.alert.inactive.title")}</h3>
-                            <p className="text-xs text-red-600 mt-0.5">Purchase products from shop to activate your account and start earning.</p>
+                            <p className="text-xs text-red-600 mt-0.5">
+                                {locale === "bn"
+                                    ? "শপ থেকে পণ্য বা গিফট কার্ড ক্রয় করে আপনার অ্যাকাউন্ট অ্যাক্টিভ করুন এবং আয় শুরু করুন।"
+                                    : "Purchase products or gift cards from shop to activate your account and start earning."}
+                            </p>
                         </div>
                     </div>
                     <Link href="/shop" className="btn-primary bg-red-600 hover:bg-red-700 whitespace-nowrap text-xs font-bold py-2.5 px-5 rounded-md">

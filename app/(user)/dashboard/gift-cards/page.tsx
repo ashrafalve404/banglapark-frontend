@@ -308,24 +308,14 @@ export default function UserGiftCardsPage() {
                                                     <span>{locale === "bn" ? "ওয়ালেটে রিফান্ড করা হয়েছে" : "Refunded to Wallet"}</span>
                                                     <span className="font-semibold">{new Date(card.soldAt || card.purchasedAt).toLocaleDateString()}</span>
                                                 </div>
-                                            ) : isEligibleToSell ? (
+                                            ) : (
                                                 <button
                                                     onClick={() => setSellingCard(card)}
-                                                    className="w-full py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition-colors shadow-xs flex items-center justify-center gap-1.5"
+                                                    className="w-full py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition-colors shadow-xs flex items-center justify-center gap-1.5 cursor-pointer"
                                                 >
                                                     <ArrowRightLeft size={14} />
                                                     {locale === "bn" ? `গিফট কার্ড বিক্রি করুন (${formatCurrency(card.pricePaid, locale)} ওয়ালেটে নিন)` : `Sell Gift Card (Get ${formatCurrency(card.pricePaid, locale)} in Wallet)`}
                                                 </button>
-                                            ) : (
-                                                <div className="bg-slate-50 border border-slate-200 p-2 rounded-xl flex items-center justify-between text-xs text-slate-600">
-                                                    <span className="flex items-center gap-1.5 text-[11px] font-medium">
-                                                        <Clock size={13} className="text-slate-400 shrink-0" />
-                                                        {locale === "bn" ? "বিক্রি করার সময়:" : "Resale available in:"}
-                                                    </span>
-                                                    <span className="font-bold text-amber-700 text-[11px]">
-                                                        {daysLeft} {locale === "bn" ? "দিন বাকি" : "Days left"}
-                                                    </span>
-                                                </div>
                                             )}
                                         </div>
                                     </div>
@@ -449,56 +439,92 @@ export default function UserGiftCardsPage() {
                 </div>
             )}
 
-            {/* Resale Confirmation Modal */}
-            {sellingCard && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4 fade-in">
-                    <div className="bg-white rounded-2xl p-5 w-full max-w-md shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
-                        <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                            <h2 className="text-base font-bold text-slate-900">{locale === "bn" ? "গিফট কার্ড বিক্রয় নিশ্চিতকরণ" : "Confirm Gift Card Resale"}</h2>
-                            <button onClick={() => setSellingCard(null)} className="text-slate-400 hover:text-slate-600 p-1">
-                                <X size={18} />
-                            </button>
-                        </div>
+            {/* Resale Modal / Eligibility Notice */}
+            {sellingCard && (() => {
+                const daysRemaining = getDaysRemaining(sellingCard.canSellAt);
+                const isEligible = daysRemaining <= 0;
 
-                        {purchaseError && (
-                            <div className="flex items-center gap-2 p-3 bg-red-50 text-red-700 rounded-lg text-xs font-semibold">
-                                <AlertCircle size={16} />
-                                <span>{purchaseError}</span>
+                return (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4 fade-in">
+                        <div className="bg-white rounded-2xl p-5 w-full max-w-md shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+                            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                                <h2 className="text-base font-bold text-slate-900">
+                                    {isEligible
+                                        ? (locale === "bn" ? "গিফট কার্ড বিক্রয় নিশ্চিতকরণ" : "Confirm Gift Card Resale")
+                                        : (locale === "bn" ? "বিক্রির সময় বাকি আছে" : "Resale Period Not Eligible Yet")}
+                                </h2>
+                                <button onClick={() => setSellingCard(null)} className="text-slate-400 hover:text-slate-600 p-1 cursor-pointer">
+                                    <X size={18} />
+                                </button>
                             </div>
-                        )}
 
-                        <div className="space-y-3 text-xs">
-                            <p className="text-slate-600 font-medium">
-                                {locale === "bn" ? "আপনি কি নিশ্চিত যে আপনি এই গিফট কার্ডটি বিক্রি করতে চান?" : "Are you sure you want to sell"} <strong className="text-slate-900">"{sellingCard.title}"</strong>?
-                            </p>
-
-                            <div className="bg-emerald-50 rounded-xl p-3 space-y-1 border border-emerald-200">
-                                <div className="flex justify-between items-center text-emerald-800 font-semibold">
-                                    <span>{locale === "bn" ? "ওয়ালেটে রিফান্ড পরিমাণ:" : "Refund to Wallet:"}</span>
-                                    <span className="font-extrabold text-emerald-700 text-base">{formatCurrency(sellingCard.pricePaid, locale)}</span>
+                            {purchaseError && (
+                                <div className="flex items-center gap-2 p-3 bg-red-50 text-red-700 rounded-lg text-xs font-semibold">
+                                    <AlertCircle size={16} />
+                                    <span>{purchaseError}</span>
                                 </div>
-                            </div>
-                        </div>
+                            )}
 
-                        <div className="flex items-center gap-2.5 pt-1">
-                            <button
-                                onClick={() => sellMutation.mutate(sellingCard.id)}
-                                disabled={sellMutation.isPending}
-                                className="btn-primary bg-emerald-600 hover:bg-emerald-700 flex-1 py-2 text-xs font-bold flex items-center justify-center gap-1.5"
-                            >
-                                {sellMutation.isPending && <Loader2 size={14} className="animate-spin" />}
-                                {locale === "bn" ? "বিক্রি নিশ্চিত করুন" : "Confirm Resale"}
-                            </button>
-                            <button
-                                onClick={() => setSellingCard(null)}
-                                className="btn-outline-primary py-2 text-xs font-semibold px-4"
-                            >
-                                {t("cpa.cancel")}
-                            </button>
+                            {!isEligible ? (
+                                <div className="text-center space-y-4 py-2">
+                                    <div className="w-12 h-12 bg-amber-50 text-amber-600 rounded-full flex items-center justify-center mx-auto border border-amber-200 shadow-xs">
+                                        <Clock size={24} className="animate-pulse" />
+                                    </div>
+                                    <div className="bg-amber-50/70 p-4 rounded-xl border border-amber-200 text-left space-y-1.5">
+                                        <p className="text-xs font-bold text-amber-900">
+                                            {locale === "bn" ? "৩০ দিনের হোল্ডিং পিরিয়ড প্রযোজ্য" : "30-Day Resale Period Notice"}
+                                        </p>
+                                        <p className="text-xs text-amber-800 leading-relaxed">
+                                            {locale === "bn"
+                                                ? `এই গিফট কার্ডটি ক্রয় করার ৩০ দিন পর ওয়ালেটে রিফান্ড নেওয়া যাবে। আপনার বিক্রির সময় বাকি আছে: `
+                                                : `This gift card can be resold for wallet refund 30 days after purchase. Time remaining: `}
+                                            <strong className="text-amber-950 font-extrabold underline">{daysRemaining} {locale === "bn" ? "দিন" : "days"}</strong>.
+                                        </p>
+                                    </div>
+                                    <button
+                                        onClick={() => setSellingCard(null)}
+                                        className="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs transition-all shadow-sm cursor-pointer"
+                                    >
+                                        {locale === "bn" ? "ঠিক আছে" : "Understood"}
+                                    </button>
+                                </div>
+                            ) : (
+                                <div className="space-y-4">
+                                    <div className="space-y-3 text-xs">
+                                        <p className="text-slate-600 font-medium">
+                                            {locale === "bn" ? "আপনি কি নিশ্চিত যে আপনি এই গিফট কার্ডটি বিক্রি করতে চান?" : "Are you sure you want to sell"} <strong className="text-slate-900">"{sellingCard.title}"</strong>?
+                                        </p>
+
+                                        <div className="bg-emerald-50 rounded-xl p-3 space-y-1 border border-emerald-200">
+                                            <div className="flex justify-between items-center text-emerald-800 font-semibold">
+                                                <span>{locale === "bn" ? "ওয়ালেটে রিফান্ড পরিমাণ:" : "Refund to Wallet:"}</span>
+                                                <span className="font-extrabold text-emerald-700 text-base">{formatCurrency(sellingCard.pricePaid, locale)}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-center gap-2.5 pt-1">
+                                        <button
+                                            onClick={() => sellMutation.mutate(sellingCard.id)}
+                                            disabled={sellMutation.isPending}
+                                            className="btn-primary bg-emerald-600 hover:bg-emerald-700 flex-1 py-2 text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer"
+                                        >
+                                            {sellMutation.isPending && <Loader2 size={14} className="animate-spin" />}
+                                            {locale === "bn" ? "বিক্রি নিশ্চিত করুন" : "Confirm Resale"}
+                                        </button>
+                                        <button
+                                            onClick={() => setSellingCard(null)}
+                                            className="btn-outline-primary py-2 text-xs font-semibold px-4 cursor-pointer"
+                                        >
+                                            {t("cpa.cancel")}
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
-                </div>
-            )}
+                );
+            })()}
         </div>
     );
 }
