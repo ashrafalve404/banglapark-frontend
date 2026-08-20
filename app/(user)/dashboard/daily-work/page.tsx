@@ -3,7 +3,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import Link from "next/link";
-import { Download, Copy, Check, Loader2, ImageIcon, ExternalLink, CheckCircle, Play, Sparkles } from "lucide-react";
+import { Download, Copy, Check, Loader2, ImageIcon, ExternalLink, CheckCircle, Play } from "lucide-react";
 import { bannersApi, type Banner } from "@/lib/api/banners";
 import { quizApi, type QuizPurchaseInfo } from "@/lib/api/quiz";
 import { cpaApi, type CpaTaskUserPurchase, type CpaTaskPublic } from "@/lib/api/cpa";
@@ -100,7 +100,7 @@ export default function DailyWorkPage() {
     if (isLoading) {
         return (
             <div className="flex justify-center py-20">
-                <Loader2 className="animate-spin text-purple-600" size={32} />
+                <Loader2 className="animate-spin text-red-700" size={32} />
             </div>
         );
     }
@@ -119,15 +119,12 @@ export default function DailyWorkPage() {
             {(cpaPurchases.length > 0 || activePublicCpaTasks.length > 0) && (
                 <div className="space-y-3">
                     <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                            <Sparkles size={18} className="text-purple-600" />
-                            <h2 className="text-sm font-bold text-gray-800">
-                                {locale === "bn" ? "সিপিএ মার্কেটিং কাজসমূহ" : "CPA Marketing Tasks"}
-                            </h2>
-                        </div>
+                        <h2 className="text-sm font-bold text-gray-800">
+                            {locale === "bn" ? "সিপিএ মার্কেটিং কাজসমূহ" : "CPA Marketing Tasks"}
+                        </h2>
                         <Link
                             href="/dashboard/cpa-marketing"
-                            className="text-xs font-bold text-purple-700 hover:text-purple-800 flex items-center gap-1"
+                            className="text-xs font-bold text-red-700 hover:text-red-800 flex items-center gap-1"
                         >
                             {locale === "bn" ? "সব টাস্ক দেখুন" : "View All"} →
                         </Link>
@@ -138,12 +135,12 @@ export default function DailyWorkPage() {
                         {cpaPurchases.map((task) => (
                             <div
                                 key={task.id}
-                                className="card p-4 bg-white block text-left w-full border-2 border-purple-100 hover:border-purple-300 transition-all rounded-2xl shadow-xs"
+                                className="card p-4 bg-white block text-left w-full border border-slate-200 hover:border-red-300 transition-all rounded-lg shadow-xs"
                             >
                                 <div className="flex items-start justify-between gap-3">
                                     <div className="space-y-1 flex-1">
                                         <div className="flex items-center gap-2">
-                                            <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100 flex items-center gap-1">
+                                            <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-100 flex items-center gap-1">
                                                 <CheckCircle size={10} /> {locale === "bn" ? "চলতি কাজ" : "Active Work"}
                                             </span>
                                             <span className="text-[10px] text-slate-400">
@@ -158,7 +155,7 @@ export default function DailyWorkPage() {
 
                                     <button
                                         onClick={() => handleOpenTask(task)}
-                                        className="flex items-center gap-1 text-xs font-bold text-white bg-purple-600 hover:bg-purple-700 px-3 py-2 rounded-xl transition-all shrink-0 cursor-pointer shadow-xs"
+                                        className="flex items-center gap-1 text-xs font-bold text-white bg-red-700 hover:bg-red-800 px-3 py-2 rounded-md transition-all shrink-0 cursor-pointer shadow-xs"
                                     >
                                         {t("cpa.openLink")} <ExternalLink size={14} />
                                     </button>
@@ -172,12 +169,12 @@ export default function DailyWorkPage() {
                             .map((task) => (
                                 <div
                                     key={task.id}
-                                    className="card p-4 bg-white block text-left w-full border border-slate-200 hover:border-purple-300 transition-all rounded-2xl shadow-xs"
+                                    className="card p-4 bg-white block text-left w-full border border-slate-200 hover:border-red-300 transition-all rounded-lg shadow-xs"
                                 >
                                     <div className="flex items-start justify-between gap-3">
                                         <div className="space-y-1 flex-1">
                                             <div className="flex items-center gap-2">
-                                                <span className="text-[10px] font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded-full border border-purple-100">
+                                                <span className="text-[10px] font-bold text-red-700 bg-red-50 px-2 py-0.5 rounded-md border border-red-100">
                                                     {locale === "bn" ? "নতুন টাস্ক (ফ্রি)" : "New Task (FREE)"}
                                                 </span>
                                             </div>
@@ -190,7 +187,7 @@ export default function DailyWorkPage() {
                                         <button
                                             onClick={() => startTaskMutation.mutate(task.id)}
                                             disabled={startingTaskId === task.id}
-                                            className="flex items-center gap-1 text-xs font-bold text-white bg-rose-600 hover:bg-rose-700 px-3 py-2 rounded-xl transition-all shrink-0 cursor-pointer shadow-xs disabled:opacity-50"
+                                            className="flex items-center gap-1 text-xs font-bold text-white bg-red-700 hover:bg-red-800 px-3 py-2 rounded-md transition-all shrink-0 cursor-pointer shadow-xs disabled:opacity-50"
                                         >
                                             {startingTaskId === task.id ? (
                                                 <Loader2 size={14} className="animate-spin" />
@@ -216,7 +213,7 @@ export default function DailyWorkPage() {
                             <Link
                                 key={p.id}
                                 href={`/dashboard/quiz/attempt/${p.id}`}
-                                className="card bg-white overflow-hidden block hover:-translate-y-0.5 transition-transform"
+                                className="card bg-white overflow-hidden block hover:-translate-y-0.5 transition-transform rounded-lg"
                             >
                                 <img src={p.category?.imageUrl || ""} alt={p.category?.name || ""} className="w-full h-auto object-contain" />
                                 <div className="p-4 flex items-center justify-between">
@@ -233,13 +230,13 @@ export default function DailyWorkPage() {
             )}
 
             {!dailyWork ? (
-                <div className="card p-12 bg-white flex flex-col items-center gap-3 text-gray-400">
+                <div className="card p-12 bg-white flex flex-col items-center gap-3 text-gray-400 rounded-lg">
                     <ImageIcon size={48} />
                     <p className="text-sm">{t("dashboard.dailyWork.noImage")}</p>
                 </div>
             ) : (
                 <>
-                    <div className="card bg-white overflow-hidden">
+                    <div className="card bg-white overflow-hidden rounded-lg">
                         <img
                             src={dailyWork.imageUrl}
                             alt="Daily Task Work"
@@ -248,14 +245,14 @@ export default function DailyWorkPage() {
                         <div className="p-4 border-t border-gray-100 flex flex-col sm:flex-row gap-3">
                             <button
                                 onClick={handleDownload}
-                                className="btn-primary flex-1 py-2.5 flex items-center justify-center gap-2 text-xs font-bold bg-green-700 hover:bg-green-800"
+                                className="btn-primary flex-1 py-2.5 flex items-center justify-center gap-2 text-xs font-bold bg-red-700 hover:bg-red-800 text-white rounded-md"
                             >
                                 <Download size={16} /> {t("dashboard.dailyWork.downloadImage")}
                             </button>
                         </div>
                     </div>
 
-                    <div className="card p-5 bg-white space-y-4">
+                    <div className="card p-5 bg-white space-y-4 rounded-lg">
                         <h2 className="text-sm font-bold text-gray-800">
                             {t("dashboard.dailyWork.submitTitle")}
                         </h2>
@@ -265,7 +262,7 @@ export default function DailyWorkPage() {
                             </label>
                             <input
                                 type="url"
-                                className="input text-xs"
+                                className="input text-xs rounded-md border-gray-300 focus:border-red-700 focus:ring-red-700"
                                 placeholder={t("dashboard.dailyWork.linkPlaceholder")}
                                 value={userLink}
                                 onChange={(e) => setUserLink(e.target.value)}
@@ -274,7 +271,7 @@ export default function DailyWorkPage() {
                         <button
                             onClick={handleCopy}
                             disabled={!userLink.trim()}
-                            className="btn-secondary w-full py-2.5 flex items-center justify-center gap-2 text-xs font-bold disabled:opacity-50 cursor-pointer"
+                            className="btn-secondary w-full py-2.5 flex items-center justify-center gap-2 text-xs font-bold disabled:opacity-50 cursor-pointer rounded-md"
                         >
                             {copied ? (
                                 <>
