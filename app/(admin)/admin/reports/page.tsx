@@ -181,7 +181,7 @@ export default function AdminReportsPage() {
                 <button
                     onClick={() => setActiveTab("statement")}
                     className={`pb-3 text-sm font-bold border-b-2 transition-all flex items-center gap-2 ${
-                        activeTab === "statement" ? "border-rose-600 text-rose-700" : "border-transparent text-slate-500 hover:text-slate-700"
+                        activeTab === "statement" ? "border-fuchsia-600 text-fuchsia-700" : "border-transparent text-slate-500 hover:text-slate-700"
                     }`}
                 >
                     <UserIcon size={16} /> {locale === "bn" ? "ব্যবহারকারী খরচ ও স্টেটমেন্ট রিপোর্ট" : "User Statement & Expenditure"}
@@ -189,7 +189,7 @@ export default function AdminReportsPage() {
                 <button
                     onClick={() => setActiveTab("export")}
                     className={`pb-3 text-sm font-bold border-b-2 transition-all flex items-center gap-2 ${
-                        activeTab === "export" ? "border-rose-600 text-rose-700" : "border-transparent text-slate-500 hover:text-slate-700"
+                        activeTab === "export" ? "border-fuchsia-600 text-fuchsia-700" : "border-transparent text-slate-500 hover:text-slate-700"
                     }`}
                 >
                     <FileSpreadsheet size={16} /> {locale === "bn" ? "প্ল্যাটফর্ম সিএসভি এক্সপোর্ট (CSV Export)" : "CSV Data Export"}
@@ -218,7 +218,7 @@ export default function AdminReportsPage() {
                                     />
                                     <button
                                         type="submit"
-                                        className="absolute right-1.5 top-1/2 -translate-y-1/2 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs px-4 py-1.5 rounded-lg shadow-xs transition-colors cursor-pointer"
+                                        className="absolute right-1.5 top-1/2 -translate-y-1/2 bg-fuchsia-600 hover:bg-fuchsia-700 text-white font-bold text-xs px-4 py-1.5 rounded-lg shadow-xs transition-colors cursor-pointer"
                                     >
                                         {locale === "bn" ? "রিপোর্ট দেখুন" : "View Report"}
                                     </button>
@@ -235,7 +235,7 @@ export default function AdminReportsPage() {
                                                     setUserQuery(s.phone || s.name);
                                                     setSearchSubmitted(s.id);
                                                 }}
-                                                className="w-full p-2.5 text-left hover:bg-rose-50/60 transition-colors flex items-center justify-between text-xs cursor-pointer"
+                                                className="w-full p-2.5 text-left hover:bg-fuchsia-50/60 transition-colors flex items-center justify-between text-xs cursor-pointer"
                                             >
                                                 <span className="font-bold text-slate-800">{s.name}</span>
                                                 <span className="font-mono text-slate-500">{s.phone}</span>
@@ -259,7 +259,7 @@ export default function AdminReportsPage() {
                                         type="button"
                                         onClick={() => setPeriod(p.key as any)}
                                         className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                                            period === p.key ? "bg-rose-600 text-white shadow-xs" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                                            period === p.key ? "bg-fuchsia-600 text-white shadow-xs" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                                         }`}
                                     >
                                         {p.label}
@@ -296,7 +296,7 @@ export default function AdminReportsPage() {
                     {/* Report Output Content */}
                     {isStatementLoading ? (
                         <div className="flex justify-center py-20">
-                            <Loader2 size={32} className="animate-spin text-rose-600" />
+                            <Loader2 size={32} className="animate-spin text-fuchsia-600" />
                         </div>
                     ) : statementError ? (
                         <div className="card p-8 bg-red-50 border border-red-200 text-red-700 text-center space-y-2 rounded-2xl">
@@ -361,12 +361,12 @@ export default function AdminReportsPage() {
 
                             {/* Minimalist Summary Analytics Cards */}
                             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                                <div className="card p-4 bg-white border border-rose-100 rounded-2xl shadow-xs">
-                                    <div className="flex items-center justify-between text-rose-600 mb-1">
+                                <div className="card p-4 bg-white border border-fuchsia-100 rounded-2xl shadow-xs">
+                                    <div className="flex items-center justify-between text-fuchsia-600 mb-1">
                                         <span className="text-xs font-bold text-slate-500">{locale === "bn" ? "মোট খরচ (Total Spent)" : "Total Spent"}</span>
                                         <ArrowUpRight size={18} />
                                     </div>
-                                    <h3 className="text-lg sm:text-xl font-extrabold text-rose-700">
+                                    <h3 className="text-lg sm:text-xl font-extrabold text-fuchsia-700">
                                         {formatCurrency(statementData.summary.totalSpent, locale)}
                                     </h3>
                                 </div>
@@ -407,10 +407,10 @@ export default function AdminReportsPage() {
                                 <div className="card p-4 bg-white border border-slate-200 rounded-xl space-y-2">
                                     <div className="flex items-center justify-between">
                                         <span className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
-                                            <ShoppingBag size={15} className="text-rose-600" />
+                                            <ShoppingBag size={15} className="text-fuchsia-600" />
                                             {locale === "bn" ? "প্রোডাক্ট ই-কমার্স অর্ডার" : "Product Orders"}
                                         </span>
-                                        <span className="text-xs font-extrabold text-rose-700">
+                                        <span className="text-xs font-extrabold text-fuchsia-700">
                                             {formatCurrency(statementData.expenditureBreakdown.orders.totalAmount, locale)}
                                         </span>
                                     </div>
@@ -454,7 +454,7 @@ export default function AdminReportsPage() {
                             <div className="card bg-white overflow-hidden shadow-xs border border-slate-200 rounded-2xl">
                                 <div className="p-4 bg-slate-50/70 border-b border-slate-200 flex items-center justify-between">
                                     <h3 className="font-bold text-slate-900 text-sm flex items-center gap-2">
-                                        <FileSpreadsheet size={16} className="text-rose-600" />
+                                        <FileSpreadsheet size={16} className="text-fuchsia-600" />
                                         {locale === "bn" ? "বিস্তারিত লেনদেন ও খরচ স্টেটমেন্ট হিস্টোরি" : "Itemized Transaction & Expenditure Ledger"}
                                     </h3>
                                     <span className="text-xs font-semibold text-slate-500">
@@ -503,7 +503,7 @@ export default function AdminReportsPage() {
                                                             </span>
                                                         </td>
                                                         <td className="py-3 px-4 text-right font-extrabold">
-                                                            <span className={log.type === "DEBIT" ? "text-rose-700" : "text-emerald-700"}>
+                                                            <span className={log.type === "DEBIT" ? "text-fuchsia-700" : "text-emerald-700"}>
                                                                 {log.type === "DEBIT" ? "-" : "+"}{formatCurrency(log.amount, locale)}
                                                             </span>
                                                         </td>
