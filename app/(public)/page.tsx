@@ -252,7 +252,7 @@ export default function HomePage() {
                         <RevealSection>
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                                 {offers.map((offer) => (
-                                    <Link key={offer.id} href={offer.linkUrl || "/shop"} className="group relative rounded-xl overflow-hidden aspect-[16/9] bg-gray-100 block transition-all duration-300">
+                                    <Link key={offer.id} href={offer.linkUrl || "/shop"} className="group relative rounded-xl overflow-hidden aspect-[16/9] bg-gray-100 block shadow-sm hover:shadow-xl transition-all duration-300">
                                         <img src={offer.imageUrl} alt={offer.title || "Offer"} className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500" />
                                         {(offer.badge || offer.title) && (
                                             <div className="absolute bottom-3 left-3 right-3 pointer-events-none">
