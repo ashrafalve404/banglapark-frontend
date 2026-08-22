@@ -159,7 +159,7 @@ export default function UserGiftCardsPage() {
                                 return (
                                     <div
                                         key={card.id}
-                                        className={`card bg-white border flex flex-col justify-between overflow-hidden rounded-xl sm:rounded-2xl transition-all hover:shadow-md ${
+                                        className={`card bg-white border flex flex-col justify-between overflow-hidden rounded-lg transition-all hover:shadow-md ${
                                             card.isPurchased ? "border-emerald-200 bg-emerald-50/20" : "border-slate-200 hover:border-rose-300"
                                         }`}
                                     >
@@ -197,7 +197,7 @@ export default function UserGiftCardsPage() {
                                                         setPaymentMethod("WALLET");
                                                         setSelectedCard(card);
                                                     }}
-                                                    className="w-full py-1.5 sm:py-2 rounded-lg sm:rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-[11px] sm:text-xs transition-colors shadow-xs flex items-center justify-center gap-1 sm:gap-1.5"
+                                                    className="w-full py-1.5 sm:py-2 rounded-md bg-rose-600 hover:bg-rose-700 text-white font-bold text-[11px] sm:text-xs transition-colors shadow-xs flex items-center justify-center gap-1 sm:gap-1.5"
                                                 >
                                                     <ShoppingBag size={13} /> {t("giftCard.buyCard")}
                                                 </button>
@@ -219,7 +219,7 @@ export default function UserGiftCardsPage() {
                             <Loader2 size={32} className="animate-spin text-rose-600" />
                         </div>
                     ) : myCards.length === 0 ? (
-                        <div className="card p-12 bg-white text-center text-slate-400 space-y-2 rounded-2xl border border-slate-100">
+                        <div className="card p-12 bg-white text-center text-slate-400 space-y-2 rounded-lg border border-slate-100">
                             <Gift size={40} className="mx-auto text-slate-300" />
                             <p className="text-sm font-semibold">{locale === "bn" ? "আপনার কোনো ক্রয়কৃত গিফট কার্ড নেই।" : "You have not purchased any Gift Cards yet."}</p>
                         </div>
@@ -232,7 +232,7 @@ export default function UserGiftCardsPage() {
                                 return (
                                     <div
                                         key={card.id}
-                                        className={`card bg-white border p-4 rounded-2xl space-y-3 shadow-xs transition-all ${
+                                        className={`card bg-white border p-4 rounded-lg space-y-3 shadow-xs transition-all ${
                                             card.isSold ? "border-slate-200 bg-slate-50/50 opacity-85" : "border-slate-200"
                                         }`}
                                     >

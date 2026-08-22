@@ -252,25 +252,24 @@ export default function HomePage() {
                         <RevealSection>
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                                 {offers.map((offer) => (
-                                    <Link key={offer.id} href={offer.linkUrl || "/shop"} className="group relative rounded overflow-hidden aspect-[16/9] bg-gray-100 block shadow-sm hover:shadow-xl transition-all duration-300">
+                                    <Link key={offer.id} href={offer.linkUrl || "/shop"} className="group relative rounded-xl overflow-hidden aspect-[16/9] bg-gray-100 block transition-all duration-300">
                                         <img src={offer.imageUrl} alt={offer.title || "Offer"} className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
                                         {(offer.badge || offer.title) && (
-                                            <div className="absolute bottom-4 left-4 right-4">
+                                            <div className="absolute bottom-3 left-3 right-3 pointer-events-none">
                                                 {offer.badge && (
-                                                    <span className="inline-block rounded-full bg-amber-500 px-3 py-1 text-[10px] font-bold text-white uppercase tracking-wider mb-2 shadow-lg">{offer.badge}</span>
+                                                    <span className="inline-block rounded-full bg-amber-500/90 backdrop-blur-xs px-2.5 py-0.5 text-[10px] font-bold text-white uppercase tracking-wider mb-1">{offer.badge}</span>
                                                 )}
                                                 {offer.title && (
-                                                    <h3 className="text-base sm:text-lg font-bold text-white drop-shadow-lg">{offer.title}</h3>
+                                                    <h3 className="text-sm sm:text-base font-bold text-white drop-shadow-md">{offer.title}</h3>
                                                 )}
                                             </div>
                                         )}
                                     </Link>
                                 ))}
                             </div>
-                    </RevealSection>
-                </div>
-            </section>
+                        </RevealSection>
+                    </div>
+                </section>
             )}
 
 
@@ -303,10 +302,10 @@ export default function HomePage() {
                                     return (
                                         <div
                                             key={card.id}
-                                            className="group relative rounded-xl sm:rounded-2xl bg-white border border-rose-100 p-2.5 sm:p-4 shadow-xs hover:shadow-xl hover:border-rose-300 transition-all duration-300 flex flex-col justify-between"
+                                            className="group relative rounded-lg bg-white border border-rose-100 p-2.5 sm:p-4 shadow-xs hover:shadow-xl hover:border-rose-300 transition-all duration-300 flex flex-col justify-between"
                                         >
                                             <div className="space-y-2 sm:space-y-3">
-                                                <div className="relative w-full aspect-[3/2] bg-slate-900 rounded-lg sm:rounded-xl overflow-hidden flex items-center justify-center">
+                                                <div className="relative w-full aspect-[3/2] bg-slate-900 rounded-md overflow-hidden flex items-center justify-center">
                                                     {card.image ? (
                                                         <img src={card.image} alt={card.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                                                     ) : (
@@ -335,7 +334,7 @@ export default function HomePage() {
                                                 </span>
                                                 <Link
                                                     href="/dashboard/gift-cards"
-                                                    className="w-full sm:w-auto inline-flex items-center justify-center gap-1 bg-rose-600 hover:bg-rose-700 text-white font-bold text-[11px] sm:text-xs px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg shadow-xs transition-colors"
+                                                    className="w-full sm:w-auto inline-flex items-center justify-center gap-1 bg-rose-600 hover:bg-rose-700 text-white font-bold text-[11px] sm:text-xs px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-md shadow-xs transition-colors"
                                                 >
                                                     {t("giftCard.buyCard")}
                                                 </Link>
