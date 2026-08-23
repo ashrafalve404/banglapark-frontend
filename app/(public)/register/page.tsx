@@ -32,7 +32,12 @@ function isDisposableEmail(email: string): boolean {
 }
 
 const registerSchema = z.object({
-    name: z.string().min(2, "নাম কমপক্ষে ২ অক্ষরের হতে হবে"),
+    name: z
+        .string()
+        .min(2, "নাম কমপক্ষে ২ অক্ষরের হতে হবে")
+        .refine((val) => !/\d/.test(val), {
+            message: "নামে কোনো সংখ্যা (0-9) ব্যবহার করা যাবে না। দয়া করে সঠিক নাম লিখুন।",
+        }),
     email: z
         .string()
         .email("সঠিক ইমেইল এড্রেস লিখুন")
@@ -228,7 +233,12 @@ function RegisterForm() {
                             type="text"
                             className="input text-left"
                             placeholder={t("auth.register.namePlaceholder")}
-                            {...register("name")}
+                            {...register("name", {
+                                onChange: (e) => {
+                                    const clean = e.target.value.replace(/[0-9]/g, "");
+                                    setValue("name", clean, { shouldValidate: true });
+                                },
+                            })}
                         />
                         {errors.name && (
                             <p className="mt-1 text-xs text-red-500">{errors.name.message}</p>

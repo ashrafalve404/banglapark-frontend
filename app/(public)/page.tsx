@@ -334,7 +334,7 @@ export default function HomePage() {
                                                 </span>
                                                 <Link
                                                     href="/dashboard/gift-cards"
-                                                    className="w-full sm:w-auto inline-flex items-center justify-center gap-1 bg-rose-600 hover:bg-rose-700 text-white font-bold text-[11px] sm:text-xs px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-md shadow-xs transition-colors"
+                                                    className="w-full sm:w-auto inline-flex items-center justify-center gap-1 bg-red-700 hover:bg-red-800 text-white font-bold text-[11px] sm:text-xs px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-md shadow-xs transition-colors"
                                                 >
                                                     {t("giftCard.buyCard")}
                                                 </Link>

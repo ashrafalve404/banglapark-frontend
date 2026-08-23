@@ -197,7 +197,7 @@ export default function UserGiftCardsPage() {
                                                         setPaymentMethod("WALLET");
                                                         setSelectedCard(card);
                                                     }}
-                                                    className="w-full py-1.5 sm:py-2 rounded-md bg-rose-600 hover:bg-rose-700 text-white font-bold text-[11px] sm:text-xs transition-colors shadow-xs flex items-center justify-center gap-1 sm:gap-1.5"
+                                                    className="w-full py-1.5 sm:py-2 rounded-md bg-red-700 hover:bg-red-800 text-white font-bold text-[11px] sm:text-xs transition-colors shadow-xs flex items-center justify-center gap-1 sm:gap-1.5"
                                                 >
                                                     <ShoppingBag size={13} /> {t("giftCard.buyCard")}
                                                 </button>
