@@ -15,7 +15,7 @@ export default function ReferralsPage() {
     const [page, setPage] = useState(1);
     const [search, setSearch] = useState("");
     const [statusFilter, setStatusFilter] = useState<"ALL" | "ACTIVE" | "INACTIVE">("ALL");
-    const [scope, setScope] = useState<"direct" | "all_levels">("all_levels");
+    const [scope, setScope] = useState<"direct" | "all_levels">("direct");
 
     const { data: stats, isLoading: statsLoading } = useQuery({
         queryKey: ["referral-stats"],
@@ -28,7 +28,7 @@ export default function ReferralsPage() {
         queryFn: () =>
             referralApi.directTeam({
                 page,
-                limit: 10,
+                limit: 50,
                 status: statusFilter !== "ALL" ? statusFilter : undefined,
                 scope,
             }),
@@ -36,7 +36,7 @@ export default function ReferralsPage() {
 
     const referrals = teamData?.data ?? teamData?.children ?? [];
     const total = teamData?.total ?? 0;
-    const totalPages = Math.ceil(total / 10) || 1;
+    const totalPages = Math.ceil(total / 50) || 1;
 
     const referralCode = user?.referralCode ?? "";
     const referralLink = typeof window !== "undefined"
@@ -260,32 +260,24 @@ export default function ReferralsPage() {
                         <table className="w-full text-left border-collapse text-xs sm:text-sm">
                             <thead>
                                 <tr className="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold uppercase text-[11px] tracking-wider">
-                                    <th className="p-3.5 sm:p-4">{t("referrals.table.colName")}</th>
-                                    <th className="p-3.5 sm:p-4">{t("referrals.table.colContact")}</th>
-                                    <th className="p-3.5 sm:p-4">{t("referrals.table.colDate")}</th>
-                                    <th className="p-3.5 sm:p-4 text-center">{t("referrals.table.colStatus")}</th>
+                                    <th className="p-3.5 sm:p-4">{locale === "bn" ? "নাম" : "Name"}</th>
+                                    <th className="p-3.5 sm:p-4">{locale === "bn" ? "ফোন নম্বর" : "Phone Number"}</th>
+                                    <th className="p-3.5 sm:p-4">{locale === "bn" ? "ইমেইল" : "Email"}</th>
+                                    <th className="p-3.5 sm:p-4">{locale === "bn" ? "যোগদানের তারিখ" : "Join Date"}</th>
+                                    <th className="p-3.5 sm:p-4 text-center">{locale === "bn" ? "অবস্থা" : "Status"}</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-100 bg-white">
                                 {filteredReferrals.map((member: any) => (
                                     <tr key={member.id} className="hover:bg-slate-50/80 transition-colors">
-                                        <td className="p-3.5 sm:p-4">
-                                            <div className="font-bold text-slate-900">{member.name}</div>
-                                            {member.memberId && (
-                                                <div className="text-[10px] font-extrabold text-slate-400">BP-{member.memberId}</div>
-                                            )}
+                                        <td className="p-3.5 sm:p-4 font-bold text-slate-900">
+                                            {member.name}
                                         </td>
-                                        <td className="p-3.5 sm:p-4">
-                                            <div className="flex items-center gap-1 font-bold text-slate-800">
-                                                <Phone size={12} className="text-slate-400" />
-                                                <span className="font-mono">{member.phone || "N/A"}</span>
-                                            </div>
-                                            {member.email && (
-                                                <div className="flex items-center gap-1 text-[11px] text-slate-500 mt-0.5">
-                                                    <Mail size={11} className="text-slate-400" />
-                                                    <span>{member.email}</span>
-                                                </div>
-                                            )}
+                                        <td className="p-3.5 sm:p-4 font-mono font-bold text-slate-800">
+                                            {member.phone || "N/A"}
+                                        </td>
+                                        <td className="p-3.5 sm:p-4 text-slate-600">
+                                            {member.email || "N/A"}
                                         </td>
                                         <td className="p-3.5 sm:p-4 text-xs text-slate-500 whitespace-nowrap">
                                             {formatDate(member.createdAt, locale)}
@@ -296,7 +288,7 @@ export default function ReferralsPage() {
                                                     ? "bg-emerald-100 text-emerald-800 border border-emerald-200"
                                                     : "bg-red-50 text-red-700 border border-red-200"
                                             }`}>
-                                                {member.status === "ACTIVE" ? t("referrals.table.statusActive") : t("referrals.table.statusInactive")}
+                                                {member.status === "ACTIVE" ? (locale === "bn" ? "সক্রিয়" : "ACTIVE") : (locale === "bn" ? "নিষ্ক্রিয়" : "INACTIVE")}
                                             </span>
                                         </td>
                                     </tr>
