@@ -30,6 +30,8 @@ export default function AdminQuizPage() {
     const { data: stats } = useQuery<QuizAdminStats>({
         queryKey: ["admin-quiz-stats"],
         queryFn: () => quizApi.adminGetStats(),
+        refetchOnWindowFocus: true,
+        refetchInterval: 10000,
     });
 
     // Category form

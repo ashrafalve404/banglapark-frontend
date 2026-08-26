@@ -43,7 +43,7 @@ export const referralApi = {
         return res.data;
     },
 
-    directTeam: async (params?: { page?: number; limit?: number }) => {
+    directTeam: async (params?: { page?: number; limit?: number; status?: string; scope?: string }) => {
         const res = await api.get("/referral/team/direct", { params });
         return res.data;
     },
