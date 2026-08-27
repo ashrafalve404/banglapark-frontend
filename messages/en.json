@@ -474,6 +474,7 @@
       "downloadImage": "Download Image",
       "submitTitle": "Submit Your Work Link",
       "linkPrompt": "Enter your post link after sharing",
+      "pasteLinkLabel": "Paste your post link here after posting",
       "linkPlaceholder": "https://facebook.com/your-post-link",
       "copyLink": "Copy Link",
       "copied": "Copied!",

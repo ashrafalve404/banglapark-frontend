@@ -474,6 +474,7 @@
       "downloadImage": "ইমেজ ডাউনলোড করুন",
       "submitTitle": "আপনার কাজের লিংক জমা দিন",
       "linkPrompt": "পোস্ট করার পর আপনার কাজের পোস্ট লিংক দিন",
+      "pasteLinkLabel": "পোস্ট করার পর আপনার পোস্টের লিংক এখানে দিন",
       "linkPlaceholder": "https://facebook.com/your-post-link",
       "copyLink": "লিংক কপি করুন",
       "copied": "কপি হয়েছে!",
