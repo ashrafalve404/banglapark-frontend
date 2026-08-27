@@ -445,6 +445,8 @@
         "DAILY_BENEFIT": "Daily Benefit",
         "GENERATION_COMMISSION": "Generation Commission",
         "PURCHASE": "Purchase",
+        "GIFT_CARD_PURCHASE": "Gift Card Purchase",
+        "CPA_TASK_PURCHASE": "CPA Task Purchase",
         "WITHDRAWAL": "Withdrawal",
         "REFUND": "Refund",
         "ADMIN_ADJUSTMENT": "Adjustment",

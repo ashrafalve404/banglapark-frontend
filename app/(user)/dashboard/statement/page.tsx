@@ -258,26 +258,34 @@ export default function StatementPage() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {data.transactions.map((tx, i) => (
-                                    <tr key={tx.id} className={i % 2 === 0 ? "bg-green-50/30" : ""}>
-                                        <td className="px-3 py-2 text-gray-600">{new Date(tx.createdAt).toLocaleDateString()}</td>
-                                        <td className="px-3 py-2 font-semibold text-gray-800">
-                                            {(() => {
-                                                const key = `dashboard.wallet.transactionType.${tx.type}`;
-                                                const translated = t(key as any);
-                                                if (translated && translated !== key) return translated;
-                                                return tx.type.replace(/_/g, " ").replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase());
-                                            })()}
-                                        </td>
-                                        <td className="px-3 py-2 text-gray-500 max-w-[200px] truncate">
-                                            {(tx.benefitCategory === "BASE" ? `${t("dashboard.statement.dailyReward")} - ` : tx.benefitCategory === "TIER" ? `${t("dashboard.statement.tierBonus")} - ` : "")}{tx.description}
-                                        </td>
-                                        <td className={`px-3 py-2 text-right font-bold ${Number(tx.amount) >= 0 ? "text-green-700" : "text-green-600"}`}>
-                                            {formatCurrency(tx.amount, locale)}
-                                        </td>
-                                        <td className="px-3 py-2 text-right font-semibold text-gray-800">{formatCurrency(tx.balanceAfter, locale)}</td>
-                                    </tr>
-                                ))}
+                                {data.transactions.map((tx, i) => {
+                                    const isDebit =
+                                        ["PURCHASE", "WITHDRAWAL", "GIFT_CARD_PURCHASE", "CPA_TASK_PURCHASE", "QUIZ_PURCHASE", "QUIZ_DEDUCTION"].includes(tx.type) ||
+                                        tx.type.includes("PURCHASE") ||
+                                        tx.type.includes("WITHDRAWAL") ||
+                                        Number(tx.amount) < 0;
+
+                                    return (
+                                        <tr key={tx.id} className={i % 2 === 0 ? "bg-slate-50/50" : ""}>
+                                            <td className="px-3 py-2 text-slate-600 font-medium">{new Date(tx.createdAt).toLocaleDateString()}</td>
+                                            <td className="px-3 py-2 font-semibold text-slate-800">
+                                                {(() => {
+                                                    const key = `dashboard.wallet.transactionType.${tx.type}`;
+                                                    const translated = t(key as any);
+                                                    if (translated && translated !== key) return translated;
+                                                    return tx.type.replace(/_/g, " ").replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substring(1).toLowerCase());
+                                                })()}
+                                            </td>
+                                            <td className="px-3 py-2 text-slate-600 max-w-[200px] truncate">
+                                                {(tx.benefitCategory === "BASE" ? `${t("dashboard.statement.dailyReward")} - ` : tx.benefitCategory === "TIER" ? `${t("dashboard.statement.tierBonus")} - ` : "")}{tx.description}
+                                            </td>
+                                            <td className={`px-3 py-2 text-right font-extrabold ${isDebit ? "text-red-600" : "text-emerald-700"}`}>
+                                                {isDebit ? "- " : "+ "}{formatCurrency(Math.abs(Number(tx.amount)), locale)}
+                                            </td>
+                                            <td className="px-3 py-2 text-right font-bold text-slate-800">{formatCurrency(tx.balanceAfter, locale)}</td>
+                                        </tr>
+                                    );
+                                })}
                             </tbody>
                         </table>
                     </div>

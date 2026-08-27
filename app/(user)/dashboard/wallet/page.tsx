@@ -282,6 +282,7 @@ export default function WalletPage() {
                         <option value="">{t("wallet.ledger.filterAll")}</option>
                         <option value="GENERATION_COMMISSION">{t("wallet.ledger.filterGeneration")}</option>
                         <option value="DAILY_BENEFIT">{t("wallet.ledger.filterDailyBenefit")}</option>
+                        <option value="GIFT_CARD_PURCHASE">{locale === "bn" ? "গিফট কার্ড ক্রয়" : "Gift Card Purchase"}</option>
                         <option value="PURCHASE">{t("wallet.ledger.filterPurchase")}</option>
                         <option value="WITHDRAWAL">{t("wallet.ledger.filterWithdrawal")}</option>
                         <option value="ADMIN_ADJUSTMENT">{t("wallet.ledger.filterAdmin")}</option>
@@ -306,12 +307,17 @@ export default function WalletPage() {
                             </thead>
                             <tbody className="divide-y divide-gray-100 bg-white">
                                 {transactions.map((tx) => {
-                                    const isDebit = ["PURCHASE", "WITHDRAWAL"].includes(tx.type) || (tx.type === "ADMIN_ADJUSTMENT" && tx.amount < 0);
+                                    const isDebit =
+                                        ["PURCHASE", "WITHDRAWAL", "GIFT_CARD_PURCHASE", "CPA_TASK_PURCHASE", "QUIZ_PURCHASE", "QUIZ_DEDUCTION"].includes(tx.type) ||
+                                        tx.type.includes("PURCHASE") ||
+                                        tx.type.includes("WITHDRAWAL") ||
+                                        Number(tx.amount) < 0;
+
                                     return (
                                         <tr key={tx.id} className="hover:bg-gray-50/50">
                                             <td className="p-4 text-xs text-gray-600">{formatDateTime(tx.createdAt, locale)}</td>
                                             <td className="p-4 text-xs">
-                                                <span className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${isDebit ? "bg-red-50 text-red-700" : "bg-green-50 text-green-700"}`}>
+                                                <span className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${isDebit ? "bg-red-50 text-red-700 border border-red-200" : "bg-green-50 text-green-700 border border-green-200"}`}>
                                                     {(() => {
                                                         const key = `dashboard.wallet.transactionType.${tx.type}`;
                                                         const translated = t(key as any);
@@ -321,8 +327,8 @@ export default function WalletPage() {
                                                 </span>
                                             </td>
                                             <td className="p-4 text-xs text-gray-500">{tx.description}</td>
-                                            <td className={`p-4 text-xs font-bold text-right ${isDebit ? "text-green-650" : "text-green-700"}`}>
-                                                {isDebit ? "-" : "+"}{formatCurrency(Math.abs(tx.amount), locale)}
+                                            <td className={`p-4 text-xs font-bold text-right ${isDebit ? "text-red-600" : "text-green-700"}`}>
+                                                {isDebit ? "- " : "+ "}{formatCurrency(Math.abs(tx.amount), locale)}
                                             </td>
                                             <td className="p-4 text-xs font-semibold text-gray-700 text-right">{formatCurrency(tx.balanceAfter, locale)}</td>
                                         </tr>

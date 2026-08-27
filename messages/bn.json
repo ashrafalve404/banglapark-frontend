@@ -445,6 +445,8 @@
         "DAILY_BENEFIT": "দৈনিক বেনিফিট",
         "GENERATION_COMMISSION": "জেনারেশন কমিশন",
         "PURCHASE": "ক্রয়",
+        "GIFT_CARD_PURCHASE": "গিফট কার্ড ক্রয়",
+        "CPA_TASK_PURCHASE": "সিপিএ টাস্ক ক্রয়",
         "WITHDRAWAL": "উত্তোলন",
         "REFUND": "রিফান্ড",
         "ADMIN_ADJUSTMENT": "এডজাস্টমেন্ট",

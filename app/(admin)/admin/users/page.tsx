@@ -608,17 +608,25 @@ export default function AdminUsersPage() {
                                                     </tr>
                                                 </thead>
                                                 <tbody className="divide-y divide-slate-100">
-                                                    {statementData.transactions.map((tx: any) => (
-                                                        <tr key={tx.id} className="hover:bg-slate-50">
-                                                            <td className="p-2.5 text-slate-500 whitespace-nowrap">{formatDate(tx.createdAt, locale)}</td>
-                                                            <td className="p-2.5 font-medium">{tx.type}</td>
-                                                            <td className={`p-2.5 text-right font-semibold ${Number(tx.amount) >= 0 ? "text-green-700" : "text-green-600"}`}>
-                                                                ৳{tx.amount}
-                                                            </td>
-                                                            <td className="p-2.5 text-right text-slate-600">৳{tx.balanceAfter ?? ""}</td>
-                                                            <td className="p-2.5 text-slate-500 max-w-[200px] truncate">{tx.description ?? ""}</td>
-                                                        </tr>
-                                                    ))}
+                                                    {statementData.transactions.map((tx: any) => {
+                                                        const isDebit =
+                                                            ["PURCHASE", "WITHDRAWAL", "GIFT_CARD_PURCHASE", "CPA_TASK_PURCHASE", "QUIZ_PURCHASE", "QUIZ_DEDUCTION"].includes(tx.type) ||
+                                                            tx.type?.includes("PURCHASE") ||
+                                                            tx.type?.includes("WITHDRAWAL") ||
+                                                            Number(tx.amount) < 0;
+
+                                                        return (
+                                                            <tr key={tx.id} className="hover:bg-slate-50">
+                                                                <td className="p-2.5 text-slate-500 whitespace-nowrap">{formatDate(tx.createdAt, locale)}</td>
+                                                                <td className="p-2.5 font-medium">{tx.type}</td>
+                                                                <td className={`p-2.5 text-right font-extrabold ${isDebit ? "text-red-600" : "text-emerald-700"}`}>
+                                                                    {isDebit ? "- " : "+ "}৳{Math.abs(Number(tx.amount))}
+                                                                </td>
+                                                                <td className="p-2.5 text-right text-slate-600">৳{tx.balanceAfter ?? ""}</td>
+                                                                <td className="p-2.5 text-slate-500 max-w-[200px] truncate">{tx.description ?? ""}</td>
+                                                            </tr>
+                                                        );
+                                                    })}
                                                 </tbody>
                                             </table>
                                         </div>
