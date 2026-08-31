@@ -53,13 +53,22 @@ export default function AdminProfitLossPage() {
             ) : (
                 <>
                     {/* ── Revenue & Costs Grid ── */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
                         <div className="card p-5 bg-white">
                             <div className="flex items-center justify-between mb-2">
                                 <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">{t("admin.overview.profitLoss.salesRevenue")}</span>
                                 <TrendingUp size={18} className="text-emerald-600" />
                             </div>
                             <span className="text-2xl font-bold text-emerald-700">{formatCurrency(stats.totalSales, locale)}</span>
+                        </div>
+                        <div className="card p-5 bg-white border border-emerald-100">
+                            <div className="flex items-center justify-between mb-2">
+                                <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">
+                                    {locale === "bn" ? "ট্রান্সফার ফি আয় (১০%)" : "Transfer Fee Income (10%)"}
+                                </span>
+                                <TrendingUp size={18} className="text-emerald-600" />
+                            </div>
+                            <span className="text-2xl font-bold text-emerald-700">+ {formatCurrency((stats as any)?.transferFeeRevenue ?? 0, locale)}</span>
                         </div>
                         <div className="card p-5 bg-white">
                             <div className="flex items-center justify-between mb-2">

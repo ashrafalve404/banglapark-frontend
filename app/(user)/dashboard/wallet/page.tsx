@@ -558,13 +558,13 @@ export default function WalletPage() {
                                 {/* Amount */}
                                 <div className="space-y-2">
                                     <label className="text-xs font-bold text-slate-700 block">
-                                        {locale === "bn" ? "পরিমাণ (সর্বনিম্ন ৳10)" : "Amount (minimum ৳10)"}
+                                        {locale === "bn" ? "পরিমাণ (সর্বনিম্ন ৳500)" : "Amount (minimum ৳500)"}
                                     </label>
                                     <input
                                         type="number"
                                         className="input w-full text-sm"
-                                        placeholder="10"
-                                        min={10}
+                                        placeholder="500"
+                                        min={500}
                                         max={Number(balanceData?.availableBalance ?? 0)}
                                         value={transferAmount}
                                         onChange={(e) => setTransferAmount(e.target.value)}
@@ -573,6 +573,23 @@ export default function WalletPage() {
                                         {locale === "bn" ? "উপলব্ধ ব্যালেন্স:" : "Available balance:"} {formatCurrency(balanceData?.availableBalance ?? 0, locale)}
                                     </p>
                                 </div>
+
+                                {Number(transferAmount) >= 500 && (
+                                    <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-1.5 text-xs">
+                                        <div className="flex justify-between text-slate-600">
+                                            <span>{locale === "bn" ? "ট্রান্সফার পরিমাণ:" : "Transfer Amount:"}</span>
+                                            <span className="font-semibold">{formatCurrency(Number(transferAmount), locale)}</span>
+                                        </div>
+                                        <div className="flex justify-between text-amber-700">
+                                            <span>{locale === "bn" ? "সার্ভিস চার্জ (১০%):" : "Service Charge (10%):"}</span>
+                                            <span className="font-bold">- {formatCurrency(Math.round(Number(transferAmount) * 0.10 * 100) / 100, locale)}</span>
+                                        </div>
+                                        <div className="flex justify-between text-emerald-800 font-bold border-t border-slate-200 pt-1.5">
+                                            <span>{locale === "bn" ? "প্রাপক পাবেন:" : "Recipient Receives:"}</span>
+                                            <span>{formatCurrency(Math.round((Number(transferAmount) - Math.round(Number(transferAmount) * 0.10 * 100) / 100) * 100) / 100, locale)}</span>
+                                        </div>
+                                    </div>
+                                )}
 
                                 {/* Error from mutation */}
                                 {transferMutation.isError && (
@@ -588,7 +605,7 @@ export default function WalletPage() {
                                             if (!transferRecipient || !transferAmount) return;
                                             transferMutation.mutate({ recipientPhone: transferRecipient.phone, amount: Number(transferAmount) });
                                         }}
-                                        disabled={!transferRecipient || !transferAmount || Number(transferAmount) < 10 || transferMutation.isPending}
+                                        disabled={!transferRecipient || !transferAmount || Number(transferAmount) < 500 || transferMutation.isPending}
                                         className="flex-1 py-2.5 flex items-center justify-center gap-2 text-sm font-bold text-white bg-red-700 hover:bg-red-800 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-all"
                                     >
                                         {transferMutation.isPending ? <Loader2 size={16} className="animate-spin" /> : <SendHorizontal size={16} />}

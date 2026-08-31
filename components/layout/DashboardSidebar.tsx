@@ -45,7 +45,7 @@ export function DashboardSidebar({ onClose, mobile }: DashboardSidebarProps) {
         { href: "/dashboard/sales-bonus", label: t("nav.salesBonus"), icon: FaAward, activeBg: "bg-teal-50 text-teal-800 border-l-4 border-teal-600 shadow-xs", iconColor: "text-teal-600" },
         { href: "/dashboard/generation-income", label: t("nav.generationBonus"), icon: FaMoneyBills, activeBg: "bg-blue-50 text-blue-800 border-l-4 border-blue-600 shadow-xs", iconColor: "text-blue-600" },
         { href: "/dashboard/position", label: t("nav.position"), icon: FaAward, activeBg: "bg-teal-50 text-teal-800 border-l-4 border-teal-600 shadow-xs", iconColor: "text-teal-600" },
-        { href: "#", label: t("nav.digitalMarketing"), icon: FaBullhorn, activeBg: "bg-indigo-50 text-indigo-800 border-l-4 border-indigo-600 shadow-xs", iconColor: "text-indigo-600" },
+        { href: "/dashboard/digital-marketing", label: t("nav.digitalMarketing"), icon: FaBullhorn, activeBg: "bg-indigo-50 text-indigo-800 border-l-4 border-indigo-600 shadow-xs", iconColor: "text-indigo-600" },
         { href: "/dashboard/cpa-marketing", label: t("nav.cpaMarketing"), icon: FaRectangleAd, activeBg: "bg-purple-50 text-purple-800 border-l-4 border-purple-600 shadow-xs", iconColor: "text-purple-600" },
         { href: "#", label: t("nav.affiliateMarketing"), icon: FaChartPie, activeBg: "bg-emerald-50 text-emerald-800 border-l-4 border-emerald-600 shadow-xs", iconColor: "text-emerald-600" },
         { href: "#", label: t("nav.myOffers"), icon: FaTag, activeBg: "bg-pink-50 text-pink-800 border-l-4 border-pink-600 shadow-xs", iconColor: "text-pink-600" },

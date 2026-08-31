@@ -94,6 +94,24 @@ export default function AdminOverview() {
                     </div>
                 </div>
 
+                {/* Balance Transfer Fee Income (10%) */}
+                <div className="card p-5 bg-white flex items-center justify-between border-2 border-emerald-100">
+                    <div className="space-y-1">
+                        <span className="text-xs text-slate-500 font-bold uppercase tracking-wider block">
+                            {locale === "bn" ? "ব্যালেন্স ট্রান্সফার ফি (১০%)" : "Transfer Fee Income (10%)"}
+                        </span>
+                        <span className="text-2xl font-bold text-emerald-700">
+                            {isLoading ? "..." : formatCurrency((stats as any)?.transferFeeRevenue ?? 0, locale)}
+                        </span>
+                        <p className="text-[10px] text-slate-400 font-medium">
+                            {locale === "bn" ? "মোট ট্রান্সফার Volume:" : "Total Volume:"} {formatCurrency((stats as any)?.totalTransferVolume ?? 0, locale)}
+                        </p>
+                    </div>
+                    <div className="rounded-lg bg-emerald-50 p-2.5 text-emerald-800">
+                        <Coins size={20} />
+                    </div>
+                </div>
+
                 {/* Total Product Value (Inventory) */}
                 <div className="card p-5 bg-white flex items-center justify-between">
                     <div className="space-y-1">

@@ -44,7 +44,7 @@ export function AdminSidebar({ onClose, mobile }: AdminSidebarProps) {
         { href: "#", label: t("nav.productSell"), icon: FaStore, activeBg: "bg-teal-500/20 text-teal-300 border-l-4 border-teal-500 font-bold", iconColor: "text-teal-400" },
         { href: "/admin/travel", label: t("nav.travel"), icon: FaPlane, activeBg: "bg-orange-500/20 text-orange-300 border-l-4 border-orange-500 font-bold", iconColor: "text-orange-400" },
         { href: "/admin/position", label: t("nav.position"), icon: FaAward, activeBg: "bg-teal-500/20 text-teal-300 border-l-4 border-teal-500 font-bold", iconColor: "text-teal-400" },
-        { href: "#", label: t("nav.digitalMarketing"), icon: FaBullhorn, activeBg: "bg-indigo-500/20 text-indigo-300 border-l-4 border-indigo-500 font-bold", iconColor: "text-indigo-400" },
+        { href: "/admin/digital-marketing", label: t("nav.digitalMarketing"), icon: FaBullhorn, activeBg: "bg-indigo-500/20 text-indigo-300 border-l-4 border-indigo-500 font-bold", iconColor: "text-indigo-400" },
         { href: "/admin/cpa-marketing", label: t("nav.cpaMarketing"), icon: FaRectangleAd, activeBg: "bg-purple-500/20 text-purple-300 border-l-4 border-purple-500 font-bold", iconColor: "text-purple-400" },
         { href: "#", label: t("nav.affiliateMarketing"), icon: FaChartPie, activeBg: "bg-emerald-500/20 text-emerald-300 border-l-4 border-emerald-500 font-bold", iconColor: "text-emerald-400" },
         { href: "#", label: t("nav.myOffers"), icon: FaTag, activeBg: "bg-pink-500/20 text-pink-300 border-l-4 border-pink-500 font-bold", iconColor: "text-pink-400" },
