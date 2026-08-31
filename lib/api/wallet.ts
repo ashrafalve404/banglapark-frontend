@@ -17,4 +17,14 @@ export const walletApi = {
         const res = await api.get("/wallet/transactions", { params });
         return res.data;
     },
+
+    lookupUser: async (phone: string): Promise<{ id: string; name: string; phone: string }> => {
+        const res = await api.get("/wallet/lookup", { params: { phone } });
+        return res.data;
+    },
+
+    transfer: async (body: { recipientPhone: string; amount: number }): Promise<{ success: boolean; message: string; referenceId: string }> => {
+        const res = await api.post("/wallet/transfer", body);
+        return res.data;
+    },
 };

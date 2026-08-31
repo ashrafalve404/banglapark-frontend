@@ -74,8 +74,8 @@
     "commissionRules": "কমিশন রুলস",
     "profitLoss": "লাভ ও ক্ষতি",
     "reports": "রিপোর্ট",
-    "travel": "ট্রাভেলিং",
-    "marketingExpense": "মার্কেটিং আয় ব্যয়"
+    "marketingExpense": "মার্কেটিং আয় ব্যয়",
+    "deposits": "ডিপোজিট"
   },
   "travel": {
     "title": "ট্রাভেল রিওয়ার্ডস",
@@ -453,7 +453,10 @@
         "QUIZ_EARNING": "কুইজ ইনকাম",
         "QUIZ_REWARD": "কুইজ রিওয়ার্ড",
         "QUIZ_PURCHASE": "কুইজ ক্রয়",
-        "QUIZ_DEDUCTION": "কুইজ কর্তন"
+        "QUIZ_DEDUCTION": "কুইজ কর্তন",
+        "TRANSFER_OUT": "ব্যালেন্স ট্রান্সফার (পাঠানো)",
+        "TRANSFER_IN": "ব্যালেন্স ট্রান্সফার (প্রাপ্ত)",
+        "DEPOSIT": "বিকাশ ডিপোজিট"
       },
       "withdrawStatus": {
         "PENDING": "পেন্ডিং",

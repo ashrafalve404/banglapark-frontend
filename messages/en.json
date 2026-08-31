@@ -75,7 +75,8 @@
     "profitLoss": "Profit & Loss",
     "reports": "Reports",
     "travel": "Travel",
-    "marketingExpense": "Marketing Income & Expense"
+    "marketingExpense": "Marketing Income & Expense",
+    "deposits": "Deposits"
   },
   "travel": {
     "title": "Travel Rewards",
@@ -453,7 +454,10 @@
         "QUIZ_EARNING": "Quiz Earning",
         "QUIZ_REWARD": "Quiz Reward",
         "QUIZ_PURCHASE": "Quiz Purchase",
-        "QUIZ_DEDUCTION": "Quiz Deduction"
+        "QUIZ_DEDUCTION": "Quiz Deduction",
+        "TRANSFER_OUT": "Balance Transfer (Sent)",
+        "TRANSFER_IN": "Balance Transfer (Received)",
+        "DEPOSIT": "Bkash Deposit"
       },
       "withdrawStatus": {
         "PENDING": "Pending",

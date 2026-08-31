@@ -7,7 +7,7 @@ import {
     FaAward, FaPlane, FaBoxOpen, FaTags, FaBagShopping,
     FaArrowsDownToLine, FaGear, FaChartLine, FaHouse, FaChevronRight, FaXmark,
     FaChartBar, FaCartShopping, FaStore, FaBullhorn, FaRectangleAd, FaChartPie,
-    FaTag, FaTrophy, FaBuilding, FaFileLines, FaReceipt, FaRightFromBracket
+    FaTag, FaTrophy, FaBuilding, FaFileLines, FaReceipt, FaRightFromBracket, FaMoneyBillTransfer
 } from "react-icons/fa6";
 import { cn } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
@@ -51,6 +51,7 @@ export function AdminSidebar({ onClose, mobile }: AdminSidebarProps) {
         { href: "#", label: t("nav.reward"), icon: FaTrophy, activeBg: "bg-fuchsia-500/20 text-fuchsia-300 border-l-4 border-fuchsia-500 font-bold", iconColor: "text-fuchsia-400" },
         { href: "#", label: t("nav.shareholder"), icon: FaBuilding, activeBg: "bg-violet-500/20 text-violet-300 border-l-4 border-violet-500 font-bold", iconColor: "text-violet-400" },
         { href: "/admin/withdrawals", label: t("nav.withdrawals"), icon: FaArrowsDownToLine, activeBg: "bg-rose-500/20 text-rose-300 border-l-4 border-rose-500 font-bold", iconColor: "text-rose-400" },
+        { href: "/admin/deposits", label: t("nav.deposits") || "Deposits", icon: FaMoneyBillTransfer, activeBg: "bg-emerald-500/20 text-emerald-300 border-l-4 border-emerald-500 font-bold", iconColor: "text-emerald-400" },
         { href: "/admin/profit-loss", label: t("nav.profitLoss"), icon: FaChartLine, activeBg: "bg-lime-500/20 text-lime-300 border-l-4 border-lime-500 font-bold", iconColor: "text-lime-400" },
         { href: "#", label: t("nav.statement"), icon: FaFileLines, activeBg: "bg-slate-500/20 text-slate-300 border-l-4 border-slate-500 font-bold", iconColor: "text-slate-400" },
         { href: "/admin/reports", label: t("nav.reports"), icon: FaChartBar, activeBg: "bg-fuchsia-500/20 text-fuchsia-300 border-l-4 border-fuchsia-500 font-bold", iconColor: "text-fuchsia-400" },
