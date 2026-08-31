@@ -3,7 +3,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import Link from "next/link";
-import { Wallet, AlertCircle, RefreshCw, Gift, TrendingUp, Award, DollarSign, MapPin, PieChart, Users, ShieldCheck, Plane, ShoppingBag, SendHorizontal, CheckCircle2, Loader2, Search, PlusCircle, Clock, XCircle } from "lucide-react";
+import { Wallet, AlertCircle, RefreshCw, Gift, TrendingUp, Award, Coins, MapPin, PieChart, Users, ShieldCheck, Plane, ShoppingBag, SendHorizontal, CheckCircle2, Loader2, Search, PlusCircle, Clock, XCircle } from "lucide-react";
 import { walletApi } from "@/lib/api/wallet";
 import { depositApi, type DepositRequest } from "@/lib/api/deposit";
 import { referralApi } from "@/lib/api/categories";
@@ -273,7 +273,7 @@ export default function WalletPage() {
                 <div className="card p-4 border border-dashed border-gray-200 bg-gray-50/50">
                     <div className="flex items-center justify-between mb-2">
                         <span className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider">{t("wallet.balance.salary")}</span>
-                        <DollarSign size={16} className="text-gray-300" />
+                        <Coins size={16} className="text-gray-300" />
                     </div>
                     <h2 className="text-xl font-extrabold text-gray-400">
                         {balLoading ? "..." : formatCurrency(balanceData?.salary ?? 0, locale)}

@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import {
     Users, ShoppingBag, ArrowUpRight, TrendingUp,
     AlertCircle, ShieldAlert, BadgeAlert, CheckCircle2,
-    Package, DollarSign, CreditCard, Wallet,
+    Package, CreditCard, Wallet,
     AlertTriangle, TrendingDown, Coins
 } from "lucide-react";
 import { adminApi } from "@/lib/api/admin";
@@ -121,7 +121,7 @@ export default function AdminOverview() {
                         </span>
                     </div>
                     <div className="rounded-lg bg-amber-50 p-2.5 text-amber-800">
-                        <DollarSign size={20} />
+                        <Coins size={20} />
                     </div>
                 </div>
 

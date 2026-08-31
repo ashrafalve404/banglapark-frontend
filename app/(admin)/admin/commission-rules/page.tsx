@@ -2,7 +2,7 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
-import { Check, Loader2, Users, TrendingUp, DollarSign, Calendar, ShieldCheck } from "lucide-react";
+import { Check, Loader2, Users, TrendingUp, Banknote, Calendar, ShieldCheck } from "lucide-react";
 import { adminApi } from "@/lib/api/admin";
 import { formatCurrency } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
@@ -111,7 +111,7 @@ export default function AdminCommissionRulesPage() {
                 </div>
                 <div className="card p-4 bg-white flex items-center gap-3.5">
                     <div className="rounded-lg bg-amber-50 p-2.5 text-amber-700">
-                        <DollarSign size={20} />
+                        <Banknote size={20} />
                     </div>
                     <div>
                         <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider block">{t("admin.commissionRules.withdrawal.minLabel")}</span>
@@ -135,7 +135,7 @@ export default function AdminCommissionRulesPage() {
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div className="rounded-lg border border-slate-200 p-4 flex items-center justify-between">
                                 <div className="flex items-center gap-2.5">
-                                    <DollarSign size={16} className="text-slate-500" />
+                                    <Banknote size={16} className="text-slate-500" />
                                     <span className="text-sm font-semibold text-slate-700">{t("admin.commissionRules.withdrawal.minLabel")}</span>
                                 </div>
                                 <span className="text-sm font-bold text-slate-900">{t("admin.commissionRules.withdrawal.minValue")}</span>

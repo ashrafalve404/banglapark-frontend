@@ -2,7 +2,7 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
-import { Megaphone, TrendingUp, Clock, CheckCircle2, Loader2, Sparkles, ShieldCheck, ArrowRight } from "lucide-react";
+import { Megaphone, TrendingUp, Clock, CheckCircle2, Loader2, Coins, ShieldCheck, ArrowRight } from "lucide-react";
 import { digitalMarketingApi, type DigitalMarketingPackage } from "@/lib/api/digital-marketing";
 import { walletApi } from "@/lib/api/wallet";
 import { formatCurrency, formatDateTime } from "@/lib/utils";
@@ -172,7 +172,7 @@ export default function DigitalMarketingPage() {
                         </span>
                     </div>
                     <div className="p-3 rounded-xl bg-emerald-50 text-emerald-600">
-                        <Sparkles size={22} />
+                        <Coins size={22} />
                     </div>
                 </div>
             </div>

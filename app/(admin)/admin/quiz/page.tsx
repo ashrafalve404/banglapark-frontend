@@ -3,7 +3,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, Trash2, Loader2, X, ImageIcon, FolderOpen, Eye, AlertCircle, Edit2, Layers, Upload, TrendingUp, DollarSign, Wallet, ShoppingCart, HelpCircle, BarChart3 } from "lucide-react";
+import { Plus, Trash2, Loader2, X, ImageIcon, FolderOpen, Eye, AlertCircle, Edit2, Layers, Upload, TrendingUp, Coins, Wallet, ShoppingCart, HelpCircle, BarChart3 } from "lucide-react";
 import { quizApi, uploadImage, importCsv, type QuizCategoryItem, type QuizLevelItem, type QuizAdminStats } from "@/lib/api/quiz";
 import { useLocale } from "@/lib/i18n";
 import { formatCurrency } from "@/lib/utils";
@@ -414,7 +414,7 @@ export default function AdminQuizPage() {
                             <div className="card p-5 bg-slate-900 text-white border border-slate-800 shadow-sm">
                                 <div className="flex items-center justify-between mb-2">
                                     <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">Quiz Net Profit</span>
-                                    <DollarSign size={18} className={(stats?.netProfit ?? 0) >= 0 ? "text-emerald-400" : "text-rose-400"} />
+                                    <Coins size={18} className={(stats?.netProfit ?? 0) >= 0 ? "text-emerald-400" : "text-rose-400"} />
                                 </div>
                                 <span className={`text-2xl font-bold ${(stats?.netProfit ?? 0) >= 0 ? "text-emerald-400" : "text-rose-400"}`}>
                                     {(stats?.netProfit ?? 0) >= 0 ? "+ " : "- "}

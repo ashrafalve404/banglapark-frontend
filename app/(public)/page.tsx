@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import {
-    ArrowRight, ShoppingCart, Loader2, LayoutGrid, CheckCircle, X, Users, Sparkles, TrendingUp,
+    ArrowRight, ShoppingCart, Loader2, LayoutGrid, CheckCircle, X, Users, TrendingUp,
     ShieldCheck, Package, Gift
 } from "lucide-react";
 import { BannerCarousel } from "@/components/home/BannerCarousel";

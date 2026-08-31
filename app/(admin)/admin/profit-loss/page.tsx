@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { TrendingUp, DollarSign, Wallet, ArrowUpRight, BarChart3, Info, Truck } from "lucide-react";
+import { TrendingUp, Banknote, Coins, Wallet, ArrowUpRight, BarChart3, Info, Truck } from "lucide-react";
 import { adminApi } from "@/lib/api/admin";
 import { formatCurrency } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
@@ -73,7 +73,7 @@ export default function AdminProfitLossPage() {
                         <div className="card p-5 bg-white">
                             <div className="flex items-center justify-between mb-2">
                                 <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">{t("admin.overview.profitLoss.minusCostOfSold")}</span>
-                                <DollarSign size={18} className="text-orange-600" />
+                                <Banknote size={18} className="text-orange-600" />
                             </div>
                             <span className="text-2xl font-bold text-orange-700">- {formatCurrency(stats.totalSoldCost, locale)}</span>
                         </div>
@@ -136,7 +136,7 @@ export default function AdminProfitLossPage() {
                                 <span className="text-lg font-bold text-slate-800">{stats.totalProducts}</span>
                             </div>
                             <div className="rounded-lg bg-violet-50 p-2 text-violet-700">
-                                <DollarSign size={16} />
+                                <Coins size={16} />
                             </div>
                         </div>
                         <div className="card p-4 bg-white flex items-center justify-between">
@@ -145,7 +145,7 @@ export default function AdminProfitLossPage() {
                                 <span className="text-lg font-bold text-amber-700">{formatCurrency(stats.totalProductValue, locale)}</span>
                             </div>
                             <div className="rounded-lg bg-amber-50 p-2 text-amber-700">
-                                <DollarSign size={16} />
+                                <Coins size={16} />
                             </div>
                         </div>
                         <div className="card p-4 bg-white flex items-center justify-between">
@@ -154,7 +154,7 @@ export default function AdminProfitLossPage() {
                                 <span className="text-lg font-bold text-orange-700">{formatCurrency(stats.totalCostValue, locale)}</span>
                             </div>
                             <div className="rounded-lg bg-orange-50 p-2 text-orange-700">
-                                <DollarSign size={16} />
+                                <Coins size={16} />
                             </div>
                         </div>
                         <div className="card p-4 bg-white flex items-center justify-between">

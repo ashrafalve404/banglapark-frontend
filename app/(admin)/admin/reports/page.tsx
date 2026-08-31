@@ -18,7 +18,6 @@ import {
     Gift,
     HelpCircle,
     Printer,
-    Sparkles,
     CheckCircle,
     Clock,
     AlertCircle,

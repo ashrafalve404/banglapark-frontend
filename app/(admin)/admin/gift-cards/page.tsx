@@ -12,11 +12,11 @@ import {
     Search,
     AlertCircle,
     FileText,
-    DollarSign,
+    Coins,
     ShoppingBag,
     Users,
     Gift,
-    Sparkles,
+    UserCheck,
     Calendar,
     Phone,
     Mail,
@@ -251,7 +251,7 @@ export default function AdminGiftCardsPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                 <div className="card p-4 bg-white border border-rose-100 flex items-center gap-3 shadow-sm">
                     <div className="w-10 h-10 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center shrink-0">
-                        <DollarSign size={20} />
+                        <Coins size={20} />
                     </div>
                     <div>
                         <p className="text-[11px] text-slate-500 font-medium">{locale === "bn" ? "মোট বিক্রি আয়" : "Total Revenue"}</p>
@@ -292,7 +292,7 @@ export default function AdminGiftCardsPage() {
 
                 <div className="card p-4 bg-white border border-indigo-100 flex items-center gap-3 shadow-sm">
                     <div className="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center shrink-0">
-                        <Sparkles size={20} />
+                        <UserCheck size={20} />
                     </div>
                     <div>
                         <p className="text-[11px] text-slate-500 font-medium">{locale === "bn" ? "সক্রিয় অ্যাকাউন্ট" : "Activated"}</p>
@@ -545,6 +545,11 @@ export default function AdminGiftCardsPage() {
                                                                     <Mail size={12} className="text-slate-400" /> {log.user.email}
                                                                 </span>
                                                             )}
+                                                            {log.wasAccountActivated && (
+                                                                <span className="inline-flex items-center gap-1 text-[9px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded mt-0.5 border border-emerald-200">
+                                                                    <CheckCircle size={10} /> {locale === "bn" ? "অ্যাক্টিভেটেড" : "Activated"}
+                                                                </span>
+                                                            )}
                                                         </div>
                                                     </div>
                                                 </td>
@@ -552,7 +557,7 @@ export default function AdminGiftCardsPage() {
                                                     <p className="font-bold text-slate-800 text-xs">{log.giftCard.title}</p>
                                                     {log.wasAccountActivated && (
                                                         <span className="inline-flex items-center gap-1 text-[9px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded mt-0.5 border border-emerald-200">
-                                                            <Sparkles size={10} /> {locale === "bn" ? "অ্যাক্টিভেটেড" : "Activated"}
+                                                            <CheckCircle size={10} /> {locale === "bn" ? "অ্যাক্টিভেটেড" : "Activated"}
                                                         </span>
                                                     )}
                                                 </td>
