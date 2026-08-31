@@ -610,7 +610,7 @@ export default function AdminUsersPage() {
                                                 <tbody className="divide-y divide-slate-100">
                                                     {statementData.transactions.map((tx: any) => {
                                                         const isDebit =
-                                                            ["PURCHASE", "WITHDRAWAL", "GIFT_CARD_PURCHASE", "CPA_TASK_PURCHASE", "QUIZ_PURCHASE", "QUIZ_DEDUCTION"].includes(tx.type) ||
+                                                            ["PURCHASE", "WITHDRAWAL", "GIFT_CARD_PURCHASE", "CPA_TASK_PURCHASE", "QUIZ_PURCHASE", "QUIZ_DEDUCTION", "TRANSFER_OUT"].includes(tx.type) ||
                                                             tx.type?.includes("PURCHASE") ||
                                                             tx.type?.includes("WITHDRAWAL") ||
                                                             Number(tx.amount) < 0;
