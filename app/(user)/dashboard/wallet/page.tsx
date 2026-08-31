@@ -645,7 +645,7 @@ export default function WalletPage() {
                                         {locale === "bn" ? "ধাপ ১: নিচের বিকাশ নম্বরে টাকা পাঠান" : "Step 1: Send money to this Bkash number"}
                                     </p>
                                     <p className="text-2xl font-black text-emerald-900 tracking-widest">
-                                        {adminInfo?.bkashNumber ?? "Loading..."}
+                                        {adminInfo?.bkashNumber ?? "01823674796"}
                                     </p>
                                     <p className="text-[11px] text-emerald-600">{locale === "bn" ? "বিকাশ Send Money অথবা Payment ব্যবহার করুন" : "Use Bkash Send Money or Payment"}</p>
                                 </div>
