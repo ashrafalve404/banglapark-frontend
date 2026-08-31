@@ -143,7 +143,7 @@ export default function DashboardOverview() {
             cardBg: "bg-emerald-200 text-emerald-950 border-emerald-300 hover:bg-emerald-300",
         },
         {
-            href: "#",
+            href: "/dashboard/digital-marketing",
             label: t("nav.digitalMarketing"),
             image: "/images/digitalmarketing.png",
             cardBg: "bg-sky-200 text-sky-950 border-sky-300 hover:bg-sky-300",

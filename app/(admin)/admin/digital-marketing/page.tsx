@@ -2,11 +2,13 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { PlusCircle, Megaphone, CheckCircle2, Clock, Eye, EyeOff, Trash2, Edit, RefreshCw, Search } from "lucide-react";
+import { PlusCircle, Megaphone, CheckCircle2, Clock, Eye, EyeOff, Trash2, Edit, RefreshCw } from "lucide-react";
 import { digitalMarketingApi, type DigitalMarketingPackage } from "@/lib/api/digital-marketing";
 import { formatCurrency, formatDateTime } from "@/lib/utils";
+import { useLocale } from "@/lib/i18n";
 
 export default function AdminDigitalMarketingPage() {
+    const { t, locale } = useLocale();
     const queryClient = useQueryClient();
     const [page, setPage] = useState(1);
     const [statusFilter, setStatusFilter] = useState("");
@@ -79,15 +81,15 @@ export default function AdminDigitalMarketingPage() {
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-800">Digital Marketing Packages</h1>
-                    <p className="text-sm text-slate-500">Create, edit and manage 24h return packages and monitor user investments</p>
+                    <h1 className="text-2xl font-bold text-slate-800">{t("digitalMarketing.adminTitle")}</h1>
+                    <p className="text-sm text-slate-500">{t("digitalMarketing.adminSubtitle")}</p>
                 </div>
                 <div className="flex items-center gap-2 self-start">
                     <button onClick={() => { refetchPackages(); refetchPurchases(); }} className="btn-secondary py-2 px-3 flex items-center gap-1.5 text-xs">
                         <RefreshCw size={14} /> Refresh
                     </button>
                     <button onClick={() => { resetForm(); setShowModal(true); }} className="py-2 px-4 flex items-center gap-1.5 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-all shadow-xs">
-                        <PlusCircle size={14} /> Create Package
+                        <PlusCircle size={14} /> {t("digitalMarketing.createPackage")}
                     </button>
                 </div>
             </div>
@@ -95,13 +97,13 @@ export default function AdminDigitalMarketingPage() {
             {/* Packages Grid / Table */}
             <div className="card p-5 bg-white space-y-4">
                 <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                    <Megaphone size={18} className="text-indigo-600" /> Package List
+                    <Megaphone size={18} className="text-indigo-600" /> {t("digitalMarketing.packageList")}
                 </h2>
 
                 {pkgLoading ? (
-                    <div className="py-10 text-center text-slate-400">Loading packages...</div>
+                    <div className="py-10 text-center text-slate-400">{locale === "bn" ? "প্যাকেজ লোড হচ্ছে..." : "Loading packages..."}</div>
                 ) : !packages || packages.length === 0 ? (
-                    <div className="py-10 text-center text-slate-400">No packages created yet. Click "Create Package" to add one.</div>
+                    <div className="py-10 text-center text-slate-400">{locale === "bn" ? "কোনো প্যাকেজ নেই। 'নতুন প্যাকেজ তৈরি' বাটনে ক্লিক করুন।" : "No packages created yet. Click 'Create Package' to add one."}</div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         {packages.map((pkg) => (
@@ -109,7 +111,7 @@ export default function AdminDigitalMarketingPage() {
                                 <div className="flex items-start justify-between">
                                     <div>
                                         <h3 className="font-bold text-slate-900 text-sm">{pkg.title}</h3>
-                                        <p className="text-xs text-slate-500 line-clamp-1">{pkg.description || "No description"}</p>
+                                        <p className="text-xs text-slate-500 line-clamp-1">{pkg.description || (locale === "bn" ? "কোনো বিবরণ নেই" : "No description")}</p>
                                     </div>
                                     <div className="flex items-center gap-1">
                                         <button onClick={() => updateMutation.mutate({ id: pkg.id, body: { isHidden: !pkg.isHidden } })} title={pkg.isHidden ? "Unhide" : "Hide"} className="p-1.5 text-slate-400 hover:text-slate-600 cursor-pointer">
@@ -118,7 +120,7 @@ export default function AdminDigitalMarketingPage() {
                                         <button onClick={() => handleEdit(pkg)} title="Edit" className="p-1.5 text-slate-400 hover:text-indigo-600 cursor-pointer">
                                             <Edit size={16} />
                                         </button>
-                                        <button onClick={() => { if (confirm("Delete this package?")) deleteMutation.mutate(pkg.id); }} title="Delete" className="p-1.5 text-slate-400 hover:text-red-600 cursor-pointer">
+                                        <button onClick={() => { if (confirm(locale === "bn" ? "আপনি কি প্যাকেজটি মুছে ফেলতে চান?" : "Delete this package?")) deleteMutation.mutate(pkg.id); }} title="Delete" className="p-1.5 text-slate-400 hover:text-red-600 cursor-pointer">
                                             <Trash2 size={16} />
                                         </button>
                                     </div>
@@ -126,16 +128,16 @@ export default function AdminDigitalMarketingPage() {
 
                                 <div className="bg-slate-50 rounded-lg p-2.5 text-xs space-y-1">
                                     <div className="flex justify-between text-slate-700">
-                                        <span>Price:</span>
-                                        <span className="font-bold">{formatCurrency(pkg.price, "en")}</span>
+                                        <span>{locale === "bn" ? "মূল্য:" : "Price:"}</span>
+                                        <span className="font-bold">{formatCurrency(pkg.price, locale)}</span>
                                     </div>
                                     <div className="flex justify-between text-amber-700">
-                                        <span>Profit:</span>
+                                        <span>{locale === "bn" ? "প্রফিট:" : "Profit:"}</span>
                                         <span className="font-bold">+{pkg.profitPercent}% in {pkg.durationHours}h</span>
                                     </div>
                                     <div className="flex justify-between text-emerald-700 font-bold">
-                                        <span>24h Return:</span>
-                                        <span>{formatCurrency(Number(pkg.price) * (1 + Number(pkg.profitPercent) / 100), "en")}</span>
+                                        <span>{locale === "bn" ? "২৪h মোট ফেরত:" : "24h Return:"}</span>
+                                        <span>{formatCurrency(Number(pkg.price) * (1 + Number(pkg.profitPercent) / 100), locale)}</span>
                                     </div>
                                 </div>
                             </div>
@@ -148,23 +150,23 @@ export default function AdminDigitalMarketingPage() {
             <div className="card overflow-hidden">
                 <div className="p-4 bg-slate-50 border-b border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                     <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                        <Clock size={18} className="text-amber-600" /> User Investment Purchases
+                        <Clock size={18} className="text-amber-600" /> {t("digitalMarketing.userPurchases")}
                     </h2>
                     <select
                         className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-600"
                         value={statusFilter}
                         onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
                     >
-                        <option value="">All Statuses</option>
-                        <option value="ACTIVE">Active (24h Countdown)</option>
-                        <option value="COMPLETED">Completed (Credited)</option>
+                        <option value="">{t("digitalMarketing.allStatuses")}</option>
+                        <option value="ACTIVE">{t("digitalMarketing.activeFilter")}</option>
+                        <option value="COMPLETED">{t("digitalMarketing.completedFilter")}</option>
                     </select>
                 </div>
 
                 {purLoading ? (
-                    <div className="py-16 text-center text-slate-400">Loading user purchases...</div>
+                    <div className="py-16 text-center text-slate-400">{locale === "bn" ? "লোড হচ্ছে..." : "Loading user purchases..."}</div>
                 ) : purchases.length === 0 ? (
-                    <div className="py-16 text-center text-slate-400">No user purchases found</div>
+                    <div className="py-16 text-center text-slate-400">{locale === "bn" ? "কোনো পেমেন্ট পাওয়া যায়নি" : "No user purchases found"}</div>
                 ) : (
                     <div className="overflow-x-auto">
                         <table className="w-full text-left border-collapse text-xs">
@@ -183,15 +185,15 @@ export default function AdminDigitalMarketingPage() {
                             <tbody className="divide-y divide-slate-100 bg-white">
                                 {purchases.map((item) => (
                                     <tr key={item.id} className="hover:bg-slate-50/50">
-                                        <td className="p-3.5 text-slate-500 whitespace-nowrap">{formatDateTime(item.purchasedAt, "en")}</td>
+                                        <td className="p-3.5 text-slate-500 whitespace-nowrap">{formatDateTime(item.purchasedAt, locale)}</td>
                                         <td className="p-3.5">
                                             <p className="font-bold text-slate-900">{item.user?.name}</p>
                                             <p className="text-[10px] text-slate-400">{item.user?.phone} (ID#{item.user?.memberId})</p>
                                         </td>
                                         <td className="p-3.5 font-semibold text-slate-900">{item.package?.title}</td>
-                                        <td className="p-3.5 text-right font-bold text-slate-800">{formatCurrency(item.amount, "en")}</td>
-                                        <td className="p-3.5 text-right font-bold text-amber-700">+ {formatCurrency(item.profitAmount, "en")}</td>
-                                        <td className="p-3.5 text-right font-black text-emerald-700">{formatCurrency(item.totalReturn, "en")}</td>
+                                        <td className="p-3.5 text-right font-bold text-slate-800">{formatCurrency(item.amount, locale)}</td>
+                                        <td className="p-3.5 text-right font-bold text-amber-700">+ {formatCurrency(item.profitAmount, locale)}</td>
+                                        <td className="p-3.5 text-right font-black text-emerald-700">{formatCurrency(item.totalReturn, locale)}</td>
                                         <td className="p-3.5 text-center">
                                             <span className={`inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-1 rounded-full border ${
                                                 item.status === "COMPLETED" ? "bg-emerald-50 text-emerald-700 border-emerald-200" : "bg-amber-50 text-amber-700 border-amber-200"
@@ -200,7 +202,7 @@ export default function AdminDigitalMarketingPage() {
                                                 {item.status}
                                             </span>
                                         </td>
-                                        <td className="p-3.5 text-right text-slate-500 whitespace-nowrap">{formatDateTime(item.maturesAt, "en")}</td>
+                                        <td className="p-3.5 text-right text-slate-500 whitespace-nowrap">{formatDateTime(item.maturesAt, locale)}</td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -222,28 +224,28 @@ export default function AdminDigitalMarketingPage() {
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
                     <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-4">
                         <div className="flex items-center justify-between">
-                            <h3 className="text-base font-bold text-slate-900">{editingPkg ? "Edit Package" : "Create New Package"}</h3>
+                            <h3 className="text-base font-bold text-slate-900">{editingPkg ? (locale === "bn" ? "প্যাকেজ এডিট করুন" : "Edit Package") : (locale === "bn" ? "নতুন প্যাকেজ তৈরি করুন" : "Create New Package")}</h3>
                             <button onClick={resetForm} className="text-slate-400 hover:text-slate-600 text-xl leading-none cursor-pointer">✕</button>
                         </div>
 
                         <div className="space-y-3">
                             <div className="space-y-1">
-                                <label className="text-xs font-bold text-slate-700 block">Package Title</label>
+                                <label className="text-xs font-bold text-slate-700 block">{locale === "bn" ? "প্যাকেজের শিরোনাম" : "Package Title"}</label>
                                 <input type="text" className="input w-full text-sm" placeholder="Starter Marketing Package" value={title} onChange={(e) => setTitle(e.target.value)} />
                             </div>
 
                             <div className="space-y-1">
-                                <label className="text-xs font-bold text-slate-700 block">Description (Optional)</label>
+                                <label className="text-xs font-bold text-slate-700 block">{locale === "bn" ? "বিবরণ (ঐচ্ছিক)" : "Description (Optional)"}</label>
                                 <textarea className="input w-full text-sm resize-none" rows={2} placeholder="Package details..." value={description} onChange={(e) => setDescription(e.target.value)} />
                             </div>
 
                             <div className="grid grid-cols-2 gap-3">
                                 <div className="space-y-1">
-                                    <label className="text-xs font-bold text-slate-700 block">Price (৳)</label>
+                                    <label className="text-xs font-bold text-slate-700 block">{locale === "bn" ? "মূল্য (৳)" : "Price (৳)"}</label>
                                     <input type="number" className="input w-full text-sm" placeholder="1000" min={1} value={price} onChange={(e) => setPrice(e.target.value)} />
                                 </div>
                                 <div className="space-y-1">
-                                    <label className="text-xs font-bold text-slate-700 block">Profit Bonus (%)</label>
+                                    <label className="text-xs font-bold text-slate-700 block">{locale === "bn" ? "প্রফিট বোনাস (%)" : "Profit Bonus (%)"}</label>
                                     <input type="number" step="0.1" className="input w-full text-sm" placeholder="1.00" value={profitPercent} onChange={(e) => setProfitPercent(e.target.value)} />
                                 </div>
                             </div>
@@ -263,10 +265,10 @@ export default function AdminDigitalMarketingPage() {
                                 disabled={!title || !price || createMutation.isPending || updateMutation.isPending}
                                 className="flex-1 py-2.5 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl disabled:opacity-50 cursor-pointer"
                             >
-                                {editingPkg ? "Save Changes" : "Create Package"}
+                                {editingPkg ? t("digitalMarketing.saveChanges") : t("digitalMarketing.createPackage")}
                             </button>
                             <button onClick={resetForm} className="px-4 py-2.5 text-xs font-bold text-slate-600 border border-slate-200 rounded-xl hover:bg-slate-50 cursor-pointer">
-                                Cancel
+                                {t("digitalMarketing.cancel")}
                             </button>
                         </div>
                     </div>

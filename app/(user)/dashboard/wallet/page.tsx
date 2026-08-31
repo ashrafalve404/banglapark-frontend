@@ -519,6 +519,19 @@ export default function WalletPage() {
                             </div>
                         ) : (
                             <>
+                                {/* 10% Service Charge Info Notice */}
+                                <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 flex items-start gap-2 text-xs text-amber-800">
+                                    <AlertCircle size={16} className="text-amber-600 shrink-0 mt-0.5" />
+                                    <div>
+                                        <p className="font-bold">{locale === "bn" ? "১০% সার্ভিস চার্জ প্রযোজ্য" : "10% Platform Service Fee Applies"}</p>
+                                        <p className="text-[11px] text-amber-700 mt-0.5">
+                                            {locale === "bn"
+                                                ? "ট্রান্সফারকৃত পরিমাণ থেকে ১০% চার্জ কাটা হবে এবং অবশিষ্টাংশ প্রাপক পাবেন। সর্বনিম্ন ট্রান্সফার ৳৫০০।"
+                                                : "A 10% fee is deducted from the transfer amount and the recipient receives the remaining 90%. Minimum transfer is ৳500."}
+                                        </p>
+                                    </div>
+                                </div>
+
                                 {/* Recipient lookup */}
                                 <div className="space-y-2">
                                     <label className="text-xs font-bold text-slate-700 block">
