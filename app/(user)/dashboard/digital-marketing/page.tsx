@@ -90,6 +90,13 @@ export default function DigitalMarketingPage() {
     const totalActiveInvested = activePurchases.reduce((sum, p) => sum + Number(p.amount), 0);
     const totalCompletedEarned = completedPurchases.reduce((sum, p) => sum + Number(p.profitAmount), 0);
 
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
+    const todayPurchasesCount = (myData?.purchases ?? []).filter(
+        (p) => new Date(p.purchasedAt).getTime() >= startOfToday.getTime()
+    ).length;
+    const isDailyLimitReached = todayPurchasesCount >= 5;
+
     return (
         <div className="space-y-6">
             {/* Header */}
@@ -102,6 +109,15 @@ export default function DigitalMarketingPage() {
                     <p className="text-sm text-slate-500">
                         {t("digitalMarketing.subtitle")}
                     </p>
+                </div>
+                <div className="flex items-center gap-2 self-start sm:self-center">
+                    <span className={`px-3 py-1.5 rounded-xl border text-xs font-bold ${
+                        isDailyLimitReached
+                            ? "bg-red-50 text-red-700 border-red-200"
+                            : "bg-indigo-50 text-indigo-700 border-indigo-200"
+                    }`}>
+                        {locale === "bn" ? `দৈনিক লিমিট: ${todayPurchasesCount}/৫ ব্যবহৃত` : `Daily Limit: ${todayPurchasesCount}/5 Used`}
+                    </span>
                 </div>
             </div>
 
@@ -251,10 +267,12 @@ export default function DigitalMarketingPage() {
 
                                     <button
                                         onClick={() => setSelectedPkg(pkg)}
-                                        disabled={!canAfford}
+                                        disabled={!canAfford || isDailyLimitReached}
                                         className="w-full py-3 flex items-center justify-center gap-2 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-all shadow-xs"
                                     >
-                                        {canAfford ? (
+                                        {isDailyLimitReached ? (
+                                            locale === "bn" ? "দৈনিক লিমিট শেষ (সর্বোচ্চ ৫টি/দিন)" : "Daily Limit Reached (Max 5/Day)"
+                                        ) : canAfford ? (
                                             <>
                                                 {t("digitalMarketing.buyPackage")} <ArrowRight size={14} />
                                             </>
