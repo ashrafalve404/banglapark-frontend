@@ -132,90 +132,7 @@ export default function DigitalMarketingPage() {
                 </div>
             )}
 
-            {/* Stat Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="card p-5 bg-white flex items-center justify-between">
-                    <div>
-                        <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block">
-                            {t("digitalMarketing.walletBalance")}
-                        </span>
-                        <span className="text-2xl font-bold text-slate-900">
-                            {formatCurrency(availableBalance, locale)}
-                        </span>
-                    </div>
-                    <div className="p-3 rounded-xl bg-indigo-50 text-indigo-600">
-                        <TrendingUp size={22} />
-                    </div>
-                </div>
-
-                <div className="card p-5 bg-white flex items-center justify-between">
-                    <div>
-                        <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block">
-                            {t("digitalMarketing.activeInvestments")}
-                        </span>
-                        <span className="text-2xl font-bold text-amber-700">
-                            {formatCurrency(totalActiveInvested, locale)}
-                        </span>
-                    </div>
-                    <div className="p-3 rounded-xl bg-amber-50 text-amber-600">
-                        <Clock size={22} />
-                    </div>
-                </div>
-
-                <div className="card p-5 bg-white flex items-center justify-between">
-                    <div>
-                        <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block">
-                            {t("digitalMarketing.totalProfitEarned")}
-                        </span>
-                        <span className="text-2xl font-bold text-emerald-700">
-                            {formatCurrency(totalCompletedEarned, locale)}
-                        </span>
-                    </div>
-                    <div className="p-3 rounded-xl bg-emerald-50 text-emerald-600">
-                        <Coins size={22} />
-                    </div>
-                </div>
-            </div>
-
-            {/* ── Active Purchases Section ── */}
-            {activePurchases.length > 0 && (
-                <div className="space-y-3">
-                    <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                        <Clock size={18} className="text-amber-600" />
-                        {t("digitalMarketing.activeTitle")}
-                    </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {activePurchases.map((item) => (
-                            <div key={item.id} className="card p-5 bg-gradient-to-br from-indigo-50/60 to-white border border-indigo-100 space-y-3 shadow-xs">
-                                <div className="flex items-center justify-between">
-                                    <h3 className="font-bold text-slate-900 text-sm">{item.package?.title || "Digital Marketing Package"}</h3>
-                                    <CountdownTimer expiresAt={item.maturesAt} locale={locale} t={t} />
-                                </div>
-                                <div className="grid grid-cols-3 gap-2 bg-white p-3 rounded-xl border border-slate-100 text-center">
-                                    <div>
-                                        <span className="text-[10px] text-slate-400 block font-semibold">{t("digitalMarketing.paidAmount")}</span>
-                                        <span className="text-xs font-bold text-slate-900">{formatCurrency(item.amount, locale)}</span>
-                                    </div>
-                                    <div>
-                                        <span className="text-[10px] text-slate-400 block font-semibold">{t("digitalMarketing.profit1Percent")}</span>
-                                        <span className="text-xs font-bold text-amber-700">+ {formatCurrency(item.profitAmount, locale)}</span>
-                                    </div>
-                                    <div>
-                                        <span className="text-[10px] text-slate-400 block font-semibold">{t("digitalMarketing.return24h")}</span>
-                                        <span className="text-xs font-bold text-emerald-700">{formatCurrency(item.totalReturn, locale)}</span>
-                                    </div>
-                                </div>
-                                <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1">
-                                    <span>{t("digitalMarketing.purchasedDate")}: {formatDateTime(item.purchasedAt, locale)}</span>
-                                    <span>{t("digitalMarketing.returnTime")}: {formatDateTime(item.maturesAt, locale)}</span>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            )}
-
-            {/* ── Available Packages Grid ── */}
+            {/* ── 1. Available Packages Grid (Top Priority) ── */}
             <div className="space-y-3">
                 <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
                     <Megaphone size={18} className="text-indigo-600" />
@@ -230,7 +147,7 @@ export default function DigitalMarketingPage() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                         {packages.map((pkg) => {
                             const price = Number(pkg.price);
-                            const profitPercent = Number(pkg.profitPercent ?? 1.0);
+                            const profitPercent = Number(pkg.profitPercent ?? 0.1);
                             const profitAmount = Math.round((price * (profitPercent / 100)) * 100) / 100;
                             const totalReturn = Math.round((price + profitAmount) * 100) / 100;
                             const canAfford = availableBalance >= price;
@@ -271,7 +188,7 @@ export default function DigitalMarketingPage() {
                                                 <span className="font-bold text-slate-900 text-sm">{formatCurrency(price, locale)}</span>
                                             </div>
                                             <div className="flex items-center justify-between text-amber-700">
-                                                <span>{t("digitalMarketing.bonusProfit")}</span>
+                                                <span>{t("digitalMarketing.bonusProfit")} ({profitPercent}%)</span>
                                                 <span className="font-bold">+ {formatCurrency(profitAmount, locale)}</span>
                                             </div>
                                             <div className="flex items-center justify-between text-emerald-800 font-bold border-t border-slate-200 pt-2 text-sm">
@@ -301,6 +218,89 @@ export default function DigitalMarketingPage() {
                         })}
                     </div>
                 )}
+            </div>
+
+            {/* ── 2. Active Purchases Section ── */}
+            {activePurchases.length > 0 && (
+                <div className="space-y-3">
+                    <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                        <Clock size={18} className="text-amber-600" />
+                        {t("digitalMarketing.activeTitle")}
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {activePurchases.map((item) => (
+                            <div key={item.id} className="card p-5 bg-gradient-to-br from-indigo-50/60 to-white border border-indigo-100 space-y-3 shadow-xs">
+                                <div className="flex items-center justify-between">
+                                    <h3 className="font-bold text-slate-900 text-sm">{item.package?.title || "Digital Marketing Package"}</h3>
+                                    <CountdownTimer expiresAt={item.maturesAt} locale={locale} t={t} />
+                                </div>
+                                <div className="grid grid-cols-3 gap-2 bg-white p-3 rounded-xl border border-slate-100 text-center">
+                                    <div>
+                                        <span className="text-[10px] text-slate-400 block font-semibold">{t("digitalMarketing.paidAmount")}</span>
+                                        <span className="text-xs font-bold text-slate-900">{formatCurrency(item.amount, locale)}</span>
+                                    </div>
+                                    <div>
+                                        <span className="text-[10px] text-slate-400 block font-semibold">{t("digitalMarketing.profit1Percent")}</span>
+                                        <span className="text-xs font-bold text-amber-700">+ {formatCurrency(item.profitAmount, locale)}</span>
+                                    </div>
+                                    <div>
+                                        <span className="text-[10px] text-slate-400 block font-semibold">{t("digitalMarketing.return24h")}</span>
+                                        <span className="text-xs font-bold text-emerald-700">{formatCurrency(item.totalReturn, locale)}</span>
+                                    </div>
+                                </div>
+                                <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1">
+                                    <span>{t("digitalMarketing.purchasedDate")}: {formatDateTime(item.purchasedAt, locale)}</span>
+                                    <span>{t("digitalMarketing.returnTime")}: {formatDateTime(item.maturesAt, locale)}</span>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            {/* ── 3. Investment & Balance Summary Stats ── */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="card p-5 bg-white flex items-center justify-between border border-slate-200">
+                    <div>
+                        <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block">
+                            {t("digitalMarketing.walletBalance")}
+                        </span>
+                        <span className="text-2xl font-bold text-slate-900">
+                            {formatCurrency(availableBalance, locale)}
+                        </span>
+                    </div>
+                    <div className="p-3 rounded-xl bg-indigo-50 text-indigo-600">
+                        <TrendingUp size={22} />
+                    </div>
+                </div>
+
+                <div className="card p-5 bg-white flex items-center justify-between border border-slate-200">
+                    <div>
+                        <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block">
+                            {t("digitalMarketing.activeInvestments")}
+                        </span>
+                        <span className="text-2xl font-bold text-amber-700">
+                            {formatCurrency(totalActiveInvested, locale)}
+                        </span>
+                    </div>
+                    <div className="p-3 rounded-xl bg-amber-50 text-amber-600">
+                        <Clock size={22} />
+                    </div>
+                </div>
+
+                <div className="card p-5 bg-white flex items-center justify-between border border-slate-200">
+                    <div>
+                        <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block">
+                            {t("digitalMarketing.totalProfitEarned")}
+                        </span>
+                        <span className="text-2xl font-bold text-emerald-700">
+                            {formatCurrency(totalCompletedEarned, locale)}
+                        </span>
+                    </div>
+                    <div className="p-3 rounded-xl bg-emerald-50 text-emerald-600">
+                        <Coins size={22} />
+                    </div>
+                </div>
             </div>
 
             {/* ── Completed Returns History ── */}
@@ -360,12 +360,12 @@ export default function DigitalMarketingPage() {
                                 <span className="font-bold text-slate-900">{formatCurrency(selectedPkg.price, locale)}</span>
                             </div>
                             <div className="flex justify-between text-amber-700">
-                                <span>{t("digitalMarketing.profitBonus")}</span>
-                                <span className="font-bold">+ {formatCurrency(Math.round((Number(selectedPkg.price) * 0.01) * 100) / 100, locale)}</span>
+                                <span>{t("digitalMarketing.profitBonus")} ({selectedPkg.profitPercent ?? 0.1}%)</span>
+                                <span className="font-bold">+ {formatCurrency(Math.round((Number(selectedPkg.price) * (Number(selectedPkg.profitPercent ?? 0.1) / 100)) * 100) / 100, locale)}</span>
                             </div>
                             <div className="flex justify-between text-emerald-800 font-bold border-t border-indigo-100 pt-2 text-sm">
                                 <span>{t("digitalMarketing.totalReturn24h")}</span>
-                                <span>{formatCurrency(Math.round((Number(selectedPkg.price) * 1.01) * 100) / 100, locale)}</span>
+                                <span>{formatCurrency(Math.round((Number(selectedPkg.price) * (1 + (Number(selectedPkg.profitPercent ?? 0.1) / 100))) * 100) / 100, locale)}</span>
                             </div>
                         </div>
 
