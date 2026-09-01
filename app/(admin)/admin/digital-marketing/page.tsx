@@ -2,8 +2,9 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { PlusCircle, Megaphone, CheckCircle2, Clock, Eye, EyeOff, Trash2, Edit, RefreshCw, ExternalLink, Image as ImageIcon } from "lucide-react";
+import { PlusCircle, Megaphone, CheckCircle2, Clock, Eye, EyeOff, Trash2, Edit, RefreshCw, ExternalLink, Image as ImageIcon, Upload, Loader2 } from "lucide-react";
 import { digitalMarketingApi, type DigitalMarketingPackage } from "@/lib/api/digital-marketing";
+import { uploadsApi } from "@/lib/api/uploads";
 import { formatCurrency, formatDateTime } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
 
@@ -23,6 +24,7 @@ export default function AdminDigitalMarketingPage() {
     const [price, setPrice] = useState("");
     const [profitPercent, setProfitPercent] = useState("0.10");
     const [durationHours, setDurationHours] = useState("24");
+    const [uploadingImage, setUploadingImage] = useState(false);
 
     const { data: packages, isLoading: pkgLoading, refetch: refetchPackages } = useQuery({
         queryKey: ["admin-dm-packages"],
@@ -54,6 +56,20 @@ export default function AdminDigitalMarketingPage() {
         mutationFn: (id: string) => digitalMarketingApi.adminDeletePackage(id),
         onSuccess: () => queryClient.invalidateQueries({ queryKey: ["admin-dm-packages"] }),
     });
+
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        try {
+            setUploadingImage(true);
+            const res = await uploadsApi.upload(file);
+            setImage(res.url);
+        } catch (err: any) {
+            alert("Image upload failed: " + (err.message || "Error"));
+        } finally {
+            setUploadingImage(false);
+        }
+    };
 
     const resetForm = () => {
         setShowModal(false);
@@ -257,9 +273,38 @@ export default function AdminDigitalMarketingPage() {
                                 <textarea className="input w-full text-sm resize-none" rows={2} placeholder="Package details..." value={description} onChange={(e) => setDescription(e.target.value)} />
                             </div>
 
+                            {/* Image File Uploader */}
                             <div className="space-y-1">
-                                <label className="text-xs font-bold text-slate-700 block">{locale === "bn" ? "ব্যানার / ইমেজ লিংক (ঐচ্ছিক)" : "Banner / Image URL (Optional)"}</label>
-                                <input type="url" className="input w-full text-sm" placeholder="https://example.com/banner.jpg" value={image} onChange={(e) => setImage(e.target.value)} />
+                                <label className="text-xs font-bold text-slate-700 block">
+                                    {locale === "bn" ? "প্যাকেজ ব্যানার ছবি (ঐচ্ছিক)" : "Package Banner Image (Optional)"}
+                                </label>
+                                {image ? (
+                                    <div className="relative w-full h-32 rounded-xl overflow-hidden bg-slate-100 border border-slate-200 group">
+                                        <img src={image} alt="Preview" className="w-full h-full object-contain" />
+                                        <button
+                                            type="button"
+                                            onClick={() => setImage("")}
+                                            className="absolute top-2 right-2 bg-red-600 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg shadow cursor-pointer hover:bg-red-700"
+                                        >
+                                            Remove
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <div className="flex items-center gap-2">
+                                        <label className="flex-1 border-2 border-dashed border-slate-200 hover:border-indigo-400 rounded-xl p-3 text-center cursor-pointer transition-all bg-slate-50 hover:bg-indigo-50/50">
+                                            <input type="file" accept="image/*" className="hidden" onChange={handleFileChange} disabled={uploadingImage} />
+                                            {uploadingImage ? (
+                                                <span className="text-xs text-indigo-600 font-bold flex items-center justify-center gap-1">
+                                                    <Loader2 size={14} className="animate-spin" /> Uploading image...
+                                                </span>
+                                            ) : (
+                                                <span className="text-xs font-semibold text-slate-600 flex items-center justify-center gap-1.5">
+                                                    <Upload size={14} className="text-indigo-600" /> {locale === "bn" ? "ছবি ফাইল আপলোড করুন" : "Upload Banner Image File"}
+                                                </span>
+                                            )}
+                                        </label>
+                                    </div>
+                                )}
                             </div>
 
                             <div className="space-y-1">
@@ -290,7 +335,7 @@ export default function AdminDigitalMarketingPage() {
                                         createMutation.mutate(body);
                                     }
                                 }}
-                                disabled={!title || !price || createMutation.isPending || updateMutation.isPending}
+                                disabled={!title || !price || uploadingImage || createMutation.isPending || updateMutation.isPending}
                                 className="flex-1 py-2.5 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl disabled:opacity-50 cursor-pointer"
                             >
                                 {editingPkg ? t("digitalMarketing.saveChanges") : t("digitalMarketing.createPackage")}
