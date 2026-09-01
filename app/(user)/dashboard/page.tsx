@@ -94,6 +94,13 @@ export default function DashboardOverview() {
             badge: "New",
         },
         {
+            href: "/dashboard/digital-marketing",
+            label: t("nav.digitalMarketing"),
+            image: "/images/digitalmarketing.png",
+            cardBg: "bg-sky-200 text-sky-950 border-sky-300 hover:bg-sky-300",
+            badge: "Hot",
+        },
+        {
             href: "#",
             label: t("nav.myOffers"),
             image: "/images/myoffer.png",
@@ -141,12 +148,6 @@ export default function DashboardOverview() {
             label: t("nav.affiliateMarketing"),
             image: "/images/affilaitemarketing.png",
             cardBg: "bg-emerald-200 text-emerald-950 border-emerald-300 hover:bg-emerald-300",
-        },
-        {
-            href: "/dashboard/digital-marketing",
-            label: t("nav.digitalMarketing"),
-            image: "/images/digitalmarketing.png",
-            cardBg: "bg-sky-200 text-sky-950 border-sky-300 hover:bg-sky-300",
         },
         {
             href: "#",
