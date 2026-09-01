@@ -180,21 +180,129 @@ export default function AdminCommissionRulesPage() {
                         </button>
                     </form>
 
-                    {/* ── Commission Rules Images ── */}
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <div className="card overflow-hidden bg-white">
-                            <img
-                                src="/images/comissionrulesimage1.jpeg"
-                                alt="Commission rules overview"
-                                className="w-full h-auto object-contain"
-                            />
+                    {/* ── All Bonus & Commission Rules Breakdown ── */}
+                    <div className="space-y-4 pt-2">
+                        <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
+                            <TrendingUp size={20} className="text-indigo-600" />
+                            {locale === "bn" ? "সকল বোনাস ও কমিশন রুলসের তালিকা" : "All Bonus & Commission Rules Overview"}
+                        </h2>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            {/* 1. Sales Bonus */}
+                            <div className="card p-5 bg-white border border-slate-200 hover:border-emerald-300 transition-all space-y-2">
+                                <div className="flex items-center gap-2">
+                                    <div className="p-2 rounded-lg bg-emerald-50 text-emerald-700">
+                                        <TrendingUp size={18} />
+                                    </div>
+                                    <h3 className="font-bold text-slate-900 text-sm">
+                                        {locale === "bn" ? "সেলস বোনাস (ডাইনামিক টিয়ার)" : "Sales Bonus (Dynamic Tier)"}
+                                    </h3>
+                                </div>
+                                <p className="text-xs text-slate-600 leading-relaxed">
+                                    {locale === "bn"
+                                        ? "আপনার ডাউনলাইনের প্রতিটি সক্রিয় মেম্বারের জন্য প্রতিদিন ১ টাকা সেলস বোনাস যোগ হবে।"
+                                        : "Earn BDT 1 daily per active member in your downline team directly into your wallet."}
+                                </p>
+                                <div className="bg-emerald-50/60 rounded-lg p-2.5 text-[11px] font-bold text-emerald-900 flex justify-between border border-emerald-100">
+                                    <span>{locale === "bn" ? "হিসাব সূত্র:" : "Formula:"}</span>
+                                    <span>{locale === "bn" ? "সক্রিয় মেম্বার × ৳১ / দিন" : "Active Members × ৳1 / day"}</span>
+                                </div>
+                            </div>
+
+                            {/* 2. Daily Base Benefit */}
+                            <div className="card p-5 bg-white border border-slate-200 hover:border-indigo-300 transition-all space-y-2">
+                                <div className="flex items-center gap-2">
+                                    <div className="p-2 rounded-lg bg-indigo-50 text-indigo-700">
+                                        <Calendar size={18} />
+                                    </div>
+                                    <h3 className="font-bold text-slate-900 text-sm">
+                                        {locale === "bn" ? "দৈনিক বেসিক বেনিফিট" : "Base Daily Benefit"}
+                                    </h3>
+                                </div>
+                                <p className="text-xs text-slate-600 leading-relaxed">
+                                    {locale === "bn"
+                                        ? "প্রতিটি সক্রিয় অ্যাকাউন্টধারী মেম্বার প্রতিদিন নিশ্চিত বেসিক দৈনিক বেনিফিট পাবেন।"
+                                        : "Every active user automatically earns a fixed base daily reward."}
+                                </p>
+                                <div className="bg-indigo-50/60 rounded-lg p-2.5 text-[11px] font-bold text-indigo-900 flex justify-between border border-indigo-100">
+                                    <span>{locale === "bn" ? "দৈনিক পরিমাণ:" : "Daily Base Reward:"}</span>
+                                    <span>৳১০ / দিন</span>
+                                </div>
+                            </div>
+
+                            {/* 3. Generation Commission */}
+                            <div className="card p-5 bg-white border border-slate-200 hover:border-amber-300 transition-all space-y-2">
+                                <div className="flex items-center gap-2">
+                                    <div className="p-2 rounded-lg bg-amber-50 text-amber-700">
+                                        <Users size={18} />
+                                    </div>
+                                    <h3 className="font-bold text-slate-900 text-sm">
+                                        {locale === "bn" ? "জেনারেটর কমিশন (১০ জেনারেশন)" : "Generation Commission (10 Levels)"}
+                                    </h3>
+                                </div>
+                                <p className="text-xs text-slate-600 leading-relaxed">
+                                    {locale === "bn"
+                                        ? "রেফারকৃত নতুন মেম্বার ৳২,০০০ টাকার কোয়ালিফাইং অর্ডার দিয়ে একাউন্ট এক্টিভ করলে ১০ ধাপ পর্যন্ত কমিশন।"
+                                        : "Earn 10-level commission when referred members activate account with a ৳2,000 order."}
+                                </p>
+                                <div className="bg-amber-50/60 rounded-lg p-2.5 text-[11px] font-bold text-amber-900 flex justify-between border border-amber-100">
+                                    <span>{locale === "bn" ? "কমিশন প্রতি ধাপ:" : "Payout Per Level:"}</span>
+                                    <span>৳২০০ (১০ জেনারেশন পর্যন্ত)</span>
+                                </div>
+                            </div>
+
+                            {/* 4. Digital Marketing Packages */}
+                            <div className="card p-5 bg-white border border-slate-200 hover:border-purple-300 transition-all space-y-2">
+                                <div className="flex items-center gap-2">
+                                    <div className="p-2 rounded-lg bg-purple-50 text-purple-700">
+                                        <Banknote size={18} />
+                                    </div>
+                                    <h3 className="font-bold text-slate-900 text-sm">
+                                        {locale === "bn" ? "ডিজিটাল মার্কেটিং প্যাকেজ" : "Digital Marketing Investment"}
+                                    </h3>
+                                </div>
+                                <p className="text-xs text-slate-600 leading-relaxed">
+                                    {locale === "bn"
+                                        ? "২৪ ঘন্টা পর মূল টাকা + ০.১% প্রফিট সরাসরি ওয়ালেটে ব্যাক পাবেন (দৈনিক সর্বোচ্চ ৫টি)।"
+                                        : "100% Principal + 0.1% Profit returned in 24 hours (Max 5 packages/day)."}
+                                </p>
+                                <div className="bg-purple-50/60 rounded-lg p-2.5 text-[11px] font-bold text-purple-900 flex justify-between border border-purple-100">
+                                    <span>{locale === "bn" ? "মুনাফার হার:" : "Profit Rate:"}</span>
+                                    <span>+০.১% (২৪ ঘন্টা পর)</span>
+                                </div>
+                            </div>
                         </div>
-                        <div className="card overflow-hidden bg-white">
-                            <img
-                                src="/images/comissionrulesimage2.jpeg"
-                                alt="Commission rules details"
-                                className="w-full h-auto object-contain"
-                            />
+
+                        {/* 5. Position Salary Table Overview */}
+                        <div className="card p-5 bg-white border border-slate-200 space-y-3">
+                            <h3 className="font-bold text-slate-900 text-sm flex items-center gap-2">
+                                <ShieldCheck size={18} className="text-indigo-600" />
+                                {locale === "bn" ? "পদবী ও মাসিক বেতন তালিকা" : "Position Ranks & Monthly Salary Table"}
+                            </h3>
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-left text-xs border-collapse">
+                                    <thead>
+                                        <tr className="bg-slate-100/70 border-b border-slate-200 text-slate-700 font-bold">
+                                            <th className="p-2.5">Rank</th>
+                                            <th className="p-2.5">Position Title</th>
+                                            <th className="p-2.5 text-center">Required Active Members</th>
+                                            <th className="p-2.5 text-right">Monthly Salary</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-slate-100 text-slate-700 font-medium">
+                                        <tr><td className="p-2.5 font-bold">1</td><td className="p-2.5">Executive Officer</td><td className="p-2.5 text-center">5,000</td><td className="p-2.5 text-right font-bold text-emerald-700">৳25,000</td></tr>
+                                        <tr><td className="p-2.5 font-bold">2</td><td className="p-2.5">Executive Manager</td><td className="p-2.5 text-center">25,000</td><td className="p-2.5 text-right font-bold text-emerald-700">৳75,000</td></tr>
+                                        <tr><td className="p-2.5 font-bold">3</td><td className="p-2.5">Marketing Manager</td><td className="p-2.5 text-center">75,000</td><td className="p-2.5 text-right font-bold text-emerald-700">৳150,000</td></tr>
+                                        <tr><td className="p-2.5 font-bold">4</td><td className="p-2.5">District Manager</td><td className="p-2.5 text-center">200,000</td><td className="p-2.5 text-right font-bold text-emerald-700">৳300,000</td></tr>
+                                        <tr><td className="p-2.5 font-bold">5</td><td className="p-2.5">Regional Manager</td><td className="p-2.5 text-center">500,000</td><td className="p-2.5 text-right font-bold text-emerald-700">৳500,000</td></tr>
+                                        <tr><td className="p-2.5 font-bold">6</td><td className="p-2.5">Executive Vice President</td><td className="p-2.5 text-center">1,200,000</td><td className="p-2.5 text-right font-bold text-emerald-700">৳750,000</td></tr>
+                                        <tr><td className="p-2.5 font-bold">7</td><td className="p-2.5">Additional General Manager</td><td className="p-2.5 text-center">2,500,000</td><td className="p-2.5 text-right font-bold text-emerald-700">৳1,200,000</td></tr>
+                                        <tr><td className="p-2.5 font-bold">8</td><td className="p-2.5">Divisional General Manager</td><td className="p-2.5 text-center">5,000,000</td><td className="p-2.5 text-right font-bold text-emerald-700">৳2,500,000</td></tr>
+                                        <tr><td className="p-2.5 font-bold">9</td><td className="p-2.5">General Manager</td><td className="p-2.5 text-center">5,000,000</td><td className="p-2.5 text-right font-bold text-emerald-700">৳7,500,000</td></tr>
+                                        <tr><td className="p-2.5 font-bold">10</td><td className="p-2.5">Executive Director</td><td className="p-2.5 text-center">10,000,000</td><td className="p-2.5 text-right font-bold text-emerald-700">৳10,000,000</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </>
