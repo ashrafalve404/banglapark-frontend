@@ -21,7 +21,7 @@ export const withdrawalApi = {
         return res.data;
     },
 
-    review: async (id: string, data: { status: "APPROVED" | "REJECTED"; reason?: string }): Promise<WithdrawalRequest> => {
+    review: async (id: string, data: { status: "APPROVED" | "REJECTED" | "RETURNED"; reason?: string }): Promise<WithdrawalRequest> => {
         const res = await api.patch(`/withdrawals/admin/${id}/review`, data);
         return res.data;
     },

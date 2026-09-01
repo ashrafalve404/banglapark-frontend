@@ -234,16 +234,23 @@ export default function WithdrawPage() {
                                                     {req.accountDetails?.bankName} ({req.accountDetails?.branchName}), {req.accountDetails?.holderName}
                                                 </div>
                                             )}
-                                            {req.reason && <div className="text-[10px] text-red-500 font-semibold mt-1">{t("withdraw.history.comment")} {req.reason}</div>}
+                                            {req.reason && (
+                                                <div className={`text-[10px] font-semibold mt-1 ${req.status === "RETURNED" ? "text-indigo-600 font-bold" : "text-red-500"}`}>
+                                                    {t("withdraw.history.comment")} {req.reason}
+                                                </div>
+                                            )}
                                         </td>
                                         <td className="p-4 text-xs font-bold text-gray-900 text-right">{formatCurrency(req.amount, locale)}</td>
                                         <td className="p-4 text-center">
-                                            <span className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${req.status === "APPROVED"
-                                                ? "bg-green-100 text-green-800"
-                                                : req.status === "REJECTED"
-                                                    ? "bg-green-150 text-green-700"
-                                                    : "bg-amber-100 text-amber-800"
-                                                }`}>
+                                            <span className={`inline-block rounded-full px-2.5 py-0.5 text-[10px] font-bold ${
+                                                req.status === "APPROVED"
+                                                    ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                                                    : req.status === "RETURNED"
+                                                        ? "bg-indigo-50 text-indigo-700 border border-indigo-200"
+                                                        : req.status === "REJECTED"
+                                                            ? "bg-red-50 text-red-700 border border-red-200"
+                                                            : "bg-amber-100 text-amber-800"
+                                            }`}>
                                                 {getWithdrawStatusLabel(req.status)}
                                             </span>
                                         </td>

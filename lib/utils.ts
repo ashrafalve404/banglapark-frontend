@@ -56,6 +56,7 @@ export function getWithdrawStatusLabel(status: string): string {
         PENDING: "অপেক্ষমান",
         APPROVED: "অনুমোদিত",
         REJECTED: "প্রত্যাখ্যাত",
+        RETURNED: "ফেরত সম্পন্ন",
     };
     return map[status] ?? status;
 }
