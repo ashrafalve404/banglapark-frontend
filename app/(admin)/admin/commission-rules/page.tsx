@@ -226,7 +226,7 @@ export default function AdminCommissionRulesPage() {
                                 </p>
                                 <div className="bg-indigo-50/60 rounded-lg p-2.5 text-[11px] font-bold text-indigo-900 flex justify-between border border-indigo-100">
                                     <span>{locale === "bn" ? "দৈনিক পরিমাণ:" : "Daily Base Reward:"}</span>
-                                    <span>৳১০ / দিন</span>
+                                    <span>{locale === "bn" ? "৳১০ / দিন" : "BDT 10 / day"}</span>
                                 </div>
                             </div>
 
@@ -247,7 +247,7 @@ export default function AdminCommissionRulesPage() {
                                 </p>
                                 <div className="bg-amber-50/60 rounded-lg p-2.5 text-[11px] font-bold text-amber-900 flex justify-between border border-amber-100">
                                     <span>{locale === "bn" ? "কমিশন প্রতি ধাপ:" : "Payout Per Level:"}</span>
-                                    <span>৳২০০ (১০ জেনারেশন পর্যন্ত)</span>
+                                    <span>{locale === "bn" ? "৳২০০ (১০ জেনারেশন পর্যন্ত)" : "BDT 200 (up to 10 levels)"}</span>
                                 </div>
                             </div>
 
@@ -268,7 +268,7 @@ export default function AdminCommissionRulesPage() {
                                 </p>
                                 <div className="bg-purple-50/60 rounded-lg p-2.5 text-[11px] font-bold text-purple-900 flex justify-between border border-purple-100">
                                     <span>{locale === "bn" ? "মুনাফার হার:" : "Profit Rate:"}</span>
-                                    <span>+০.১% (২৪ ঘন্টা পর)</span>
+                                    <span>{locale === "bn" ? "+০.১% (২৪ ঘন্টা পর)" : "+0.1% (after 24 hours)"}</span>
                                 </div>
                             </div>
                         </div>
