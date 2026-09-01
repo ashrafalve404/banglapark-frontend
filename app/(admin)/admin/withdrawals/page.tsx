@@ -36,6 +36,8 @@ export default function AdminWithdrawalsPage() {
         },
     });
 
+    const [actionError, setActionError] = useState("");
+
     // Review withdrawal request (REJECTED or RETURNED)
     const reviewMutation = useMutation({
         mutationFn: ({ id, status, reason }: { id: string; status: "REJECTED" | "RETURNED"; reason: string }) =>
@@ -43,19 +45,25 @@ export default function AdminWithdrawalsPage() {
         onSuccess: () => {
             setActionId(null);
             setActionReason("");
+            setActionError("");
             queryClient.invalidateQueries({ queryKey: ["admin-withdrawals"] });
+        },
+        onError: (err: any) => {
+            setActionError(err?.response?.data?.message || err?.message || "Failed to update withdrawal status");
         },
     });
 
     const handleLaunchModal = (id: string, type: "REJECTED" | "RETURNED") => {
         setActionId(id);
         setActionType(type);
+        setActionError("");
         setActionReason(type === "RETURNED" ? (locale === "bn" ? "ব্যালেন্স ইতিমধ্যে অন্য কাজে ব্যবহৃত হওয়ায় ওয়ালেটে ফেরত দেওয়া হয়েছে" : "Returned to wallet balance") : "");
     };
 
     const handleConfirmAction = (e: React.FormEvent) => {
         e.preventDefault();
         if (!actionId) return;
+        setActionError("");
         reviewMutation.mutate({ id: actionId, status: actionType, reason: actionReason.trim() });
     };
 
@@ -205,6 +213,11 @@ export default function AdminWithdrawalsPage() {
                             value={actionReason}
                             onChange={(e) => setActionReason(e.target.value)}
                         />
+                        {actionError && (
+                            <div className="bg-red-50 border border-red-200 rounded-xl p-2.5 text-xs text-red-700 font-semibold">
+                                {actionError}
+                            </div>
+                        )}
                         <div className="flex gap-2">
                             <button
                                 type="submit"
