@@ -6,7 +6,7 @@ export const uploadsApi = {
         fd.append("file", file);
         const res = await api.post("/uploads", fd, {
             timeout: 60000,
-            headers: { "Content-Type": null },
+            headers: { "Content-Type": "multipart/form-data" },
         });
         return res.data;
     },
