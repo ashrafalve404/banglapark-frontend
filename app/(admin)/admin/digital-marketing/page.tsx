@@ -25,6 +25,7 @@ export default function AdminDigitalMarketingPage() {
     const [profitPercent, setProfitPercent] = useState("0.10");
     const [durationHours, setDurationHours] = useState("24");
     const [uploadingImage, setUploadingImage] = useState(false);
+    const [formError, setFormError] = useState("");
 
     const { data: packages, isLoading: pkgLoading, refetch: refetchPackages } = useQuery({
         queryKey: ["admin-dm-packages"],
@@ -42,6 +43,9 @@ export default function AdminDigitalMarketingPage() {
             queryClient.invalidateQueries({ queryKey: ["admin-dm-packages"] });
             resetForm();
         },
+        onError: (err: any) => {
+            setFormError(err?.response?.data?.message || err?.message || "Failed to create package");
+        },
     });
 
     const updateMutation = useMutation({
@@ -49,6 +53,9 @@ export default function AdminDigitalMarketingPage() {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["admin-dm-packages"] });
             resetForm();
+        },
+        onError: (err: any) => {
+            setFormError(err?.response?.data?.message || err?.message || "Failed to update package");
         },
     });
 
@@ -62,10 +69,11 @@ export default function AdminDigitalMarketingPage() {
         if (!file) return;
         try {
             setUploadingImage(true);
+            setFormError("");
             const res = await uploadsApi.upload(file);
             setImage(res.url);
         } catch (err: any) {
-            alert("Image upload failed: " + (err.message || "Error"));
+            setFormError("Image upload failed: " + (err?.response?.data?.message || err.message || "Error"));
         } finally {
             setUploadingImage(false);
         }
@@ -74,6 +82,7 @@ export default function AdminDigitalMarketingPage() {
     const resetForm = () => {
         setShowModal(false);
         setEditingPkg(null);
+        setFormError("");
         setTitle("");
         setDescription("");
         setImage("");
@@ -85,6 +94,7 @@ export default function AdminDigitalMarketingPage() {
 
     const handleEdit = (pkg: DigitalMarketingPackage) => {
         setEditingPkg(pkg);
+        setFormError("");
         setTitle(pkg.title);
         setDescription(pkg.description || "");
         setImage(pkg.image || "");
@@ -93,6 +103,26 @@ export default function AdminDigitalMarketingPage() {
         setProfitPercent(String(pkg.profitPercent));
         setDurationHours(String(pkg.durationHours));
         setShowModal(true);
+    };
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!title.trim() || !price) return;
+        setFormError("");
+        const body = {
+            title: title.trim(),
+            description: description.trim() || undefined,
+            image: image.trim() || undefined,
+            link: link.trim() || undefined,
+            price: Number(price),
+            profitPercent: Number(profitPercent),
+            durationHours: Number(durationHours),
+        };
+        if (editingPkg) {
+            updateMutation.mutate({ id: editingPkg.id, body });
+        } else {
+            createMutation.mutate(body);
+        }
     };
 
     const purchases = purchasesData?.purchases ?? [];
@@ -107,10 +137,10 @@ export default function AdminDigitalMarketingPage() {
                     <p className="text-sm text-slate-500">{t("digitalMarketing.adminSubtitle")}</p>
                 </div>
                 <div className="flex items-center gap-2 self-start">
-                    <button onClick={() => { refetchPackages(); refetchPurchases(); }} className="btn-secondary py-2 px-3 flex items-center gap-1.5 text-xs">
+                    <button onClick={() => { refetchPackages(); refetchPurchases(); }} className="btn-secondary py-2 px-3 flex items-center gap-1.5 text-xs cursor-pointer">
                         <RefreshCw size={14} /> Refresh
                     </button>
-                    <button onClick={() => { resetForm(); setShowModal(true); }} className="py-2 px-4 flex items-center gap-1.5 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-all shadow-xs">
+                    <button onClick={() => { resetForm(); setShowModal(true); }} className="py-2 px-4 flex items-center gap-1.5 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-all shadow-xs cursor-pointer">
                         <PlusCircle size={14} /> {t("digitalMarketing.createPackage")}
                     </button>
                 </div>
@@ -256,16 +286,22 @@ export default function AdminDigitalMarketingPage() {
             {/* ── Create / Edit Package Modal ── */}
             {showModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-                    <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-4">
+                    <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-4">
                         <div className="flex items-center justify-between">
                             <h3 className="text-base font-bold text-slate-900">{editingPkg ? (locale === "bn" ? "প্যাকেজ এডিট করুন" : "Edit Package") : (locale === "bn" ? "নতুন প্যাকেজ তৈরি করুন" : "Create New Package")}</h3>
-                            <button onClick={resetForm} className="text-slate-400 hover:text-slate-600 text-xl leading-none cursor-pointer">✕</button>
+                            <button type="button" onClick={resetForm} className="text-slate-400 hover:text-slate-600 text-xl leading-none cursor-pointer">✕</button>
                         </div>
+
+                        {formError && (
+                            <div className="bg-red-50 border border-red-200 text-red-700 p-2.5 rounded-xl text-xs font-semibold">
+                                {formError}
+                            </div>
+                        )}
 
                         <div className="space-y-3">
                             <div className="space-y-1">
                                 <label className="text-xs font-bold text-slate-700 block">{locale === "bn" ? "প্যাকেজের শিরোনাম" : "Package Title"}</label>
-                                <input type="text" className="input w-full text-sm" placeholder="Starter Marketing Package" value={title} onChange={(e) => setTitle(e.target.value)} />
+                                <input type="text" required className="input w-full text-sm" placeholder="Starter Marketing Package" value={title} onChange={(e) => setTitle(e.target.value)} />
                             </div>
 
                             <div className="space-y-1">
@@ -315,7 +351,7 @@ export default function AdminDigitalMarketingPage() {
                             <div className="grid grid-cols-2 gap-3">
                                 <div className="space-y-1">
                                     <label className="text-xs font-bold text-slate-700 block">{locale === "bn" ? "মূল্য (৳)" : "Price (৳)"}</label>
-                                    <input type="number" className="input w-full text-sm" placeholder="1000" min={1} value={price} onChange={(e) => setPrice(e.target.value)} />
+                                    <input type="number" required className="input w-full text-sm" placeholder="1000" min={1} value={price} onChange={(e) => setPrice(e.target.value)} />
                                 </div>
                                 <div className="space-y-1">
                                     <label className="text-xs font-bold text-slate-700 block">{locale === "bn" ? "প্রফিট বোনাস (%)" : "Profit Bonus (%)"}</label>
@@ -326,25 +362,23 @@ export default function AdminDigitalMarketingPage() {
 
                         <div className="flex gap-3 pt-2">
                             <button
-                                onClick={() => {
-                                    if (!title || !price) return;
-                                    const body = { title, description, image, link, price: Number(price), profitPercent: Number(profitPercent), durationHours: Number(durationHours) };
-                                    if (editingPkg) {
-                                        updateMutation.mutate({ id: editingPkg.id, body });
-                                    } else {
-                                        createMutation.mutate(body);
-                                    }
-                                }}
-                                disabled={!title || !price || uploadingImage || createMutation.isPending || updateMutation.isPending}
-                                className="flex-1 py-2.5 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl disabled:opacity-50 cursor-pointer"
+                                type="submit"
+                                disabled={!title.trim() || !price || uploadingImage || createMutation.isPending || updateMutation.isPending}
+                                className="flex-1 py-2.5 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl disabled:opacity-50 cursor-pointer flex items-center justify-center gap-1.5"
                             >
-                                {editingPkg ? t("digitalMarketing.saveChanges") : t("digitalMarketing.createPackage")}
+                                {(createMutation.isPending || updateMutation.isPending) ? (
+                                    <>
+                                        <Loader2 size={14} className="animate-spin" /> Saving...
+                                    </>
+                                ) : (
+                                    editingPkg ? t("digitalMarketing.saveChanges") : t("digitalMarketing.createPackage")
+                                )}
                             </button>
-                            <button onClick={resetForm} className="px-4 py-2.5 text-xs font-bold text-slate-600 border border-slate-200 rounded-xl hover:bg-slate-50 cursor-pointer">
+                            <button type="button" onClick={resetForm} className="px-4 py-2.5 text-xs font-bold text-slate-600 border border-slate-200 rounded-xl hover:bg-slate-50 cursor-pointer">
                                 {t("digitalMarketing.cancel")}
                             </button>
                         </div>
-                    </div>
+                    </form>
                 </div>
             )}
         </div>
