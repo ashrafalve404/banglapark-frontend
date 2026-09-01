@@ -2,7 +2,7 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { PlusCircle, Megaphone, CheckCircle2, Clock, Eye, EyeOff, Trash2, Edit, RefreshCw } from "lucide-react";
+import { PlusCircle, Megaphone, CheckCircle2, Clock, Eye, EyeOff, Trash2, Edit, RefreshCw, ExternalLink, Image as ImageIcon } from "lucide-react";
 import { digitalMarketingApi, type DigitalMarketingPackage } from "@/lib/api/digital-marketing";
 import { formatCurrency, formatDateTime } from "@/lib/utils";
 import { useLocale } from "@/lib/i18n";
@@ -18,8 +18,10 @@ export default function AdminDigitalMarketingPage() {
     // Form state
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
+    const [image, setImage] = useState("");
+    const [link, setLink] = useState("");
     const [price, setPrice] = useState("");
-    const [profitPercent, setProfitPercent] = useState("1.00");
+    const [profitPercent, setProfitPercent] = useState("0.10");
     const [durationHours, setDurationHours] = useState("24");
 
     const { data: packages, isLoading: pkgLoading, refetch: refetchPackages } = useQuery({
@@ -58,8 +60,10 @@ export default function AdminDigitalMarketingPage() {
         setEditingPkg(null);
         setTitle("");
         setDescription("");
+        setImage("");
+        setLink("");
         setPrice("");
-        setProfitPercent("1.00");
+        setProfitPercent("0.10");
         setDurationHours("24");
     };
 
@@ -67,6 +71,8 @@ export default function AdminDigitalMarketingPage() {
         setEditingPkg(pkg);
         setTitle(pkg.title);
         setDescription(pkg.description || "");
+        setImage(pkg.image || "");
+        setLink(pkg.link || "");
         setPrice(String(pkg.price));
         setProfitPercent(String(pkg.profitPercent));
         setDurationHours(String(pkg.durationHours));
@@ -101,43 +107,63 @@ export default function AdminDigitalMarketingPage() {
                 </h2>
 
                 {pkgLoading ? (
-                    <div className="py-10 text-center text-slate-400">{locale === "bn" ? "প্যাকেজ লোড হচ্ছে..." : "Loading packages..."}</div>
-                ) : !packages || packages.length === 0 ? (
-                    <div className="py-10 text-center text-slate-400">{locale === "bn" ? "কোনো প্যাকেজ নেই। 'নতুন প্যাকেজ তৈরি' বাটনে ক্লিক করুন।" : "No packages created yet. Click 'Create Package' to add one."}</div>
+                    <div className="py-8 text-center text-slate-400 text-xs">Loading packages...</div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        {packages.map((pkg) => (
-                            <div key={pkg.id} className={`p-4 rounded-xl border ${pkg.isHidden ? "bg-slate-50 border-slate-200 opacity-60" : "bg-white border-slate-200"} space-y-3`}>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {(packages ?? []).map((pkg) => (
+                            <div key={pkg.id} className="border border-slate-200 rounded-2xl p-4 space-y-3 relative bg-slate-50/50 hover:border-slate-300 transition-all">
+                                {pkg.image && (
+                                    <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-900/5 border border-slate-200 flex items-center justify-center p-1">
+                                        <img src={pkg.image} alt={pkg.title} className="w-full h-full object-contain rounded-lg" />
+                                    </div>
+                                )}
                                 <div className="flex items-start justify-between">
                                     <div>
                                         <h3 className="font-bold text-slate-900 text-sm">{pkg.title}</h3>
-                                        <p className="text-xs text-slate-500 line-clamp-1">{pkg.description || (locale === "bn" ? "কোনো বিবরণ নেই" : "No description")}</p>
+                                        <p className="text-xs text-slate-500 line-clamp-2 mt-0.5">{pkg.description}</p>
                                     </div>
-                                    <div className="flex items-center gap-1">
-                                        <button onClick={() => updateMutation.mutate({ id: pkg.id, body: { isHidden: !pkg.isHidden } })} title={pkg.isHidden ? "Unhide" : "Hide"} className="p-1.5 text-slate-400 hover:text-slate-600 cursor-pointer">
-                                            {pkg.isHidden ? <EyeOff size={16} /> : <Eye size={16} />}
-                                        </button>
-                                        <button onClick={() => handleEdit(pkg)} title="Edit" className="p-1.5 text-slate-400 hover:text-indigo-600 cursor-pointer">
-                                            <Edit size={16} />
-                                        </button>
-                                        <button onClick={() => { if (confirm(locale === "bn" ? "আপনি কি প্যাকেজটি মুছে ফেলতে চান?" : "Delete this package?")) deleteMutation.mutate(pkg.id); }} title="Delete" className="p-1.5 text-slate-400 hover:text-red-600 cursor-pointer">
-                                            <Trash2 size={16} />
-                                        </button>
+                                    <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${pkg.isHidden ? "bg-red-100 text-red-700" : "bg-emerald-100 text-emerald-700"}`}>
+                                        {pkg.isHidden ? "Hidden" : "Active"}
+                                    </span>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-2 text-xs bg-white p-3 rounded-xl border border-slate-150">
+                                    <div>
+                                        <span className="text-[10px] text-slate-400 font-semibold block uppercase">Price</span>
+                                        <span className="font-bold text-slate-800">{formatCurrency(pkg.price, locale)}</span>
+                                    </div>
+                                    <div>
+                                        <span className="text-[10px] text-slate-400 font-semibold block uppercase">Profit (+{pkg.profitPercent}%)</span>
+                                        <span className="font-bold text-emerald-600">+{formatCurrency((pkg.price * pkg.profitPercent) / 100, locale)}</span>
                                     </div>
                                 </div>
 
-                                <div className="bg-slate-50 rounded-lg p-2.5 text-xs space-y-1">
-                                    <div className="flex justify-between text-slate-700">
-                                        <span>{locale === "bn" ? "মূল্য:" : "Price:"}</span>
-                                        <span className="font-bold">{formatCurrency(pkg.price, locale)}</span>
-                                    </div>
-                                    <div className="flex justify-between text-amber-700">
-                                        <span>{locale === "bn" ? "প্রফিট:" : "Profit:"}</span>
-                                        <span className="font-bold">+{pkg.profitPercent}% in {pkg.durationHours}h</span>
-                                    </div>
-                                    <div className="flex justify-between text-emerald-700 font-bold">
-                                        <span>{locale === "bn" ? "২৪h মোট ফেরত:" : "24h Return:"}</span>
-                                        <span>{formatCurrency(Number(pkg.price) * (1 + Number(pkg.profitPercent) / 100), locale)}</span>
+                                {pkg.link && (
+                                    <a href={pkg.link} target="_blank" rel="noopener noreferrer" className="text-[11px] font-bold text-indigo-600 hover:underline flex items-center gap-1">
+                                        <ExternalLink size={12} /> {locale === "bn" ? "ক্যাম্পেইন লিংক" : "Campaign Link"}
+                                    </a>
+                                )}
+
+                                <div className="flex items-center justify-between pt-2 border-t border-slate-200">
+                                    <span className="text-[10px] text-slate-400">{pkg._count?.purchases ?? 0} Sales</span>
+                                    <div className="flex items-center gap-1.5">
+                                        <button
+                                            onClick={() => updateMutation.mutate({ id: pkg.id, body: { isHidden: !pkg.isHidden } })}
+                                            className="p-1.5 text-slate-500 hover:text-slate-700 hover:bg-slate-200/60 rounded cursor-pointer"
+                                            title={pkg.isHidden ? "Unhide" : "Hide"}
+                                        >
+                                            {pkg.isHidden ? <Eye size={14} /> : <EyeOff size={14} />}
+                                        </button>
+                                        <button onClick={() => handleEdit(pkg)} className="p-1.5 text-indigo-600 hover:bg-indigo-50 rounded cursor-pointer" title="Edit">
+                                            <Edit size={14} />
+                                        </button>
+                                        <button
+                                            onClick={() => { if (confirm("Delete this package?")) deleteMutation.mutate(pkg.id); }}
+                                            className="p-1.5 text-red-600 hover:bg-red-50 rounded cursor-pointer"
+                                            title="Delete"
+                                        >
+                                            <Trash2 size={14} />
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -146,27 +172,30 @@ export default function AdminDigitalMarketingPage() {
                 )}
             </div>
 
-            {/* ── User Purchases Ledger ── */}
-            <div className="card overflow-hidden">
-                <div className="p-4 bg-slate-50 border-b border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            {/* ── User Purchases History Table ── */}
+            <div className="card p-5 bg-white space-y-4">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
                     <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                        <Clock size={18} className="text-amber-600" /> {t("digitalMarketing.userPurchases")}
+                        <CheckCircle2 size={18} className="text-emerald-600" /> {locale === "bn" ? "ইউজার প্যাকেজ ক্রয়ের তথ্য" : "All User Package Purchases"}
                     </h2>
-                    <select
-                        className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-600"
-                        value={statusFilter}
-                        onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
-                    >
-                        <option value="">{t("digitalMarketing.allStatuses")}</option>
-                        <option value="ACTIVE">{t("digitalMarketing.activeFilter")}</option>
-                        <option value="COMPLETED">{t("digitalMarketing.completedFilter")}</option>
-                    </select>
+
+                    <div className="flex items-center gap-2">
+                        <select
+                            className="input text-xs py-1.5 font-semibold cursor-pointer"
+                            value={statusFilter}
+                            onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
+                        >
+                            <option value="">{locale === "bn" ? "সকল স্ট্যাটাস (All)" : "All Status"}</option>
+                            <option value="ACTIVE">ACTIVE (টাইমার চালু)</option>
+                            <option value="COMPLETED">COMPLETED (পেআউট সম্পন্ন)</option>
+                        </select>
+                    </div>
                 </div>
 
                 {purLoading ? (
-                    <div className="py-16 text-center text-slate-400">{locale === "bn" ? "লোড হচ্ছে..." : "Loading user purchases..."}</div>
+                    <div className="py-12 text-center text-slate-400 text-xs">Loading purchases...</div>
                 ) : purchases.length === 0 ? (
-                    <div className="py-16 text-center text-slate-400">{locale === "bn" ? "কোনো পেমেন্ট পাওয়া যায়নি" : "No user purchases found"}</div>
+                    <div className="py-12 text-center text-slate-400 text-xs">No package purchases found</div>
                 ) : (
                     <div className="overflow-x-auto">
                         <table className="w-full text-left border-collapse text-xs">
@@ -176,45 +205,34 @@ export default function AdminDigitalMarketingPage() {
                                     <th className="p-3.5">User</th>
                                     <th className="p-3.5">Package</th>
                                     <th className="p-3.5 text-right">Investment</th>
-                                    <th className="p-3.5 text-right">1% Profit</th>
+                                    <th className="p-3.5 text-right">0.1% Profit</th>
                                     <th className="p-3.5 text-right">Total 24h Return</th>
                                     <th className="p-3.5 text-center">Status</th>
                                     <th className="p-3.5 text-right">Matures At</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-100 bg-white">
-                                {purchases.map((item) => (
-                                    <tr key={item.id} className="hover:bg-slate-50/50">
-                                        <td className="p-3.5 text-slate-500 whitespace-nowrap">{formatDateTime(item.purchasedAt, locale)}</td>
+                                {purchases.map((pur) => (
+                                    <tr key={pur.id} className="hover:bg-slate-50/60">
+                                        <td className="p-3.5 text-slate-500 font-medium">{formatDateTime(pur.purchasedAt, locale)}</td>
                                         <td className="p-3.5">
-                                            <p className="font-bold text-slate-900">{item.user?.name}</p>
-                                            <p className="text-[10px] text-slate-400">{item.user?.phone} (ID#{item.user?.memberId})</p>
+                                            <div className="font-bold text-slate-900">{pur.user?.name}</div>
+                                            <div className="text-[10px] text-slate-400">{pur.user?.phone} (ID: {pur.user?.memberId})</div>
                                         </td>
-                                        <td className="p-3.5 font-semibold text-slate-900">{item.package?.title}</td>
-                                        <td className="p-3.5 text-right font-bold text-slate-800">{formatCurrency(item.amount, locale)}</td>
-                                        <td className="p-3.5 text-right font-bold text-amber-700">+ {formatCurrency(item.profitAmount, locale)}</td>
-                                        <td className="p-3.5 text-right font-black text-emerald-700">{formatCurrency(item.totalReturn, locale)}</td>
+                                        <td className="p-3.5 font-bold text-indigo-900">{pur.package?.title}</td>
+                                        <td className="p-3.5 text-right font-bold text-slate-800">{formatCurrency(pur.amount, locale)}</td>
+                                        <td className="p-3.5 text-right font-bold text-emerald-600">+{formatCurrency(pur.profitAmount, locale)}</td>
+                                        <td className="p-3.5 text-right font-extrabold text-emerald-700">{formatCurrency(pur.totalReturn, locale)}</td>
                                         <td className="p-3.5 text-center">
-                                            <span className={`inline-flex items-center gap-1 text-[10px] font-bold px-2.5 py-1 rounded-full border ${
-                                                item.status === "COMPLETED" ? "bg-emerald-50 text-emerald-700 border-emerald-200" : "bg-amber-50 text-amber-700 border-amber-200"
-                                            }`}>
-                                                {item.status === "COMPLETED" ? <CheckCircle2 size={11} /> : <Clock size={11} />}
-                                                {item.status}
+                                            <span className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold ${pur.status === "COMPLETED" ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800"}`}>
+                                                {pur.status === "COMPLETED" ? "PAYOUT COMPLETED" : "ACTIVE 24H TIMER"}
                                             </span>
                                         </td>
-                                        <td className="p-3.5 text-right text-slate-500 whitespace-nowrap">{formatDateTime(item.maturesAt, locale)}</td>
+                                        <td className="p-3.5 text-right text-slate-500">{formatDateTime(pur.maturesAt, locale)}</td>
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
-                    </div>
-                )}
-
-                {totalPages > 1 && (
-                    <div className="p-4 bg-slate-50/50 border-t border-slate-100 flex items-center justify-between">
-                        <button disabled={page === 1} onClick={() => setPage(page - 1)} className="btn-secondary py-1 px-3 text-xs">Prev</button>
-                        <span className="text-xs text-slate-500 font-semibold">{page} / {totalPages}</span>
-                        <button disabled={page === totalPages} onClick={() => setPage(page + 1)} className="btn-secondary py-1 px-3 text-xs">Next</button>
                     </div>
                 )}
             </div>
@@ -239,6 +257,16 @@ export default function AdminDigitalMarketingPage() {
                                 <textarea className="input w-full text-sm resize-none" rows={2} placeholder="Package details..." value={description} onChange={(e) => setDescription(e.target.value)} />
                             </div>
 
+                            <div className="space-y-1">
+                                <label className="text-xs font-bold text-slate-700 block">{locale === "bn" ? "ব্যানার / ইমেজ লিংক (ঐচ্ছিক)" : "Banner / Image URL (Optional)"}</label>
+                                <input type="url" className="input w-full text-sm" placeholder="https://example.com/banner.jpg" value={image} onChange={(e) => setImage(e.target.value)} />
+                            </div>
+
+                            <div className="space-y-1">
+                                <label className="text-xs font-bold text-slate-700 block">{locale === "bn" ? "ক্যাম্পেইন / প্রমোশন লিংক (ঐচ্ছিক)" : "Campaign Target Link (Optional)"}</label>
+                                <input type="url" className="input w-full text-sm" placeholder="https://facebook.com/my-page or https://youtu.be/..." value={link} onChange={(e) => setLink(e.target.value)} />
+                            </div>
+
                             <div className="grid grid-cols-2 gap-3">
                                 <div className="space-y-1">
                                     <label className="text-xs font-bold text-slate-700 block">{locale === "bn" ? "মূল্য (৳)" : "Price (৳)"}</label>
@@ -246,7 +274,7 @@ export default function AdminDigitalMarketingPage() {
                                 </div>
                                 <div className="space-y-1">
                                     <label className="text-xs font-bold text-slate-700 block">{locale === "bn" ? "প্রফিট বোনাস (%)" : "Profit Bonus (%)"}</label>
-                                    <input type="number" step="0.1" className="input w-full text-sm" placeholder="1.00" value={profitPercent} onChange={(e) => setProfitPercent(e.target.value)} />
+                                    <input type="number" step="0.01" className="input w-full text-sm" placeholder="0.10" value={profitPercent} onChange={(e) => setProfitPercent(e.target.value)} />
                                 </div>
                             </div>
                         </div>
@@ -255,7 +283,7 @@ export default function AdminDigitalMarketingPage() {
                             <button
                                 onClick={() => {
                                     if (!title || !price) return;
-                                    const body = { title, description, price: Number(price), profitPercent: Number(profitPercent), durationHours: Number(durationHours) };
+                                    const body = { title, description, image, link, price: Number(price), profitPercent: Number(profitPercent), durationHours: Number(durationHours) };
                                     if (editingPkg) {
                                         updateMutation.mutate({ id: editingPkg.id, body });
                                     } else {

@@ -2,7 +2,7 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
-import { Megaphone, TrendingUp, Clock, CheckCircle2, Loader2, Coins, ShieldCheck, ArrowRight } from "lucide-react";
+import { Megaphone, TrendingUp, Clock, CheckCircle2, Loader2, Coins, ShieldCheck, ArrowRight, ExternalLink } from "lucide-react";
 import { digitalMarketingApi, type DigitalMarketingPackage } from "@/lib/api/digital-marketing";
 import { walletApi } from "@/lib/api/wallet";
 import { formatCurrency, formatDateTime } from "@/lib/utils";
@@ -238,6 +238,11 @@ export default function DigitalMarketingPage() {
                             return (
                                 <div key={pkg.id} className="card p-6 bg-white border border-slate-200 hover:border-indigo-300 transition-all flex flex-col justify-between space-y-5 shadow-xs hover:shadow-md">
                                     <div className="space-y-3">
+                                        {pkg.image && (
+                                            <div className="w-full h-44 rounded-xl overflow-hidden bg-slate-900/5 border border-slate-200 flex items-center justify-center p-1">
+                                                <img src={pkg.image} alt={pkg.title} className="w-full h-full object-contain rounded-lg" />
+                                            </div>
+                                        )}
                                         <div className="flex items-center justify-between">
                                             <span className="text-[11px] font-bold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-100">
                                                 {t("digitalMarketing.returnBadge")}
@@ -247,6 +252,17 @@ export default function DigitalMarketingPage() {
 
                                         <h3 className="text-lg font-bold text-slate-900">{pkg.title}</h3>
                                         {pkg.description && <p className="text-xs text-slate-500 line-clamp-2">{pkg.description}</p>}
+
+                                        {pkg.link && (
+                                            <a
+                                                href={pkg.link}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg border border-indigo-200 transition-all mt-1"
+                                            >
+                                                <ExternalLink size={13} /> {locale === "bn" ? "প্রমোশন/ক্যাম্পেইন লিংক দেখুন" : "View Campaign Link"}
+                                            </a>
+                                        )}
 
                                         {/* Financial Breakdown */}
                                         <div className="bg-slate-50 rounded-xl p-4 space-y-2 text-xs border border-slate-100">
@@ -302,7 +318,7 @@ export default function DigitalMarketingPage() {
                                     <th className="p-3.5">Package</th>
                                     <th className="p-3.5">Purchased Date</th>
                                     <th className="p-3.5 text-right">Investment</th>
-                                    <th className="p-3.5 text-right">1% Profit</th>
+                                    <th className="p-3.5 text-right">0.1% Profit</th>
                                     <th className="p-3.5 text-right">Total Returned</th>
                                     <th className="p-3.5 text-center">Status</th>
                                 </tr>

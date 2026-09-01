@@ -4,6 +4,8 @@ export type DigitalMarketingPackage = {
     id: string;
     title: string;
     description?: string;
+    image?: string;
+    link?: string;
     price: number;
     profitPercent: number;
     durationHours: number;
