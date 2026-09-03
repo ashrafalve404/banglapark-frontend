@@ -150,11 +150,6 @@ export default function HomePage() {
         queryFn: () => bannersApi.findOffers(),
     });
 
-    const { data: homeGiftCards = [] } = useQuery<GiftCardPublic[]>({
-        queryKey: ["home-gift-cards"],
-        queryFn: () => giftCardsApi.getPublicCards(),
-    });
-
     const FALLBACK_USER_COUNT = 2010971;
     const { data: publicStats } = useQuery({
         queryKey: ["public-stats"],
@@ -273,80 +268,7 @@ export default function HomePage() {
             )}
 
 
-            {/* Gift Cards Section */}
-            {homeGiftCards.length > 0 && (
-                <section className="py-8 sm:py-12 bg-gradient-to-b from-rose-50/50 via-purple-50/30 to-white">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <RevealSection>
-                            <div className="flex items-center justify-between mb-8">
-                                <div>
-                                    <div className="flex items-center gap-2">
-                                        <h2 className="section-title text-slate-900">{t("giftCard.title")}</h2>
-                                        <span className="bg-rose-100 text-rose-700 font-extrabold text-[10px] px-2.5 py-0.5 rounded-full border border-rose-200 uppercase tracking-wider">
-                                            {locale === "bn" ? "অফার" : "Offers"}
-                                        </span>
-                                    </div>
-                                    <p className="section-subtitle mt-1">
-                                        {locale === "en" ? "Purchase gift cards with Wallet or bKash." : "ওয়ালেট বা বিকাশ দিয়ে সহজে গিফট কার্ড কিনুন।"}
-                                    </p>
-                                </div>
-                                <Link href="/dashboard/gift-cards" className="hidden sm:inline-flex items-center gap-1 text-sm font-bold text-rose-700 hover:text-rose-800 transition-colors">
-                                    {t("giftCard.storeTab")} <ArrowRight size={14} />
-                                </Link>
-                            </div>
-                        </RevealSection>
 
-                        <RevealSection>
-                            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
-                                {homeGiftCards.slice(0, 4).map((card) => {
-                                    return (
-                                        <div
-                                            key={card.id}
-                                            className="group relative rounded-lg bg-white border border-rose-100 p-2.5 sm:p-4 shadow-xs hover:shadow-xl hover:border-rose-300 transition-all duration-300 flex flex-col justify-between"
-                                        >
-                                            <div className="space-y-2 sm:space-y-3">
-                                                <div className="relative w-full aspect-[3/2] bg-slate-900 rounded-md overflow-hidden flex items-center justify-center">
-                                                    {card.image ? (
-                                                        <img src={card.image} alt={card.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                                                    ) : (
-                                                        <div className="text-center text-white space-y-1">
-                                                            <Gift size={28} className="mx-auto text-rose-300 group-hover:scale-110 transition-transform duration-300" />
-                                                            <p className="text-[9px] font-black text-rose-200 tracking-widest uppercase">GIFT CARD</p>
-                                                        </div>
-                                                    )}
-                                                </div>
-
-                                                <div>
-                                                    <h3 className="font-bold text-slate-900 text-xs sm:text-sm line-clamp-1 group-hover:text-rose-700 transition-colors">
-                                                        {card.title}
-                                                    </h3>
-                                                    {card.description && (
-                                                        <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5 line-clamp-2 leading-tight sm:leading-relaxed">
-                                                            {card.description}
-                                                        </p>
-                                                    )}
-                                                </div>
-                                            </div>
-
-                                            <div className="pt-2 sm:pt-3 mt-2 sm:mt-3 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-2">
-                                                <span className="text-sm sm:text-base font-black text-rose-700">
-                                                    {formatCurrency(card.price, locale)}
-                                                </span>
-                                                <Link
-                                                    href="/dashboard/gift-cards"
-                                                    className="w-full sm:w-auto inline-flex items-center justify-center gap-1 bg-red-700 hover:bg-red-800 text-white font-bold text-[11px] sm:text-xs px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-md shadow-xs transition-colors"
-                                                >
-                                                    {t("giftCard.buyCard")}
-                                                </Link>
-                                            </div>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </RevealSection>
-                    </div>
-                </section>
-            )}
 
             {/* All Products */}
             <section className="py-8 sm:py-12 bg-white">

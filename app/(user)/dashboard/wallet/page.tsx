@@ -145,26 +145,34 @@ export default function WalletPage() {
     return (
         <>
         <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                    <h1 className="text-2xl font-bold text-gray-900">{t("wallet.heading")}</h1>
-                    <p className="text-sm text-gray-500">{t("wallet.subheading")}</p>
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="flex items-center justify-between">
+                    <div>
+                        <h1 className="text-2xl font-bold text-gray-900">{t("wallet.heading")}</h1>
+                        <p className="text-sm text-gray-500">{t("wallet.subheading")}</p>
+                    </div>
+                    <button onClick={handleRefresh} className="btn-secondary py-2 px-3 flex items-center gap-1.5 text-xs sm:hidden">
+                        <RefreshCw size={14} /> {t("wallet.refresh")}
+                    </button>
                 </div>
-                <button onClick={handleRefresh} className="btn-secondary self-start py-2 px-3 flex items-center gap-1.5 text-xs">
-                    <RefreshCw size={14} /> {t("wallet.refresh")}
-                </button>
-                <button
-                    onClick={() => { setShowTransfer(true); setTransferSuccess(""); }}
-                    className="self-start py-2 px-4 flex items-center gap-1.5 text-xs font-bold text-white bg-red-700 hover:bg-red-800 rounded-lg transition-all shadow-xs"
-                >
-                    <SendHorizontal size={14} /> {locale === "bn" ? "ব্যালেন্স ট্রান্সফার" : "Transfer Balance"}
-                </button>
-                <button
-                    onClick={() => { setShowDeposit(true); setDepositSuccess(false); depositMutation.reset(); }}
-                    className="self-start py-2 px-4 flex items-center gap-1.5 text-xs font-bold text-white bg-emerald-700 hover:bg-emerald-800 rounded-lg transition-all shadow-xs"
-                >
-                    <PlusCircle size={14} /> {locale === "bn" ? "টাকা যোগ করুন" : "Add Money"}
-                </button>
+
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
+                    <button onClick={handleRefresh} className="btn-secondary hidden sm:flex py-2.5 px-4 items-center gap-1.5 text-xs font-semibold">
+                        <RefreshCw size={15} /> {t("wallet.refresh")}
+                    </button>
+                    <button
+                        onClick={() => { setShowTransfer(true); setTransferSuccess(""); }}
+                        className="w-full sm:w-auto py-3 px-6 flex items-center justify-center gap-2 text-sm sm:text-base font-bold text-white bg-red-700 hover:bg-red-800 active:scale-[0.98] rounded-xl transition-all shadow-md hover:shadow-lg"
+                    >
+                        <SendHorizontal size={18} /> {locale === "bn" ? "ব্যালেন্স ট্রান্সফার" : "Transfer Balance"}
+                    </button>
+                    <button
+                        onClick={() => { setShowDeposit(true); setDepositSuccess(false); depositMutation.reset(); }}
+                        className="w-full sm:w-auto py-3 px-6 flex items-center justify-center gap-2 text-sm sm:text-base font-bold text-white bg-emerald-700 hover:bg-emerald-800 active:scale-[0.98] rounded-xl transition-all shadow-md hover:shadow-lg"
+                    >
+                        <PlusCircle size={18} /> {locale === "bn" ? "টাকা যোগ করুন" : "Add Money"}
+                    </button>
+                </div>
             </div>
 
             {isInactive && (
