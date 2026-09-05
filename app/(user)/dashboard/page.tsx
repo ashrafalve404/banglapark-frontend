@@ -101,12 +101,6 @@ export default function DashboardOverview() {
             badge: "Hot",
         },
         {
-            href: "#",
-            label: t("nav.myOffers"),
-            image: "/images/myoffer.png",
-            cardBg: "bg-pink-200 text-pink-950 border-pink-300 hover:bg-pink-300",
-        },
-        {
             href: "/dashboard/orders",
             label: t("nav.orders"),
             image: "/images/orderimg.png",
@@ -142,18 +136,6 @@ export default function DashboardOverview() {
             label: t("nav.withdraw"),
             image: "/images/withdraw.png",
             cardBg: "bg-rose-200 text-rose-950 border-rose-300 hover:bg-rose-300",
-        },
-        {
-            href: "#",
-            label: t("nav.affiliateMarketing"),
-            image: "/images/affilaitemarketing.png",
-            cardBg: "bg-emerald-200 text-emerald-950 border-emerald-300 hover:bg-emerald-300",
-        },
-        {
-            href: "#",
-            label: t("nav.shareholder"),
-            icon: FaBuilding,
-            cardBg: "bg-violet-200 text-violet-950 border-violet-300 hover:bg-violet-300",
         },
         {
             href: "#",
