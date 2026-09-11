@@ -2,9 +2,9 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { Search, ShieldAlert, Loader2, Trash2, Smartphone, Minus, Copy, Check } from "lucide-react";
+import { Search, ShieldAlert, Loader2, Trash2, Smartphone, Minus, Copy, Check, Printer, PackageCheck } from "lucide-react";
 import { ordersApi } from "@/lib/api/orders";
-import { formatCurrency, formatDateTime, getOrderStatusLabel } from "@/lib/utils";
+import { formatCurrency, formatDateTime, getOrderStatusLabel, numberToWords } from "@/lib/utils";
 import type { Order, OrderItem, OrderStatus } from "@/types";
 import { useLocale } from "@/lib/i18n";
 
@@ -50,6 +50,9 @@ export default function AdminOrdersPage() {
     const [page, setPage] = useState(1);
     const [search, setSearch] = useState("");
     const [status, setStatus] = useState("");
+
+    // Printable Order Voucher modal state
+    const [voucherOrder, setVoucherOrder] = useState<Order | null>(null);
 
     const { data, isLoading } = useQuery({
         queryKey: ["admin-orders", page, status, search],
@@ -101,7 +104,7 @@ export default function AdminOrdersPage() {
             setMutatingId(id);
             return ordersApi.updateStatus(id, nextStatus as OrderStatus);
         },
-        onSuccess: (updatedOrder) => {
+        onSuccess: (updatedOrder, variables) => {
             // Update react-query cache directly for instant UI changes
             queryClient.setQueriesData<any>({ queryKey: ["admin-orders"] }, (oldData: any) => {
                 if (!oldData) return oldData;
@@ -112,8 +115,15 @@ export default function AdminOrdersPage() {
                     ) || [],
                 };
             });
-            // Also trigger background invalidation / check
             queryClient.invalidateQueries({ queryKey: ["admin-orders"] });
+
+            // If order status was changed to DELIVERED, launch printable voucher modal automatically!
+            if (variables.nextStatus === "DELIVERED") {
+                const targetOrder = orders.find((o) => o.id === variables.id);
+                if (targetOrder) {
+                    setVoucherOrder({ ...targetOrder, status: "DELIVERED" });
+                }
+            }
         },
         onSettled: () => {
             setMutatingId(null);
@@ -123,6 +133,29 @@ export default function AdminOrdersPage() {
 
     return (
         <div className="space-y-6">
+            {/* Global style tag for perfect printable PDF formatting */}
+            <style jsx global>{`
+                @media print {
+                    body * {
+                        visibility: hidden !important;
+                    }
+                    .id-order-voucher-modal, .id-order-voucher-modal * {
+                        visibility: visible !important;
+                    }
+                    .id-order-voucher-modal {
+                        position: absolute !important;
+                        left: 0 !important;
+                        top: 0 !important;
+                        width: 100% !important;
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        background: #ffffff !important;
+                    }
+                    .print\\:hidden {
+                        display: none !important;
+                    }
+                }
+            `}</style>
             <div>
                 <h1 className="text-2xl font-bold text-slate-800">{t("admin.orders.heading")}</h1>
                 <p className="text-sm text-slate-500">{t("admin.orders.subheading")}</p>
@@ -331,7 +364,19 @@ export default function AdminOrdersPage() {
                                                             );
                                                         })
                                                     ) : (
-                                                        <span className="text-[10px] text-gray-400 font-semibold">{t("admin.orders.table.completed")}</span>
+                                                        <div className="flex flex-col gap-1 items-center">
+                                                            <span className="text-[10px] text-gray-400 font-semibold">{t("admin.orders.table.completed")}</span>
+                                                            {order.status === "DELIVERED" && (
+                                                                <button
+                                                                    onClick={() => setVoucherOrder(order)}
+                                                                    className="text-[10px] py-1 px-2.5 rounded font-bold border bg-indigo-50 text-indigo-700 border-indigo-200 hover:bg-indigo-100 cursor-pointer flex items-center justify-center gap-1 transition-all shadow-2xs"
+                                                                    title="Print Order Voucher PDF"
+                                                                >
+                                                                    <Printer size={11} />
+                                                                    {locale === "bn" ? "ভাউচার প্রিন্ট" : "Voucher PDF"}
+                                                                </button>
+                                                            )}
+                                                        </div>
                                                     )}
                                                     <button
                                                         onClick={() => handleDeleteOrder(order.id)}
@@ -360,6 +405,151 @@ export default function AdminOrdersPage() {
                     </div>
                 )}
             </div>
+
+            {/* Detailed Printable Order Delivery Voucher Modal */}
+            {voucherOrder && (
+                <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 overflow-y-auto print:p-0 print:bg-white print:static">
+                    <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full p-6 space-y-6 relative print:p-0 print:shadow-none print:max-w-none print:w-full id-order-voucher-modal">
+                        {/* Action Bar (Hidden when printing) */}
+                        <div className="flex items-center justify-between border-b border-slate-200 pb-4 print:hidden">
+                            <div className="flex items-center gap-2">
+                                <Printer className="text-indigo-600" size={20} />
+                                <h3 className="text-base font-bold text-slate-900">
+                                    {locale === "bn" ? "অর্ডার ডেলিভারি ইনভয়েস ভাউচার (PDF / প্রিন্ট)" : "Order Delivery Invoice Voucher (PDF / Print)"}
+                                </h3>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <button
+                                    onClick={() => window.print()}
+                                    className="py-1.5 px-4 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
+                                >
+                                    <Printer size={14} /> {locale === "bn" ? "প্রিন্ট / PDF সেভ করুন" : "Print / Save PDF"}
+                                </button>
+                                <button
+                                    onClick={() => setVoucherOrder(null)}
+                                    className="py-1.5 px-3 text-xs font-bold text-slate-600 border border-slate-200 rounded-xl hover:bg-slate-50 cursor-pointer"
+                                >
+                                    ✕
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Official Order Delivery Voucher Document Sheet */}
+                        <div className="bg-white p-6 rounded-xl border border-slate-200 space-y-6 text-slate-800 font-sans print:border-none print:p-6">
+                            {/* Header Banner */}
+                            <div className="flex items-start justify-between border-b-2 border-indigo-600 pb-4">
+                                <div>
+                                    <h2 className="text-2xl font-black tracking-tight text-indigo-900">BANGLAPARK</h2>
+                                    <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">BanglaPark E-Commerce Portal</p>
+                                    <p className="text-[11px] text-slate-400 mt-0.5">Official Product Delivery Voucher & Sales Receipt</p>
+                                </div>
+                                <div className="text-right">
+                                    <span className="inline-block px-3 py-1 bg-emerald-100 text-emerald-800 rounded-md font-bold text-xs uppercase tracking-wider border border-emerald-300">
+                                        DELIVERED (ডেলিভারি সম্পন্ন)
+                                    </span>
+                                    <div className="text-xs font-mono font-bold text-slate-700 mt-2">
+                                        INVOICE NO: <span className="text-indigo-700">INV-{voucherOrder.id.slice(0, 8).toUpperCase()}</span>
+                                    </div>
+                                    <div className="text-[11px] text-slate-500 font-medium mt-0.5">
+                                        Order Date: {formatDateTime(voucherOrder.createdAt, locale)}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Customer & Delivery Information Grid */}
+                            <div className="grid grid-cols-2 gap-4 text-xs bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                <div className="space-y-1.5">
+                                    <div className="text-[10px] font-bold uppercase tracking-wider text-indigo-700 border-b border-slate-200 pb-1">
+                                        Customer Details (গ্রাহকের তথ্য)
+                                    </div>
+                                    <div><strong className="text-slate-500">Customer Name:</strong> <span className="font-bold text-slate-900">{voucherOrder.user?.name || "N/A"}</span></div>
+                                    <div><strong className="text-slate-500">Phone Number:</strong> <span className="font-bold text-slate-900">{voucherOrder.user?.phone || "N/A"}</span></div>
+                                    {voucherOrder.user?.email && (
+                                        <div><strong className="text-slate-500">Email:</strong> <span className="text-slate-900">{voucherOrder.user.email}</span></div>
+                                    )}
+                                </div>
+
+                                <div className="space-y-1.5">
+                                    <div className="text-[10px] font-bold uppercase tracking-wider text-indigo-700 border-b border-slate-200 pb-1">
+                                        Shipping & Payment Info (ডেলিভারি ঠিকানা)
+                                    </div>
+                                    <div><strong className="text-slate-500">Address:</strong> <span className="font-semibold text-slate-900">{voucherOrder.shippingAddress?.address || "N/A"}, {voucherOrder.shippingAddress?.city || ""}</span></div>
+                                    <div><strong className="text-slate-500">Delivery Area:</strong> <span className="font-semibold text-slate-900">{voucherOrder.deliveryArea === "INSIDE_DHAKA" ? "Inside Dhaka" : "Outside Dhaka"}</span></div>
+                                    <div><strong className="text-slate-500">Payment Method:</strong> <span className="font-bold text-indigo-900 uppercase">{voucherOrder.paymentMethod} {voucherOrder.transactionId ? `(TrxID: ${voucherOrder.transactionId})` : ""}</span></div>
+                                </div>
+                            </div>
+
+                            {/* Delivered Products Table */}
+                            <div className="overflow-hidden rounded-xl border border-slate-200">
+                                <table className="w-full text-left text-xs border-collapse">
+                                    <thead>
+                                        <tr className="bg-indigo-900 text-white font-bold uppercase tracking-wider">
+                                            <th className="p-3">#</th>
+                                            <th className="p-3">Product Name</th>
+                                            <th className="p-3 text-center">Qty</th>
+                                            <th className="p-3 text-right">Unit Price</th>
+                                            <th className="p-3 text-right">Total (BDT)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-slate-200 font-medium">
+                                        {voucherOrder.items.map((item, index) => (
+                                            <tr key={item.id}>
+                                                <td className="p-3 text-slate-400 font-bold">{index + 1}</td>
+                                                <td className="p-3 font-bold text-slate-900">
+                                                    {item.product?.name || "Product"}
+                                                    {item.size && <span className="ml-2 text-[10px] font-bold text-indigo-700 bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-200">Size: {item.size}</span>}
+                                                </td>
+                                                <td className="p-3 text-center font-bold text-slate-800">x{item.quantity}</td>
+                                                <td className="p-3 text-right text-slate-700">{formatCurrency(item.price, locale)}</td>
+                                                <td className="p-3 text-right font-bold text-slate-900">{formatCurrency(item.price * item.quantity, locale)}</td>
+                                            </tr>
+                                        ))}
+
+                                        {/* Delivery Charge */}
+                                        <tr>
+                                            <td colSpan={4} className="p-3 text-right font-bold text-slate-600">Delivery Charge</td>
+                                            <td className="p-3 text-right font-bold text-slate-800">{formatCurrency(voucherOrder.deliveryCharge || 0, locale)}</td>
+                                        </tr>
+
+                                        {/* Total Net Payable */}
+                                        <tr className="bg-emerald-50/80 font-extrabold text-sm text-emerald-900">
+                                            <td colSpan={4} className="p-3 text-emerald-950 uppercase tracking-wide text-right">Grand Total Paid Amount</td>
+                                            <td className="p-3 text-right text-emerald-700">{formatCurrency(voucherOrder.total, locale)}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            {/* Amount in Words */}
+                            <div className="bg-slate-100 p-3 rounded-lg text-xs font-semibold border border-slate-200">
+                                <span className="text-slate-500 font-bold uppercase text-[10px] block mb-0.5">Amount in Words:</span>
+                                <span className="text-slate-900 italic font-bold">{numberToWords(Number(voucherOrder.total))}</span>
+                            </div>
+
+                            {/* Signatures Footer */}
+                            <div className="pt-12 grid grid-cols-3 gap-6 text-center text-xs">
+                                <div className="border-t border-slate-400 pt-2 space-y-0.5">
+                                    <p className="font-bold text-slate-800">Customer Received</p>
+                                    <p className="text-[10px] text-slate-400">Receiver's Signature</p>
+                                </div>
+                                <div className="border-t border-slate-400 pt-2 space-y-0.5">
+                                    <p className="font-bold text-slate-800">Courier / Agent</p>
+                                    <p className="text-[10px] text-slate-400">Delivery Person</p>
+                                </div>
+                                <div className="border-t border-slate-400 pt-2 space-y-0.5">
+                                    <p className="font-bold text-indigo-900">BanglaPark Operations</p>
+                                    <p className="text-[10px] text-slate-400">Authorized Stamp & Signature</p>
+                                </div>
+                            </div>
+
+                            {/* Disclaimer */}
+                            <div className="text-center text-[10px] text-slate-400 pt-4 border-t border-slate-200">
+                                Thank you for shopping with BanglaPark! Computer generated official order delivery voucher & receipt. © {new Date().getFullYear()} BanglaPark.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

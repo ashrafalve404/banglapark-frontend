@@ -22,8 +22,8 @@ export default function AdminDigitalMarketingPage() {
     const [image, setImage] = useState("");
     const [link, setLink] = useState("");
     const [price, setPrice] = useState("");
-    const [profitPercent, setProfitPercent] = useState("0.10");
-    const [durationHours, setDurationHours] = useState("24");
+    const [dailyProfitPercent, setDailyProfitPercent] = useState("0.50");
+    const [durationDays, setDurationDays] = useState("365");
     const [uploadingImage, setUploadingImage] = useState(false);
     const [formError, setFormError] = useState("");
 
@@ -88,8 +88,8 @@ export default function AdminDigitalMarketingPage() {
         setImage("");
         setLink("");
         setPrice("");
-        setProfitPercent("0.10");
-        setDurationHours("24");
+        setDailyProfitPercent("0.50");
+        setDurationDays("365");
     };
 
     const handleEdit = (pkg: DigitalMarketingPackage) => {
@@ -100,8 +100,8 @@ export default function AdminDigitalMarketingPage() {
         setImage(pkg.image || "");
         setLink(pkg.link || "");
         setPrice(String(pkg.price));
-        setProfitPercent(String(pkg.profitPercent));
-        setDurationHours(String(pkg.durationHours));
+        setDailyProfitPercent(String(pkg.dailyProfitPercent ?? pkg.profitPercent ?? 0.5));
+        setDurationDays(String(pkg.durationDays ?? 365));
         setShowModal(true);
     };
 
@@ -115,8 +115,9 @@ export default function AdminDigitalMarketingPage() {
             image: image.trim() || undefined,
             link: link.trim() || undefined,
             price: Number(price),
-            profitPercent: Number(profitPercent),
-            durationHours: Number(durationHours),
+            profitPercent: Number(dailyProfitPercent),
+            dailyProfitPercent: Number(dailyProfitPercent),
+            durationDays: Number(durationDays),
         };
         if (editingPkg) {
             updateMutation.mutate({ id: editingPkg.id, body });
@@ -156,64 +157,76 @@ export default function AdminDigitalMarketingPage() {
                     <div className="py-8 text-center text-slate-400 text-xs">Loading packages...</div>
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                        {(packages ?? []).map((pkg) => (
-                            <div key={pkg.id} className="border border-slate-200 rounded-2xl p-4 space-y-3 relative bg-slate-50/50 hover:border-slate-300 transition-all">
-                                {pkg.image && (
-                                    <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-900/5 border border-slate-200 flex items-center justify-center p-1">
-                                        <img src={pkg.image} alt={pkg.title} className="w-full h-full object-contain rounded-lg" />
-                                    </div>
-                                )}
-                                <div className="flex items-start justify-between">
-                                    <div>
-                                        <h3 className="font-bold text-slate-900 text-sm">{pkg.title}</h3>
-                                        <p className="text-xs text-slate-500 line-clamp-2 mt-0.5">{pkg.description}</p>
-                                    </div>
-                                    <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${pkg.isHidden ? "bg-red-100 text-red-700" : "bg-emerald-100 text-emerald-700"}`}>
-                                        {pkg.isHidden ? "Hidden" : "Active"}
-                                    </span>
-                                </div>
+                        {(packages ?? []).map((pkg) => {
+                            const pPrice = Number(pkg.price);
+                            const pPercent = Number(pkg.dailyProfitPercent ?? pkg.profitPercent ?? 0.5);
+                            const pDays = Number(pkg.durationDays ?? 365);
+                            const pDailyReturn = Math.round((pPrice * (pPercent / 100)) * 100) / 100;
+                            const pTotalReturn = Math.round((pDailyReturn * pDays) * 100) / 100;
 
-                                <div className="grid grid-cols-2 gap-2 text-xs bg-white p-3 rounded-xl border border-slate-150">
-                                    <div>
-                                        <span className="text-[10px] text-slate-400 font-semibold block uppercase">Price</span>
-                                        <span className="font-bold text-slate-800">{formatCurrency(pkg.price, locale)}</span>
+                            return (
+                                <div key={pkg.id} className="border border-slate-200 rounded-2xl p-4 space-y-3 relative bg-slate-50/50 hover:border-slate-300 transition-all">
+                                    {pkg.image && (
+                                        <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-900/5 border border-slate-200 flex items-center justify-center p-1">
+                                            <img src={pkg.image} alt={pkg.title} className="w-full h-full object-contain rounded-lg" />
+                                        </div>
+                                    )}
+                                    <div className="flex items-start justify-between">
+                                        <div>
+                                            <h3 className="font-bold text-slate-900 text-sm">{pkg.title}</h3>
+                                            <p className="text-xs text-slate-500 line-clamp-2 mt-0.5">{pkg.description}</p>
+                                        </div>
+                                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${pkg.isHidden ? "bg-red-100 text-red-700" : "bg-emerald-100 text-emerald-700"}`}>
+                                            {pkg.isHidden ? "Hidden" : "Active"}
+                                        </span>
                                     </div>
-                                    <div>
-                                        <span className="text-[10px] text-slate-400 font-semibold block uppercase">Profit (+{pkg.profitPercent}%)</span>
-                                        <span className="font-bold text-emerald-600">+{formatCurrency((pkg.price * pkg.profitPercent) / 100, locale)}</span>
+
+                                    <div className="grid grid-cols-2 gap-2 text-xs bg-white p-3 rounded-xl border border-slate-150">
+                                        <div>
+                                            <span className="text-[10px] text-slate-400 font-semibold block uppercase">Price</span>
+                                            <span className="font-bold text-slate-800">{formatCurrency(pPrice, locale)}</span>
+                                        </div>
+                                        <div>
+                                            <span className="text-[10px] text-slate-400 font-semibold block uppercase">Daily Profit ({pPercent}%)</span>
+                                            <span className="font-bold text-emerald-600">+{formatCurrency(pDailyReturn, locale)} / day</span>
+                                        </div>
+                                        <div className="col-span-2 pt-1 border-t border-slate-100 flex justify-between items-center text-[11px]">
+                                            <span className="text-slate-500 font-medium">Duration: <strong className="text-slate-700">{pDays} Days</strong></span>
+                                            <span className="text-emerald-700 font-bold">Total Return: {formatCurrency(pTotalReturn, locale)}</span>
+                                        </div>
+                                    </div>
+
+                                    {pkg.link && (
+                                        <a href={pkg.link} target="_blank" rel="noopener noreferrer" className="text-[11px] font-bold text-indigo-600 hover:underline flex items-center gap-1">
+                                            <ExternalLink size={12} /> {locale === "bn" ? "ক্যাম্পেইন লিংক" : "Campaign Link"}
+                                        </a>
+                                    )}
+
+                                    <div className="flex items-center justify-between pt-2 border-t border-slate-200">
+                                        <span className="text-[10px] text-slate-400">{pkg._count?.purchases ?? 0} Sales</span>
+                                        <div className="flex items-center gap-1.5">
+                                            <button
+                                                onClick={() => updateMutation.mutate({ id: pkg.id, body: { isHidden: !pkg.isHidden } })}
+                                                className="p-1.5 text-slate-500 hover:text-slate-700 hover:bg-slate-200/60 rounded cursor-pointer"
+                                                title={pkg.isHidden ? "Unhide" : "Hide"}
+                                            >
+                                                {pkg.isHidden ? <Eye size={14} /> : <EyeOff size={14} />}
+                                            </button>
+                                            <button onClick={() => handleEdit(pkg)} className="p-1.5 text-indigo-600 hover:bg-indigo-50 rounded cursor-pointer" title="Edit">
+                                                <Edit size={14} />
+                                            </button>
+                                            <button
+                                                onClick={() => { if (confirm("Delete this package?")) deleteMutation.mutate(pkg.id); }}
+                                                className="p-1.5 text-red-600 hover:bg-red-50 rounded cursor-pointer"
+                                                title="Delete"
+                                            >
+                                                <Trash2 size={14} />
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-
-                                {pkg.link && (
-                                    <a href={pkg.link} target="_blank" rel="noopener noreferrer" className="text-[11px] font-bold text-indigo-600 hover:underline flex items-center gap-1">
-                                        <ExternalLink size={12} /> {locale === "bn" ? "ক্যাম্পেইন লিংক" : "Campaign Link"}
-                                    </a>
-                                )}
-
-                                <div className="flex items-center justify-between pt-2 border-t border-slate-200">
-                                    <span className="text-[10px] text-slate-400">{pkg._count?.purchases ?? 0} Sales</span>
-                                    <div className="flex items-center gap-1.5">
-                                        <button
-                                            onClick={() => updateMutation.mutate({ id: pkg.id, body: { isHidden: !pkg.isHidden } })}
-                                            className="p-1.5 text-slate-500 hover:text-slate-700 hover:bg-slate-200/60 rounded cursor-pointer"
-                                            title={pkg.isHidden ? "Unhide" : "Hide"}
-                                        >
-                                            {pkg.isHidden ? <Eye size={14} /> : <EyeOff size={14} />}
-                                        </button>
-                                        <button onClick={() => handleEdit(pkg)} className="p-1.5 text-indigo-600 hover:bg-indigo-50 rounded cursor-pointer" title="Edit">
-                                            <Edit size={14} />
-                                        </button>
-                                        <button
-                                            onClick={() => { if (confirm("Delete this package?")) deleteMutation.mutate(pkg.id); }}
-                                            className="p-1.5 text-red-600 hover:bg-red-50 rounded cursor-pointer"
-                                            title="Delete"
-                                        >
-                                            <Trash2 size={14} />
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 )}
             </div>
@@ -232,8 +245,8 @@ export default function AdminDigitalMarketingPage() {
                             onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
                         >
                             <option value="">{locale === "bn" ? "সকল স্ট্যাটাস (All)" : "All Status"}</option>
-                            <option value="ACTIVE">ACTIVE (টাইমার চালু)</option>
-                            <option value="COMPLETED">COMPLETED (পেআউট সম্পন্ন)</option>
+                            <option value="ACTIVE">ACTIVE (দৈনিক 0.5% পেআউট चालू)</option>
+                            <option value="COMPLETED">COMPLETED (365 দিন সম্পন্ন)</option>
                         </select>
                     </div>
                 </div>
@@ -251,32 +264,39 @@ export default function AdminDigitalMarketingPage() {
                                     <th className="p-3.5">User</th>
                                     <th className="p-3.5">Package</th>
                                     <th className="p-3.5 text-right">Investment</th>
-                                    <th className="p-3.5 text-right">0.1% Profit</th>
-                                    <th className="p-3.5 text-right">Total 24h Return</th>
+                                    <th className="p-3.5 text-right">Daily Profit (0.5%)</th>
+                                    <th className="p-3.5 text-center">Progress (Days Paid)</th>
+                                    <th className="p-3.5 text-right">Total Earned</th>
                                     <th className="p-3.5 text-center">Status</th>
-                                    <th className="p-3.5 text-right">Matures At</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-100 bg-white">
-                                {purchases.map((pur) => (
-                                    <tr key={pur.id} className="hover:bg-slate-50/60">
-                                        <td className="p-3.5 text-slate-500 font-medium">{formatDateTime(pur.purchasedAt, locale)}</td>
-                                        <td className="p-3.5">
-                                            <div className="font-bold text-slate-900">{pur.user?.name}</div>
-                                            <div className="text-[10px] text-slate-400">{pur.user?.phone} (ID: {pur.user?.memberId})</div>
-                                        </td>
-                                        <td className="p-3.5 font-bold text-indigo-900">{pur.package?.title}</td>
-                                        <td className="p-3.5 text-right font-bold text-slate-800">{formatCurrency(pur.amount, locale)}</td>
-                                        <td className="p-3.5 text-right font-bold text-emerald-600">+{formatCurrency(pur.profitAmount, locale)}</td>
-                                        <td className="p-3.5 text-right font-extrabold text-emerald-700">{formatCurrency(pur.totalReturn, locale)}</td>
-                                        <td className="p-3.5 text-center">
-                                            <span className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold ${pur.status === "COMPLETED" ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-800"}`}>
-                                                {pur.status === "COMPLETED" ? "PAYOUT COMPLETED" : "ACTIVE 24H TIMER"}
-                                            </span>
-                                        </td>
-                                        <td className="p-3.5 text-right text-slate-500">{formatDateTime(pur.maturesAt, locale)}</td>
-                                    </tr>
-                                ))}
+                                {purchases.map((pur) => {
+                                    const dProfit = Number(pur.dailyProfitAmount ?? pur.profitAmount ?? (Number(pur.amount) * 0.005));
+                                    const dPaid = Number(pur.daysPaid ?? 0);
+                                    const dTotal = Number(pur.daysTotal ?? 365);
+                                    const tEarned = Number(pur.totalEarned ?? (dPaid * dProfit));
+
+                                    return (
+                                        <tr key={pur.id} className="hover:bg-slate-50/60">
+                                            <td className="p-3.5 text-slate-500 font-medium">{formatDateTime(pur.purchasedAt, locale)}</td>
+                                            <td className="p-3.5">
+                                                <div className="font-bold text-slate-900">{pur.user?.name}</div>
+                                                <div className="text-[10px] text-slate-400">{pur.user?.phone} (ID: {pur.user?.memberId})</div>
+                                            </td>
+                                            <td className="p-3.5 font-bold text-indigo-900">{pur.package?.title}</td>
+                                            <td className="p-3.5 text-right font-bold text-slate-800">{formatCurrency(pur.amount, locale)}</td>
+                                            <td className="p-3.5 text-right font-bold text-emerald-600">+{formatCurrency(dProfit, locale)} / day</td>
+                                            <td className="p-3.5 text-center font-bold text-indigo-700">{dPaid} / {dTotal} Days</td>
+                                            <td className="p-3.5 text-right font-extrabold text-emerald-700">{formatCurrency(tEarned, locale)}</td>
+                                            <td className="p-3.5 text-center">
+                                                <span className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold ${pur.status === "COMPLETED" ? "bg-emerald-100 text-emerald-800" : "bg-indigo-100 text-indigo-800"}`}>
+                                                    {pur.status === "COMPLETED" ? "365 DAYS COMPLETED" : "DAILY PAYOUT ACTIVE"}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
                             </tbody>
                         </table>
                     </div>
@@ -348,14 +368,18 @@ export default function AdminDigitalMarketingPage() {
                                 <input type="url" className="input w-full text-sm" placeholder="https://facebook.com/my-page or https://youtu.be/..." value={link} onChange={(e) => setLink(e.target.value)} />
                             </div>
 
-                            <div className="grid grid-cols-2 gap-3">
+                            <div className="grid grid-cols-3 gap-3">
                                 <div className="space-y-1">
                                     <label className="text-xs font-bold text-slate-700 block">{locale === "bn" ? "মূল্য (৳)" : "Price (৳)"}</label>
-                                    <input type="number" required className="input w-full text-sm" placeholder="1000" min={1} value={price} onChange={(e) => setPrice(e.target.value)} />
+                                    <input type="number" required className="input w-full text-sm" placeholder="2000" min={1} value={price} onChange={(e) => setPrice(e.target.value)} />
                                 </div>
                                 <div className="space-y-1">
-                                    <label className="text-xs font-bold text-slate-700 block">{locale === "bn" ? "প্রফিট বোনাস (%)" : "Profit Bonus (%)"}</label>
-                                    <input type="number" step="0.01" className="input w-full text-sm" placeholder="0.10" value={profitPercent} onChange={(e) => setProfitPercent(e.target.value)} />
+                                    <label className="text-xs font-bold text-slate-700 block">{locale === "bn" ? "দৈনিক প্রফিট (%)" : "Daily Profit (%)"}</label>
+                                    <input type="number" step="0.01" className="input w-full text-sm" placeholder="0.50" value={dailyProfitPercent} onChange={(e) => setDailyProfitPercent(e.target.value)} />
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="text-xs font-bold text-slate-700 block">{locale === "bn" ? "মেয়াদ (দিন)" : "Duration (Days)"}</label>
+                                    <input type="number" className="input w-full text-sm" placeholder="365" value={durationDays} onChange={(e) => setDurationDays(e.target.value)} />
                                 </div>
                             </div>
                         </div>
@@ -375,7 +399,7 @@ export default function AdminDigitalMarketingPage() {
                                 )}
                             </button>
                             <button type="button" onClick={resetForm} className="px-4 py-2.5 text-xs font-bold text-slate-600 border border-slate-200 rounded-xl hover:bg-slate-50 cursor-pointer">
-                                {t("digitalMarketing.cancel")}
+                                 {t("digitalMarketing.cancel")}
                             </button>
                         </div>
                     </form>

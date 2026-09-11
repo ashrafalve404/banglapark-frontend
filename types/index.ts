@@ -121,7 +121,7 @@ export interface Order {
 export interface WithdrawalRequest {
     id: string;
     userId: string;
-    user?: Pick<User, "id" | "name" | "phone" | "email">;
+    user?: Pick<User, "id" | "name" | "phone" | "email" | "memberId">;
     amount: number;
     method: WithdrawMethod;
     accountDetails: Record<string, string>;

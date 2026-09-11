@@ -8,7 +8,10 @@ export type DigitalMarketingPackage = {
     link?: string;
     price: number;
     profitPercent: number;
-    durationHours: number;
+    dailyProfitPercent?: number;
+    durationDays?: number;
+    dailyProfitAmount?: number;
+    durationHours?: number;
     isHidden: boolean;
     sortOrder: number;
     createdAt: string;
@@ -19,11 +22,17 @@ export type DigitalMarketingPurchase = {
     userId: string;
     packageId: string;
     amount: number;
-    profitAmount: number;
-    totalReturn: number;
+    profitAmount?: number;
+    totalReturn?: number;
+    dailyProfitPercent?: number;
+    dailyProfitAmount?: number;
+    daysTotal?: number;
+    daysPaid?: number;
+    totalEarned?: number;
+    lastCreditedAt?: string;
     status: "ACTIVE" | "COMPLETED";
     purchasedAt: string;
-    maturesAt: string;
+    maturesAt?: string;
     creditedAt?: string;
     package?: {
         title: string;

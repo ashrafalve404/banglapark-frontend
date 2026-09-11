@@ -2,9 +2,9 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { Search, ShieldAlert, Loader2, ArrowRight, RotateCcw } from "lucide-react";
+import { Search, ShieldAlert, Loader2, ArrowRight, RotateCcw, Printer, FileText, CheckCircle2 } from "lucide-react";
 import { withdrawalApi } from "@/lib/api/withdrawal";
-import { formatCurrency, formatDateTime, getWithdrawStatusLabel, getWithdrawMethodLabel } from "@/lib/utils";
+import { formatCurrency, formatDateTime, getWithdrawStatusLabel, getWithdrawMethodLabel, numberToWords } from "@/lib/utils";
 import type { WithdrawalRequest, WithdrawStatus } from "@/types";
 import { useLocale } from "@/lib/i18n";
 
@@ -19,6 +19,9 @@ export default function AdminWithdrawalsPage() {
     const [actionType, setActionType] = useState<"REJECTED" | "RETURNED">("REJECTED");
     const [actionReason, setActionReason] = useState("");
 
+    // Printable Voucher modal state
+    const [voucherReq, setVoucherReq] = useState<WithdrawalRequest | null>(null);
+
     const { data, isLoading } = useQuery({
         queryKey: ["admin-withdrawals", page, status],
         queryFn: () => withdrawalApi.adminAll({ page, limit: 12, status: status ? status as WithdrawStatus : undefined }),
@@ -28,11 +31,15 @@ export default function AdminWithdrawalsPage() {
     const total = data?.total ?? 0;
     const totalPages = Math.ceil(total / 12) || 1;
 
-    // Approve withdrawal request
+    // Approve withdrawal request & launch payment voucher print
     const approveMutation = useMutation({
         mutationFn: (id: string) => withdrawalApi.review(id, { status: "APPROVED" }),
-        onSuccess: () => {
+        onSuccess: (_, targetId) => {
             queryClient.invalidateQueries({ queryKey: ["admin-withdrawals"] });
+            const targetReq = requests.find((r) => r.id === targetId);
+            if (targetReq) {
+                setVoucherReq({ ...targetReq, status: "APPROVED" });
+            }
         },
     });
 
@@ -69,6 +76,30 @@ export default function AdminWithdrawalsPage() {
 
     return (
         <div className="space-y-6">
+            {/* Global style tag for perfect printable PDF formatting */}
+            <style jsx global>{`
+                @media print {
+                    body * {
+                        visibility: hidden !important;
+                    }
+                    .id-voucher-modal, .id-voucher-modal * {
+                        visibility: visible !important;
+                    }
+                    .id-voucher-modal {
+                        position: absolute !important;
+                        left: 0 !important;
+                        top: 0 !important;
+                        width: 100% !important;
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        background: #ffffff !important;
+                    }
+                    .print\\:hidden {
+                        display: none !important;
+                    }
+                }
+            `}</style>
+
             <div>
                 <h1 className="text-2xl font-bold text-slate-800">{t("admin.withdrawals.heading")}</h1>
                 <p className="text-sm text-slate-500">{t("admin.withdrawals.subheading")}</p>
@@ -172,7 +203,16 @@ export default function AdminWithdrawalsPage() {
                                                     </button>
                                                 </div>
                                             ) : (
-                                                <span className="text-[10px] text-slate-400">{t("admin.withdrawals.table.completed")}</span>
+                                                <div className="flex items-center justify-center gap-2">
+                                                    <span className="text-[10px] text-slate-400">{t("admin.withdrawals.table.completed")}</span>
+                                                    <button
+                                                        onClick={() => setVoucherReq(req)}
+                                                        className="bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 font-bold text-[10px] py-1 px-2.5 rounded-lg cursor-pointer flex items-center gap-1 transition-all"
+                                                        title="Print Voucher PDF"
+                                                    >
+                                                        <Printer size={12} /> {locale === "bn" ? "ভাউচার প্রিন্ট" : "Voucher PDF"}
+                                                    </button>
+                                                </div>
                                             )}
                                         </td>
                                     </tr>
@@ -233,6 +273,139 @@ export default function AdminWithdrawalsPage() {
                             </button>
                         </div>
                     </form>
+                </div>
+            )}
+
+            {/* Detailed Printable Payment Voucher Modal */}
+            {voucherReq && (
+                <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 overflow-y-auto print:p-0 print:bg-white print:static">
+                    <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-6 space-y-6 relative print:p-0 print:shadow-none print:max-w-none print:w-full id-voucher-modal">
+                        {/* Action Bar (Hidden when printing) */}
+                        <div className="flex items-center justify-between border-b border-slate-200 pb-4 print:hidden">
+                            <div className="flex items-center gap-2">
+                                <Printer className="text-indigo-600" size={20} />
+                                <h3 className="text-base font-bold text-slate-900">
+                                    {locale === "bn" ? "উইথড্রয়াল পেমেন্ট ভাউচার (PDF / প্রিন্ট)" : "Withdrawal Payment Voucher (PDF / Print)"}
+                                </h3>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <button
+                                    onClick={() => window.print()}
+                                    className="py-1.5 px-4 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
+                                >
+                                    <Printer size={14} /> {locale === "bn" ? "প্রিন্ট / PDF সেভ করুন" : "Print / Save PDF"}
+                                </button>
+                                <button
+                                    onClick={() => setVoucherReq(null)}
+                                    className="py-1.5 px-3 text-xs font-bold text-slate-600 border border-slate-200 rounded-xl hover:bg-slate-50 cursor-pointer"
+                                >
+                                    ✕
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Official Voucher Document Sheet */}
+                        <div className="bg-white p-6 rounded-xl border border-slate-200 space-y-6 text-slate-800 font-sans print:border-none print:p-6">
+                            {/* Header Banner */}
+                            <div className="flex items-start justify-between border-b-2 border-indigo-600 pb-4">
+                                <div>
+                                    <h2 className="text-2xl font-black tracking-tight text-indigo-900">BANGLAPARK</h2>
+                                    <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">BanglaPark E-Commerce Portal</p>
+                                    <p className="text-[11px] text-slate-400 mt-0.5">Official Payment Disbursement Voucher</p>
+                                </div>
+                                <div className="text-right">
+                                    <span className="inline-block px-3 py-1 bg-emerald-100 text-emerald-800 rounded-md font-bold text-xs uppercase tracking-wider border border-emerald-300">
+                                        {voucherReq.status === "APPROVED" ? (locale === "bn" ? "অনুমোদিত পেমেন্ট (APPROVED)" : "PAYMENT DISBURSED") : voucherReq.status}
+                                    </span>
+                                    <div className="text-xs font-mono font-bold text-slate-700 mt-2">
+                                        VOUCHER NO: <span className="text-indigo-700">WD-{voucherReq.id.slice(0, 8).toUpperCase()}</span>
+                                    </div>
+                                    <div className="text-[11px] text-slate-500 font-medium mt-0.5">
+                                        Date: {formatDateTime(voucherReq.createdAt, locale)}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* User & Payment Information Grid */}
+                            <div className="grid grid-cols-2 gap-4 text-xs bg-slate-50 p-4 rounded-xl border border-slate-200">
+                                <div className="space-y-1.5">
+                                    <div className="text-[10px] font-bold uppercase tracking-wider text-indigo-700 border-b border-slate-200 pb-1">
+                                        Beneficiary Details (গ্রাহকের তথ্য)
+                                    </div>
+                                    <div><strong className="text-slate-500">Name:</strong> <span className="font-bold text-slate-900">{voucherReq.user?.name || "N/A"}</span></div>
+                                    <div><strong className="text-slate-500">Phone:</strong> <span className="font-bold text-slate-900">{voucherReq.user?.phone || "N/A"}</span></div>
+                                    <div><strong className="text-slate-500">User / Member ID:</strong> <span className="font-bold text-slate-900">#{voucherReq.user?.memberId || voucherReq.userId?.slice(0, 8)}</span></div>
+                                </div>
+
+                                <div className="space-y-1.5">
+                                    <div className="text-[10px] font-bold uppercase tracking-wider text-indigo-700 border-b border-slate-200 pb-1">
+                                        Disbursal Account Info (পেমেন্ট মাধ্যম)
+                                    </div>
+                                    <div><strong className="text-slate-500">Method:</strong> <span className="font-bold text-indigo-900 uppercase">{getWithdrawMethodLabel(voucherReq.method)}</span></div>
+                                    <div><strong className="text-slate-500">Account No:</strong> <span className="font-mono font-bold text-slate-900 select-all">{voucherReq.accountDetails?.accountNo || "N/A"}</span></div>
+                                    {voucherReq.method === "BANK" && (
+                                        <>
+                                            <div><strong className="text-slate-500">Bank & Branch:</strong> {voucherReq.accountDetails?.bankName} ({voucherReq.accountDetails?.branchName})</div>
+                                            <div><strong className="text-slate-500">Account Holder:</strong> {voucherReq.accountDetails?.holderName}</div>
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Financial Breakdown Table */}
+                            <div className="overflow-hidden rounded-xl border border-slate-200">
+                                <table className="w-full text-left text-xs border-collapse">
+                                    <thead>
+                                        <tr className="bg-indigo-900 text-white font-bold uppercase tracking-wider">
+                                            <th className="p-3">Financial Description</th>
+                                            <th className="p-3 text-right">Amount (BDT)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-slate-200 font-medium">
+                                        <tr>
+                                            <td className="p-3">Requested Withdrawal Balance</td>
+                                            <td className="p-3 text-right font-bold text-slate-900">{formatCurrency(voucherReq.amount, locale)}</td>
+                                        </tr>
+                                        <tr>
+                                            <td className="p-3 text-slate-500">Processing / Gateway Charge</td>
+                                            <td className="p-3 text-right text-slate-500">৳0.00</td>
+                                        </tr>
+                                        <tr className="bg-emerald-50/80 font-extrabold text-sm text-emerald-900">
+                                            <td className="p-3 text-emerald-950 uppercase tracking-wide">Net Disbursed Payable Amount</td>
+                                            <td className="p-3 text-right text-emerald-700">{formatCurrency(voucherReq.amount, locale)}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            {/* Amount in Words */}
+                            <div className="bg-slate-100 p-3 rounded-lg text-xs font-semibold border border-slate-200">
+                                <span className="text-slate-500 font-bold uppercase text-[10px] block mb-0.5">Amount in Words:</span>
+                                <span className="text-slate-900 italic font-bold">{numberToWords(Number(voucherReq.amount))}</span>
+                            </div>
+
+                            {/* Signatures & Approval Footer */}
+                            <div className="pt-12 grid grid-cols-3 gap-6 text-center text-xs">
+                                <div className="border-t border-slate-400 pt-2 space-y-0.5">
+                                    <p className="font-bold text-slate-800">System Admin</p>
+                                    <p className="text-[10px] text-slate-400">Prepared By</p>
+                                </div>
+                                <div className="border-t border-slate-400 pt-2 space-y-0.5">
+                                    <p className="font-bold text-slate-800">Accounts Manager</p>
+                                    <p className="text-[10px] text-slate-400">Verified By</p>
+                                </div>
+                                <div className="border-t border-slate-400 pt-2 space-y-0.5">
+                                    <p className="font-bold text-indigo-900">Authorized Signature & Stamp</p>
+                                    <p className="text-[10px] text-slate-400">Disbursed Authority</p>
+                                </div>
+                            </div>
+
+                            {/* Computer Generated Footer Disclaimer */}
+                            <div className="text-center text-[10px] text-slate-400 pt-4 border-t border-slate-200">
+                                Computer generated payment voucher. BanglaPark Portal © {new Date().getFullYear()}. All Rights Reserved.
+                            </div>
+                        </div>
+                    </div>
                 </div>
             )}
         </div>

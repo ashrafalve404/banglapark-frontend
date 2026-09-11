@@ -147,9 +147,10 @@ export default function DigitalMarketingPage() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                         {packages.map((pkg) => {
                             const price = Number(pkg.price);
-                            const profitPercent = Number(pkg.profitPercent ?? 0.1);
-                            const profitAmount = Math.round((price * (profitPercent / 100)) * 100) / 100;
-                            const totalReturn = Math.round((price + profitAmount) * 100) / 100;
+                            const dailyProfitPercent = Number(pkg.profitPercent ?? 0.5);
+                            const daysTotal = Number(pkg.durationDays ?? 365);
+                            const dailyProfitAmount = Math.round((price * (dailyProfitPercent / 100)) * 100) / 100;
+                            const totalReturnPotential = Math.round((dailyProfitAmount * daysTotal) * 100) / 100;
                             const canAfford = availableBalance >= price;
 
                             return (
@@ -188,12 +189,12 @@ export default function DigitalMarketingPage() {
                                                 <span className="font-bold text-slate-900 text-sm">{formatCurrency(price, locale)}</span>
                                             </div>
                                             <div className="flex items-center justify-between text-amber-700">
-                                                <span>{t("digitalMarketing.bonusProfit")} ({profitPercent}%)</span>
-                                                <span className="font-bold">+ {formatCurrency(profitAmount, locale)}</span>
+                                                <span>{t("digitalMarketing.bonusProfit")} ({dailyProfitPercent}% / {locale === "bn" ? "দিন" : "day"})</span>
+                                                <span className="font-bold">+ {formatCurrency(dailyProfitAmount, locale)} / {locale === "bn" ? "দিন" : "day"}</span>
                                             </div>
-                                            <div className="flex items-center justify-between text-emerald-800 font-bold border-t border-slate-200 pt-2 text-sm">
+                                            <div className="flex items-center justify-between text-emerald-800 font-bold border-t border-slate-200 pt-2 text-xs">
                                                 <span>{t("digitalMarketing.totalReturn24h")}</span>
-                                                <span>{formatCurrency(totalReturn, locale)}</span>
+                                                <span className="font-black text-sm">{formatCurrency(totalReturnPotential, locale)} ({daysTotal} {locale === "bn" ? "দিন" : "days"})</span>
                                             </div>
                                         </div>
                                     </div>
@@ -228,32 +229,43 @@ export default function DigitalMarketingPage() {
                         {t("digitalMarketing.activeTitle")}
                     </h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {activePurchases.map((item) => (
-                            <div key={item.id} className="card p-5 bg-gradient-to-br from-indigo-50/60 to-white border border-indigo-100 space-y-3 shadow-xs">
-                                <div className="flex items-center justify-between">
-                                    <h3 className="font-bold text-slate-900 text-sm">{item.package?.title || "Digital Marketing Package"}</h3>
-                                    <CountdownTimer expiresAt={item.maturesAt} locale={locale} t={t} />
-                                </div>
-                                <div className="grid grid-cols-3 gap-2 bg-white p-3 rounded-xl border border-slate-100 text-center">
-                                    <div>
-                                        <span className="text-[10px] text-slate-400 block font-semibold">{t("digitalMarketing.paidAmount")}</span>
-                                        <span className="text-xs font-bold text-slate-900">{formatCurrency(item.amount, locale)}</span>
+                        {activePurchases.map((item) => {
+                            const amount = Number(item.amount);
+                            const dailyProfitPercent = Number(item.dailyProfitPercent ?? 0.5);
+                            const dailyProfitAmount = item.dailyProfitAmount ? Number(item.dailyProfitAmount) : Math.round((amount * (dailyProfitPercent / 100)) * 100) / 100;
+                            const daysPaid = Number(item.daysPaid ?? 0);
+                            const daysTotal = Number(item.daysTotal ?? 365);
+                            const totalEarned = Number(item.totalEarned ?? (daysPaid * dailyProfitAmount));
+
+                            return (
+                                <div key={item.id} className="card p-5 bg-gradient-to-br from-indigo-50/60 to-white border border-indigo-100 space-y-3 shadow-xs">
+                                    <div className="flex items-center justify-between">
+                                        <h3 className="font-bold text-slate-900 text-sm">{item.package?.title || "Digital Marketing Package"}</h3>
+                                        <span className="inline-flex items-center gap-1 text-xs font-mono font-bold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-200">
+                                            <Clock size={12} /> {daysPaid} / {daysTotal} {locale === "bn" ? "দিন পরিশোধিত" : "Days Paid"}
+                                        </span>
                                     </div>
-                                    <div>
-                                        <span className="text-[10px] text-slate-400 block font-semibold">{t("digitalMarketing.profit1Percent")}</span>
-                                        <span className="text-xs font-bold text-amber-700">+ {formatCurrency(item.profitAmount, locale)}</span>
+                                    <div className="grid grid-cols-3 gap-2 bg-white p-3 rounded-xl border border-slate-100 text-center">
+                                        <div>
+                                            <span className="text-[10px] text-slate-400 block font-semibold">{t("digitalMarketing.paidAmount")}</span>
+                                            <span className="text-xs font-bold text-slate-900">{formatCurrency(amount, locale)}</span>
+                                        </div>
+                                        <div>
+                                            <span className="text-[10px] text-slate-400 block font-semibold">{t("digitalMarketing.profit1Percent")}</span>
+                                            <span className="text-xs font-bold text-amber-700">+ {formatCurrency(dailyProfitAmount, locale)} / {locale === "bn" ? "দিন" : "day"}</span>
+                                        </div>
+                                        <div>
+                                            <span className="text-[10px] text-slate-400 block font-semibold">{t("digitalMarketing.return24h")}</span>
+                                            <span className="text-xs font-bold text-emerald-700">{formatCurrency(totalEarned, locale)}</span>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <span className="text-[10px] text-slate-400 block font-semibold">{t("digitalMarketing.return24h")}</span>
-                                        <span className="text-xs font-bold text-emerald-700">{formatCurrency(item.totalReturn, locale)}</span>
+                                    <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1">
+                                        <span>{t("digitalMarketing.purchasedDate")}: {formatDateTime(item.purchasedAt, locale)}</span>
+                                        <span className="text-indigo-600 font-semibold">{locale === "bn" ? "মেয়াদ: ৩৬৫ সক্রিয় দিন" : "Term: 365 Active Days"}</span>
                                     </div>
                                 </div>
-                                <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1">
-                                    <span>{t("digitalMarketing.purchasedDate")}: {formatDateTime(item.purchasedAt, locale)}</span>
-                                    <span>{t("digitalMarketing.returnTime")}: {formatDateTime(item.maturesAt, locale)}</span>
-                                </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 </div>
             )}
@@ -318,26 +330,33 @@ export default function DigitalMarketingPage() {
                                     <th className="p-3.5">Package</th>
                                     <th className="p-3.5">Purchased Date</th>
                                     <th className="p-3.5 text-right">Investment</th>
-                                    <th className="p-3.5 text-right">0.1% Profit</th>
-                                    <th className="p-3.5 text-right">Total Returned</th>
+                                    <th className="p-3.5 text-right">Daily Profit (0.5%)</th>
+                                    <th className="p-3.5 text-right">Total Earned (365 Days)</th>
                                     <th className="p-3.5 text-center">Status</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-slate-100 bg-white">
-                                {completedPurchases.map((item) => (
-                                    <tr key={item.id} className="hover:bg-slate-50/50">
-                                        <td className="p-3.5 font-bold text-slate-900">{item.package?.title || "Digital Marketing"}</td>
-                                        <td className="p-3.5 text-slate-500 whitespace-nowrap">{formatDateTime(item.purchasedAt, locale)}</td>
-                                        <td className="p-3.5 text-right font-bold text-slate-800">{formatCurrency(item.amount, locale)}</td>
-                                        <td className="p-3.5 text-right font-bold text-amber-700">+ {formatCurrency(item.profitAmount, locale)}</td>
-                                        <td className="p-3.5 text-right font-black text-emerald-700">{formatCurrency(item.totalReturn, locale)}</td>
-                                        <td className="p-3.5 text-center">
-                                            <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
-                                                <CheckCircle2 size={11} /> Completed & Credited
-                                            </span>
-                                        </td>
-                                    </tr>
-                                ))}
+                                {completedPurchases.map((item) => {
+                                    const amount = Number(item.amount);
+                                    const dailyProfitPercent = Number(item.dailyProfitPercent ?? 0.5);
+                                    const dailyProfitAmount = item.dailyProfitAmount ? Number(item.dailyProfitAmount) : Math.round((amount * (dailyProfitPercent / 100)) * 100) / 100;
+                                    const totalEarned = Number(item.totalEarned ?? (365 * dailyProfitAmount));
+
+                                    return (
+                                        <tr key={item.id} className="hover:bg-slate-50/50">
+                                            <td className="p-3.5 font-bold text-slate-900">{item.package?.title || "Digital Marketing"}</td>
+                                            <td className="p-3.5 text-slate-500 whitespace-nowrap">{formatDateTime(item.purchasedAt, locale)}</td>
+                                            <td className="p-3.5 text-right font-bold text-slate-800">{formatCurrency(amount, locale)}</td>
+                                            <td className="p-3.5 text-right font-bold text-amber-700">+ {formatCurrency(dailyProfitAmount, locale)} / {locale === "bn" ? "দিন" : "day"}</td>
+                                            <td className="p-3.5 text-right font-black text-emerald-700">{formatCurrency(totalEarned, locale)}</td>
+                                            <td className="p-3.5 text-center">
+                                                <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+                                                    <CheckCircle2 size={11} /> 365 Days Completed
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
                             </tbody>
                         </table>
                     </div>
@@ -345,52 +364,65 @@ export default function DigitalMarketingPage() {
             )}
 
             {/* ── Purchase Confirmation Modal ── */}
-            {selectedPkg && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-                    <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-5">
-                        <div className="flex items-center justify-between">
-                            <h3 className="text-base font-bold text-slate-900">{t("digitalMarketing.confirmTitle")}</h3>
-                            <button onClick={() => setSelectedPkg(null)} className="text-slate-400 hover:text-slate-600 text-xl leading-none cursor-pointer">✕</button>
-                        </div>
+            {selectedPkg && (() => {
+                const price = Number(selectedPkg.price);
+                const dailyProfitPercent = Number(selectedPkg.profitPercent ?? 0.5);
+                const daysTotal = Number(selectedPkg.durationDays ?? 365);
+                const dailyProfitAmount = Math.round((price * (dailyProfitPercent / 100)) * 100) / 100;
+                const totalReturnPotential = Math.round((dailyProfitAmount * daysTotal) * 100) / 100;
 
-                        <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-4 space-y-2 text-xs">
-                            <p className="font-bold text-indigo-900 text-sm">{selectedPkg.title}</p>
-                            <div className="flex justify-between text-slate-600 border-t border-indigo-100 pt-2">
-                                <span>{t("digitalMarketing.deductedFromWallet")}</span>
-                                <span className="font-bold text-slate-900">{formatCurrency(selectedPkg.price, locale)}</span>
+                return (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+                        <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-5">
+                            <div className="flex items-center justify-between">
+                                <h3 className="text-base font-bold text-slate-900">{t("digitalMarketing.confirmTitle")}</h3>
+                                <button onClick={() => setSelectedPkg(null)} className="text-slate-400 hover:text-slate-600 text-xl leading-none cursor-pointer">✕</button>
                             </div>
-                            <div className="flex justify-between text-amber-700">
-                                <span>{t("digitalMarketing.profitBonus")} ({selectedPkg.profitPercent ?? 0.1}%)</span>
-                                <span className="font-bold">+ {formatCurrency(Math.round((Number(selectedPkg.price) * (Number(selectedPkg.profitPercent ?? 0.1) / 100)) * 100) / 100, locale)}</span>
-                            </div>
-                            <div className="flex justify-between text-emerald-800 font-bold border-t border-indigo-100 pt-2 text-sm">
-                                <span>{t("digitalMarketing.totalReturn24h")}</span>
-                                <span>{formatCurrency(Math.round((Number(selectedPkg.price) * (1 + (Number(selectedPkg.profitPercent ?? 0.1) / 100))) * 100) / 100, locale)}</span>
-                            </div>
-                        </div>
 
-                        {purchaseMutation.isError && (
-                            <div className="bg-red-50 border border-red-200 rounded-xl p-3 text-xs text-red-700 font-semibold">
-                                {(purchaseMutation.error as any)?.response?.data?.message || (locale === "bn" ? "ক্রয় সম্পন্ন করা ব্যর্থ হয়েছে" : "Purchase failed")}
+                            <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-4 space-y-2 text-xs">
+                                <p className="font-bold text-indigo-900 text-sm">{selectedPkg.title}</p>
+                                <div className="flex justify-between text-slate-600 border-t border-indigo-100 pt-2">
+                                    <span>{t("digitalMarketing.deductedFromWallet")}</span>
+                                    <span className="font-bold text-slate-900">{formatCurrency(price, locale)}</span>
+                                </div>
+                                <div className="flex justify-between text-amber-700 font-bold">
+                                    <span>{t("digitalMarketing.profitBonus")} ({dailyProfitPercent}% / {locale === "bn" ? "দিন" : "day"})</span>
+                                    <span>+ {formatCurrency(dailyProfitAmount, locale)} / {locale === "bn" ? "দিন" : "day"}</span>
+                                </div>
+                                <div className="flex justify-between text-emerald-800 font-bold border-t border-indigo-100 pt-2 text-sm">
+                                    <span>{locale === "bn" ? "৩৬৫ দিনে মোট সম্ভাব্য লাভ:" : "365-Day Total Return:"}</span>
+                                    <span>{formatCurrency(totalReturnPotential, locale)}</span>
+                                </div>
+                                <p className="text-[11px] text-slate-500 pt-1 border-t border-indigo-100/60 leading-relaxed">
+                                    {locale === "bn"
+                                        ? "💡 আপনার অ্যাকাউন্ট সক্রিয় থাকা পর্যন্ত প্রতিদিন এই ০.৫% ডেইলি লাভ ওয়ালেটে জমা হবে (মোট ৩৬৫ দিন)। অ্যাকাউন্ট ইনঅ্যাক্টিভ হলে লাভ বন্ধ থাকবে, পরবর্তীতে অ্যাক্টিভ করলে পুনরায় চালু হবে।"
+                                        : "💡 Daily 0.5% profit will be credited to your wallet for 365 active days. If your account becomes Inactive, payouts pause and automatically resume when reactivated."}
+                                </p>
                             </div>
-                        )}
 
-                        <div className="flex gap-3">
-                            <button
-                                onClick={() => purchaseMutation.mutate(selectedPkg.id)}
-                                disabled={purchaseMutation.isPending}
-                                className="flex-1 py-3 flex items-center justify-center gap-2 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl disabled:opacity-50 cursor-pointer transition-all"
-                            >
-                                {purchaseMutation.isPending ? <Loader2 size={16} className="animate-spin" /> : <Megaphone size={16} />}
-                                {t("digitalMarketing.confirmPay")}
-                            </button>
-                            <button onClick={() => setSelectedPkg(null)} className="px-4 py-3 text-xs font-bold text-slate-600 border border-slate-200 rounded-xl hover:bg-slate-50 cursor-pointer">
-                                {t("digitalMarketing.cancel")}
-                            </button>
+                            {purchaseMutation.isError && (
+                                <div className="bg-red-50 border border-red-200 rounded-xl p-3 text-xs text-red-700 font-semibold">
+                                    {(purchaseMutation.error as any)?.response?.data?.message || (locale === "bn" ? "ক্রয় সম্পন্ন করা ব্যর্থ হয়েছে" : "Purchase failed")}
+                                </div>
+                            )}
+
+                            <div className="flex gap-3">
+                                <button
+                                    onClick={() => purchaseMutation.mutate(selectedPkg.id)}
+                                    disabled={purchaseMutation.isPending}
+                                    className="flex-1 py-3 flex items-center justify-center gap-2 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl disabled:opacity-50 cursor-pointer transition-all"
+                                >
+                                    {purchaseMutation.isPending ? <Loader2 size={16} className="animate-spin" /> : <Megaphone size={16} />}
+                                    {t("digitalMarketing.confirmPay")}
+                                </button>
+                                <button onClick={() => setSelectedPkg(null)} className="px-4 py-3 text-xs font-bold text-slate-600 border border-slate-200 rounded-xl hover:bg-slate-50 cursor-pointer">
+                                    {t("digitalMarketing.cancel")}
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            )}
+                );
+            })()}
         </div>
     );
 }
