@@ -147,28 +147,32 @@ export default function DigitalMarketingPage() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                         {packages.map((pkg) => {
                             const price = Number(pkg.price);
-                            const dailyProfitPercent = Number(pkg.profitPercent ?? 0.5);
+                            const dailyProfitPercent = Number(
+                                pkg.dailyProfitPercent && Number(pkg.dailyProfitPercent) >= 0.5
+                                    ? pkg.dailyProfitPercent
+                                    : (pkg.profitPercent && Number(pkg.profitPercent) >= 0.5 ? pkg.profitPercent : 0.5)
+                            );
                             const daysTotal = Number(pkg.durationDays ?? 365);
                             const dailyProfitAmount = Math.round((price * (dailyProfitPercent / 100)) * 100) / 100;
                             const totalReturnPotential = Math.round((dailyProfitAmount * daysTotal) * 100) / 100;
                             const canAfford = availableBalance >= price;
 
                             return (
-                                <div key={pkg.id} className="card p-6 bg-white border border-slate-200 hover:border-indigo-300 transition-all flex flex-col justify-between space-y-5 shadow-xs hover:shadow-md">
+                                <div key={pkg.id} className="card p-5 bg-white border border-slate-200 hover:border-indigo-300 transition-all flex flex-col justify-between space-y-4 shadow-xs hover:shadow-md">
                                     <div className="space-y-3">
                                         {pkg.image && (
-                                            <div className="w-full h-44 rounded-xl overflow-hidden bg-slate-900/5 border border-slate-200 flex items-center justify-center p-1">
+                                            <div className="w-full h-40 rounded-xl overflow-hidden bg-slate-900/5 border border-slate-200 flex items-center justify-center p-1">
                                                 <img src={pkg.image} alt={pkg.title} className="w-full h-full object-contain rounded-lg" />
                                             </div>
                                         )}
                                         <div className="flex items-center justify-between">
-                                            <span className="text-[11px] font-bold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-100">
-                                                {t("digitalMarketing.returnBadge")}
+                                            <span className="text-[11px] font-bold text-indigo-700 bg-indigo-50 px-2.5 py-0.5 rounded-full border border-indigo-100">
+                                                {locale === "bn" ? "দৈনিক ০.৫% লাভ (৩৬৫ দিন)" : "Daily 0.5% Profit (365 Days)"}
                                             </span>
                                             <ShieldCheck size={18} className="text-emerald-600" />
                                         </div>
 
-                                        <h3 className="text-lg font-bold text-slate-900">{pkg.title}</h3>
+                                        <h3 className="text-base font-bold text-slate-900">{pkg.title}</h3>
                                         {pkg.description && <p className="text-xs text-slate-500 line-clamp-2">{pkg.description}</p>}
 
                                         {pkg.link && (
@@ -176,25 +180,25 @@ export default function DigitalMarketingPage() {
                                                 href={pkg.link}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg border border-indigo-200 transition-all mt-1"
+                                                className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg border border-indigo-200 transition-all"
                                             >
-                                                <ExternalLink size={13} /> {locale === "bn" ? "প্রমোশন/ক্যাম্পেইন লিংক দেখুন" : "View Campaign Link"}
+                                                <ExternalLink size={13} /> {locale === "bn" ? "ক্যাম্পেইন লিংক" : "View Link"}
                                             </a>
                                         )}
 
-                                        {/* Financial Breakdown */}
-                                        <div className="bg-slate-50 rounded-xl p-4 space-y-2 text-xs border border-slate-100">
-                                            <div className="flex items-center justify-between text-slate-600">
-                                                <span>{t("digitalMarketing.packagePrice")}</span>
+                                        {/* Financial Breakdown - Clean & Essential Info Only */}
+                                        <div className="bg-slate-50 rounded-xl p-3.5 space-y-2 text-xs border border-slate-100">
+                                            <div className="flex items-center justify-between">
+                                                <span className="text-slate-500 font-medium">{locale === "bn" ? "প্যাকেজ মূল্য:" : "Package Price:"}</span>
                                                 <span className="font-bold text-slate-900 text-sm">{formatCurrency(price, locale)}</span>
                                             </div>
-                                            <div className="flex items-center justify-between text-amber-700">
-                                                <span>{t("digitalMarketing.bonusProfit")} ({dailyProfitPercent}% / {locale === "bn" ? "দিন" : "day"})</span>
-                                                <span className="font-bold">+ {formatCurrency(dailyProfitAmount, locale)} / {locale === "bn" ? "দিন" : "day"}</span>
+                                            <div className="flex items-center justify-between text-emerald-700 font-bold">
+                                                <span>{locale === "bn" ? "দৈনিক লাভ (০.৫%):" : "Daily Profit (0.5%):"}</span>
+                                                <span>+{formatCurrency(dailyProfitAmount, locale)} / {locale === "bn" ? "দিন" : "day"}</span>
                                             </div>
-                                            <div className="flex items-center justify-between text-emerald-800 font-bold border-t border-slate-200 pt-2 text-xs">
-                                                <span>{t("digitalMarketing.totalReturn24h")}</span>
-                                                <span className="font-black text-sm">{formatCurrency(totalReturnPotential, locale)} ({daysTotal} {locale === "bn" ? "দিন" : "days"})</span>
+                                            <div className="flex items-center justify-between text-indigo-900 font-extrabold border-t border-slate-200 pt-2">
+                                                <span>{locale === "bn" ? "৩৬৫ দিনে মোট রিটার্ন:" : "365-Day Total Return:"}</span>
+                                                <span className="font-black text-sm text-emerald-700">{formatCurrency(totalReturnPotential, locale)}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -202,7 +206,7 @@ export default function DigitalMarketingPage() {
                                     <button
                                         onClick={() => setSelectedPkg(pkg)}
                                         disabled={!canAfford || isDailyLimitReached}
-                                        className="w-full py-3 flex items-center justify-center gap-2 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-all shadow-xs"
+                                        className="w-full py-2.5 flex items-center justify-center gap-2 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-all shadow-xs"
                                     >
                                         {isDailyLimitReached ? (
                                             locale === "bn" ? "দৈনিক লিমিট শেষ (সর্বোচ্চ ৫টি/দিন)" : "Daily Limit Reached (Max 5/Day)"
@@ -366,37 +370,41 @@ export default function DigitalMarketingPage() {
             {/* ── Purchase Confirmation Modal ── */}
             {selectedPkg && (() => {
                 const price = Number(selectedPkg.price);
-                const dailyProfitPercent = Number(selectedPkg.profitPercent ?? 0.5);
+                const dailyProfitPercent = Number(
+                    selectedPkg.dailyProfitPercent && Number(selectedPkg.dailyProfitPercent) >= 0.5
+                        ? selectedPkg.dailyProfitPercent
+                        : (selectedPkg.profitPercent && Number(selectedPkg.profitPercent) >= 0.5 ? selectedPkg.profitPercent : 0.5)
+                );
                 const daysTotal = Number(selectedPkg.durationDays ?? 365);
                 const dailyProfitAmount = Math.round((price * (dailyProfitPercent / 100)) * 100) / 100;
                 const totalReturnPotential = Math.round((dailyProfitAmount * daysTotal) * 100) / 100;
 
                 return (
                     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-                        <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-5">
+                        <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 space-y-4">
                             <div className="flex items-center justify-between">
                                 <h3 className="text-base font-bold text-slate-900">{t("digitalMarketing.confirmTitle")}</h3>
                                 <button onClick={() => setSelectedPkg(null)} className="text-slate-400 hover:text-slate-600 text-xl leading-none cursor-pointer">✕</button>
                             </div>
 
-                            <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-4 space-y-2 text-xs">
-                                <p className="font-bold text-indigo-900 text-sm">{selectedPkg.title}</p>
-                                <div className="flex justify-between text-slate-600 border-t border-indigo-100 pt-2">
-                                    <span>{t("digitalMarketing.deductedFromWallet")}</span>
-                                    <span className="font-bold text-slate-900">{formatCurrency(price, locale)}</span>
+                            <div className="bg-indigo-50/80 border border-indigo-100 rounded-xl p-4 space-y-2.5 text-xs">
+                                <p className="font-bold text-indigo-950 text-base">{selectedPkg.title}</p>
+                                <div className="flex justify-between text-slate-600 border-t border-indigo-150 pt-2">
+                                    <span>{locale === "bn" ? "ওয়ালেট থেকে কাটা হবে:" : "Deducted from Wallet:"}</span>
+                                    <span className="font-bold text-slate-900 text-sm">{formatCurrency(price, locale)}</span>
                                 </div>
-                                <div className="flex justify-between text-amber-700 font-bold">
-                                    <span>{t("digitalMarketing.profitBonus")} ({dailyProfitPercent}% / {locale === "bn" ? "দিন" : "day"})</span>
-                                    <span>+ {formatCurrency(dailyProfitAmount, locale)} / {locale === "bn" ? "দিন" : "day"}</span>
+                                <div className="flex justify-between text-emerald-800 font-bold">
+                                    <span>{locale === "bn" ? "দৈনিক লাভ (০.৫%/দিন):" : "Daily Profit (0.5%/day):"}</span>
+                                    <span className="text-emerald-700">+{formatCurrency(dailyProfitAmount, locale)} / {locale === "bn" ? "দিন" : "day"}</span>
                                 </div>
-                                <div className="flex justify-between text-emerald-800 font-bold border-t border-indigo-100 pt-2 text-sm">
-                                    <span>{locale === "bn" ? "৩৬৫ দিনে মোট সম্ভাব্য লাভ:" : "365-Day Total Return:"}</span>
-                                    <span>{formatCurrency(totalReturnPotential, locale)}</span>
+                                <div className="flex justify-between text-indigo-900 font-extrabold border-t border-indigo-150 pt-2 text-sm">
+                                    <span>{locale === "bn" ? "৩৬৫ দিনে মোট রিটার্ন:" : "365-Day Total Return:"}</span>
+                                    <span className="text-emerald-700">{formatCurrency(totalReturnPotential, locale)}</span>
                                 </div>
-                                <p className="text-[11px] text-slate-500 pt-1 border-t border-indigo-100/60 leading-relaxed">
+                                <p className="text-[11px] text-slate-500 pt-1.5 border-t border-indigo-150/70 leading-relaxed">
                                     {locale === "bn"
-                                        ? "💡 আপনার অ্যাকাউন্ট সক্রিয় থাকা পর্যন্ত প্রতিদিন এই ০.৫% ডেইলি লাভ ওয়ালেটে জমা হবে (মোট ৩৬৫ দিন)। অ্যাকাউন্ট ইনঅ্যাক্টিভ হলে লাভ বন্ধ থাকবে, পরবর্তীতে অ্যাক্টিভ করলে পুনরায় চালু হবে।"
-                                        : "💡 Daily 0.5% profit will be credited to your wallet for 365 active days. If your account becomes Inactive, payouts pause and automatically resume when reactivated."}
+                                        ? "💡 আপনার অ্যাকাউন্ট সক্রিয় থাকা অবস্থায় প্রতিদিন ০.৫% ওয়ালেটে জমা হবে (৩৬৫ দিন)।"
+                                        : "💡 Daily 0.5% profit will be credited to your wallet for 365 active days."}
                                 </p>
                             </div>
 
