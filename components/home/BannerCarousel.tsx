@@ -8,10 +8,11 @@ import { useQuery } from "@tanstack/react-query";
 const AUTO_PLAY_INTERVAL = 5000;
 
 const FALLBACK_BANNERS = [
-    { id: "fb1", imageUrl: "/images/banner01.png", linkUrl: "/shop" },
-    { id: "fb2", imageUrl: "/images/banner02.png", linkUrl: "/shop" },
-    { id: "fb3", imageUrl: "/images/banner03.png", linkUrl: "/shop" },
-    { id: "fb4", imageUrl: "/images/banner04.png", linkUrl: "/shop" },
+    { id: "fb1", imageUrl: "/images/banner1.webp", linkUrl: "/shop" },
+    { id: "fb2", imageUrl: "/images/banner2.webp", linkUrl: "/shop" },
+    { id: "fb3", imageUrl: "/images/banner3.webp", linkUrl: "/shop" },
+    { id: "fb4", imageUrl: "/images/banner4.webp", linkUrl: "/shop" },
+    { id: "fb5", imageUrl: "/images/banner5.webp", linkUrl: "/shop" },
 ];
 
 export function BannerCarousel() {
