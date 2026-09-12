@@ -132,7 +132,56 @@ export default function DigitalMarketingPage() {
                 </div>
             )}
 
-            {/* ── 1. Available Packages Grid (Top Priority) ── */}
+            {/* ── 1. Active Purchases Section (Top Priority) ── */}
+            {activePurchases.length > 0 && (
+                <div className="space-y-3">
+                    <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+                        <Clock size={18} className="text-amber-600" />
+                        {locale === "bn" ? "আপনার সক্রিয় প্যাকেজ (দৈনিক ০.৫% লাভ)" : "Your Active Packages (Daily 0.5% Payout)"}
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {activePurchases.map((item) => {
+                            const amount = Number(item.amount);
+                            const dailyProfitPercent = Number(item.dailyProfitPercent ?? 0.5);
+                            const dailyProfitAmount = item.dailyProfitAmount ? Number(item.dailyProfitAmount) : Math.round((amount * (dailyProfitPercent / 100)) * 100) / 100;
+                            const daysPaid = Number(item.daysPaid ?? 0);
+                            const daysTotal = Number(item.daysTotal ?? 365);
+                            const totalEarned = Number(item.totalEarned ?? (daysPaid * dailyProfitAmount));
+
+                            return (
+                                <div key={item.id} className="card p-4 bg-gradient-to-br from-indigo-50/60 to-white border border-indigo-100 space-y-3 shadow-xs">
+                                    <div className="flex items-center justify-between gap-2">
+                                        <h3 className="font-bold text-slate-900 text-sm">{item.package?.title || "Digital Marketing Package"}</h3>
+                                        <span className="inline-flex items-center gap-1 text-[11px] font-mono font-bold text-indigo-700 bg-indigo-50 px-2.5 py-0.5 rounded-full border border-indigo-200 shrink-0">
+                                            <Clock size={11} /> {daysPaid} / {daysTotal} {locale === "bn" ? "দিন পরিশোধিত" : "Days Paid"}
+                                        </span>
+                                    </div>
+                                    <div className="grid grid-cols-3 gap-2 bg-white p-3 rounded-xl border border-slate-100 text-center">
+                                        <div>
+                                            <span className="text-[10px] text-slate-400 block font-semibold">{locale === "bn" ? "বিনিয়োগকৃত পরিমাণ" : "Invested Amount"}</span>
+                                            <span className="text-xs font-bold text-slate-900">{formatCurrency(amount, locale)}</span>
+                                        </div>
+                                        <div>
+                                            <span className="text-[10px] text-slate-400 block font-semibold">{locale === "bn" ? "দৈনিক ০.৫% লাভ" : "Daily 0.5% Profit"}</span>
+                                            <span className="text-xs font-bold text-amber-700">+ {formatCurrency(dailyProfitAmount, locale)} / {locale === "bn" ? "দিন" : "day"}</span>
+                                        </div>
+                                        <div>
+                                            <span className="text-[10px] text-slate-400 block font-semibold">{locale === "bn" ? "মোট অর্জিত" : "Total Earned"}</span>
+                                            <span className="text-xs font-bold text-emerald-700">{formatCurrency(totalEarned, locale)}</span>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center justify-between text-[11px] text-slate-500 pt-0.5">
+                                        <span>{locale === "bn" ? "ক্রয়ের তারিখ" : "Purchased Date"}: {formatDateTime(item.purchasedAt, locale)}</span>
+                                        <span className="text-indigo-600 font-semibold">{locale === "bn" ? "মেয়াদ: ৩৬৫ সক্রিয় দিন" : "Term: 365 Active Days"}</span>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            )}
+
+            {/* ── 2. Available Packages Grid ── */}
             <div className="space-y-3">
                 <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
                     <Megaphone size={18} className="text-indigo-600" />
@@ -220,55 +269,6 @@ export default function DigitalMarketingPage() {
                     </div>
                 )}
             </div>
-
-            {/* ── 2. Active Purchases Section ── */}
-            {activePurchases.length > 0 && (
-                <div className="space-y-3">
-                    <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                        <Clock size={18} className="text-amber-600" />
-                        {t("digitalMarketing.activeTitle")}
-                    </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {activePurchases.map((item) => {
-                            const amount = Number(item.amount);
-                            const dailyProfitPercent = Number(item.dailyProfitPercent ?? 0.5);
-                            const dailyProfitAmount = item.dailyProfitAmount ? Number(item.dailyProfitAmount) : Math.round((amount * (dailyProfitPercent / 100)) * 100) / 100;
-                            const daysPaid = Number(item.daysPaid ?? 0);
-                            const daysTotal = Number(item.daysTotal ?? 365);
-                            const totalEarned = Number(item.totalEarned ?? (daysPaid * dailyProfitAmount));
-
-                            return (
-                                <div key={item.id} className="card p-5 bg-gradient-to-br from-indigo-50/60 to-white border border-indigo-100 space-y-3 shadow-xs">
-                                    <div className="flex items-center justify-between">
-                                        <h3 className="font-bold text-slate-900 text-sm">{item.package?.title || "Digital Marketing Package"}</h3>
-                                        <span className="inline-flex items-center gap-1 text-xs font-mono font-bold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-200">
-                                            <Clock size={12} /> {daysPaid} / {daysTotal} {locale === "bn" ? "দিন পরিশোধিত" : "Days Paid"}
-                                        </span>
-                                    </div>
-                                    <div className="grid grid-cols-3 gap-2 bg-white p-3 rounded-xl border border-slate-100 text-center">
-                                        <div>
-                                            <span className="text-[10px] text-slate-400 block font-semibold">{t("digitalMarketing.paidAmount")}</span>
-                                            <span className="text-xs font-bold text-slate-900">{formatCurrency(amount, locale)}</span>
-                                        </div>
-                                        <div>
-                                            <span className="text-[10px] text-slate-400 block font-semibold">{t("digitalMarketing.profit1Percent")}</span>
-                                            <span className="text-xs font-bold text-amber-700">+ {formatCurrency(dailyProfitAmount, locale)} / {locale === "bn" ? "দিন" : "day"}</span>
-                                        </div>
-                                        <div>
-                                            <span className="text-[10px] text-slate-400 block font-semibold">{t("digitalMarketing.return24h")}</span>
-                                            <span className="text-xs font-bold text-emerald-700">{formatCurrency(totalEarned, locale)}</span>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1">
-                                        <span>{t("digitalMarketing.purchasedDate")}: {formatDateTime(item.purchasedAt, locale)}</span>
-                                        <span className="text-indigo-600 font-semibold">{locale === "bn" ? "মেয়াদ: ৩৬৫ সক্রিয় দিন" : "Term: 365 Active Days"}</span>
-                                    </div>
-                                </div>
-                            );
-                        })}
-                    </div>
-                </div>
-            )}
 
 
 
