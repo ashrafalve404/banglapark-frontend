@@ -214,6 +214,11 @@ export interface AdminStats {
     totalProductValue: number;
     totalCostValue: number;
     totalWithdrawalsApproved: number;
+    withdrawalFeeRevenue?: number;
+    totalWithdrawalVolume?: number;
+    userProductCommission?: number;
+    transferFeeRevenue?: number;
+    totalTransferVolume?: number;
     totalSales: number;
     totalSoldCost: number;
     totalDeliveryCharges: number;
