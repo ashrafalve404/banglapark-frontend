@@ -164,34 +164,34 @@ export default function AdminReportsPage() {
     return (
         <div className="space-y-6 max-w-6xl mx-auto">
             {/* Header */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 print:hidden">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-4 print:hidden">
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-800">{t("admin.reports.heading")}</h1>
-                    <p className="text-sm text-slate-500 mt-0.5">
+                    <h1 className="text-xl sm:text-2xl font-bold text-slate-800">{t("admin.reports.heading")}</h1>
+                    <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
                         {locale === "bn"
-                            ? "নির্দিষ্ট ব্যবহারকারীর সাপ্তাহিক ও মাসিক খরচ, আয় এবং লেনদেন বিবরণী রিপোর্ট দেখুন।"
-                            : "View user weekly/monthly expenditure, earnings, and financial statement reports."}
+                            ? "ব্যবহারকারীর খরচ, আয় ও লেনদেন বিবরণী রিপোর্ট দেখুন।"
+                            : "View user expenditure, earnings & financial statement reports."}
                     </p>
                 </div>
             </div>
 
             {/* Navigation Tabs */}
-            <div className="flex border-b border-slate-200 gap-6 print:hidden">
+            <div className="flex border-b border-slate-200 gap-3 sm:gap-6 print:hidden">
                 <button
                     onClick={() => setActiveTab("statement")}
-                    className={`pb-3 text-sm font-bold border-b-2 transition-all flex items-center gap-2 ${
+                    className={`pb-2.5 sm:pb-3 text-xs sm:text-sm font-bold border-b-2 transition-all flex items-center gap-1.5 sm:gap-2 ${
                         activeTab === "statement" ? "border-fuchsia-600 text-fuchsia-700" : "border-transparent text-slate-500 hover:text-slate-700"
                     }`}
                 >
-                    <UserIcon size={16} /> {locale === "bn" ? "ব্যবহারকারী খরচ ও স্টেটমেন্ট রিপোর্ট" : "User Statement & Expenditure"}
+                    <UserIcon size={15} /> {locale === "bn" ? "ইউজার স্টেটমেন্ট" : "User Statement"}
                 </button>
                 <button
                     onClick={() => setActiveTab("export")}
-                    className={`pb-3 text-sm font-bold border-b-2 transition-all flex items-center gap-2 ${
+                    className={`pb-2.5 sm:pb-3 text-xs sm:text-sm font-bold border-b-2 transition-all flex items-center gap-1.5 sm:gap-2 ${
                         activeTab === "export" ? "border-fuchsia-600 text-fuchsia-700" : "border-transparent text-slate-500 hover:text-slate-700"
                     }`}
                 >
-                    <FileSpreadsheet size={16} /> {locale === "bn" ? "প্ল্যাটফর্ম সিএসভি এক্সপোর্ট (CSV Export)" : "CSV Data Export"}
+                    <FileSpreadsheet size={15} /> {locale === "bn" ? "সিএসভি এক্সপোর্ট" : "CSV Export"}
                 </button>
             </div>
 

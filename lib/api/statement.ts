@@ -22,6 +22,17 @@ export interface StatementAccount {
     dailyReward: number;
     tierBonus: number;
     generationIncome: number;
+    digitalMarketingIncome: number;
+    digitalMarketingSpent: number;
+    quizIncome: number;
+    sellerIncome: number;
+    positionSalary: number;
+    totalDeposited: number;
+    totalWithdrawn: number;
+    transferIn: number;
+    transferOut: number;
+    giftCardSpent: number;
+    cpaSpent: number;
     withdrawable: number;
 }
 
@@ -49,7 +60,7 @@ export interface StatementData {
     account: StatementAccount;
     transactions: StatementTransaction[];
     withdrawals: StatementWithdrawal[];
-    team: { totalTeam: number };
+    team: { totalTeam: number; directTeam: number; activeTeam: number };
     orders: { totalOrders: number; totalSpent: number };
 }
 
