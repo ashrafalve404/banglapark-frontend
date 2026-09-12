@@ -2,7 +2,7 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
-import { Megaphone, TrendingUp, Clock, CheckCircle2, Loader2, Coins, ShieldCheck, ArrowRight, ExternalLink } from "lucide-react";
+import { Megaphone, Clock, CheckCircle2, Loader2, ShieldCheck, ArrowRight, ExternalLink } from "lucide-react";
 import { digitalMarketingApi, type DigitalMarketingPackage } from "@/lib/api/digital-marketing";
 import { walletApi } from "@/lib/api/wallet";
 import { formatCurrency, formatDateTime } from "@/lib/utils";
@@ -270,50 +270,7 @@ export default function DigitalMarketingPage() {
                 </div>
             )}
 
-            {/* ── 3. Investment & Balance Summary Stats ── */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="card p-5 bg-white flex items-center justify-between border border-slate-200">
-                    <div>
-                        <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block">
-                            {t("digitalMarketing.walletBalance")}
-                        </span>
-                        <span className="text-2xl font-bold text-slate-900">
-                            {formatCurrency(availableBalance, locale)}
-                        </span>
-                    </div>
-                    <div className="p-3 rounded-xl bg-indigo-50 text-indigo-600">
-                        <TrendingUp size={22} />
-                    </div>
-                </div>
 
-                <div className="card p-5 bg-white flex items-center justify-between border border-slate-200">
-                    <div>
-                        <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block">
-                            {t("digitalMarketing.activeInvestments")}
-                        </span>
-                        <span className="text-2xl font-bold text-amber-700">
-                            {formatCurrency(totalActiveInvested, locale)}
-                        </span>
-                    </div>
-                    <div className="p-3 rounded-xl bg-amber-50 text-amber-600">
-                        <Clock size={22} />
-                    </div>
-                </div>
-
-                <div className="card p-5 bg-white flex items-center justify-between border border-slate-200">
-                    <div>
-                        <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider block">
-                            {t("digitalMarketing.totalProfitEarned")}
-                        </span>
-                        <span className="text-2xl font-bold text-emerald-700">
-                            {formatCurrency(totalCompletedEarned, locale)}
-                        </span>
-                    </div>
-                    <div className="p-3 rounded-xl bg-emerald-50 text-emerald-600">
-                        <Coins size={22} />
-                    </div>
-                </div>
-            </div>
 
             {/* ── Completed Returns History ── */}
             {completedPurchases.length > 0 && (

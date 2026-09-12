@@ -47,7 +47,6 @@ export default function DashboardOverview() {
         icon?: any;
         image?: string;
         cardBg: string;
-        badge?: string;
     }> = [
         {
             href: "/dashboard/quiz",
@@ -84,21 +83,18 @@ export default function DashboardOverview() {
             label: t("nav.giftCards"),
             image: "/images/giftcardbtn.png",
             cardBg: "bg-rose-200 text-rose-950 border-rose-300 hover:bg-rose-300",
-            badge: "Hot",
         },
         {
             href: "/dashboard/travel",
             label: t("nav.travel"),
             image: "/images/trveling.png",
             cardBg: "bg-indigo-200 text-indigo-950 border-indigo-300 hover:bg-indigo-300",
-            badge: "New",
         },
         {
             href: "/dashboard/digital-marketing",
             label: t("nav.digitalMarketing"),
             image: "/images/digitalmarketing.png",
             cardBg: "bg-sky-200 text-sky-950 border-sky-300 hover:bg-sky-300",
-            badge: "Hot",
         },
         {
             href: "/dashboard/orders",
@@ -111,7 +107,6 @@ export default function DashboardOverview() {
             label: t("nav.position"), // Displays "Monthly Salary" / "মাসিক সেলারি"
             image: "/images/salrymonthly.png",
             cardBg: "bg-yellow-200 text-yellow-950 border-yellow-300 hover:bg-yellow-300",
-            badge: "Hot",
         },
         {
             href: "/dashboard/profile",
@@ -225,12 +220,6 @@ export default function DashboardOverview() {
                             <div
                                 className={`relative w-full aspect-square ${item.cardBg} border rounded-md p-0 flex items-center justify-center transition-all duration-200 shadow-xs group-hover:shadow-md active:scale-95 overflow-hidden`}
                             >
-                                {item.badge && (
-                                    <span className="absolute top-2 right-2 bg-red-600 text-white text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full shadow-md z-10">
-                                        {item.badge}
-                                    </span>
-                                )}
-
                                 {item.image ? (
                                     <img
                                         src={item.image}
