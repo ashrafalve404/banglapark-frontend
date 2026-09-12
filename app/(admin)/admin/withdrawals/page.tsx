@@ -83,23 +83,36 @@ export default function AdminWithdrawalsPage() {
             {/* Global style tag for perfect printable PDF formatting */}
             <style jsx global>{`
                 @media print {
-                    body * {
+                    body {
                         visibility: hidden !important;
-                    }
-                    .id-voucher-modal, .id-voucher-modal * {
-                        visibility: visible !important;
+                        background: #ffffff !important;
                     }
                     .id-voucher-modal {
-                        position: absolute !important;
+                        visibility: visible !important;
+                        position: fixed !important;
                         left: 0 !important;
                         top: 0 !important;
                         width: 100% !important;
+                        height: auto !important;
+                        max-width: 100% !important;
                         margin: 0 !important;
                         padding: 0 !important;
+                        border: none !important;
+                        box-shadow: none !important;
                         background: #ffffff !important;
+                        z-index: 999999 !important;
                     }
-                    .print\\:hidden {
+                    .id-voucher-modal * {
+                        visibility: visible !important;
+                    }
+                    .print\\:hidden,
+                    .print\\:hidden * {
                         display: none !important;
+                        visibility: hidden !important;
+                    }
+                    @page {
+                        size: auto;
+                        margin: 15mm;
                     }
                 }
             `}</style>
