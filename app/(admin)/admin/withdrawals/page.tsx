@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Search, ShieldAlert, Loader2, ArrowRight, RotateCcw, Printer, FileText, CheckCircle2 } from "lucide-react";
 import { withdrawalApi } from "@/lib/api/withdrawal";
-import { formatCurrency, formatDateTime, getWithdrawStatusLabel, getWithdrawMethodLabel, numberToWords } from "@/lib/utils";
+import { formatCurrency, formatDateTime, getWithdrawStatusLabel, getWithdrawMethodLabel, numberToWords, printElementHtml } from "@/lib/utils";
 import type { WithdrawalRequest, WithdrawStatus } from "@/types";
 import { useLocale } from "@/lib/i18n";
 
@@ -309,7 +309,7 @@ export default function AdminWithdrawalsPage() {
                             <span className="text-sm font-bold text-gray-800">Payment Voucher</span>
                             <div className="flex items-center gap-2">
                                 <button
-                                    onClick={() => window.print()}
+                                    onClick={() => printElementHtml("printable-withdrawal-voucher-body", "Payment Voucher")}
                                     className="flex items-center gap-1.5 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 px-3 py-1.5 rounded-lg cursor-pointer transition-all"
                                 >
                                     <Printer size={13} /> Print / PDF
@@ -319,7 +319,7 @@ export default function AdminWithdrawalsPage() {
                         </div>
 
                         {/* Voucher Body */}
-                        <div className="p-5 sm:p-7 space-y-5 print:p-8">
+                        <div id="printable-withdrawal-voucher-body" className="p-5 sm:p-7 space-y-5 print:p-8">
                             {/* Header */}
                             <div className="flex items-start justify-between">
                                 <div>

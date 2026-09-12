@@ -113,3 +113,79 @@ export function numberToWords(num: number): string {
     }
     return res + " Only";
 }
+
+export function printElementHtml(elementId: string, title = "Voucher PDF") {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+
+    const printWindow = window.open("", "_blank", "width=800,height=900");
+    if (!printWindow) {
+        const iframe = document.createElement("iframe");
+        iframe.style.position = "fixed";
+        iframe.style.right = "0";
+        iframe.style.bottom = "0";
+        iframe.style.width = "0";
+        iframe.style.height = "0";
+        iframe.style.border = "0";
+        document.body.appendChild(iframe);
+
+        const doc = iframe.contentWindow?.document;
+        if (!doc) return;
+
+        doc.open();
+        doc.write(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>${title}</title>
+                <script src="https://cdn.tailwindcss.com"></script>
+                <style>
+                    @page { size: A4 portrait; margin: 12mm; }
+                    body { background: #ffffff !important; color: #111827 !important; padding: 20px; font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; }
+                    .print\\:hidden { display: none !important; }
+                </style>
+            </head>
+            <body>
+                <div>${el.innerHTML}</div>
+            </body>
+            </html>
+        `);
+        doc.close();
+
+        setTimeout(() => {
+            iframe.contentWindow?.focus();
+            iframe.contentWindow?.print();
+            setTimeout(() => {
+                document.body.removeChild(iframe);
+            }, 1000);
+        }, 500);
+        return;
+    }
+
+    printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>${title}</title>
+            <script src="https://cdn.tailwindcss.com"></script>
+            <style>
+                @page { size: A4 portrait; margin: 12mm; }
+                body { background: #ffffff !important; color: #111827 !important; padding: 24px; font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; }
+                .print\\:hidden { display: none !important; }
+            </style>
+        </head>
+        <body>
+            <div class="max-w-xl mx-auto">${el.innerHTML}</div>
+            <script>
+                window.onload = function() {
+                    setTimeout(function() {
+                        window.print();
+                        window.close();
+                    }, 400);
+                };
+            </script>
+        </body>
+        </html>
+    `);
+    printWindow.document.close();
+}

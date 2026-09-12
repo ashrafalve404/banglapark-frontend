@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Search, ShieldAlert, Loader2, Trash2, Smartphone, Minus, Copy, Check, Printer, PackageCheck } from "lucide-react";
 import { ordersApi } from "@/lib/api/orders";
-import { formatCurrency, formatDateTime, getOrderStatusLabel, numberToWords } from "@/lib/utils";
+import { formatCurrency, formatDateTime, getOrderStatusLabel, numberToWords, printElementHtml } from "@/lib/utils";
 import type { Order, OrderItem, OrderStatus } from "@/types";
 import { useLocale } from "@/lib/i18n";
 
@@ -426,13 +426,13 @@ export default function AdminOrdersPage() {
                         <div className="flex items-center justify-between p-4 border-b border-gray-100 print:hidden">
                             <span className="text-sm font-bold text-gray-800">Delivery Invoice</span>
                             <div className="flex items-center gap-2">
-                                <button onClick={() => window.print()} className="flex items-center gap-1.5 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 px-3 py-1.5 rounded-lg cursor-pointer transition-all">
+                                <button onClick={() => printElementHtml("printable-order-voucher-body", "Delivery Invoice")} className="flex items-center gap-1.5 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 px-3 py-1.5 rounded-lg cursor-pointer transition-all">
                                     <Printer size={13} /> Print / PDF
                                 </button>
                                 <button onClick={() => setVoucherOrder(null)} className="text-gray-400 hover:text-gray-700 px-2 py-1.5 rounded-lg hover:bg-gray-100 cursor-pointer text-base leading-none transition-all">✕</button>
                             </div>
                         </div>
-                        <div className="p-5 sm:p-7 space-y-5 print:p-8">
+                        <div id="printable-order-voucher-body" className="p-5 sm:p-7 space-y-5 print:p-8">
                             <div className="flex items-start justify-between">
                                 <div>
                                     <p className="text-lg font-black tracking-tight text-gray-900">BANGLAPARK</p>
