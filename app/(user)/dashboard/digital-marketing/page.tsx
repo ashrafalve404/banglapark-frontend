@@ -186,7 +186,7 @@ export default function DigitalMarketingPage() {
                                             </a>
                                         )}
 
-                                        {/* Financial Breakdown - Clean & Essential Info Only */}
+                                         {/* Financial Breakdown - Clean & Essential Info Only */}
                                         <div className="bg-slate-50 rounded-xl p-3.5 space-y-2 text-xs border border-slate-100">
                                             <div className="flex items-center justify-between">
                                                 <span className="text-slate-500 font-medium">{locale === "bn" ? "প্যাকেজ মূল্য:" : "Package Price:"}</span>
@@ -195,10 +195,6 @@ export default function DigitalMarketingPage() {
                                             <div className="flex items-center justify-between text-emerald-700 font-bold">
                                                 <span>{locale === "bn" ? "দৈনিক লাভ (০.৫%):" : "Daily Profit (0.5%):"}</span>
                                                 <span>+{formatCurrency(dailyProfitAmount, locale)} / {locale === "bn" ? "দিন" : "day"}</span>
-                                            </div>
-                                            <div className="flex items-center justify-between text-indigo-900 font-extrabold border-t border-slate-200 pt-2">
-                                                <span>{locale === "bn" ? "৩৬৫ দিনে মোট রিটার্ন:" : "365-Day Total Return:"}</span>
-                                                <span className="font-black text-sm text-emerald-700">{formatCurrency(totalReturnPotential, locale)}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -396,10 +392,6 @@ export default function DigitalMarketingPage() {
                                 <div className="flex justify-between text-emerald-800 font-bold">
                                     <span>{locale === "bn" ? "দৈনিক লাভ (০.৫%/দিন):" : "Daily Profit (0.5%/day):"}</span>
                                     <span className="text-emerald-700">+{formatCurrency(dailyProfitAmount, locale)} / {locale === "bn" ? "দিন" : "day"}</span>
-                                </div>
-                                <div className="flex justify-between text-indigo-900 font-extrabold border-t border-indigo-150 pt-2 text-sm">
-                                    <span>{locale === "bn" ? "৩৬৫ দিনে মোট রিটার্ন:" : "365-Day Total Return:"}</span>
-                                    <span className="text-emerald-700">{formatCurrency(totalReturnPotential, locale)}</span>
                                 </div>
                                 <p className="text-[11px] text-slate-500 pt-1.5 border-t border-indigo-150/70 leading-relaxed">
                                     {locale === "bn"

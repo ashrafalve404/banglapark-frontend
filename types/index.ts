@@ -42,6 +42,7 @@ export interface Wallet {
     generationIncome?: number;
     quizEarning?: number;
     productSalesIncome?: number;
+    digitalMarketingIncome?: number;
     reward?: number;
     salary?: number;
     travelling?: number;

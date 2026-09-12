@@ -406,146 +406,67 @@ export default function AdminOrdersPage() {
                 )}
             </div>
 
-            {/* Detailed Printable Order Delivery Voucher Modal */}
+            {/* Order Delivery Voucher Modal */}
             {voucherOrder && (
-                <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 overflow-y-auto print:p-0 print:bg-white print:static">
-                    <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full p-6 space-y-6 relative print:p-0 print:shadow-none print:max-w-none print:w-full id-order-voucher-modal">
-                        {/* Action Bar (Hidden when printing) */}
-                        <div className="flex items-center justify-between border-b border-slate-200 pb-4 print:hidden">
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-start justify-center p-3 sm:p-6 z-50 overflow-y-auto print:p-0 print:bg-white print:static">
+                    <div className="bg-white rounded-xl shadow-xl w-full max-w-md relative print:shadow-none print:max-w-none print:w-full print:rounded-none id-order-voucher-modal my-4 print:my-0">
+                        <div className="flex items-center justify-between p-4 border-b border-gray-100 print:hidden">
+                            <span className="text-sm font-bold text-gray-800">Delivery Invoice</span>
                             <div className="flex items-center gap-2">
-                                <Printer className="text-indigo-600" size={20} />
-                                <h3 className="text-base font-bold text-slate-900">
-                                    {locale === "bn" ? "অর্ডার ডেলিভারি ইনভয়েস ভাউচার (PDF / প্রিন্ট)" : "Order Delivery Invoice Voucher (PDF / Print)"}
-                                </h3>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <button
-                                    onClick={() => window.print()}
-                                    className="py-1.5 px-4 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
-                                >
-                                    <Printer size={14} /> {locale === "bn" ? "প্রিন্ট / PDF সেভ করুন" : "Print / Save PDF"}
+                                <button onClick={() => window.print()} className="flex items-center gap-1.5 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 px-3 py-1.5 rounded-lg cursor-pointer transition-all">
+                                    <Printer size={13} /> Print / PDF
                                 </button>
-                                <button
-                                    onClick={() => setVoucherOrder(null)}
-                                    className="py-1.5 px-3 text-xs font-bold text-slate-600 border border-slate-200 rounded-xl hover:bg-slate-50 cursor-pointer"
-                                >
-                                    ✕
-                                </button>
+                                <button onClick={() => setVoucherOrder(null)} className="text-gray-400 hover:text-gray-700 px-2 py-1.5 rounded-lg hover:bg-gray-100 cursor-pointer text-base leading-none transition-all">✕</button>
                             </div>
                         </div>
-
-                        {/* Official Order Delivery Voucher Document Sheet */}
-                        <div className="bg-white p-6 rounded-xl border border-slate-200 space-y-6 text-slate-800 font-sans print:border-none print:p-6">
-                            {/* Header Banner */}
-                            <div className="flex items-start justify-between border-b-2 border-indigo-600 pb-4">
+                        <div className="p-5 sm:p-7 space-y-5 print:p-8">
+                            <div className="flex items-start justify-between">
                                 <div>
-                                    <h2 className="text-2xl font-black tracking-tight text-indigo-900">BANGLAPARK</h2>
-                                    <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">BanglaPark E-Commerce Portal</p>
-                                    <p className="text-[11px] text-slate-400 mt-0.5">Official Product Delivery Voucher & Sales Receipt</p>
+                                    <p className="text-lg font-black tracking-tight text-gray-900">BANGLAPARK</p>
+                                    <p className="text-[10px] text-gray-400 uppercase tracking-widest">Delivery Invoice</p>
                                 </div>
                                 <div className="text-right">
-                                    <span className="inline-block px-3 py-1 bg-emerald-100 text-emerald-800 rounded-md font-bold text-xs uppercase tracking-wider border border-emerald-300">
-                                        DELIVERED (ডেলিভারি সম্পন্ন)
-                                    </span>
-                                    <div className="text-xs font-mono font-bold text-slate-700 mt-2">
-                                        INVOICE NO: <span className="text-indigo-700">INV-{voucherOrder.id.slice(0, 8).toUpperCase()}</span>
+                                    <span className="inline-block px-2 py-0.5 bg-green-100 text-green-700 rounded text-[10px] font-bold uppercase border border-green-200">DELIVERED</span>
+                                    <p className="text-[10px] text-gray-400 mt-1 font-mono">INV-{voucherOrder.id.slice(0, 8).toUpperCase()}</p>
+                                    <p className="text-[10px] text-gray-400">{formatDateTime(voucherOrder.createdAt, locale)}</p>
+                                </div>
+                            </div>
+                            <hr className="border-gray-200" />
+                            <div className="space-y-2 text-xs">
+                                <div className="flex justify-between gap-2"><span className="text-gray-500">Customer</span><span className="font-semibold text-gray-900 text-right">{voucherOrder.user?.name || "N/A"}</span></div>
+                                <div className="flex justify-between gap-2"><span className="text-gray-500">Phone</span><span className="font-semibold text-gray-900">{voucherOrder.user?.phone || "N/A"}</span></div>
+                                {voucherOrder.user?.email && <div className="flex justify-between gap-2"><span className="text-gray-500">Email</span><span className="font-semibold text-gray-900 text-right">{voucherOrder.user.email}</span></div>}
+                                <hr className="border-gray-100" />
+                                <div className="flex justify-between gap-2"><span className="text-gray-500">Address</span><span className="font-semibold text-gray-900 text-right">{voucherOrder.shippingAddress?.address || "N/A"}{voucherOrder.shippingAddress?.city ? `, ${voucherOrder.shippingAddress.city}` : ""}</span></div>
+                                <div className="flex justify-between gap-2"><span className="text-gray-500">Area</span><span className="font-semibold text-gray-900">{voucherOrder.deliveryArea === "INSIDE_DHAKA" ? "Inside Dhaka" : "Outside Dhaka"}</span></div>
+                                <div className="flex justify-between gap-2"><span className="text-gray-500">Payment</span><span className="font-semibold text-gray-900 uppercase">{voucherOrder.paymentMethod}{voucherOrder.transactionId ? ` · ${voucherOrder.transactionId}` : ""}</span></div>
+                            </div>
+                            <hr className="border-gray-200" />
+                            <div className="space-y-1.5 text-xs">
+                                <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Items Delivered</p>
+                                {voucherOrder.items.map((item, index) => (
+                                    <div key={item.id} className="flex items-start justify-between gap-2 py-1.5 border-b border-gray-100 last:border-0">
+                                        <div className="flex-1 min-w-0">
+                                            <p className="font-semibold text-gray-900">{index + 1}. {item.product?.name || "Product"}{item.size && <span className="ml-1.5 text-[9px] font-bold text-indigo-600 bg-indigo-50 px-1 py-0.5 rounded">S:{item.size}</span>}</p>
+                                            <p className="text-gray-400">×{item.quantity} @ {formatCurrency(item.price, locale)}</p>
+                                        </div>
+                                        <span className="font-bold text-gray-800 shrink-0">{formatCurrency(item.price * item.quantity, locale)}</span>
                                     </div>
-                                    <div className="text-[11px] text-slate-500 font-medium mt-0.5">
-                                        Order Date: {formatDateTime(voucherOrder.createdAt, locale)}
-                                    </div>
-                                </div>
+                                ))}
+                                <div className="flex justify-between gap-2 pt-1 text-gray-500"><span>Delivery Charge</span><span className="font-semibold">{formatCurrency(voucherOrder.deliveryCharge || 0, locale)}</span></div>
                             </div>
-
-                            {/* Customer & Delivery Information Grid */}
-                            <div className="grid grid-cols-2 gap-4 text-xs bg-slate-50 p-4 rounded-xl border border-slate-200">
-                                <div className="space-y-1.5">
-                                    <div className="text-[10px] font-bold uppercase tracking-wider text-indigo-700 border-b border-slate-200 pb-1">
-                                        Customer Details (গ্রাহকের তথ্য)
-                                    </div>
-                                    <div><strong className="text-slate-500">Customer Name:</strong> <span className="font-bold text-slate-900">{voucherOrder.user?.name || "N/A"}</span></div>
-                                    <div><strong className="text-slate-500">Phone Number:</strong> <span className="font-bold text-slate-900">{voucherOrder.user?.phone || "N/A"}</span></div>
-                                    {voucherOrder.user?.email && (
-                                        <div><strong className="text-slate-500">Email:</strong> <span className="text-slate-900">{voucherOrder.user.email}</span></div>
-                                    )}
-                                </div>
-
-                                <div className="space-y-1.5">
-                                    <div className="text-[10px] font-bold uppercase tracking-wider text-indigo-700 border-b border-slate-200 pb-1">
-                                        Shipping & Payment Info (ডেলিভারি ঠিকানা)
-                                    </div>
-                                    <div><strong className="text-slate-500">Address:</strong> <span className="font-semibold text-slate-900">{voucherOrder.shippingAddress?.address || "N/A"}, {voucherOrder.shippingAddress?.city || ""}</span></div>
-                                    <div><strong className="text-slate-500">Delivery Area:</strong> <span className="font-semibold text-slate-900">{voucherOrder.deliveryArea === "INSIDE_DHAKA" ? "Inside Dhaka" : "Outside Dhaka"}</span></div>
-                                    <div><strong className="text-slate-500">Payment Method:</strong> <span className="font-bold text-indigo-900 uppercase">{voucherOrder.paymentMethod} {voucherOrder.transactionId ? `(TrxID: ${voucherOrder.transactionId})` : ""}</span></div>
-                                </div>
+                            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 flex items-center justify-between">
+                                <span className="text-xs text-gray-500 font-medium">Grand Total</span>
+                                <span className="text-xl font-black text-green-700">{formatCurrency(voucherOrder.total, locale)}</span>
                             </div>
-
-                            {/* Delivered Products Table */}
-                            <div className="overflow-hidden rounded-xl border border-slate-200">
-                                <table className="w-full text-left text-xs border-collapse">
-                                    <thead>
-                                        <tr className="bg-indigo-900 text-white font-bold uppercase tracking-wider">
-                                            <th className="p-3">#</th>
-                                            <th className="p-3">Product Name</th>
-                                            <th className="p-3 text-center">Qty</th>
-                                            <th className="p-3 text-right">Unit Price</th>
-                                            <th className="p-3 text-right">Total (BDT)</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-slate-200 font-medium">
-                                        {voucherOrder.items.map((item, index) => (
-                                            <tr key={item.id}>
-                                                <td className="p-3 text-slate-400 font-bold">{index + 1}</td>
-                                                <td className="p-3 font-bold text-slate-900">
-                                                    {item.product?.name || "Product"}
-                                                    {item.size && <span className="ml-2 text-[10px] font-bold text-indigo-700 bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-200">Size: {item.size}</span>}
-                                                </td>
-                                                <td className="p-3 text-center font-bold text-slate-800">x{item.quantity}</td>
-                                                <td className="p-3 text-right text-slate-700">{formatCurrency(item.price, locale)}</td>
-                                                <td className="p-3 text-right font-bold text-slate-900">{formatCurrency(item.price * item.quantity, locale)}</td>
-                                            </tr>
-                                        ))}
-
-                                        {/* Delivery Charge */}
-                                        <tr>
-                                            <td colSpan={4} className="p-3 text-right font-bold text-slate-600">Delivery Charge</td>
-                                            <td className="p-3 text-right font-bold text-slate-800">{formatCurrency(voucherOrder.deliveryCharge || 0, locale)}</td>
-                                        </tr>
-
-                                        {/* Total Net Payable */}
-                                        <tr className="bg-emerald-50/80 font-extrabold text-sm text-emerald-900">
-                                            <td colSpan={4} className="p-3 text-emerald-950 uppercase tracking-wide text-right">Grand Total Paid Amount</td>
-                                            <td className="p-3 text-right text-emerald-700">{formatCurrency(voucherOrder.total, locale)}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                            <p className="text-[10px] text-gray-400 italic">{numberToWords(Number(voucherOrder.total))}</p>
+                            <hr className="border-gray-200" />
+                            <div className="grid grid-cols-3 gap-3 pt-8 text-center text-[10px]">
+                                <div className="border-t border-gray-300 pt-1.5 space-y-0.5"><p className="font-semibold text-gray-700">Customer</p><p className="text-gray-400">Received By</p></div>
+                                <div className="border-t border-gray-300 pt-1.5 space-y-0.5"><p className="font-semibold text-gray-700">Courier</p><p className="text-gray-400">Delivery Person</p></div>
+                                <div className="border-t border-gray-300 pt-1.5 space-y-0.5"><p className="font-semibold text-gray-700">BanglaPark</p><p className="text-gray-400">Authorized</p></div>
                             </div>
-
-                            {/* Amount in Words */}
-                            <div className="bg-slate-100 p-3 rounded-lg text-xs font-semibold border border-slate-200">
-                                <span className="text-slate-500 font-bold uppercase text-[10px] block mb-0.5">Amount in Words:</span>
-                                <span className="text-slate-900 italic font-bold">{numberToWords(Number(voucherOrder.total))}</span>
-                            </div>
-
-                            {/* Signatures Footer */}
-                            <div className="pt-12 grid grid-cols-3 gap-6 text-center text-xs">
-                                <div className="border-t border-slate-400 pt-2 space-y-0.5">
-                                    <p className="font-bold text-slate-800">Customer Received</p>
-                                    <p className="text-[10px] text-slate-400">Receiver's Signature</p>
-                                </div>
-                                <div className="border-t border-slate-400 pt-2 space-y-0.5">
-                                    <p className="font-bold text-slate-800">Courier / Agent</p>
-                                    <p className="text-[10px] text-slate-400">Delivery Person</p>
-                                </div>
-                                <div className="border-t border-slate-400 pt-2 space-y-0.5">
-                                    <p className="font-bold text-indigo-900">BanglaPark Operations</p>
-                                    <p className="text-[10px] text-slate-400">Authorized Stamp & Signature</p>
-                                </div>
-                            </div>
-
-                            {/* Disclaimer */}
-                            <div className="text-center text-[10px] text-slate-400 pt-4 border-t border-slate-200">
-                                Thank you for shopping with BanglaPark! Computer generated official order delivery voucher & receipt. © {new Date().getFullYear()} BanglaPark.
-                            </div>
+                            <p className="text-center text-[9px] text-gray-300 pt-2">Thank you for shopping with BanglaPark! © {new Date().getFullYear()}</p>
                         </div>
                     </div>
                 </div>

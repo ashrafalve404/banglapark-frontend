@@ -184,7 +184,7 @@ export default function WalletPage() {
                 </div>
             )}
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-8 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-9 gap-3">
                 <div className="card p-5 bg-gradient-to-br from-green-900 to-green-800 text-white">
                     <div className="flex items-center justify-between mb-3">
                         <span className="text-[10px] text-green-100 font-semibold uppercase tracking-wider">{t("wallet.balance.total")}</span>
@@ -247,24 +247,38 @@ export default function WalletPage() {
                     </h2>
                 </div>
 
-                <div className="card p-5 bg-white border border-gray-150">
+                <div className="card p-5 bg-gradient-to-br from-rose-900 to-rose-800 text-white">
                     <div className="flex items-center justify-between mb-3">
-                        <span className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider">{t("wallet.balance.pending")}</span>
-                        <AlertCircle size={18} className="text-gray-400" />
+                        <span className="text-[10px] text-rose-100 font-semibold uppercase tracking-wider">
+                            {locale === "bn" ? "ডিজিটাল মার্কেটিং লাভ" : "Digital Marketing Profit"}
+                        </span>
+                        <TrendingUp size={18} className="text-rose-300" />
                     </div>
-                    <h2 className="text-2xl font-extrabold text-gray-800">
-                        {balLoading ? "..." : formatCurrency(balanceData?.pendingWithdrawal ?? 0, locale)}
+                    <h2 className="text-2xl font-extrabold text-white">
+                        {balLoading ? "..." : formatCurrency(balanceData?.digitalMarketingIncome ?? 0, locale)}
                     </h2>
                 </div>
 
-                <div className="card p-5 bg-green-50/50 border border-green-100">
-                    <div className="flex items-center justify-between mb-3">
-                        <span className="text-[10px] text-green-700 font-semibold uppercase tracking-wider">{t("wallet.balance.available")}</span>
-                        <Wallet size={18} className="text-green-700" />
+                <div className="col-span-1 sm:col-span-2 md:col-span-4 xl:col-span-2 grid grid-cols-2 gap-3">
+                    <div className="card p-4 sm:p-5 bg-white border border-gray-150">
+                        <div className="flex items-center justify-between mb-3">
+                            <span className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider">{t("wallet.balance.pending")}</span>
+                            <AlertCircle size={18} className="text-gray-400" />
+                        </div>
+                        <h2 className="text-xl sm:text-2xl font-extrabold text-gray-800">
+                            {balLoading ? "..." : formatCurrency(balanceData?.pendingWithdrawal ?? 0, locale)}
+                        </h2>
                     </div>
-                    <h2 className="text-2xl font-extrabold text-green-800">
-                        {balLoading ? "..." : formatCurrency(balanceData?.availableBalance ?? 0, locale)}
-                    </h2>
+
+                    <div className="card p-4 sm:p-5 bg-green-50/50 border border-green-100">
+                        <div className="flex items-center justify-between mb-3">
+                            <span className="text-[10px] text-green-700 font-semibold uppercase tracking-wider">{t("wallet.balance.available")}</span>
+                            <Wallet size={18} className="text-green-700" />
+                        </div>
+                        <h2 className="text-xl sm:text-2xl font-extrabold text-green-800">
+                            {balLoading ? "..." : formatCurrency(balanceData?.availableBalance ?? 0, locale)}
+                        </h2>
+                    </div>
                 </div>
             </div>
 

@@ -276,134 +276,104 @@ export default function AdminWithdrawalsPage() {
                 </div>
             )}
 
-            {/* Detailed Printable Payment Voucher Modal */}
+            {/* Payment Voucher Modal */}
             {voucherReq && (
-                <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 overflow-y-auto print:p-0 print:bg-white print:static">
-                    <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-6 space-y-6 relative print:p-0 print:shadow-none print:max-w-none print:w-full id-voucher-modal">
-                        {/* Action Bar (Hidden when printing) */}
-                        <div className="flex items-center justify-between border-b border-slate-200 pb-4 print:hidden">
-                            <div className="flex items-center gap-2">
-                                <Printer className="text-indigo-600" size={20} />
-                                <h3 className="text-base font-bold text-slate-900">
-                                    {locale === "bn" ? "উইথড্রয়াল পেমেন্ট ভাউচার (PDF / প্রিন্ট)" : "Withdrawal Payment Voucher (PDF / Print)"}
-                                </h3>
-                            </div>
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-start justify-center p-3 sm:p-6 z-50 overflow-y-auto print:p-0 print:bg-white print:static">
+                    <div className="bg-white rounded-xl shadow-xl w-full max-w-md relative print:shadow-none print:max-w-none print:w-full print:rounded-none id-voucher-modal my-4 print:my-0">
+                        {/* Toolbar */}
+                        <div className="flex items-center justify-between p-4 border-b border-gray-100 print:hidden">
+                            <span className="text-sm font-bold text-gray-800">Payment Voucher</span>
                             <div className="flex items-center gap-2">
                                 <button
                                     onClick={() => window.print()}
-                                    className="py-1.5 px-4 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
+                                    className="flex items-center gap-1.5 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 px-3 py-1.5 rounded-lg cursor-pointer transition-all"
                                 >
-                                    <Printer size={14} /> {locale === "bn" ? "প্রিন্ট / PDF সেভ করুন" : "Print / Save PDF"}
+                                    <Printer size={13} /> Print / PDF
                                 </button>
-                                <button
-                                    onClick={() => setVoucherReq(null)}
-                                    className="py-1.5 px-3 text-xs font-bold text-slate-600 border border-slate-200 rounded-xl hover:bg-slate-50 cursor-pointer"
-                                >
-                                    ✕
-                                </button>
+                                <button onClick={() => setVoucherReq(null)} className="text-gray-400 hover:text-gray-700 px-2 py-1.5 rounded-lg hover:bg-gray-100 cursor-pointer text-base leading-none transition-all">✕</button>
                             </div>
                         </div>
 
-                        {/* Official Voucher Document Sheet */}
-                        <div className="bg-white p-6 rounded-xl border border-slate-200 space-y-6 text-slate-800 font-sans print:border-none print:p-6">
-                            {/* Header Banner */}
-                            <div className="flex items-start justify-between border-b-2 border-indigo-600 pb-4">
+                        {/* Voucher Body */}
+                        <div className="p-5 sm:p-7 space-y-5 print:p-8">
+                            {/* Header */}
+                            <div className="flex items-start justify-between">
                                 <div>
-                                    <h2 className="text-2xl font-black tracking-tight text-indigo-900">BANGLAPARK</h2>
-                                    <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">BanglaPark E-Commerce Portal</p>
-                                    <p className="text-[11px] text-slate-400 mt-0.5">Official Payment Disbursement Voucher</p>
+                                    <p className="text-lg font-black tracking-tight text-gray-900">BANGLAPARK</p>
+                                    <p className="text-[10px] text-gray-400 uppercase tracking-widest">Payment Voucher</p>
                                 </div>
                                 <div className="text-right">
-                                    <span className="inline-block px-3 py-1 bg-emerald-100 text-emerald-800 rounded-md font-bold text-xs uppercase tracking-wider border border-emerald-300">
-                                        {voucherReq.status === "APPROVED" ? (locale === "bn" ? "অনুমোদিত পেমেন্ট (APPROVED)" : "PAYMENT DISBURSED") : voucherReq.status}
-                                    </span>
-                                    <div className="text-xs font-mono font-bold text-slate-700 mt-2">
-                                        VOUCHER NO: <span className="text-indigo-700">WD-{voucherReq.id.slice(0, 8).toUpperCase()}</span>
-                                    </div>
-                                    <div className="text-[11px] text-slate-500 font-medium mt-0.5">
-                                        Date: {formatDateTime(voucherReq.createdAt, locale)}
-                                    </div>
+                                    <span className="inline-block px-2 py-0.5 bg-green-100 text-green-700 rounded text-[10px] font-bold uppercase border border-green-200">APPROVED</span>
+                                    <p className="text-[10px] text-gray-400 mt-1 font-mono">WD-{voucherReq.id.slice(0, 8).toUpperCase()}</p>
+                                    <p className="text-[10px] text-gray-400">{formatDateTime(voucherReq.createdAt, locale)}</p>
                                 </div>
                             </div>
 
-                            {/* User & Payment Information Grid */}
-                            <div className="grid grid-cols-2 gap-4 text-xs bg-slate-50 p-4 rounded-xl border border-slate-200">
-                                <div className="space-y-1.5">
-                                    <div className="text-[10px] font-bold uppercase tracking-wider text-indigo-700 border-b border-slate-200 pb-1">
-                                        Beneficiary Details (গ্রাহকের তথ্য)
-                                    </div>
-                                    <div><strong className="text-slate-500">Name:</strong> <span className="font-bold text-slate-900">{voucherReq.user?.name || "N/A"}</span></div>
-                                    <div><strong className="text-slate-500">Phone:</strong> <span className="font-bold text-slate-900">{voucherReq.user?.phone || "N/A"}</span></div>
-                                    <div><strong className="text-slate-500">User / Member ID:</strong> <span className="font-bold text-slate-900">#{voucherReq.user?.memberId || voucherReq.userId?.slice(0, 8)}</span></div>
-                                </div>
+                            <hr className="border-gray-200" />
 
-                                <div className="space-y-1.5">
-                                    <div className="text-[10px] font-bold uppercase tracking-wider text-indigo-700 border-b border-slate-200 pb-1">
-                                        Disbursal Account Info (পেমেন্ট মাধ্যম)
-                                    </div>
-                                    <div><strong className="text-slate-500">Method:</strong> <span className="font-bold text-indigo-900 uppercase">{getWithdrawMethodLabel(voucherReq.method)}</span></div>
-                                    <div><strong className="text-slate-500">Account No:</strong> <span className="font-mono font-bold text-slate-900 select-all">{voucherReq.accountDetails?.accountNo || "N/A"}</span></div>
-                                    {voucherReq.method === "BANK" && (
-                                        <>
-                                            <div><strong className="text-slate-500">Bank & Branch:</strong> {voucherReq.accountDetails?.bankName} ({voucherReq.accountDetails?.branchName})</div>
-                                            <div><strong className="text-slate-500">Account Holder:</strong> {voucherReq.accountDetails?.holderName}</div>
-                                        </>
-                                    )}
+                            {/* Info rows */}
+                            <div className="space-y-2 text-xs">
+                                <div className="flex justify-between gap-2">
+                                    <span className="text-gray-500">Name</span>
+                                    <span className="font-semibold text-gray-900 text-right">{voucherReq.user?.name || "N/A"}</span>
                                 </div>
+                                <div className="flex justify-between gap-2">
+                                    <span className="text-gray-500">Phone</span>
+                                    <span className="font-semibold text-gray-900">{voucherReq.user?.phone || "N/A"}</span>
+                                </div>
+                                <div className="flex justify-between gap-2">
+                                    <span className="text-gray-500">Member ID</span>
+                                    <span className="font-semibold text-gray-900">#{voucherReq.user?.memberId || voucherReq.userId?.slice(0, 8)}</span>
+                                </div>
+                                <hr className="border-gray-100" />
+                                <div className="flex justify-between gap-2">
+                                    <span className="text-gray-500">Method</span>
+                                    <span className="font-semibold text-gray-900 uppercase">{getWithdrawMethodLabel(voucherReq.method)}</span>
+                                </div>
+                                <div className="flex justify-between gap-2">
+                                    <span className="text-gray-500">Account No</span>
+                                    <span className="font-mono font-semibold text-gray-900">{voucherReq.accountDetails?.accountNo || "N/A"}</span>
+                                </div>
+                                {voucherReq.method === "BANK" && (
+                                    <>
+                                        <div className="flex justify-between gap-2">
+                                            <span className="text-gray-500">Bank</span>
+                                            <span className="font-semibold text-gray-900 text-right">{voucherReq.accountDetails?.bankName} ({voucherReq.accountDetails?.branchName})</span>
+                                        </div>
+                                        <div className="flex justify-between gap-2">
+                                            <span className="text-gray-500">Holder</span>
+                                            <span className="font-semibold text-gray-900">{voucherReq.accountDetails?.holderName}</span>
+                                        </div>
+                                    </>
+                                )}
                             </div>
 
-                            {/* Financial Breakdown Table */}
-                            <div className="overflow-hidden rounded-xl border border-slate-200">
-                                <table className="w-full text-left text-xs border-collapse">
-                                    <thead>
-                                        <tr className="bg-indigo-900 text-white font-bold uppercase tracking-wider">
-                                            <th className="p-3">Financial Description</th>
-                                            <th className="p-3 text-right">Amount (BDT)</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-slate-200 font-medium">
-                                        <tr>
-                                            <td className="p-3">Requested Withdrawal Balance</td>
-                                            <td className="p-3 text-right font-bold text-slate-900">{formatCurrency(voucherReq.amount, locale)}</td>
-                                        </tr>
-                                        <tr>
-                                            <td className="p-3 text-slate-500">Processing / Gateway Charge</td>
-                                            <td className="p-3 text-right text-slate-500">৳0.00</td>
-                                        </tr>
-                                        <tr className="bg-emerald-50/80 font-extrabold text-sm text-emerald-900">
-                                            <td className="p-3 text-emerald-950 uppercase tracking-wide">Net Disbursed Payable Amount</td>
-                                            <td className="p-3 text-right text-emerald-700">{formatCurrency(voucherReq.amount, locale)}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                            {/* Amount block */}
+                            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 flex items-center justify-between">
+                                <span className="text-xs text-gray-500 font-medium">Total Disbursed</span>
+                                <span className="text-xl font-black text-green-700">{formatCurrency(voucherReq.amount, locale)}</span>
                             </div>
+                            <p className="text-[10px] text-gray-400 italic">{numberToWords(Number(voucherReq.amount))}</p>
 
-                            {/* Amount in Words */}
-                            <div className="bg-slate-100 p-3 rounded-lg text-xs font-semibold border border-slate-200">
-                                <span className="text-slate-500 font-bold uppercase text-[10px] block mb-0.5">Amount in Words:</span>
-                                <span className="text-slate-900 italic font-bold">{numberToWords(Number(voucherReq.amount))}</span>
-                            </div>
+                            <hr className="border-gray-200" />
 
-                            {/* Signatures & Approval Footer */}
-                            <div className="pt-12 grid grid-cols-3 gap-6 text-center text-xs">
-                                <div className="border-t border-slate-400 pt-2 space-y-0.5">
-                                    <p className="font-bold text-slate-800">System Admin</p>
-                                    <p className="text-[10px] text-slate-400">Prepared By</p>
+                            {/* Signatures */}
+                            <div className="grid grid-cols-3 gap-3 pt-8 text-center text-[10px]">
+                                <div className="border-t border-gray-300 pt-1.5 space-y-0.5">
+                                    <p className="font-semibold text-gray-700">Admin</p>
+                                    <p className="text-gray-400">Prepared By</p>
                                 </div>
-                                <div className="border-t border-slate-400 pt-2 space-y-0.5">
-                                    <p className="font-bold text-slate-800">Accounts Manager</p>
-                                    <p className="text-[10px] text-slate-400">Verified By</p>
+                                <div className="border-t border-gray-300 pt-1.5 space-y-0.5">
+                                    <p className="font-semibold text-gray-700">Accounts</p>
+                                    <p className="text-gray-400">Verified By</p>
                                 </div>
-                                <div className="border-t border-slate-400 pt-2 space-y-0.5">
-                                    <p className="font-bold text-indigo-900">Authorized Signature & Stamp</p>
-                                    <p className="text-[10px] text-slate-400">Disbursed Authority</p>
+                                <div className="border-t border-gray-300 pt-1.5 space-y-0.5">
+                                    <p className="font-semibold text-gray-700">Authority</p>
+                                    <p className="text-gray-400">Authorized</p>
                                 </div>
                             </div>
 
-                            {/* Computer Generated Footer Disclaimer */}
-                            <div className="text-center text-[10px] text-slate-400 pt-4 border-t border-slate-200">
-                                Computer generated payment voucher. BanglaPark Portal © {new Date().getFullYear()}. All Rights Reserved.
-                            </div>
+                            <p className="text-center text-[9px] text-gray-300 pt-2">Computer generated voucher. BanglaPark © {new Date().getFullYear()}</p>
                         </div>
                     </div>
                 </div>
