@@ -100,18 +100,18 @@ export default function DigitalMarketingPage() {
     return (
         <div className="space-y-6">
             {/* Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-                        <Megaphone className="text-indigo-600" />
+                    <h1 className="text-xl sm:text-2xl font-bold text-slate-900 flex items-center gap-2">
+                        <Megaphone className="text-indigo-600 shrink-0" size={22} />
                         {t("digitalMarketing.title")}
                     </h1>
-                    <p className="text-sm text-slate-500">
+                    <p className="text-xs sm:text-sm text-slate-500 mt-1">
                         {t("digitalMarketing.subtitle")}
                     </p>
                 </div>
                 <div className="flex items-center gap-2 self-start sm:self-center">
-                    <span className={`px-3 py-1.5 rounded-xl border text-xs font-bold ${
+                    <span className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl border text-[11px] sm:text-xs font-bold ${
                         isDailyLimitReached
                             ? "bg-red-50 text-red-700 border-red-200"
                             : "bg-indigo-50 text-indigo-700 border-indigo-200"
@@ -135,9 +135,9 @@ export default function DigitalMarketingPage() {
             {/* ── 1. Active Purchases Section (Top Priority) ── */}
             {activePurchases.length > 0 && (
                 <div className="space-y-3">
-                    <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                        <Clock size={18} className="text-amber-600" />
-                        {locale === "bn" ? "আপনার সক্রিয় প্যাকেজ (দৈনিক ০.৫% লাভ)" : "Your Active Packages (Daily 0.5% Payout)"}
+                    <h2 className="text-xs sm:text-base md:text-lg font-bold text-slate-900 flex items-center gap-1.5 sm:gap-2">
+                        <Clock size={16} className="text-amber-600 shrink-0" />
+                        {t("digitalMarketing.activeTitle")}
                     </h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {activePurchases.map((item) => {
@@ -183,8 +183,8 @@ export default function DigitalMarketingPage() {
 
             {/* ── 2. Available Packages Grid ── */}
             <div className="space-y-3">
-                <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                    <Megaphone size={18} className="text-indigo-600" />
+                <h2 className="text-xs sm:text-base md:text-lg font-bold text-slate-900 flex items-center gap-1.5 sm:gap-2">
+                    <Megaphone size={16} className="text-indigo-600 shrink-0" />
                     {t("digitalMarketing.availableTitle")}
                 </h2>
 
