@@ -34,12 +34,16 @@ export default function AdminWithdrawalsPage() {
     // Approve withdrawal request & launch payment voucher print
     const approveMutation = useMutation({
         mutationFn: (id: string) => withdrawalApi.review(id, { status: "APPROVED" }),
-        onSuccess: (_, targetId) => {
+        onSuccess: (updatedReq, targetId) => {
             queryClient.invalidateQueries({ queryKey: ["admin-withdrawals"] });
-            const targetReq = requests.find((r) => r.id === targetId);
+            const targetReq = updatedReq || requests.find((r) => r.id === targetId);
             if (targetReq) {
                 setVoucherReq({ ...targetReq, status: "APPROVED" });
             }
+        },
+        onError: (err: any) => {
+            const msg = err?.response?.data?.message || err?.message || "Failed to approve withdrawal request";
+            alert(msg);
         },
     });
 
@@ -150,7 +154,13 @@ export default function AdminWithdrawalsPage() {
                                             <div className="text-xs font-semibold text-slate-800">{req.user?.name}</div>
                                             <div className="text-[10px] text-gray-500">{req.user?.phone}</div>
                                         </td>
-                                        <td className="p-4 text-xs font-bold text-slate-800 text-right">{formatCurrency(req.amount, locale)}</td>
+                                        <td className="p-4 text-xs text-slate-800 text-right">
+                                            <div className="font-bold">{formatCurrency(req.amount, locale)}</div>
+                                            <div className="text-[10px] text-red-500 font-semibold">- {formatCurrency(req.fee ?? Math.round(Number(req.amount) * 0.10 * 100) / 100, locale)} (10%)</div>
+                                            <div className="text-[11px] font-extrabold text-emerald-700 mt-0.5">
+                                                {locale === "bn" ? "প্রদেয়: " : "Payable: "}{formatCurrency(req.netAmount ?? (Number(req.amount) - (req.fee ?? Math.round(Number(req.amount) * 0.10 * 100) / 100)), locale)}
+                                            </div>
+                                        </td>
                                         <td className="p-4 text-xs text-slate-650 min-w-[200px]">
                                             <div className="font-bold">{getWithdrawMethodLabel(req.method)}</div>
                                             <div className="text-[10px] text-gray-500 mt-0.5">
@@ -185,7 +195,8 @@ export default function AdminWithdrawalsPage() {
                                                 <div className="flex items-center gap-1.5 justify-center">
                                                     <button
                                                         onClick={() => { if (confirm(t("admin.withdrawals.confirm.approve"))) approveMutation.mutate(req.id); }}
-                                                        className="bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 font-bold text-[10px] py-1.5 px-2.5 rounded-lg cursor-pointer"
+                                                        disabled={approveMutation.isPending}
+                                                        className="bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 font-bold text-[10px] py-1.5 px-2.5 rounded-lg cursor-pointer disabled:opacity-50"
                                                     >
                                                         {t("admin.withdrawals.table.btnApprove")}
                                                     </button>
@@ -349,11 +360,26 @@ export default function AdminWithdrawalsPage() {
                             </div>
 
                             {/* Amount block */}
-                            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 flex items-center justify-between">
-                                <span className="text-xs text-gray-500 font-medium">Total Disbursed</span>
-                                <span className="text-xl font-black text-green-700">{formatCurrency(voucherReq.amount, locale)}</span>
+                            <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 space-y-2">
+                                <div className="flex items-center justify-between text-xs text-gray-600">
+                                    <span>Requested Amount</span>
+                                    <span className="font-semibold text-gray-900">{formatCurrency(voucherReq.amount, locale)}</span>
+                                </div>
+                                <div className="flex items-center justify-between text-xs text-red-600">
+                                    <span>Withdrawal Charge (10%)</span>
+                                    <span className="font-semibold">- {formatCurrency(voucherReq.fee ?? Math.round(Number(voucherReq.amount) * 0.10 * 100) / 100, locale)}</span>
+                                </div>
+                                <hr className="border-gray-200 my-1" />
+                                <div className="flex items-center justify-between">
+                                    <span className="text-xs text-gray-900 font-bold">Net Disbursed (Payable)</span>
+                                    <span className="text-xl font-black text-green-700">
+                                        {formatCurrency(voucherReq.netAmount ?? (Number(voucherReq.amount) - (voucherReq.fee ?? Math.round(Number(voucherReq.amount) * 0.10 * 100) / 100)), locale)}
+                                    </span>
+                                </div>
                             </div>
-                            <p className="text-[10px] text-gray-400 italic">{numberToWords(Number(voucherReq.amount))}</p>
+                            <p className="text-[10px] text-gray-400 italic">
+                                {numberToWords(Number(voucherReq.netAmount ?? (Number(voucherReq.amount) - (voucherReq.fee ?? Math.round(Number(voucherReq.amount) * 0.10 * 100) / 100))))}
+                            </p>
 
                             <hr className="border-gray-200" />
 

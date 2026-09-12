@@ -124,6 +124,8 @@ export interface WithdrawalRequest {
     userId: string;
     user?: Pick<User, "id" | "name" | "phone" | "email" | "memberId">;
     amount: number;
+    fee?: number;
+    netAmount?: number;
     method: WithdrawMethod;
     accountDetails: Record<string, string>;
     status: WithdrawStatus;

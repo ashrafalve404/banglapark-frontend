@@ -128,6 +128,22 @@ export default function WithdrawPage() {
                                 {errors.amount && (
                                     <p className="mt-1 text-xs text-red-500">{errors.amount.message}</p>
                                 )}
+                                {watch("amount") >= 2000 && (
+                                    <div className="mt-2.5 p-3 bg-emerald-50/80 rounded-xl border border-emerald-200 text-xs space-y-1">
+                                        <div className="flex justify-between text-slate-600">
+                                            <span>{locale === "bn" ? "আবেদনকৃত উত্তোলন:" : "Requested Amount:"}</span>
+                                            <span className="font-semibold text-slate-900">{formatCurrency(watch("amount"), locale)}</span>
+                                        </div>
+                                        <div className="flex justify-between text-red-600">
+                                            <span>{locale === "bn" ? "উইথড্রয়াল চার্জ (১০%):" : "Withdrawal Charge (10%):"}</span>
+                                            <span className="font-semibold">- {formatCurrency(Math.round((watch("amount") * 0.10) * 100) / 100, locale)}</span>
+                                        </div>
+                                        <div className="flex justify-between text-emerald-800 font-bold border-t border-emerald-200 pt-1">
+                                            <span>{locale === "bn" ? "আপনি মোট পাবেন:" : "You Will Receive:"}</span>
+                                            <span>{formatCurrency(watch("amount") - Math.round((watch("amount") * 0.10) * 100) / 100, locale)}</span>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
 
                             <div>
