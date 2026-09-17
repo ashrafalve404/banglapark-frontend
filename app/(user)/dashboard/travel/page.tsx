@@ -104,7 +104,7 @@ export default function UserTravelPage() {
             {/* Page header */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
-                    <div className="p-3 rounded-xl bg-slate-900 text-white shadow-md">
+                    <div className="p-3 rounded-lg bg-slate-900 text-white shadow-xs">
                         <Plane size={24} />
                     </div>
                     <div>
@@ -114,7 +114,7 @@ export default function UserTravelPage() {
                 </div>
 
                 {/* Month badge */}
-                <div className="flex items-center gap-2 bg-slate-100 border border-slate-200 px-4 py-2 rounded-xl w-fit">
+                <div className="flex items-center gap-2 bg-slate-100 border border-slate-200 px-4 py-2 rounded-lg w-fit">
                     <Calendar size={16} className="text-red-700" />
                     <span className="text-xs font-bold text-slate-800">
                         {monthName} {year} — {t("travel.currentMonth")}
@@ -123,7 +123,7 @@ export default function UserTravelPage() {
             </div>
 
             {/* Status Hero Card */}
-            <div className={`rounded-2xl p-6 text-white shadow-lg relative overflow-hidden transition-all ${
+            <div className={`rounded-xl p-6 text-white shadow-md relative overflow-hidden transition-all ${
                 isEligible
                     ? "bg-gradient-to-br from-emerald-700 via-emerald-800 to-teal-900 border border-emerald-600"
                     : "bg-gradient-to-br from-slate-800 via-slate-900 to-slate-950 border border-slate-700"
@@ -151,14 +151,14 @@ export default function UserTravelPage() {
                             )}
                         </div>
 
-                        <div className="bg-white/10 backdrop-blur-md border border-white/15 px-4 py-2 rounded-xl text-xs font-bold self-start">
+                        <div className="bg-white/10 backdrop-blur-md border border-white/15 px-4 py-2 rounded-lg text-xs font-bold self-start">
                             {count.toLocaleString()} / {nextTier?.minMembers.toLocaleString() ?? "MAX"} {t("travel.members")}
                         </div>
                     </div>
 
                     {/* Stats Grid */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-white/10">
-                        <div className="bg-white/10 rounded-xl p-4 backdrop-blur-md border border-white/10">
+                        <div className="bg-white/10 rounded-lg p-4 backdrop-blur-md border border-white/10">
                             <div className="flex items-center gap-2 mb-1">
                                 <Users size={16} className="opacity-80 text-white" />
                                 <span className="text-xs opacity-75 font-semibold">{t("travel.newActiveReferrals")}</span>
@@ -167,7 +167,7 @@ export default function UserTravelPage() {
                             <p className="text-[11px] opacity-65 mt-0.5">{t("travel.newActiveReferralsSub")}</p>
                         </div>
 
-                        <div className="bg-white/10 rounded-xl p-4 backdrop-blur-md border border-white/10">
+                        <div className="bg-white/10 rounded-lg p-4 backdrop-blur-md border border-white/10">
                             <div className="flex items-center gap-2 mb-1">
                                 <MapPin size={16} className="opacity-80 text-white" />
                                 <span className="text-xs opacity-75 font-semibold">{t("travel.destinationsUnlocked")}</span>
@@ -190,7 +190,7 @@ export default function UserTravelPage() {
                             </div>
                             <div className="w-full h-2.5 rounded-full bg-white/20 overflow-hidden">
                                 <div
-                                    className="h-2.5 rounded-full bg-white transition-all duration-500 shadow-sm"
+                                    className="h-2.5 rounded-full bg-white transition-all duration-500 shadow-xs"
                                     style={{ width: `${progressPct}%` }}
                                 />
                             </div>
@@ -204,7 +204,7 @@ export default function UserTravelPage() {
 
             {/* Unlocked destinations highlight */}
             {isEligible && unlockedTier && unlockedTier.destinations.length > 0 && (
-                <div className="card p-6 border border-emerald-200 bg-emerald-50/60 rounded-2xl shadow-xs space-y-4">
+                <div className="card p-6 border border-emerald-200 bg-emerald-50/60 rounded-xl shadow-xs space-y-4">
                     <div className="flex items-center gap-2">
                         <Trophy size={20} className="text-emerald-700" />
                         <h3 className="font-bold text-emerald-900 text-base">{t("travel.yourUnlockedDestinations")}</h3>
@@ -213,7 +213,7 @@ export default function UserTravelPage() {
                         {unlockedTier.destinations.map((dest, i) => (
                             <div
                                 key={i}
-                                className="flex items-center gap-2.5 bg-white border border-emerald-200/80 rounded-xl p-3.5 shadow-xs font-bold text-slate-800 text-xs sm:text-sm"
+                                className="flex items-center gap-2.5 bg-white border border-emerald-200/80 rounded-lg p-3.5 shadow-xs font-bold text-slate-800 text-xs sm:text-sm"
                             >
                                 <MapPin size={16} className="text-emerald-600 shrink-0" />
                                 <span>{dest}</span>
@@ -241,7 +241,7 @@ export default function UserTravelPage() {
                         return (
                             <div
                                 key={meta.tierNumber}
-                                className={`rounded-2xl border ${meta.cardBorder} overflow-hidden bg-white shadow-xs hover:shadow-md transition-all flex flex-col justify-between ${
+                                className={`rounded-xl border ${meta.cardBorder} overflow-hidden bg-white shadow-xs hover:shadow-md transition-all flex flex-col justify-between ${
                                     achieved ? "ring-2 ring-emerald-500 ring-offset-2" : ""
                                 }`}
                             >
@@ -249,7 +249,7 @@ export default function UserTravelPage() {
                                 <div className={`bg-gradient-to-r ${meta.headerGradient} p-5 text-white relative`}>
                                     <div className="flex items-start justify-between">
                                         <div className="space-y-2">
-                                            <div className="p-2.5 rounded-xl bg-white/15 backdrop-blur-sm w-fit border border-white/20">
+                                            <div className="p-2.5 rounded-lg bg-white/15 backdrop-blur-xs w-fit border border-white/20">
                                                 <TierIcon size={22} className="text-white" />
                                             </div>
                                             <div>
@@ -283,7 +283,7 @@ export default function UserTravelPage() {
                                             {locale === "bn" ? "ভ্রমণ গন্তব্যসমূহ" : "Destinations"}
                                         </span>
 
-                                        <div className="bg-slate-50 border border-slate-200/70 rounded-xl p-3.5">
+                                        <div className="bg-slate-50 border border-slate-200/70 rounded-lg p-3.5">
                                             {noDestSet ? (
                                                 <div className="flex items-center gap-2 text-xs font-medium text-slate-500">
                                                     <MapPin size={14} className="text-slate-400 shrink-0" />
@@ -310,12 +310,12 @@ export default function UserTravelPage() {
                                     {/* Status / Requirement Badge */}
                                     <div className="pt-2 border-t border-slate-100">
                                         {achieved ? (
-                                            <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-3 py-2 rounded-xl text-center">
+                                            <div className="flex items-center justify-center gap-1.5 text-xs font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-3 py-2 rounded-lg text-center">
                                                 <Star size={13} className="fill-emerald-600 text-emerald-600" />
                                                 <span>{t("travel.achievedThisMonth")}</span>
                                             </div>
                                         ) : (
-                                            <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 text-center space-y-1">
+                                            <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 text-center space-y-1">
                                                 <span className="text-xs font-bold text-slate-700 block">
                                                     {t("travel.needMoreReferrals", { count: neededMore.toLocaleString() })}
                                                 </span>

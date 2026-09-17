@@ -3,9 +3,9 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import {
-    FaStore, FaPlus, FaCircleInfo, FaClock, FaCircleCheck,
-    FaCircleXmark, FaCoins, FaBoxOpen, FaUpload, FaSpinner, FaLock
-} from "react-icons/fa6";
+    Store, Plus, Info, Clock, CheckCircle2,
+    XCircle, Coins, Package, Upload, Loader2, Lock, X
+} from "lucide-react";
 import { useAuthStore } from "@/store/auth";
 import { userProductsApi } from "@/lib/api/products";
 import { categoriesApi } from "@/lib/api/categories";
@@ -155,7 +155,7 @@ export default function ProductSellPage() {
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                        <FaStore className="text-teal-600" />
+                        <Store className="text-teal-600" size={24} />
                         {isBn ? "পোডাক্ট বিক্রয় ড্যাশবোর্ড" : "Product Selling Dashboard"}
                     </h1>
                     <p className="text-sm text-gray-500 mt-1">
@@ -167,24 +167,24 @@ export default function ProductSellPage() {
                 {isActiveUser ? (
                     <button
                         onClick={() => setIsModalOpen(true)}
-                        className="flex items-center justify-center gap-2 rounded-xl bg-teal-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-teal-700 transition-all cursor-pointer"
+                        className="flex items-center justify-center gap-2 rounded-lg bg-teal-600 px-4 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-teal-700 transition-all cursor-pointer"
                     >
-                        <FaPlus size={14} /> {isBn ? "নতুন পোডাক্ট যোগ করুন" : "Add New Product"}
+                        <Plus size={16} /> {isBn ? "নতুন পোডাক্ট যোগ করুন" : "Add New Product"}
                     </button>
                 ) : (
                     <button
                         disabled
-                        className="flex items-center justify-center gap-2 rounded-xl bg-gray-300 px-4 py-2.5 text-sm font-semibold text-gray-500 cursor-not-allowed"
+                        className="flex items-center justify-center gap-2 rounded-lg bg-gray-300 px-4 py-2.5 text-sm font-semibold text-gray-500 cursor-not-allowed"
                     >
-                        <FaLock size={14} /> {isBn ? "পোডাক্ট যোগ করুন (শুধুমাত্র অ্যাক্টিভ ইউজার)" : "Add Product (Active Users Only)"}
+                        <Lock size={16} /> {isBn ? "পোডাক্ট যোগ করুন (শুধুমাত্র অ্যাক্টিভ ইউজার)" : "Add Product (Active Users Only)"}
                     </button>
                 )}
             </div>
 
             {/* Inactive Alert Banner */}
             {!isActiveUser && (
-                <div className="rounded-xl bg-amber-50 border border-amber-200 p-4 sm:p-5 flex items-start gap-4 text-amber-800">
-                    <FaLock size={22} className="text-amber-600 mt-0.5 shrink-0" />
+                <div className="rounded-lg bg-amber-50 border border-amber-200 p-4 sm:p-5 flex items-start gap-4 text-amber-800">
+                    <Lock size={22} className="text-amber-600 mt-0.5 shrink-0" />
                     <div className="space-y-1">
                         <h3 className="font-bold text-amber-900 text-base">
                             {isBn ? "পণ্য বিক্রয়ের জন্য অ্যাক্টিভ একাউন্ট প্রয়োজন" : "Active Account Required for Selling"}
@@ -197,7 +197,7 @@ export default function ProductSellPage() {
                         <div className="pt-2">
                             <Link
                                 href="/shop"
-                                className="inline-flex items-center gap-2 rounded-lg bg-amber-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-amber-700 transition-all"
+                                className="inline-flex items-center gap-2 rounded-md bg-amber-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-amber-700 transition-all"
                             >
                                 {isBn ? "শপ করুন ও অ্যাক্টিভ হন" : "Shop & Activate Now"}
                             </Link>
@@ -207,13 +207,13 @@ export default function ProductSellPage() {
             )}
 
             {/* Store Delivery & Commission Rules Info Banner */}
-            <div className="rounded-xl bg-gradient-to-br from-teal-900 to-emerald-950 p-5 text-white shadow-lg space-y-3 border border-teal-700/50">
-                <div className="flex items-center gap-3 text-teal-300 font-bold text-base">
-                    <FaCircleInfo size={20} />
+            <div className="rounded-lg bg-gradient-to-br from-teal-900 to-emerald-950 p-5 text-white shadow-md space-y-3 border border-teal-700/50">
+                <div className="flex items-center gap-2.5 text-teal-300 font-bold text-base">
+                    <Info size={20} />
                     <span>{isBn ? "বাংলা পার্কে কিভাবে পণ্য বিক্রি কাজ করে" : "How Product Selling Works on Bangla Park"}</span>
                 </div>
                 <div className="grid gap-3 sm:grid-cols-3 text-xs sm:text-sm pt-1 text-teal-100/90">
-                    <div className="bg-white/10 rounded-xl p-3 backdrop-blur-xs border border-white/10 space-y-1">
+                    <div className="bg-white/10 rounded-md p-3 backdrop-blur-xs border border-white/10 space-y-1">
                         <div className="font-bold text-teal-200">
                             {isBn ? "১. অনলাইনে পণ্য জমা দিন" : "1. List Product Online"}
                         </div>
@@ -223,7 +223,7 @@ export default function ProductSellPage() {
                                 : "Submit product details & images. Your product stays pending until admin approval."}
                         </p>
                     </div>
-                    <div className="bg-white/10 rounded-xl p-3 backdrop-blur-xs border border-white/10 space-y-1">
+                    <div className="bg-white/10 rounded-md p-3 backdrop-blur-xs border border-white/10 space-y-1">
                         <div className="font-bold text-teal-200">
                             {isBn ? "২. টিম স্টোরে পণ্য জমা দিন" : "2. Deliver Stock to Store"}
                         </div>
@@ -233,7 +233,7 @@ export default function ProductSellPage() {
                                 : "Deliver your physical product to Bangla Park team store by contacting support."}
                         </p>
                     </div>
-                    <div className="bg-white/10 rounded-xl p-3 backdrop-blur-xs border border-white/10 space-y-1">
+                    <div className="bg-white/10 rounded-md p-3 backdrop-blur-xs border border-white/10 space-y-1">
                         <div className="font-bold text-teal-200">
                             {isBn ? "৩. বিক্রয়ে ৮০% পে-আউট পান" : "3. Get 80% Payout on Sale"}
                         </div>
@@ -248,27 +248,27 @@ export default function ProductSellPage() {
 
             {/* Seller Stats Cards */}
             <div className="grid gap-4 sm:grid-cols-3">
-                <div className="rounded-xl bg-white p-5 border border-gray-100 shadow-xs flex items-center gap-4">
-                    <div className="rounded-xl bg-teal-100 p-3.5 text-teal-700">
-                        <FaBoxOpen size={24} />
+                <div className="rounded-lg bg-white p-5 border border-gray-100 shadow-xs flex items-center gap-4">
+                    <div className="rounded-md bg-teal-50 p-3 text-teal-700 border border-teal-100">
+                        <Package size={22} />
                     </div>
                     <div>
                         <div className="text-xs font-medium text-gray-500">{isBn ? "আমার তালিকাভুক্ত পোডাক্ট" : "My Listed Products"}</div>
                         <div className="text-2xl font-extrabold text-gray-900 mt-0.5">{products.length}</div>
                     </div>
                 </div>
-                <div className="rounded-xl bg-white p-5 border border-gray-100 shadow-xs flex items-center gap-4">
-                    <div className="rounded-xl bg-purple-100 p-3.5 text-purple-700">
-                        <FaStore size={24} />
+                <div className="rounded-lg bg-white p-5 border border-gray-100 shadow-xs flex items-center gap-4">
+                    <div className="rounded-md bg-purple-50 p-3 text-purple-700 border border-purple-100">
+                        <Store size={22} />
                     </div>
                     <div>
                         <div className="text-xs font-medium text-gray-500">{isBn ? "মোট বিক্রিত ইউনিট" : "Total Units Sold"}</div>
                         <div className="text-2xl font-extrabold text-gray-900 mt-0.5">{totalSoldUnits}</div>
                     </div>
                 </div>
-                <div className="rounded-xl bg-white p-5 border border-gray-100 shadow-xs flex items-center gap-4">
-                    <div className="rounded-xl bg-emerald-100 p-3.5 text-emerald-700">
-                        <FaCoins size={24} />
+                <div className="rounded-lg bg-white p-5 border border-gray-100 shadow-xs flex items-center gap-4">
+                    <div className="rounded-md bg-emerald-50 p-3 text-emerald-700 border border-emerald-100">
+                        <Coins size={22} />
                     </div>
                     <div>
                         <div className="text-xs font-medium text-gray-500">{isBn ? "মোট অর্জিত আয়" : "Total Earned"}</div>
@@ -278,7 +278,7 @@ export default function ProductSellPage() {
             </div>
 
             {/* Products Table */}
-            <div className="rounded-xl bg-white border border-gray-100 shadow-xs overflow-hidden">
+            <div className="rounded-lg bg-white border border-gray-100 shadow-xs overflow-hidden">
                 <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
                     <h2 className="font-bold text-gray-900">{isBn ? "আমার পোডাক্ট তালিকা" : "My Product Listings"}</h2>
                     <span className="text-xs text-gray-400 font-medium">{products.length} {isBn ? "টি" : "items"}</span>
@@ -286,19 +286,19 @@ export default function ProductSellPage() {
 
                 {loading ? (
                     <div className="p-12 text-center text-gray-400 space-y-2">
-                        <FaSpinner className="animate-spin text-teal-600 mx-auto" size={24} />
+                        <Loader2 className="animate-spin text-teal-600 mx-auto" size={24} />
                         <p className="text-xs font-medium">{isBn ? "পোডাক্ট লোড হচ্ছে..." : "Loading products..."}</p>
                     </div>
                 ) : products.length === 0 ? (
                     <div className="p-12 text-center space-y-3">
-                        <FaBoxOpen className="mx-auto text-gray-300" size={40} />
+                        <Package className="mx-auto text-gray-300" size={40} />
                         <div className="text-gray-500 text-sm font-medium">{isBn ? "এখনও কোনো পোডাক্ট যোগ করা হয়নি" : "No products listed yet"}</div>
                         {isActiveUser && (
                             <button
                                 onClick={() => setIsModalOpen(true)}
-                                className="inline-flex items-center gap-2 rounded-xl bg-teal-600 px-4 py-2 text-xs font-semibold text-white hover:bg-teal-700 transition-all cursor-pointer"
+                                className="inline-flex items-center gap-2 rounded-lg bg-teal-600 px-4 py-2 text-xs font-semibold text-white hover:bg-teal-700 transition-all cursor-pointer"
                             >
-                                <FaPlus size={12} /> {isBn ? "আপনার প্রথম পোডাক্ট যোগ করুন" : "Add Your First Product"}
+                                <Plus size={14} /> {isBn ? "আপনার প্রথম পোডাক্ট যোগ করুন" : "Add Your First Product"}
                             </button>
                         )}
                     </div>
@@ -322,7 +322,7 @@ export default function ProductSellPage() {
                                     return (
                                         <tr key={p.id} className="hover:bg-gray-50/80 transition-all">
                                             <td className="px-5 py-3.5 flex items-center gap-3">
-                                                <div className="relative h-11 w-11 rounded-lg overflow-hidden border border-gray-200 bg-gray-100 shrink-0">
+                                                <div className="relative h-11 w-11 rounded-md overflow-hidden border border-gray-200 bg-gray-100 shrink-0">
                                                     <Image src={img} alt={p.name} fill className="object-cover" />
                                                 </div>
                                                 <div>
@@ -343,18 +343,18 @@ export default function ProductSellPage() {
                                             </td>
                                             <td className="px-5 py-3.5">
                                                 {p.approvalStatus === "PENDING" && (
-                                                    <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-1 text-[11px] font-bold text-amber-700 border border-amber-200">
-                                                        <FaClock size={11} /> {isBn ? "অনুমোদনের অপেক্ষায়" : "Pending Approval"}
+                                                    <span className="inline-flex items-center gap-1 rounded-md bg-amber-50 px-2.5 py-1 text-[11px] font-bold text-amber-700 border border-amber-200">
+                                                        <Clock size={12} /> {isBn ? "অনুমোদনের অপেক্ষায়" : "Pending Approval"}
                                                     </span>
                                                 )}
                                                 {p.approvalStatus === "APPROVED" && (
-                                                    <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-bold text-emerald-700 border border-emerald-200">
-                                                        <FaCircleCheck size={11} /> {isBn ? "অনুমোদিত ও লাইভ" : "Approved & Live"}
+                                                    <span className="inline-flex items-center gap-1 rounded-md bg-emerald-50 px-2.5 py-1 text-[11px] font-bold text-emerald-700 border border-emerald-200">
+                                                        <CheckCircle2 size={12} /> {isBn ? "অনুমোদিত ও লাইভ" : "Approved & Live"}
                                                     </span>
                                                 )}
                                                 {p.approvalStatus === "REJECTED" && (
-                                                    <span className="inline-flex items-center gap-1.5 rounded-full bg-rose-50 px-2.5 py-1 text-[11px] font-bold text-rose-700 border border-rose-200" title={p.rejectionReason || (isBn ? "অনুমোদিত নয়" : "Not approved")}>
-                                                        <FaCircleXmark size={11} /> {isBn ? "প্রত্যাখ্যাত" : "Rejected"}
+                                                    <span className="inline-flex items-center gap-1 rounded-md bg-rose-50 px-2.5 py-1 text-[11px] font-bold text-rose-700 border border-rose-200" title={p.rejectionReason || (isBn ? "অনুমোদিত নয়" : "Not approved")}>
+                                                        <XCircle size={12} /> {isBn ? "প্রত্যাখ্যাত" : "Rejected"}
                                                     </span>
                                                 )}
                                             </td>
@@ -376,22 +376,22 @@ export default function ProductSellPage() {
             {/* Add Product Modal */}
             {isModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs overflow-y-auto">
-                    <div className="relative w-full max-w-lg rounded-xl bg-white p-6 shadow-2xl space-y-4 my-8">
+                    <div className="relative w-full max-w-lg rounded-lg bg-white p-6 shadow-2xl space-y-4 my-8 border border-gray-100">
                         <div className="flex items-center justify-between border-b border-gray-100 pb-3">
                             <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-                                <FaPlus className="text-teal-600" size={16} /> {isBn ? "বিক্রয়ের জন্য পোডাক্ট যোগ করুন" : "Add Product for Selling"}
+                                <Plus className="text-teal-600" size={18} /> {isBn ? "বিক্রয়ের জন্য পোডাক্ট যোগ করুন" : "Add Product for Selling"}
                             </h3>
                             <button
                                 onClick={() => setIsModalOpen(false)}
-                                className="text-gray-400 hover:text-gray-600 p-1"
+                                className="text-gray-400 hover:text-gray-600 p-1 cursor-pointer"
                             >
-                                ✕
+                                <X size={18} />
                             </button>
                         </div>
 
                         <form onSubmit={handleSubmit} className="space-y-4 text-xs">
                             {formMsg && (
-                                <div className={`rounded-xl p-3 text-xs font-semibold ${formMsg.type === "success" ? "bg-emerald-50 text-emerald-700 border border-emerald-200" : "bg-rose-50 text-rose-700 border border-rose-200"}`}>
+                                <div className={`rounded-md p-3 text-xs font-semibold ${formMsg.type === "success" ? "bg-emerald-50 text-emerald-700 border border-emerald-200" : "bg-rose-50 text-rose-700 border border-rose-200"}`}>
                                     {formMsg.text}
                                 </div>
                             )}
@@ -403,7 +403,7 @@ export default function ProductSellPage() {
                                     placeholder={isBn ? "যেমন: হাতের কাজের কটন শার্ট" : "e.g. Handmade Cotton Shirt"}
                                     value={formData.name}
                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                    className="w-full rounded-xl border border-gray-200 p-2.5 text-sm focus:border-teal-500 focus:outline-hidden"
+                                    className="w-full rounded-md border border-gray-200 p-2.5 text-sm focus:border-teal-500 focus:outline-hidden"
                                 />
                             </div>
 
@@ -417,7 +417,7 @@ export default function ProductSellPage() {
                                         placeholder="1000"
                                         value={formData.price}
                                         onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                                        className="w-full rounded-xl border border-gray-200 p-2.5 text-sm focus:border-teal-500 focus:outline-hidden"
+                                        className="w-full rounded-md border border-gray-200 p-2.5 text-sm focus:border-teal-500 focus:outline-hidden"
                                     />
                                     <span className="text-[10px] text-teal-600 font-medium mt-0.5 block">
                                         {isBn
@@ -435,7 +435,7 @@ export default function ProductSellPage() {
                                         placeholder="5"
                                         value={formData.stock}
                                         onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
-                                        className="w-full rounded-xl border border-gray-200 p-2.5 text-sm focus:border-teal-500 focus:outline-hidden"
+                                        className="w-full rounded-md border border-gray-200 p-2.5 text-sm focus:border-teal-500 focus:outline-hidden"
                                     />
                                 </div>
                             </div>
@@ -445,7 +445,7 @@ export default function ProductSellPage() {
                                 <select
                                     value={formData.categoryId}
                                     onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
-                                    className="w-full rounded-xl border border-gray-200 p-2.5 text-sm focus:border-teal-500 focus:outline-hidden bg-white"
+                                    className="w-full rounded-md border border-gray-200 p-2.5 text-sm focus:border-teal-500 focus:outline-hidden bg-white"
                                 >
                                     <option value="">{isBn ? "ক্যাটাগরি নির্বাচন করুন" : "Select Category"}</option>
                                     {categories.map((c) => (
@@ -463,7 +463,7 @@ export default function ProductSellPage() {
                                     placeholder={isBn ? "আপনার পণ্য সম্পর্কে বিস্তারিত লিখুন..." : "Write a brief detail about your product..."}
                                     value={formData.description}
                                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                    className="w-full rounded-xl border border-gray-200 p-2.5 text-sm focus:border-teal-500 focus:outline-hidden"
+                                    className="w-full rounded-md border border-gray-200 p-2.5 text-sm focus:border-teal-500 focus:outline-hidden"
                                 />
                             </div>
 
@@ -474,7 +474,7 @@ export default function ProductSellPage() {
                                     placeholder="M, L, XL"
                                     value={formData.sizes}
                                     onChange={(e) => setFormData({ ...formData, sizes: e.target.value })}
-                                    className="w-full rounded-xl border border-gray-200 p-2.5 text-sm focus:border-teal-500 focus:outline-hidden"
+                                    className="w-full rounded-md border border-gray-200 p-2.5 text-sm focus:border-teal-500 focus:outline-hidden"
                                 />
                             </div>
 
@@ -483,25 +483,25 @@ export default function ProductSellPage() {
                                 <label className="block font-bold text-gray-700 mb-1">{isBn ? "পোডাক্টের ছবি (সর্বোচ্চ ৪ টি)" : "Product Images (Max 4)"}</label>
                                 <div className="flex flex-wrap gap-2 mb-2">
                                     {formData.images.map((url, idx) => (
-                                        <div key={idx} className="relative h-16 w-16 rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
+                                        <div key={idx} className="relative h-16 w-16 rounded-md overflow-hidden border border-gray-200 bg-gray-50">
                                             <Image src={url} alt="Product preview" fill className="object-cover" />
                                             <button
                                                 type="button"
                                                 onClick={() => removeImage(idx)}
                                                 className="absolute top-0.5 right-0.5 rounded-full bg-black/70 text-white p-1 text-[10px]"
                                             >
-                                                ✕
+                                                <X size={10} />
                                             </button>
                                         </div>
                                     ))}
 
                                     {formData.images.length < 4 && (
-                                        <label className="flex h-16 w-16 cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 text-gray-400 hover:border-teal-500 hover:bg-teal-50 transition-all">
+                                        <label className="flex h-16 w-16 cursor-pointer flex-col items-center justify-center rounded-md border-2 border-dashed border-gray-300 bg-gray-50 text-gray-400 hover:border-teal-500 hover:bg-teal-50 transition-all">
                                             {uploading ? (
-                                                <FaSpinner className="animate-spin text-teal-600" size={16} />
+                                                <Loader2 className="animate-spin text-teal-600" size={16} />
                                             ) : (
                                                 <>
-                                                    <FaUpload size={14} />
+                                                    <Upload size={14} />
                                                     <span className="text-[9px] font-semibold mt-1">{isBn ? "আপলোড" : "Upload"}</span>
                                                 </>
                                             )}
@@ -521,16 +521,16 @@ export default function ProductSellPage() {
                                 <button
                                     type="button"
                                     onClick={() => setIsModalOpen(false)}
-                                    className="rounded-xl px-4 py-2.5 text-xs font-semibold text-gray-600 hover:bg-gray-100 transition-all cursor-pointer"
+                                    className="rounded-md px-4 py-2 text-xs font-semibold text-gray-600 hover:bg-gray-100 transition-all cursor-pointer"
                                 >
                                     {isBn ? "বাতিল" : "Cancel"}
                                 </button>
                                 <button
                                     type="submit"
                                     disabled={submitting}
-                                    className="flex items-center gap-2 rounded-xl bg-teal-600 px-5 py-2.5 text-xs font-semibold text-white shadow-sm hover:bg-teal-700 transition-all cursor-pointer disabled:opacity-50"
+                                    className="flex items-center gap-2 rounded-md bg-teal-600 px-5 py-2 text-xs font-semibold text-white shadow-xs hover:bg-teal-700 transition-all cursor-pointer disabled:opacity-50"
                                 >
-                                    {submitting && <FaSpinner className="animate-spin" />}
+                                    {submitting && <Loader2 className="animate-spin" size={14} />}
                                     {isBn ? "অনুমোদনের জন্য জমা দিন" : "Submit Product for Approval"}
                                 </button>
                             </div>
