@@ -101,50 +101,6 @@ export default function HomePage() {
     const [addedId, setAddedId] = useState<string | null>(null);
     const [toastMsg, setToastMsg] = useState("");
     const [showToast, setShowToast] = useState(false);
-    const [productPage, setProductPage] = useState(1);
-    const [allProducts, setAllProducts] = useState<any[]>([]);
-    const [hasMore, setHasMore] = useState(true);
-    const [loadingMore, setLoadingMore] = useState(false);
-
-    const triggerToast = useCallback((msg: string) => {
-        setToastMsg(msg);
-        setShowToast(true);
-    }, []);
-
-    const handleAddToCart = (product: any, e: React.MouseEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-        addItem(product);
-        setAddedId(product.id);
-        setTimeout(() => setAddedId(null), 1500);
-        triggerToast(`"${product.name}" added to cart`);
-    };
-
-    const { data: firstPageData, isError: firstPageError, isLoading: productsLoading } = useQuery({
-        queryKey: ["products", "all", "popular", 1],
-        queryFn: () => productsApi.list({ page: 1, limit: 50, sort: "popular" }),
-    });
-
-    useEffect(() => {
-        if (firstPageError) setHasMore(false);
-    }, [firstPageError]);
-
-    useEffect(() => {
-        if (firstPageData) {
-            if (firstPageData.products?.length > 0) {
-                setAllProducts(firstPageData.products);
-                setHasMore(firstPageData.page * firstPageData.limit < firstPageData.total);
-            }
-        }
-    }, [firstPageData]);
-
-    const { data: categoriesData } = useQuery({
-        queryKey: ["categories"],
-        queryFn: () => categoriesApi.list(),
-    });
-
-    const categories = categoriesData?.categories ?? [];
-
     const { data: offers = [] } = useQuery({
         queryKey: ["offers"],
         queryFn: () => bannersApi.findOffers(),
@@ -172,19 +128,6 @@ export default function HomePage() {
         retry: 0,
         staleTime: 120_000,
     });
-
-    const handleLoadMore = async () => {
-        setLoadingMore(true);
-        const nextPage = productPage + 1;
-        try {
-            const res = await productsApi.list({ page: nextPage, limit: 50, sort: "popular" });
-            setAllProducts((prev) => [...prev, ...res.products]);
-            setProductPage(nextPage);
-            setHasMore(nextPage * res.limit < res.total);
-        } finally {
-            setLoadingMore(false);
-        }
-    };
 
     return (
         <div>
@@ -266,106 +209,6 @@ export default function HomePage() {
                     </div>
                 </section>
             )}
-
-
-
-
-            {/* All Products */}
-            <section className="py-8 sm:py-12 bg-white">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <RevealSection>
-                        <div className="flex items-center justify-between mb-8">
-                            <h2 className="section-title">{t("home.allProducts.heading", undefined, "All Products")}</h2>
-                            <Link href="/shop" className="hidden sm:inline-flex items-center gap-1 text-sm font-semibold text-green-700 hover:text-green-800 transition-colors">
-                                {t("home.allProducts.viewAll", undefined, "View All")}
-                            </Link>
-                        </div>
-                    </RevealSection>
-
-                    {productsLoading ? (
-                        <SkeletonGrid />
-                    ) : allProducts.length === 0 ? (
-                        <div className="text-center py-20">
-                            <Package size={40} className="mx-auto text-gray-200 mb-3" />
-                            <p className="text-gray-400 text-sm">{t("home.allProducts.empty", undefined, "No products found")}</p>
-                        </div>
-                    ) : (
-                        <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:gap-5 sm:grid-cols-3 lg:grid-cols-4">
-                            {allProducts.map((product, idx) => (
-                                <Link
-                                    key={product.id}
-                                    href={`/product/${product.slug}`}
-                                    className="group card-flat overflow-hidden hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
-                                >
-                                    <div className="aspect-square bg-gray-50 overflow-hidden relative">
-                                        {product.images?.[0] ? (
-                                            <img
-                                                src={product.images[0]}
-                                                alt={product.name}
-                                                className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500"
-                                            />
-                                        ) : (
-                                            <div className="flex h-full items-center justify-center text-gray-300">
-                                                <Package size={32} />
-                                            </div>
-                                        )}
-                                        {product.stock <= 3 && product.stock > 0 && (
-                                            <span className="absolute top-2 left-2 rounded-full bg-amber-500 px-2 py-0.5 text-[10px] font-bold text-white shadow-md">
-                                                Only {product.stock} left
-                                            </span>
-                                        )}
-                                        {product.stock === 0 && (
-                                            <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                                                <span className="rounded-full bg-white px-3 py-1 text-xs font-bold text-gray-800 shadow-lg">
-                                                    Out of Stock
-                                                </span>
-                                            </div>
-                                        )}
-                                    </div>
-                                    <div className="p-3 sm:p-4">
-                                        <h3 className="text-xs sm:text-sm font-semibold text-gray-800 line-clamp-2 leading-snug min-h-[2.2em]">{product.name}</h3>
-                                        <p className="mt-1.5 text-base sm:text-lg font-bold text-emerald-600 tracking-tight">
-                                            ৳{Number(product.price).toLocaleString(locale === "bn" ? "bn-BD" : "en-IN")}
-                                        </p>
-                                        <div className="flex items-center gap-2 mt-1">
-                                            <p className={`text-[11px] ${product.stock > 0 ? 'text-gray-400' : 'text-red-500'}`}>
-                                                {product.stock > 0 ? `${t("home.featuredProducts.stockLabel")} ${product.stock}` : t("home.featuredProducts.stockOut")}
-                                            </p>
-                                            {product.clicks > 0 && (
-                                                <span className="text-[10px] text-gray-300">• {product.clicks} views</span>
-                                            )}
-                                        </div>
-                                        {product.stock > 0 && (
-                                            <div className="mt-2.5">
-                                                <button
-                                                    onClick={(e) => handleAddToCart(product, e)}
-                                                    className="w-full rounded-sm bg-gradient-to-r from-red-700 to-red-600 py-2 text-xs sm:text-sm font-bold text-white hover:from-red-600 hover:to-red-500 transition-all shadow-sm hover:shadow-md flex items-center justify-center gap-1.5 cursor-pointer"
-                                                >
-                                                    {addedId === product.id ? (
-                                                        <span className="flex items-center gap-1"><CheckCircle size={13} /> Added!</span>
-                                                    ) : (
-                                                        <><ShoppingCart size={14} /> {t("product.addToCart")}</>
-                                                    )}
-                                                </button>
-                                            </div>
-                                        )}
-                                    </div>
-                                </Link>
-                            ))}
-                        </div>
-                    )}
-                    {allProducts.length > 0 && hasMore && (
-                        <RevealSection>
-                            <div className="flex justify-center mt-10">
-                                <button onClick={handleLoadMore} disabled={loadingMore} className="btn-secondary py-3 px-10 text-sm font-semibold flex items-center gap-2 rounded-xl shadow-sm hover:shadow-md transition-all">
-                                    {loadingMore ? <Loader2 className="animate-spin" size={16} /> : null}
-                                    {loadingMore ? (t("home.allProducts.loading", undefined, "Loading...")) : (t("home.allProducts.loadMore", undefined, "Load More"))}
-                                </button>
-                            </div>
-                        </RevealSection>
-                    )}
-                </div>
-            </section>
 
             {/* Success Stories */}
             <section className="relative overflow-hidden bg-[#f7f7f7] py-16 lg:py-24">
