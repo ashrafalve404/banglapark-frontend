@@ -24,15 +24,15 @@ function getCategoryIcon(_name?: string, _slug?: string) {
     return LayoutGrid;
 }
 
-const CATEGORY_GRADIENTS = [
-    "from-indigo-500 to-purple-600 shadow-purple-500/20",
-    "from-blue-500 to-cyan-600 shadow-cyan-500/20",
-    "from-emerald-500 to-teal-600 shadow-teal-500/20",
-    "from-amber-500 to-orange-600 shadow-orange-500/20",
-    "from-rose-500 to-pink-600 shadow-pink-500/20",
-    "from-violet-500 to-indigo-600 shadow-indigo-500/20",
-    "from-sky-500 to-blue-600 shadow-blue-500/20",
-    "from-teal-500 to-emerald-600 shadow-emerald-500/20",
+const CATEGORY_SOLID_COLORS = [
+    { bg: "bg-indigo-600", accent: "bg-indigo-600" },
+    { bg: "bg-blue-600", accent: "bg-blue-600" },
+    { bg: "bg-emerald-600", accent: "bg-emerald-600" },
+    { bg: "bg-amber-600", accent: "bg-amber-600" },
+    { bg: "bg-rose-600", accent: "bg-rose-600" },
+    { bg: "bg-violet-600", accent: "bg-violet-600" },
+    { bg: "bg-sky-600", accent: "bg-sky-600" },
+    { bg: "bg-teal-600", accent: "bg-teal-600" },
 ];
 
 export default function UserCategoriesPage() {
@@ -68,8 +68,7 @@ export default function UserCategoriesPage() {
     return (
         <div className="space-y-6">
             {/* Header Banner */}
-            <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 p-6 sm:p-8 text-white shadow-xl">
-                <div className="absolute top-0 right-0 -mr-16 -mt-16 h-64 w-64 rounded-full bg-indigo-500/10 blur-3xl" />
+            <div className="relative overflow-hidden rounded-xl bg-slate-900 p-6 sm:p-8 text-white shadow-md">
                 <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div className="space-y-2">
                         <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold backdrop-blur-md border border-white/10">
@@ -150,23 +149,23 @@ export default function UserCategoriesPage() {
                     {filteredCategories.map((cat, idx) => {
                         const productCount = cat._count?.products ?? 0;
                         const Icon = getCategoryIcon(cat.name, cat.slug);
-                        const gradient = CATEGORY_GRADIENTS[idx % CATEGORY_GRADIENTS.length];
+                        const solidColor = CATEGORY_SOLID_COLORS[idx % CATEGORY_SOLID_COLORS.length];
 
                         return (
                             <Link
                                 key={cat.id}
                                 href={`/shop?categoryId=${cat.id}`}
-                                className="group relative flex flex-col items-center justify-center text-center gap-3 rounded-xl bg-white border border-slate-150/90 p-5 shadow-xs hover:shadow-xl hover:border-indigo-500/30 hover:-translate-y-1 transition-all duration-300 overflow-hidden cursor-pointer"
+                                className="group relative flex flex-col items-center justify-center text-center gap-3 rounded-xl bg-white border border-slate-150/90 p-5 shadow-xs hover:shadow-lg hover:border-indigo-500/30 hover:-translate-y-1 transition-all duration-300 overflow-hidden cursor-pointer"
                             >
                                 {/* Top Color Accent Line */}
-                                <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${gradient.split(" ")[0]} ${gradient.split(" ")[1]}`} />
+                                <div className={`absolute top-0 left-0 right-0 h-1 ${solidColor.accent}`} />
 
                                 {cat.image ? (
                                     <div className="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center p-1 group-hover:scale-105 transition-transform duration-300">
                                         <img src={cat.image} alt={cat.name} className="max-h-full max-w-full object-contain" />
                                     </div>
                                 ) : (
-                                    <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br ${gradient} text-white shadow-md flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+                                    <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-xl ${solidColor.bg} text-white shadow-xs flex items-center justify-center group-hover:scale-105 transition-transform duration-300`}>
                                         <Icon size={24} className="sm:w-6 sm:h-6 stroke-[2.2]" />
                                     </div>
                                 )}

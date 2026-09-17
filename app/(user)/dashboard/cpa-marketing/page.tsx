@@ -81,7 +81,7 @@ export default function UserCpaMarketingPage() {
     return (
         <div className="max-w-4xl mx-auto space-y-6">
             {/* Clean Header Banner */}
-            <div className="card p-6 bg-gradient-to-r from-purple-900 via-indigo-900 to-slate-900 text-white shadow-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 rounded-xl">
+            <div className="card p-6 bg-slate-900 text-white shadow-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 rounded-xl">
                 <div>
                     <h1 className="text-xl sm:text-2xl font-bold">{t("cpa.title")}</h1>
                     <p className="text-xs text-purple-200 mt-1">

@@ -183,8 +183,7 @@ export default function DigitalMarketingPage() {
 
             {/* ── 2. Available Packages Grid ── */}
             <div className="space-y-3">
-                <h2 className="text-xs sm:text-base md:text-lg font-bold text-slate-900 flex items-center gap-1.5 sm:gap-2">
-                    <Megaphone size={16} className="text-indigo-600 shrink-0" />
+                <h2 className="text-xs sm:text-base md:text-lg font-bold text-slate-900">
                     {t("digitalMarketing.availableTitle")}
                 </h2>
 

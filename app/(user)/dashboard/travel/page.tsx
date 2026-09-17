@@ -25,7 +25,7 @@ const TIER_META = [
         IconComponent: Compass,
         minMembers: 500,
         badgeText: "Bronze Tier",
-        headerGradient: "from-amber-800 via-amber-900 to-amber-950",
+        headerBg: "bg-amber-900",
         badgeBg: "bg-amber-100 text-amber-900 border-amber-300",
         cardBorder: "border-amber-200/80 hover:border-amber-400",
         progressColor: "bg-amber-600",
@@ -36,7 +36,7 @@ const TIER_META = [
         IconComponent: Globe,
         minMembers: 5000,
         badgeText: "Silver Tier",
-        headerGradient: "from-slate-700 via-slate-800 to-slate-900",
+        headerBg: "bg-slate-800",
         badgeBg: "bg-slate-100 text-slate-900 border-slate-300",
         cardBorder: "border-slate-200/80 hover:border-slate-400",
         progressColor: "bg-slate-700",
@@ -47,7 +47,7 @@ const TIER_META = [
         IconComponent: Plane,
         minMembers: 20000,
         badgeText: "Gold Tier",
-        headerGradient: "from-amber-600 via-yellow-600 to-amber-700",
+        headerBg: "bg-amber-700",
         badgeBg: "bg-yellow-100 text-yellow-900 border-yellow-300",
         cardBorder: "border-yellow-300/80 hover:border-yellow-400",
         progressColor: "bg-amber-500",
@@ -125,8 +125,8 @@ export default function UserTravelPage() {
             {/* Status Hero Card */}
             <div className={`rounded-xl p-6 text-white shadow-md relative overflow-hidden transition-all ${
                 isEligible
-                    ? "bg-gradient-to-br from-emerald-700 via-emerald-800 to-teal-900 border border-emerald-600"
-                    : "bg-gradient-to-br from-slate-800 via-slate-900 to-slate-950 border border-slate-700"
+                    ? "bg-emerald-800 border border-emerald-700"
+                    : "bg-slate-900 border border-slate-800"
             }`}>
 
                 <div className="relative z-10 space-y-6">
@@ -246,7 +246,7 @@ export default function UserTravelPage() {
                                 }`}
                             >
                                 {/* Header */}
-                                <div className={`bg-gradient-to-r ${meta.headerGradient} p-5 text-white relative`}>
+                                <div className={`${meta.headerBg} p-5 text-white relative`}>
                                     <div className="flex items-start justify-between">
                                         <div className="space-y-2">
                                             <div className="p-2.5 rounded-lg bg-white/15 backdrop-blur-xs w-fit border border-white/20">
